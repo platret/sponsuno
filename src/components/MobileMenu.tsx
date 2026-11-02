@@ -1,5 +1,5 @@
 import { useEffect, useRef, type MouseEvent, type RefObject } from 'react';
-import { cta, menu, nav } from '../content';
+import { cta, demo, menu, nav } from '../content';
 import { gsap, motionEnabled, resumeSmoothScroll, scrollToHash, stopSmoothScroll } from '../lib/motion';
 
 export interface MenuState {
@@ -71,6 +71,7 @@ export function MobileMenu({ state, onClose, toggleRef }: MobileMenuProps) {
           {nav.map((item) => (
             <li key={item.id}><a href={`#${item.id}`} onClick={go}>{item.label}</a></li>
           ))}
+          <li><a href={demo.href}>{demo.hero}</a></li>
         </ul>
         <a className="btn btn-gold menu-cta" href="#warteliste" onClick={go}>{cta.waitlist}</a>
         <p className="menu-note">{menu.note}</p>

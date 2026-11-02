@@ -776,6 +776,9 @@ html:not(.motion) .ribbon-pause { display: none; }
 @keyframes caret { 50% { opacity: 0; } }
 .assistant-status { margin-top: .7rem; font-size: .8125rem; color: var(--steel); }
 .assistant-caption { margin-top: 1rem; font-size: .8125rem; color: var(--steel); }
+.assistant-caption a { color: var(--gold-light); font-weight: 600; text-underline-offset: 3px; }
+.main-nav a.nav-demo { color: var(--gold-light); }
+.main-nav a.nav-demo:hover { color: var(--gold-pale); }
 
 /* Sachleistungen: gold silk with ivory cards (no border, per CD) */
 .section-head-wide { max-width: 52rem; }

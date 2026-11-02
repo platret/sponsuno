@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import logoDark from '../assets/Sponsuno_Logo_dunkel.svg';
-import { cta, menu, nav, type SectionId } from '../content';
+import { cta, demo, menu, nav, type SectionId } from '../content';
 import { MobileMenu, type MenuState } from './MobileMenu';
 
 /** Floating glass pill: sliding gold marker on the active section, scroll progress, hides while scrolling down. */
@@ -114,6 +114,7 @@ export function Header() {
                   </a>
                 </li>
               ))}
+              <li><a href={demo.href} className="nav-demo">{demo.nav}</a></li>
             </ul>
             <span className="nav-indicator" ref={indicatorRef} aria-hidden="true" />
           </nav>

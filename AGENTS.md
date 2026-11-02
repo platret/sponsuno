@@ -6,9 +6,14 @@ Read this first in every session. It says what this project is, how it is built,
 
 Sponsuno is a startup project of a four-person team in the Youngpreneurs programme. The planned platform matches athletes, sport clubs and culture clubs with sponsors from their region, starting in German-speaking Switzerland (long term: DACH). A personal AI sponsoring manager is planned to help with the partnership afterwards, plus separately billed marketing services (photo, video, content).
 
-This repo is the public landing page. **The product does not exist yet.** The page collects interest on a waitlist and explains the idea.
+This repo holds two things:
 
-- Live: https://platret.github.io/sponsuno/
+1. The public **landing page** (`/sponsuno/`). It explains the idea and collects interest on a waitlist.
+2. A **clickable demo** (`/sponsuno/demo/`) with fictional data, used to show the idea to sponsors, club boards and in pitches.
+
+**The product does not exist yet.** Neither page may suggest otherwise.
+
+- Live: https://platret.github.io/sponsuno/ and https://platret.github.io/sponsuno/demo/
 - Repo: https://github.com/platret/sponsuno (public)
 - Language of the page: German, Swiss spelling, formal "Sie"
 
@@ -18,7 +23,7 @@ Node 20.19 or newer (CI uses 22).
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/sponsuno/
+npm run dev        # http://localhost:5173/sponsuno/ and /sponsuno/demo/
 npm run build      # typecheck, client build, prerender into dist/
 npm run preview    # serve dist/ at http://localhost:4173/sponsuno/
 npm run typecheck
@@ -47,7 +52,9 @@ src/
   assets/               Logos (from the CD), AI-generated persona photo (labelled on the page).
   vite-env.d.ts         Types for import.meta.env (VITE_WAITLIST_ENDPOINT) and window.__introFailsafe. Add new env vars here.
 public/                 Copied as-is (favicon.svg). In code, import assets instead of hardcoding /paths (the base path is /sponsuno/).
-scripts/prerender.mjs   Injects the server render into dist/index.html.
+demo/index.html         Second Vite entry: the clickable demo (client-only, noindex).
+src/demo/               The demo app, see "The demo" below.
+scripts/prerender.mjs   Injects the server render into dist/index.html (landing page only).
 .github/workflows/      Builds on pushes to main, on pull requests and on manual runs; deploys only from main.
 docs/                   Images for the README only.
 ```
@@ -65,6 +72,36 @@ docs/                   Images for the README only.
 - **Heavy code is lazy**: Three.js must stay behind `import('../lib/emblem')`. Never import `three` from a file that ends up in the main bundle.
 - **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the floating header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
 - **Waitlist**: posts JSON `{ rolle, email }` to `VITE_WAITLIST_ENDPOINT`. If the variable is empty, the form only previews success and stores nothing.
+
+## The demo (`src/demo/`)
+
+A small React app with hash routing (`#/partner/velo`), so it works on GitHub Pages without server rewrites. It is not prerendered and carries `noindex`.
+
+```
+types.ts        Data model: SeekerProfile, Sponsor, Partnership, Draft, Reminder, DemoState
+data.ts         Fictional data, DEMO_TODAY (fixed "today": 2026-11-02), matchFor() (the four criteria)
+store.tsx       DemoProvider + useDemo(): state, dispatch(action), derived matches. Persists only user-changeable
+                slices to localStorage (key sponsuno-demo-v2, shape-checked on load); sponsors come from data.ts.
+router.ts       useRoute(), href(), navigate()
+format.ts       CHF, dates, relative days, labels
+ui.tsx          UI kit (Button, Card, Badge, CriteriaList, ScoreBadge, Tabs, Field, ChipGroup, toasts, icons)
+demo.css        Shell and UI kit styles (classes ui-*, demo-*)
+DemoApp.tsx     Shell: banner, sidebar with role switch, mobile role row and tab bar, view switch, focus on route change.
+                The URL decides the role: seeker views switch to the seeker, #/sponsor to the sponsor.
+main.tsx        Error boundary with a reset, in case stored data does not fit the code.
+views/          One view per route, each with its own CSS file and class prefix
+```
+
+Two roles: **seeker** (persona Lea Keller, mountain biker, from the team's persona work) and **sponsor** (Velogeschäft Oberland). Views: Übersicht, Passende Partner, Partnerschaften (both roles), KI-Manager, Profil, Sponsor-Cockpit.
+
+Rules for the demo:
+- Every name, company and figure is fictional and generic. Never use real companies, clubs or people.
+- Nothing is sent. Every "send" or "contact" action is labelled as simulated. The KI-Manager writes from local templates and says so; never present it as real AI output.
+- Requests: "Anfrage vorbereiten" only creates a draft. The partnership (status `anfrage`) appears when that draft is sent (simulated) in the KI-Manager. A sponsor can decline (`abgesagt`, distinct from `abgeschlossen`).
+- If you change the stored shape, bump the storage key in `store.tsx` so old browser data is dropped.
+- State changes go through `dispatch` actions in `store.tsx`. Add new actions there, not ad-hoc state in views, when data must survive navigation.
+- Dates relative to `DEMO_TODAY`, never `new Date()` for "today".
+- The banner "Demo mit fiktiven Daten" stays visible on every view.
 
 ## Rules for copy (non-negotiable)
 
@@ -117,7 +154,7 @@ Measured on 2 Nov 2026 (mobile, 4× CPU throttling, Fast 4G, pre-React version):
 
 1. `npm run build` passes (includes typecheck and prerender).
 2. Push your branch and open a PR so CI builds it (pushes to other branches alone run no CI).
-3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, hero match plays, in-page links land below the header, mobile menu opens, scrolls and closes.
+3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, hero match plays, in-page links land below the header, mobile menu opens, scrolls and closes. If you touched the demo, click through both roles at `/sponsuno/demo/`.
 4. Check once with reduced motion emulated: everything visible, nothing moves.
 5. Copy changes: re-read the copy rules above.
 6. Update `DESIGN.md` if you changed tokens, components or motion; update this file if you changed architecture or rules; update `README.md` screenshots if the look changed noticeably.

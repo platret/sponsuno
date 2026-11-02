@@ -1,6 +1,9 @@
 /* Sponsuno demo: shell and UI kit. Tokens come from tokens.css (CD Manual v1.0). View styles live next to each view. */
 @import '../styles/tokens.css';
 
+/* Demo-only status colour for overdue items and destructive actions (documented in DESIGN.md) */
+:root { --danger: #8A2C1F; }
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -13,6 +16,8 @@ body {
   font-size: 1rem;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  /* Cormorant defaults to old-style figures; amounts and dates read better with lining figures */
+  font-variant-numeric: lining-nums;
 }
 
 h1, h2, h3, p, ul, ol, figure { margin: 0; }
@@ -53,6 +58,13 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 }
 .demo-banner strong { font-weight: 600; }
 .demo-banner-actions { display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
+.demo-banner-short { display: none; }
+@media (max-width: 600px) {
+  .demo-banner { flex-wrap: nowrap; gap: .75rem; font-size: .8125rem; }
+  .demo-banner-more { display: none; }
+  .demo-banner-short { display: inline; }
+  .demo-banner-actions { flex-wrap: nowrap; gap: .5rem; }
+}
 .demo-banner-btn {
   display: inline-flex; align-items: center; gap: .4rem;
   min-height: 36px; padding: 0 .25rem;
@@ -61,7 +73,13 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
 }
 
-.demo-body { flex: 1; display: grid; grid-template-columns: 268px minmax(0, 1fr); }
+.demo-body { flex: 1; display: grid; grid-template-columns: 268px minmax(0, 1fr); grid-template-rows: auto 1fr; }
+/* Wide screens: the banner sits above the content column, so the sticky sidebar can start at the very top and fit the viewport */
+@media (min-width: 901px) {
+  .demo-banner { grid-column: 2; grid-row: 1; }
+  .demo-sidebar { grid-column: 1; grid-row: 1 / -1; }
+  .demo-main { grid-column: 2; grid-row: 2; }
+}
 
 .demo-sidebar {
   position: sticky; top: 0; align-self: start;
@@ -93,7 +111,14 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   font-size: .8125rem; font-weight: 600;
   transition: background-color .2s ease, color .2s ease;
 }
-.demo-role-btn[aria-checked="true"] { background: var(--ivory); color: var(--navy); }
+.demo-role-btn[aria-pressed="true"] { background: var(--ivory); color: var(--navy); }
+
+/* Narrow screens: the role switch sits above the view (the sidebar is hidden) */
+.demo-mobile-role { display: none; }
+.demo-mobile-role-label { font-weight: 600; font-size: .875rem; color: var(--navy); }
+.demo-role-light { display: inline-grid; grid-template-columns: auto auto; background: rgba(11, 24, 48, .05); border-color: var(--rule); }
+.demo-role-light .demo-role-btn { min-height: 44px; padding: 0 1.1rem; color: var(--ink); font-size: .875rem; }
+.demo-role-light .demo-role-btn[aria-pressed="true"] { background: var(--navy); color: var(--ivory); }
 
 .demo-nav { display: grid; gap: 2px; }
 .demo-nav a {
@@ -128,28 +153,30 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .demo-tabbar { display: none; }
 
 @media (max-width: 900px) {
-  .demo-body { grid-template-columns: minmax(0, 1fr); }
+  .demo-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr; }
+  /* Focused elements scroll into view above the fixed tab bar, not under it */
+  html { scroll-padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); }
   .demo-sidebar { display: none; }
+  .demo-mobile-role { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; padding: 1rem clamp(1rem, 3.5vw, 3rem) 0; }
   .demo-main { padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)); }
   .demo-tabbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
     display: flex; align-items: stretch; gap: 2px;
     padding: .4rem .5rem calc(.4rem + env(safe-area-inset-bottom, 0px));
-    background: rgba(11, 24, 48, .96);
+    background: var(--navy);
     border-top: 1px solid var(--card-dark-line);
     overflow-x: auto;
     --focus: var(--gold-light);
   }
   .demo-tabbar a {
-    flex: 1 0 64px;
+    flex: 1 1 auto;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
     min-height: 52px; padding: .25rem .2rem; border-radius: 10px;
-    color: var(--steel); text-decoration: none; font-size: .6875rem; font-weight: 600; text-align: center; line-height: 1.2;
+    color: var(--steel); text-decoration: none; font-size: .6875rem; font-weight: 600; text-align: center; line-height: 1.2; white-space: nowrap;
   }
   .demo-tabbar a.is-active { color: var(--ivory); background: rgba(196, 163, 107, .18); }
   .demo-tabbar a.is-active .ui-icon { stroke: var(--gold-light); }
   .demo-tabbar .ui-icon { stroke: currentColor; }
-  .demo-tabbar-role { flex: 0 0 auto; align-self: center; color: var(--gold-light); }
 }
 
 /* ---------- UI kit ---------- */
@@ -172,7 +199,7 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-btn-ghost:hover { border-color: var(--navy); }
 .ui-btn-quiet { background: transparent; color: var(--navy); padding-inline: .6rem; }
 .ui-btn-quiet:hover { background: rgba(11, 24, 48, .06); }
-.ui-btn-danger { border-color: var(--rule); background: var(--paper); color: #8A2C1F; }
+.ui-btn-danger { border-color: var(--rule); background: var(--paper); color: var(--danger); }
 .ui-btn:disabled { opacity: .5; cursor: not-allowed; }
 
 .ui-page-header { margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
@@ -184,6 +211,11 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   color: var(--gold-dark); font-weight: 600; font-size: .875rem; text-decoration: none;
 }
 .ui-back:hover { text-decoration: underline; }
+
+/* Touch screens: every control at least 44 px high */
+@media (pointer: coarse) {
+  .ui-btn-sm, .demo-banner-btn, .ui-back { min-height: 44px; }
+}
 
 .ui-card {
   border-radius: var(--radius);
@@ -212,6 +244,7 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-badge-navy { background: var(--navy); color: var(--ivory); }
 .ui-badge-success { background: #E3EDE4; color: #2E5A36; }
 .ui-badge-muted { background: rgba(185, 191, 203, .35); color: var(--ink); }
+.ui-badge-danger { background: #F5E4DF; color: var(--danger); }
 
 .ui-progress { height: 6px; border-radius: 6px; background: rgba(11, 24, 48, .08); overflow: hidden; }
 .ui-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width .5s var(--ease-out); }
@@ -252,25 +285,32 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   min-height: 38px; padding: 0 1rem; border: 0; border-radius: 999px; cursor: pointer;
   background: transparent; color: var(--ink); font-weight: 600; font-size: .875rem;
 }
-.ui-tab[aria-selected="true"] { background: var(--paper); color: var(--navy); box-shadow: 0 1px 2px rgba(11, 24, 48, .12); }
+.ui-tab[aria-selected="true"] { background: var(--navy); color: var(--ivory); }
 .ui-tab-count { min-width: 1.4rem; padding: 0 .35rem; border-radius: 999px; background: rgba(11, 24, 48, .08); font-size: .75rem; text-align: center; }
+.ui-tab[aria-selected="true"] .ui-tab-count { background: rgba(243, 239, 230, .18); }
+/* Narrow screens: tabs that do not fit one row fill full rows instead of leaving one orphan in a pill */
+@media (max-width: 600px) {
+  .ui-tabs { width: 100%; border-radius: var(--radius); }
+  .ui-tab { flex: 1 1 auto; justify-content: center; padding-inline: .75rem; }
+}
 
 .ui-field { display: grid; gap: .35rem; }
 .ui-field label { font-weight: 600; font-size: .875rem; color: var(--navy); }
 .ui-field input, .ui-field select, .ui-field textarea {
   width: 100%; min-height: 44px; padding: .6rem .8rem;
-  border: 1px solid var(--rule); border-radius: 12px; background: #FFFDF8;
+  /* Border at least 3:1 against field and card (WCAG 1.4.11) */
+  border: 1px solid rgba(11, 24, 48, .5); border-radius: 12px; background: #FFFDF8;
   font-size: 1rem; color: var(--navy);
-  transition: border-color .2s ease, box-shadow .2s ease;
+  transition: border-color .2s ease;
 }
 .ui-field textarea { min-height: 8rem; resize: vertical; line-height: 1.55; }
-.ui-field input:focus, .ui-field select:focus, .ui-field textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(196, 163, 107, .25); }
+.ui-field input:focus, .ui-field select:focus, .ui-field textarea:focus { border-color: var(--navy); outline: 3px solid var(--focus); outline-offset: 2px; }
 .ui-field-hint { font-size: .8125rem; color: var(--ink); }
 
 .ui-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
 .ui-chip {
   display: inline-flex; align-items: center; gap: .35rem;
-  min-height: 36px; padding: 0 .9rem; border-radius: 999px; cursor: pointer;
+  min-height: 44px; padding: 0 .95rem; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
   font-size: .875rem; font-weight: 600;
   transition: background-color .2s ease, border-color .2s ease, color .2s ease;
@@ -288,7 +328,12 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-toast .ui-icon { stroke: var(--gold-light); }
 .motion .ui-toast { animation: toast-in .4s var(--ease-out); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
-@media (max-width: 900px) { .ui-toasts { bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); left: 1rem; } }
+/* Narrow screens: toasts appear at the top, clear of the tab bar and of sticky action bars at the bottom */
+@keyframes toast-in-top { from { opacity: 0; transform: translateY(-8px); } }
+@media (max-width: 900px) {
+  .ui-toasts { top: calc(1rem + env(safe-area-inset-top, 0px)); bottom: auto; left: 1rem; }
+  .motion .ui-toast { animation-name: toast-in-top; }
+}
 
 /* Shared view helpers */
 .demo-grid { display: grid; gap: clamp(1rem, 2vw, 1.5rem); }

@@ -1,5 +1,5 @@
 import { DEMO_TODAY } from './data';
-import type { DraftStatus, DraftType, PartnershipStatus, ProfileKind } from './types';
+import type { DraftStatus, DraftType, PartnershipStatus, ProfileKind, SeekerProfile } from './types';
 
 const chf = new Intl.NumberFormat('de-CH', { maximumFractionDigits: 0 });
 const dateLong = new Intl.DateTimeFormat('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -36,6 +36,7 @@ export const statusLabel: Record<PartnershipStatus, string> = {
   vereinbart: 'Vereinbart',
   aktiv: 'Aktiv',
   abgeschlossen: 'Abgeschlossen',
+  abgesagt: 'Abgesagt',
 };
 
 export const draftTypeLabel: Record<DraftType, string> = {
@@ -56,6 +57,14 @@ export const kindLabel: Record<ProfileKind, string> = {
   sportverein: 'Sportverein',
   kulturverein: 'Kulturverein',
 };
+
+/** Descriptor of a named profile: "Sportlerin" for Lea instead of the generic "Sportlerin oder Sportler". */
+export const profileKindLabel = (s: Pick<SeekerProfile, 'kind' | 'athleteLabel'>) =>
+  (s.kind === 'athlete' && s.athleteLabel) || kindLabel[s.kind];
+
+/** "A, B und C" */
+export const joinList = (items: string[]) =>
+  items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} und ${items[items.length - 1]}`;
 
 /** Initials for monogram avatars: "Velogeschäft Oberland" → "VO" */
 export const initials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();

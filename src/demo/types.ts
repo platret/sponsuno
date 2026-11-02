@@ -12,6 +12,8 @@ export type ProfileKind = 'athlete' | 'sportverein' | 'kulturverein';
 export interface SeekerProfile {
   id: string;
   kind: ProfileKind;
+  /** How a named athlete profile is described ("Sportlerin", "Sportler", "Zweierteam"). Falls back to kindLabel. */
+  athleteLabel?: string;
   name: string;
   /** Sport or cultural discipline, e.g. "Langstrecken-Mountainbike", "Blasmusik". */
   discipline: string;
@@ -66,7 +68,8 @@ export interface MatchResult {
   sortValue: number;
 }
 
-export type PartnershipStatus = 'anfrage' | 'gespraech' | 'vereinbart' | 'aktiv' | 'abgeschlossen';
+/** "abgesagt": a request the sponsor declined. "abgeschlossen": a partnership that ran and ended. */
+export type PartnershipStatus = 'anfrage' | 'gespraech' | 'vereinbart' | 'aktiv' | 'abgeschlossen' | 'abgesagt';
 
 export interface Deliverable {
   id: string;
@@ -104,6 +107,8 @@ export interface Draft {
   status: DraftStatus;
   /** ISO date-time */
   updatedAt: string;
+  /** For requests: id of the partnership that is created once the request is sent (simulated). */
+  partnershipId?: string;
 }
 
 export interface Reminder {
@@ -114,6 +119,12 @@ export interface Reminder {
   /** Hash route to open, e.g. "#/partnerschaften/p1" */
   href: string;
   done: boolean;
+  /** Optional link to the data the reminder repeats, so both stay in sync. */
+  partnershipId?: string;
+  /** Done together with this deliverable of the partnership. */
+  deliverableId?: string;
+  /** Open only while the partnership is in one of these states, e.g. "Gespräch vorbereiten" while "gespraech". */
+  openWhile?: PartnershipStatus[];
 }
 
 export type Role = 'seeker' | 'sponsor';

@@ -1,0 +1,274 @@
+/* Overview (#/uebersicht). All classes prefixed "ov-". Tokens from tokens.css, kit from demo.css. */
+
+.ov { container: ov / inline-size; }
+
+.ov-date { display: block; margin-bottom: .15rem; font-size: .9375rem; font-weight: 600; color: var(--gold-dark); }
+.ov-nowrap { white-space: nowrap; }
+
+.ov-small { font-size: .875rem; color: var(--ink); line-height: 1.45; }
+
+/* ---------- Layout ---------- */
+
+.ov-layout { display: grid; gap: clamp(1rem, 2vw, 1.5rem); align-items: start; }
+.ov-main, .ov-side { display: grid; gap: clamp(1rem, 2vw, 1.5rem); min-width: 0; align-content: start; }
+.ov-main { container: ovmain / inline-size; }
+
+/* Side column capped at 330px so the main column keeps room for three suggestion cards at 1440px.
+   Not sticky: the side column is taller than common laptop viewports. */
+@container ov (min-width: 880px) {
+  .ov-layout { grid-template-columns: minmax(0, 1fr) minmax(280px, 330px); }
+}
+/* Stacked but roomy: profile and KI-Manager side by side */
+@container ov (min-width: 640px) and (max-width: 879.98px) {
+  .ov-side { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+
+/* Card header link */
+.ov-head-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  color: var(--gold-dark); font-weight: 600; font-size: .875rem;
+  text-decoration: underline; text-decoration-color: rgba(110, 82, 40, .35); text-underline-offset: 4px;
+  white-space: nowrap;
+}
+.ov-head-link:hover { text-decoration-color: currentColor; }
+
+/* ---------- Summary row ---------- */
+
+.ov-summary-list {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--paper), #F7F4EC);
+  overflow: hidden;
+}
+.ov-summary-list li + li { border-left: 1px solid var(--rule); }
+.ov-summary-item {
+  position: relative; height: 100%;
+  display: flex; align-items: center; gap: .9rem;
+  min-height: 88px; padding: 1rem 2.5rem 1rem 1.25rem;
+  text-decoration: none; color: var(--navy);
+  transition: background-color .2s ease;
+}
+.ov-summary-item:hover { background: rgba(196, 163, 107, .1); }
+.ov-summary-item:focus-visible { outline-offset: -3px; border-radius: 0; }
+.ov-summary-value {
+  font-family: var(--serif); font-weight: 600; font-size: 2.5rem; line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums; color: var(--navy);
+}
+.ov-summary-text { display: grid; gap: .1rem; min-width: 0; }
+.ov-summary-label { font-weight: 600; font-size: .9375rem; line-height: 1.3; }
+.ov-summary-hint { font-size: .8125rem; color: var(--ink); line-height: 1.35; }
+.ov-summary-arrow {
+  position: absolute; right: 1rem; top: 50%; translate: 0 -50%;
+  color: var(--gold-dark); opacity: .45; transition: opacity .2s ease, translate .25s var(--ease-out);
+}
+.ov-summary-item:hover .ov-summary-arrow, .ov-summary-item:focus-visible .ov-summary-arrow { opacity: 1; translate: 3px -50%; }
+
+/* Three across: number on top, text below, so labels get the full item width */
+@container ovmain (min-width: 720px) {
+  .ov-summary-item { flex-direction: column; align-items: flex-start; gap: .5rem; padding: 1.1rem 2.5rem 1.1rem 1.25rem; }
+  .ov-summary-arrow { top: 1.4rem; translate: 0 0; }
+  .ov-summary-item:hover .ov-summary-arrow, .ov-summary-item:focus-visible .ov-summary-arrow { translate: 3px 0; }
+}
+@container ovmain (max-width: 719.98px) {
+  .ov-summary-list { grid-template-columns: minmax(0, 1fr); }
+  .ov-summary-list li + li { border-left: 0; border-top: 1px solid var(--rule); }
+  .ov-summary-item { min-height: 72px; padding-block: .75rem; }
+  .ov-summary-value { font-size: 2rem; min-width: 2.2ch; }
+}
+
+/* ---------- Reminders ---------- */
+
+.ov-focus-anchor:focus { outline: none; }
+.ov-focus-anchor:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.ov-rem-list { display: grid; }
+.ov-rem {
+  display: grid; grid-template-columns: 44px 6.5rem minmax(0, 1fr); align-items: center; gap: .25rem .75rem;
+  padding: .35rem 0; border-top: 1px solid var(--rule);
+}
+.ov-rem-list > .ov-rem:first-child { border-top: 0; }
+.ov-rem-toggle {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; cursor: pointer; color: var(--navy);
+}
+.ov-rem-box {
+  width: 24px; height: 24px; display: grid; place-items: center;
+  border: 1.5px solid var(--gold); border-radius: 50%; background: var(--paper);
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.ov-rem-box .ui-icon { opacity: 0; transition: opacity .2s ease; }
+.ov-rem-toggle:hover .ov-rem-box { background: rgba(196, 163, 107, .18); }
+.ov-rem-toggle:hover .ov-rem-box .ui-icon { opacity: .5; }
+.ov-rem-toggle[aria-pressed="true"] .ov-rem-box { background: var(--gold-light); border-color: var(--gold-light); }
+.ov-rem-toggle[aria-pressed="true"] .ov-rem-box .ui-icon { opacity: 1; }
+
+.ov-rem-date { display: grid; line-height: 1.3; }
+.ov-rem-day { font-weight: 600; color: var(--navy); font-size: .9375rem; }
+.ov-rem-rel { font-size: .8125rem; color: var(--ink); }
+.ov-rem.is-late .ov-rem-rel { color: var(--danger); font-weight: 600; }
+.ov-rem-text {
+  display: flex; align-items: center; min-height: 44px; padding: .25rem 0;
+  color: var(--navy); font-weight: 600; text-decoration: none; line-height: 1.4;
+}
+.ov-rem-text:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--gold); }
+
+.ov-rem.is-done .ov-rem-day, .ov-rem.is-done .ov-rem-rel { color: var(--ink); opacity: .75; }
+.ov-rem.is-done .ov-rem-text { color: var(--ink); font-weight: 400; text-decoration: line-through; text-decoration-color: rgba(59, 69, 96, .5); }
+
+.ov-rem-empty { display: flex; align-items: center; gap: .5rem; color: var(--ink); padding: .5rem 0; }
+.ov-rem-empty .ui-icon { color: var(--gold-dark); }
+
+.ov-rem-done { margin-top: .5rem; border-top: 1px solid var(--rule); padding-top: .25rem; }
+.ov-disclosure {
+  display: inline-flex; align-items: center; gap: .4rem;
+  min-height: 44px; padding: 0 .5rem 0 0; border: 0; background: none; cursor: pointer;
+  color: var(--ink); font-weight: 600; font-size: .875rem;
+}
+.ov-disclosure:hover { color: var(--navy); }
+.ov-disclosure-icon { transition: rotate .25s var(--ease-out); }
+.ov-disclosure[aria-expanded="true"] .ov-disclosure-icon { rotate: 90deg; }
+
+@container ovmain (max-width: 520px) {
+  .ov-rem { grid-template-columns: 44px minmax(0, 1fr); align-items: start; padding-block: .5rem; }
+  .ov-rem-toggle { grid-row: span 2; }
+  .ov-rem-date { grid-auto-flow: column; justify-content: start; gap: .5rem; align-items: baseline; padding-top: .55rem; }
+  .ov-rem-text { min-height: 0; padding-top: 0; }
+}
+
+/* ---------- Deliverables ---------- */
+
+.ov-deliv-list { display: grid; gap: 1rem; }
+.ov-deliv {
+  display: grid; gap: 1rem;
+  padding: 1.1rem; border-radius: 12px;
+  background: rgba(255, 253, 248, .7); border: 1px solid var(--rule);
+}
+.ov-deliv-head { display: flex; align-items: center; gap: .85rem; }
+.ov-deliv-title { flex: 1; min-width: 0; }
+.ov-deliv-title h3 { font-size: 1.3rem; }
+.ov-deliv-progress { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .85rem; }
+
+.ov-deliv-next {
+  display: grid; gap: .2rem;
+  padding: .85rem 1rem; border-radius: 12px;
+  background: rgba(196, 163, 107, .1); border-left: 2px solid var(--gold);
+}
+.ov-deliv-next.is-overdue { background: rgba(138, 44, 31, .06); border-left-color: var(--danger); }
+.ov-deliv-next-label { font-size: .8125rem; color: var(--gold-dark); font-weight: 600; }
+.ov-deliv-next.is-overdue .ov-deliv-next-label { color: var(--danger); }
+.ov-deliv-next-text { font-weight: 600; color: var(--navy); }
+.ov-deliv-next-due { font-size: .875rem; color: var(--ink); }
+.ov-overdue-more { color: var(--danger); }
+
+.ov-flag { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; }
+.ov-flag-overdue { color: var(--danger); }
+.ov-flag-soon { color: var(--gold-dark); }
+
+.ov-planned-note { margin-top: 1rem; }
+
+.ov-deliv-alldone { display: flex; align-items: center; gap: .5rem; color: var(--ink); }
+.ov-deliv-alldone .ui-icon { color: var(--gold-dark); }
+
+.ov-arrow-link {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: .4rem; min-height: 44px;
+  color: var(--navy); font-weight: 600; font-size: .9375rem; text-decoration: none;
+}
+.ov-arrow-link .ui-icon { color: var(--gold-dark); transition: translate .25s var(--ease-out); }
+.ov-arrow-link:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--gold); }
+.ov-arrow-link:hover .ui-icon { translate: 3px 0; }
+
+/* ---------- Suggestions ---------- */
+
+.ov-sugg-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+/* Three cards side by side only when each card has room for a two-word name on one line */
+@container ovmain (min-width: 900px) {
+  .ov-sugg-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.ov-sugg {
+  position: relative;
+  display: flex; flex-direction: column; gap: .5rem;
+  padding: 1.1rem; border-radius: 12px;
+  background: rgba(255, 253, 248, .7); border: 1px solid var(--rule);
+  transition: border-color .2s ease, box-shadow .25s ease, translate .3s var(--ease-out);
+}
+.ov-sugg:hover { border-color: var(--gold); box-shadow: 0 14px 30px -22px rgba(11, 24, 48, .45); }
+.motion .ov-sugg:hover { translate: 0 -2px; }
+.ov-sugg-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .25rem; }
+.ov-sugg-name { font-size: 1.25rem; }
+.ov-sugg-link { text-decoration: none; color: inherit; }
+.ov-sugg-link::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+.ov-sugg-link:focus-visible { outline: none; }
+.ov-sugg-link:focus-visible::after { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ov-sugg-saved { margin-top: -.15rem; }
+.ov-sugg .ui-criteria { margin-top: auto; padding-top: .5rem; }
+
+/* One column on medium and desktop widths: avatar and score beside the text instead of stacked */
+@container ovmain (min-width: 480px) and (max-width: 899.98px) {
+  .ov-sugg {
+    display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; column-gap: 1rem; row-gap: .35rem;
+    align-items: start;
+  }
+  .ov-sugg-top { display: contents; }
+  .ov-sugg-top > .ui-avatar { grid-column: 1; grid-row: 1 / span 4; }
+  .ov-sugg-top > .ov-sugg-score { grid-column: 3; grid-row: 1; }
+  .ov-sugg > :not(.ov-sugg-top) { grid-column: 2; }
+  .ov-sugg .ui-criteria { grid-column: 2 / span 2; margin-top: 0; padding-top: .25rem; }
+}
+
+/* ---------- Profile checklist ---------- */
+
+.ov-profile-meter { display: grid; gap: .5rem; }
+.ov-profile-meter p { color: var(--ink); font-size: .9375rem; }
+.ov-profile-meter strong { color: var(--navy); font-weight: 600; }
+.ov-profile-note { margin: .75rem 0 .5rem; }
+.ov-profile-done { display: flex; align-items: center; gap: .65rem; color: var(--navy); font-size: .9375rem; }
+.ov-profile-done strong { font-weight: 600; }
+.ov-profile-done .ov-check-mark { flex: none; background: var(--gold-light); color: var(--navy); }
+.ov-profile .ov-profile-done + .ov-profile-note { margin-bottom: 1rem; }
+
+.ov-check-list { display: grid; margin-bottom: 1rem; }
+.ov-check-list li { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: center; gap: .75rem; border-top: 1px solid var(--rule); }
+.ov-check-list li:first-child { border-top: 0; }
+.ov-check-mark { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.ov-check-list .is-done .ov-check-mark { background: var(--gold-light); color: var(--navy); }
+.ov-check-list .is-open .ov-check-mark { border: 1.5px dashed var(--gold); }
+.ov-check-body {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: .5rem;
+  min-height: 52px; padding: .45rem 0;
+}
+.ov-check-label { grid-column: 1; font-weight: 600; color: var(--navy); font-size: .9375rem; line-height: 1.35; }
+.ov-check-detail { grid-column: 1; font-size: .8125rem; color: var(--ink); line-height: 1.35; }
+.ov-check-link { text-decoration: none; }
+.ov-check-link .ui-icon { grid-column: 2; grid-row: 1 / span 2; color: var(--gold-dark); }
+.ov-check-link:hover .ov-check-label { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--gold); }
+
+/* ---------- KI-Manager (dark) ---------- */
+
+.ov-ai-title { display: inline-flex; align-items: center; gap: .5rem; }
+.ov-ai-title .ui-icon { color: var(--gold-light); }
+.ov-ai-count { display: flex; align-items: baseline; gap: .6rem; color: var(--ivory); font-weight: 600; line-height: 1.35; }
+.ov-ai-num { font-family: var(--serif); font-weight: 600; font-size: 2.5rem; line-height: 1; color: var(--gold-light); font-variant-numeric: lining-nums; }
+.ov-ai-draft {
+  margin: 1rem 0; padding: .9rem 1rem; border-radius: 12px;
+  background: rgba(11, 24, 48, .45); border: 1px solid var(--card-dark-line);
+  display: grid; gap: .3rem;
+}
+.ov-ai-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; font-size: .8125rem; color: var(--steel); line-height: 1.4; }
+.ov-ai-type {
+  display: inline-block; padding: .05rem .5rem; border-radius: 999px;
+  border: 1px solid rgba(196, 163, 107, .5); color: var(--gold-light); font-weight: 600;
+}
+.ov-ai-subject { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; line-height: 1.25; color: var(--ivory); }
+.ov-ai-btn { width: 100%; }
+.ov-ai-all {
+  display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: .25rem;
+  color: var(--gold-light); font-weight: 600; font-size: .875rem;
+  text-decoration: underline; text-decoration-color: rgba(196, 163, 107, .4); text-underline-offset: 4px;
+}
+.ov-ai-all:hover { text-decoration-color: currentColor; }
+.ov-ai-note {
+  display: flex; gap: .5rem; align-items: flex-start;
+  margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--card-dark-line);
+  font-size: .8125rem; line-height: 1.5; color: var(--steel);
+}
+.ov-ai-note .ui-icon { margin-top: .2rem; color: var(--gold-light); }

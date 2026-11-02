@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { cta, hero } from '../content';
+import { cta, demo, hero } from '../content';
 import { finePointer, gsap, motionEnabled, useGSAP } from '../lib/motion';
 import { useMagnetic } from '../hooks/usePointerFx';
 import { MatchCard, type MatchHandle } from './MatchCard';
@@ -69,9 +69,9 @@ export function Hero() {
           <p className="hero-lead" data-intro="">{hero.lead}</p>
           <div className="hero-actions" data-intro="">
             <a className="btn btn-gold btn-shine btn-lg" href="#warteliste" ref={ctaRef}>{cta.waitlist}</a>
-            <a className="btn btn-ghost btn-lg" href="#ablauf">{hero.secondary}</a>
+            <a className="btn btn-ghost btn-lg" href={demo.href}>{demo.hero}</a>
           </div>
-          <p className="hero-note" data-intro="">{hero.note}</p>
+          <p className="hero-note" data-intro="">{hero.note} {demo.heroNote}</p>
         </div>
         <MatchCard ref={matchRef} />
       </div>

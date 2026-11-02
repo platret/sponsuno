@@ -1,6 +1,6 @@
 // Shared UI kit of the demo. Styles in demo.css (classes prefixed "ui-"). Views compose these;
 // add a new primitive here only if two or more views need it.
-import { createContext, useCallback, useContext, useId, useRef, useState, type ButtonHTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useId, useRef, useState, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import { initials, statusLabel } from './format';
 import type { Criterion, PartnershipStatus } from './types';
 
@@ -62,7 +62,12 @@ export function Button({ variant = 'navy', size = 'md', icon, href, className, c
       {children && <span>{children}</span>}
     </>
   );
-  if (href) return <a className={cls} href={href} aria-label={rest['aria-label']}>{inner}</a>;
+  if (href) {
+    // Forward attributes that make sense on a link (aria-*, id, title, onClick); drop button-only ones
+    const { disabled: _disabled, form: _form, formAction: _formAction, name: _name, value: _value, ...linkProps } = rest;
+    void _disabled; void _form; void _formAction; void _name; void _value;
+    return <a className={cls} href={href} {...(linkProps as AnchorHTMLAttributes<HTMLAnchorElement>)}>{inner}</a>;
+  }
   return <button type={type} className={cls} {...rest}>{inner}</button>;
 }
 
@@ -112,14 +117,14 @@ export function EmptyState({ title, text, action }: { title: string; text?: stri
 
 /* ---------- Data display ---------- */
 
-type Tone = 'neutral' | 'gold' | 'navy' | 'success' | 'muted';
+type Tone = 'neutral' | 'gold' | 'navy' | 'success' | 'muted' | 'danger';
 
 export function Badge({ tone = 'neutral', children }: { tone?: Tone; children: ReactNode }) {
   return <span className={`ui-badge ui-badge-${tone}`}>{children}</span>;
 }
 
 const STATUS_TONE: Record<PartnershipStatus, Tone> = {
-  anfrage: 'gold', gespraech: 'gold', vereinbart: 'navy', aktiv: 'success', abgeschlossen: 'muted',
+  anfrage: 'gold', gespraech: 'gold', vereinbart: 'navy', aktiv: 'success', abgeschlossen: 'muted', abgesagt: 'muted',
 };
 
 export function StatusBadge({ status }: { status: PartnershipStatus }) {
@@ -166,24 +171,38 @@ export function CriteriaList({ criteria, compact = false }: { criteria: Criterio
 /** "3 von 4" with four dots. */
 export function ScoreBadge({ score }: { score: number }) {
   return (
-    <span className="ui-score" aria-label={`Passt in ${score} von 4 Punkten`}>
+    <span className="ui-score">
       <span className="ui-score-dots" aria-hidden="true">
         {[0, 1, 2, 3].map((i) => <span key={i} className={i < score ? 'is-on' : undefined} />)}
       </span>
       <span aria-hidden="true">{score} von 4</span>
+      <span className="visually-hidden">Passt in {score} von 4 Kriterien</span>
     </span>
   );
 }
 
 /* ---------- Navigation within a view ---------- */
 
-export function Tabs<T extends string>({ items, value, onChange, label }: {
-  items: { value: T; label: string; count?: number }[]; value: T; onChange: (v: T) => void; label: string;
+/** Ids that connect a tab with its panel. Pass the same idBase to Tabs and TabPanel. */
+const tabId = (idBase: string, value: string) => `${idBase}-tab-${value}`;
+const panelId = (idBase: string) => `${idBase}-panel`;
+
+export function Tabs<T extends string>({ items, value, onChange, label, idBase }: {
+  /** countLabel: hidden context for the number, e.g. "Vorschläge" → read as "6 Vorschläge". */
+  items: { value: T; label: string; count?: number; countLabel?: string }[]; value: T; onChange: (v: T) => void; label: string;
+  /** Links each tab to the TabPanel with the same idBase (aria-controls / aria-labelledby). */
+  idBase?: string;
 }) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const onKey = (e: KeyboardEvent, i: number) => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + items.length) % items.length;
+    const last = items.length - 1;
+    const next = e.key === 'ArrowRight' ? (i + 1) % items.length
+      : e.key === 'ArrowLeft' ? (i - 1 + items.length) % items.length
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : -1;
+    if (next < 0) return;
+    e.preventDefault();
     onChange(items[next].value);
     refs.current[next]?.focus();
   };
@@ -195,6 +214,8 @@ export function Tabs<T extends string>({ items, value, onChange, label }: {
           ref={(el) => { refs.current[i] = el; }}
           role="tab"
           type="button"
+          id={idBase ? tabId(idBase, item.value) : undefined}
+          aria-controls={idBase ? panelId(idBase) : undefined}
           aria-selected={item.value === value}
           tabIndex={item.value === value ? 0 : -1}
           className="ui-tab"
@@ -202,21 +223,33 @@ export function Tabs<T extends string>({ items, value, onChange, label }: {
           onKeyDown={(e) => onKey(e, i)}
         >
           {item.label}
-          {item.count !== undefined && <span className="ui-tab-count">{item.count}</span>}
+          {item.count !== undefined && (
+            <span className="ui-tab-count">{item.count}{item.countLabel && <span className="visually-hidden"> {item.countLabel}</span>}</span>
+          )}
         </button>
       ))}
     </div>
   );
 }
 
+/** The panel of a Tabs group, labelled by the selected tab. */
+export function TabPanel({ idBase, value, className, children }: { idBase: string; value: string; className?: string; children: ReactNode }) {
+  return (
+    <div role="tabpanel" id={panelId(idBase)} aria-labelledby={tabId(idBase, value)} className={className}>
+      {children}
+    </div>
+  );
+}
+
 /* ---------- Form fields ---------- */
 
+/** The hint gets the id `${htmlFor}-hint`; link it from the input with aria-describedby. */
 export function Field({ label, hint, children, htmlFor }: { label: string; hint?: string; children: ReactNode; htmlFor: string }) {
   return (
     <div className="ui-field">
       <label htmlFor={htmlFor}>{label}</label>
       {children}
-      {hint && <p className="ui-field-hint">{hint}</p>}
+      {hint && <p className="ui-field-hint" id={`${htmlFor}-hint`}>{hint}</p>}
     </div>
   );
 }

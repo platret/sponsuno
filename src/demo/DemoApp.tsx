@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import logoDark from '../assets/Sponsuno_Logo_dunkel.svg';
-import photo from '../assets/symbolbild-mtb-192.jpg';
 import { href, navigate, useRoute, type RouteName } from './router';
 import { useDemo } from './store';
-import { Avatar, Button, Icon, useToast, type IconName } from './ui';
-import { kindLabel } from './format';
+import { Avatar, Icon, useToast, type IconName } from './ui';
+import { profileKindLabel } from './format';
 import type { Role } from './types';
 import Overview from './views/Overview';
 import Matches from './views/Matches';
@@ -13,12 +12,13 @@ import Assistant from './views/Assistant';
 import Profile from './views/Profile';
 import SponsorCockpit from './views/SponsorCockpit';
 
-interface NavItem { route: RouteName; label: string; icon: IconName }
+/** short: label in the mobile tab bar, where five tabs share one row. */
+interface NavItem { route: RouteName; label: string; short?: string; icon: IconName }
 
 const NAV: Record<Role, NavItem[]> = {
   seeker: [
     { route: 'uebersicht', label: 'Übersicht', icon: 'home' },
-    { route: 'partner', label: 'Passende Partner', icon: 'match' },
+    { route: 'partner', label: 'Passende Partner', short: 'Vorschläge', icon: 'match' },
     { route: 'partnerschaften', label: 'Partnerschaften', icon: 'handshake' },
     { route: 'ki-manager', label: 'KI-Manager', icon: 'sparkles' },
     { route: 'profil', label: 'Profil', icon: 'user' },
@@ -30,6 +30,24 @@ const NAV: Record<Role, NavItem[]> = {
 };
 
 const HOME: Record<Role, RouteName> = { seeker: 'uebersicht', sponsor: 'sponsor' };
+
+const ROLES: { role: Role; label: string }[] = [
+  { role: 'seeker', label: 'Sportlerin' },
+  { role: 'sponsor', label: 'Sponsor' },
+];
+
+/** Perspective switch: two toggle buttons (sidebar on wide screens, above the view on narrow ones). */
+function RoleSwitch({ role, onChange, className }: { role: Role; onChange: (r: Role) => void; className?: string }) {
+  return (
+    <div className={`demo-role${className ? ` ${className}` : ''}`} role="group" aria-label="Ansicht wählen">
+      {ROLES.map((r) => (
+        <button key={r.role} type="button" aria-pressed={role === r.role} className="demo-role-btn" onClick={() => onChange(r.role)}>
+          {r.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 const TITLES: Record<RouteName, string> = {
   uebersicht: 'Übersicht',
@@ -47,6 +65,14 @@ export default function DemoApp() {
   const mainRef = useRef<HTMLElement>(null);
   const [confirmReset, setConfirmReset] = useState(false);
   const firstRender = useRef(true);
+
+  // The URL decides the perspective: seeker-only views switch to the seeker role, the cockpit to the sponsor role.
+  // Partnerschaften is shared and keeps the current role.
+  useEffect(() => {
+    const seekerOnly: RouteName[] = ['uebersicht', 'partner', 'ki-manager', 'profil'];
+    if (seekerOnly.includes(route.name) && state.role !== 'seeker') dispatch({ type: 'setRole', role: 'seeker' });
+    if (route.name === 'sponsor' && state.role !== 'sponsor') dispatch({ type: 'setRole', role: 'sponsor' });
+  }, [route.name, state.role, dispatch]);
 
   // Empty hash: open the home view of the current role
   useEffect(() => {
@@ -93,37 +119,27 @@ export default function DemoApp() {
     <div className="demo">
       <a className="skip-link" href="#demo-main" onClick={(e) => { e.preventDefault(); mainRef.current?.focus(); }}>Zum Inhalt springen</a>
 
-      <div className="demo-banner" role="note">
-        <p><strong>Demo mit fiktiven Daten.</strong> So soll Sponsuno funktionieren. Ihre Änderungen bleiben nur in diesem Browser, nichts wird gesendet.</p>
-        <div className="demo-banner-actions">
-          <button type="button" className="demo-banner-btn" onClick={reset} onBlur={() => setConfirmReset(false)}>
-            <Icon name="reset" size={16} />{confirmReset ? 'Wirklich zurücksetzen?' : 'Demo zurücksetzen'}
-          </button>
-          <a className="demo-banner-btn" href="../"><Icon name="arrowLeft" size={16} />Zur Startseite</a>
-        </div>
-      </div>
-
       <div className="demo-body">
+        <div className="demo-banner" role="note">
+          <p><strong>Demo mit fiktiven Daten.</strong><span className="demo-banner-more"> So soll Sponsuno funktionieren. Ihre Änderungen bleiben nur in diesem Browser, nichts wird gesendet.</span></p>
+          <div className="demo-banner-actions">
+            <button type="button" className="demo-banner-btn" onClick={reset} onBlur={() => setConfirmReset(false)}>
+              <Icon name="reset" size={16} />
+              {confirmReset
+                ? <span>Wirklich zurücksetzen?</span>
+                : <><span className="demo-banner-more">Demo zurücksetzen</span><span className="demo-banner-short">Zurücksetzen</span></>}
+            </button>
+            <a className="demo-banner-btn" href="../"><Icon name="arrowLeft" size={16} /><span>Startseite</span></a>
+          </div>
+        </div>
+
         <aside className="demo-sidebar" aria-label="Demo-Navigation">
           <a className="demo-brand" href={href(HOME[state.role])} aria-label="Sponsuno Demo, Startansicht">
             <img src={logoDark} alt="Sponsuno" width={132} height={31} />
             <span className="demo-brand-tag">Demo</span>
           </a>
 
-          <div className="demo-role" role="radiogroup" aria-label="Ansicht wählen">
-            {(['seeker', 'sponsor'] as Role[]).map((r) => (
-              <button
-                key={r}
-                type="button"
-                role="radio"
-                aria-checked={state.role === r}
-                className="demo-role-btn"
-                onClick={() => switchRole(r)}
-              >
-                {r === 'seeker' ? 'Sportlerin' : 'Sponsor'}
-              </button>
-            ))}
-          </div>
+          <RoleSwitch role={state.role} onChange={switchRole} />
 
           <nav aria-label="Hauptbereiche">
             <ul className="demo-nav">
@@ -140,14 +156,19 @@ export default function DemoApp() {
 
           <div className="demo-account">
             {state.role === 'seeker'
-              ? <Avatar name={seeker.name} src={seeker.id === 'lea' ? photo : undefined} size={40} />
+              ? <Avatar name={seeker.name} size={40} />
               : <Avatar name={sponsor.name} tone="gold" size={40} />}
             <div>
               <p className="demo-account-name">{state.role === 'seeker' ? seeker.name : sponsor.name}</p>
-              <p className="demo-account-role">{state.role === 'seeker' ? kindLabel[seeker.kind] : sponsor.industry}</p>
+              <p className="demo-account-role">{state.role === 'seeker' ? profileKindLabel(seeker) : sponsor.industry}</p>
             </div>
           </div>
         </aside>
+
+        <div className="demo-mobile-role">
+          <span className="demo-mobile-role-label" aria-hidden="true">Ansicht</span>
+          <RoleSwitch role={state.role} onChange={switchRole} className="demo-role-light" />
+        </div>
 
         <main className="demo-main" id="demo-main" ref={mainRef} tabIndex={-1}>
           {view}
@@ -158,12 +179,9 @@ export default function DemoApp() {
         {nav.map((item) => (
           <a key={item.route} href={href(item.route)} className={isActive(item) ? 'is-active' : undefined} aria-current={isActive(item) ? 'page' : undefined}>
             <Icon name={item.icon} />
-            <span>{item.label}</span>
+            <span>{item.short ?? item.label}</span>
           </a>
         ))}
-        <Button variant="quiet" size="sm" className="demo-tabbar-role" onClick={() => switchRole(state.role === 'seeker' ? 'sponsor' : 'seeker')}>
-          {state.role === 'seeker' ? 'Als Sponsor' : 'Als Sportlerin'}
-        </Button>
       </nav>
     </div>
   );

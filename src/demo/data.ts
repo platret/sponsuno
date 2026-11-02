@@ -20,6 +20,7 @@ export const seekers: SeekerProfile[] = [
   {
     id: 'lea',
     kind: 'athlete',
+    athleteLabel: 'Sportlerin',
     name: 'Lea Keller',
     discipline: 'Langstrecken-Mountainbike',
     region: 'Zürcher Oberland',
@@ -36,6 +37,7 @@ export const seekers: SeekerProfile[] = [
   {
     id: 'marco',
     kind: 'athlete',
+    athleteLabel: 'Sportler',
     name: 'Marco Frei',
     discipline: 'Triathlon',
     region: 'Winterthur',
@@ -52,6 +54,7 @@ export const seekers: SeekerProfile[] = [
   {
     id: 'beach',
     kind: 'athlete',
+    athleteLabel: 'Zweierteam',
     name: 'Beachvolleyball-Duo Seefeld',
     discipline: 'Beachvolleyball',
     region: 'Zürich',
@@ -201,6 +204,18 @@ export const sponsors: Sponsor[] = [
     contact: 'Praxisleiterin',
   },
   {
+    id: 'mosterei',
+    name: 'Mosterei Hügelland',
+    industry: 'Ernährung',
+    region: 'Zürcher Oberland',
+    about: 'Mosterei mit Hofladen. Möchte Apfelschorle und Riegel an Ausdauersportlerinnen und -sportler aus der Region abgeben.',
+    offers: ['Material', 'Geld'],
+    budget: { min: 1000, max: 4000 },
+    goals: ['Produkte bei Sportanlässen zeigen', 'Bekanntheit in der Region'],
+    interests: ['Mountainbike', 'Laufsport', 'Blasmusik'],
+    contact: 'Betriebsleiterin',
+  },
+  {
     id: 'alpin',
     name: 'Outdoor-Ausrüster Alpin',
     industry: 'Velo und Outdoor',
@@ -232,12 +247,15 @@ export function matchFor(seeker: SeekerProfile, sponsor: Sponsor): MatchResult {
     {
       key: 'region', label: 'Region',
       state: sameRegion ? 'match' : nearRegion ? 'partial' : 'miss',
-      detail: sameRegion ? `Beide im ${sponsor.region}` : nearRegion ? `${sponsor.region}, in der Nähe` : `${sponsor.region}, weiter entfernt`,
+      detail: sameRegion ? `Beide in der Region ${sponsor.region}` : nearRegion ? `${sponsor.region}, in der Nähe` : `${sponsor.region}, weiter entfernt`,
     },
     {
       key: 'support', label: 'Unterstützungsart',
-      state: covered.length === seeker.needs.length ? 'match' : covered.length > 0 ? 'partial' : 'miss',
-      detail: covered.length > 0 ? `Bietet ${covered.join(' und ')}` : `Bietet ${sponsor.offers.join(' und ')}`,
+      // Without any wished support there is nothing to cover: never a match
+      state: seeker.needs.length === 0 ? 'miss' : covered.length === seeker.needs.length ? 'match' : covered.length > 0 ? 'partial' : 'miss',
+      detail: seeker.needs.length === 0
+        ? 'Keine Unterstützungsart im Profil gewählt'
+        : covered.length > 0 ? `Bietet ${covered.join(' und ')}` : `Bietet ${sponsor.offers.join(' und ')}`,
     },
     {
       key: 'industry', label: 'Branche',
@@ -345,7 +363,7 @@ export function initialState(): DemoState {
         type: 'verlaengerung',
         sponsorId: 'velo',
         subject: 'Verlängerung unserer Partnerschaft für 2027',
-        body: 'Guten Tag\n\nUnsere Partnerschaft endet am 14. Dezember. Die Saison 2026 war für mich ein Erfolg: Die Reifen haben bei allen zwölf Rennen gehalten, und die drei Beiträge auf Instagram haben gute Rückmeldungen bekommen.\n\nGerne würde ich die Zusammenarbeit für 2027 verlängern und dabei mehr Bilder aus den Rennen liefern, wie Sie es sich gewünscht haben. Hätten Sie in den nächsten zwei Wochen Zeit für ein kurzes Gespräch?\n\nFreundliche Grüsse\nLea Keller',
+        body: 'Guten Tag\n\nUnsere Partnerschaft endet am 14. Dezember. Die Saison 2026 war für mich ein Erfolg: Die Reifen haben bei allen zwölf Rennen gehalten, und die beiden bisherigen Beiträge auf Instagram haben gute Rückmeldungen bekommen. Der dritte folgt im November.\n\nGerne würde ich die Zusammenarbeit für 2027 verlängern und dabei mehr Bilder aus den Rennen liefern, wie Sie es sich gewünscht haben. Hätten Sie in den nächsten zwei Wochen Zeit für ein kurzes Gespräch?\n\nFreundliche Grüsse\nLea Keller',
         status: 'entwurf',
         updatedAt: '2026-11-02T08:30:00',
       },
@@ -369,10 +387,11 @@ export function initialState(): DemoState {
       },
     ],
     reminders: [
-      { id: 'r1', date: '2026-11-06', text: 'Gespräch mit der Physiotherapie Seeblick vorbereiten', href: '#/partnerschaften/p2', done: false },
-      { id: 'r2', date: '2026-11-20', text: 'Dritter Beitrag auf Instagram für das Velogeschäft', href: '#/partnerschaften/p1', done: false },
-      { id: 'r3', date: '2026-11-28', text: 'Firmenanlass beim Velogeschäft Oberland', href: '#/partnerschaften/p1', done: false },
-      { id: 'r4', date: '2026-12-10', text: 'Gemeinsame Bilanz mit dem Velogeschäft', href: '#/partnerschaften/p1', done: false },
+      // Linked to the partnership data (see syncReminders in store.tsx), so ticking one side updates the other
+      { id: 'r1', date: '2026-11-06', text: 'Gespräch mit der Physiotherapie Seeblick vorbereiten', href: '#/partnerschaften/p2', done: false, partnershipId: 'p2', openWhile: ['anfrage', 'gespraech'] },
+      { id: 'r2', date: '2026-11-20', text: 'Dritter Beitrag auf Instagram für das Velogeschäft', href: '#/partnerschaften/p1', done: false, partnershipId: 'p1', deliverableId: 'p1-d5' },
+      { id: 'r3', date: '2026-11-28', text: 'Firmenanlass beim Velogeschäft Oberland', href: '#/partnerschaften/p1', done: false, partnershipId: 'p1', deliverableId: 'p1-d6' },
+      { id: 'r4', date: '2026-12-10', text: 'Gemeinsame Bilanz mit dem Velogeschäft', href: '#/partnerschaften/p1', done: false, partnershipId: 'p1', openWhile: ['vereinbart', 'aktiv'] },
     ],
   };
 }
