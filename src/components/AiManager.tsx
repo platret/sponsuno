@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import icon from '../assets/Sponsuno_Icon.svg';
-import { aiManager } from '../content';
+import { aiManager, demo } from '../content';
 import { gsap, motionEnabled, ScrollTrigger, useGSAP } from '../lib/motion';
 import { SplitHeading } from './SplitHeading';
 
@@ -120,7 +120,9 @@ export function AiManager() {
               </div>
             </div>
           </div>
-          <figcaption id="assistant-caption" className="assistant-caption">{aiManager.caption}</figcaption>
+          <figcaption id="assistant-caption" className="assistant-caption">
+            {aiManager.caption} <a href={`${demo.href}#/ki-manager`}>{demo.aiLink}</a>
+          </figcaption>
         </figure>
       </div>
     </section>

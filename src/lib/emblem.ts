@@ -2,9 +2,9 @@
 // straight from the logo SVG, lit with a studio environment, with drifting gold dust.
 // This module pulls in Three.js; import it dynamically so it lands in its own chunk.
 import {
-  ACESFilmicToneMapping, AdditiveBlending, BufferAttribute, BufferGeometry, CanvasTexture, Clock,
+  ACESFilmicToneMapping, AdditiveBlending, BufferAttribute, BufferGeometry, CanvasTexture,
   DirectionalLight, ExtrudeGeometry, Group, Mesh, MeshPhysicalMaterial, PerspectiveCamera, PMREMGenerator,
-  PointLight, Points, PointsMaterial, Scene, type ShapePath, SpotLight, SRGBColorSpace, WebGLRenderer,
+  PointLight, Points, PointsMaterial, Scene, type ShapePath, SpotLight, SRGBColorSpace, Timer, WebGLRenderer,
 } from 'three';
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -62,7 +62,7 @@ export function mountEmblem(host: HTMLElement, { reduceMotion }: EmblemOptions):
   emblem.add(flip);
 
   const extrude = (path: ShapePath, depth: number, bevel: number, sizeRatio = 0.7) =>
-    new ExtrudeGeometry(SVGLoader.createShapes(path), {
+    new ExtrudeGeometry(path.toShapes(), {
       depth, curveSegments: 24,
       bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * sizeRatio, bevelSegments: 5,
     });
@@ -195,11 +195,12 @@ export function mountEmblem(host: HTMLElement, { reduceMotion }: EmblemOptions):
   };
   document.addEventListener(JOINED_EVENT, onJoined);
 
-  const clock = new Clock();
+  const timer = new Timer();
   let visible = false;
   let raf = 0;
   const loop = () => {
-    const t = clock.getElapsedTime();
+    timer.update();
+    const t = timer.getElapsed();
     const rect = host.getBoundingClientRect();
     const scrollT = 1 - (rect.top + rect.height / 2) / window.innerHeight;
 

@@ -34,7 +34,7 @@ Rules:
 - Body text: `--ink` on light, `--steel` or `--ivory` on navy, `--navy` on gold.
 - Gold text on light only in `--gold-dark`. On navy use `--gold-light`.
 - Gradients run diagonally (135°): dark `#0B1830 → #1D2F52`, light `#F3EFE6 → #B9BFCB`, gold `#B08D57 → #D5BF93`.
-- No colours outside this table, except these documented ones: `#F2C5B5` for form error text on navy (`.form-error`, legible where CD reds are not defined), and the shader-only tones `#071022` (navy shade) and `#BC9A63` (gold silk base) in `src/lib/silk.ts`. Anything else new needs to go into the CD first.
+- No colours outside this table, except these documented ones: `#F2C5B5` for form error text on navy (`.form-error`, legible where CD reds are not defined), and the shader-only tones `#071022` (navy shade) and `#BC9A63` (gold silk base) in `src/lib/silk.ts`. The demo adds a status green (`#E3EDE4` background, `#2E5A36` text), a red (`#8A2C1F`, token `--danger`: overdue items and delete actions, `.ui-badge-danger`) and two near-ivory surfaces (`#F7F4EC` card gradient end, `#FFFDF8` input background), all in `src/demo/demo.css`. Anything else new needs to go into the CD first.
 
 ## Typography
 
@@ -114,6 +114,19 @@ Inventory (do not add without removing something):
 - Footer wordmark rises with scroll, "uno" sheen, cursor spotlight.
 
 Reduced motion (`html` without `.motion`): no smooth scrolling, shaders render one still frame, the match shows its final state, no reveals, no marquee, emblem is a still render.
+
+## Demo app
+
+The demo (`/sponsuno/demo/`) uses the same tokens (`src/styles/tokens.css`) in an app layout:
+
+- Shell: navy sidebar (268 px, full height) with the role switch and navigation; the gold banner ("Demo mit fiktiven Daten") sits on top of the ivory content column (max 1180 px). Below 900 px the sidebar becomes a navy bottom tab bar, the role switch moves into a row above the view, and toasts appear at the top.
+- Active navigation: gold-light icon, faint gold background, a 2 px gold inset line on the left.
+- Cards: same light and dark card styles as the landing page, smaller padding (1.1–1.5 rem). Headings in Cormorant, body in Manrope 1 rem.
+- Match criteria always appear in the same order with the same marks: gold check (passt), half circle (teilweise), muted cross (passt nicht), each with a text equivalent.
+- Status badges: Anfrage and Im Gespräch gold, Vereinbart navy, Aktiv green (`#E3EDE4` / `#2E5A36`, demo only), Abgeschlossen and Abgesagt muted.
+- Avatars: sponsors use the gold monogram, athletes and clubs the navy one. The AI-generated persona photo appears only where it is labelled "KI-generiertes Symbolbild".
+- Selected tabs are navy with ivory text; form fields have a navy focus border plus the standard focus outline.
+- Kit classes are prefixed `ui-`; each view prefixes its own classes (`ov-`, `mt-`, `ps-`, `as-`, `pf-`, `sp-`).
 
 ## Imagery
 

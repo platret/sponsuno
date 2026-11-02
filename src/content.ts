@@ -16,12 +16,20 @@ export const cta = {
   waitlistShort: 'Warteliste',
 };
 
+// Clickable prototype with fictional data (second Vite entry, /demo/)
+export const demo = {
+  href: 'demo/',
+  nav: 'Demo',
+  hero: 'Demo ansehen',
+  heroNote: 'Klickbarer Prototyp mit fiktiven Daten.',
+  aiLink: 'In der Demo ansehen',
+};
+
 export const hero = {
   kicker: 'Im Aufbau. Start in der Deutschschweiz.',
   // The soft hyphen (\u00AD) lets "zusammenpasst" break cleanly on narrow screens
   title: 'Sponsoring, das zusammen\u00ADpasst.',
   lead: 'Sponsuno bringt Sportlerinnen und Sportler, Sport- und Kulturvereine mit Firmen aus ihrer Region zusammen. Ein persönlicher KI-Manager hilft danach bei Anfragen, Terminen und Gegenleistungen.',
-  secondary: 'So funktioniert es',
   note: 'Geplant ist eine Provision für erfolgreiche Vermittlungen, kein Abo.',
 };
 
@@ -236,6 +244,7 @@ export const footer = {
         { href: '#fuer-wen', label: 'Für wen' },
         { href: '#ki-manager', label: 'KI-Manager' },
         { href: '#kosten', label: 'Kosten' },
+        { href: 'demo/', label: 'Demo' },
       ],
     },
     {
