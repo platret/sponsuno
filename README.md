@@ -10,11 +10,12 @@
   <img src="https://img.shields.io/badge/Start-Deutschschweiz-B08D57?style=for-the-badge&labelColor=0B1830" alt="Start: Deutschschweiz">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/HTML%20%C2%B7%20CSS%20%C2%B7%20JS-kein%20Build-F3EFE6?style=flat-square&labelColor=1D2F52" alt="HTML, CSS, JS ohne Build-Schritt">
+  <img src="https://img.shields.io/badge/React-19-F3EFE6?style=flat-square&labelColor=1D2F52" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-strict-F3EFE6?style=flat-square&labelColor=1D2F52" alt="TypeScript strict">
+  <img src="https://img.shields.io/badge/Vite-6-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Vite 6">
   <img src="https://img.shields.io/badge/WebGL-eigener%20Shader-F3EFE6?style=flat-square&labelColor=1D2F52" alt="WebGL-Shader">
-  <img src="https://img.shields.io/badge/Three.js-r160-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Three.js r160">
-  <img src="https://img.shields.io/badge/GSAP-3.12-F3EFE6?style=flat-square&labelColor=1D2F52" alt="GSAP 3.12">
-  <img src="https://img.shields.io/badge/Lenis-1.1-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Lenis 1.1">
+  <img src="https://img.shields.io/badge/Three.js-r187-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Three.js r187">
+  <img src="https://img.shields.io/badge/GSAP-3.15-F3EFE6?style=flat-square&labelColor=1D2F52" alt="GSAP 3.15">
 </p>
 
 <p align="center">
@@ -103,20 +104,21 @@ Eine Mountainbikerin aus dem Zürcher Oberland sucht Material, ein Velogeschäft
 
 ## Technik
 
-Kein Framework, kein Build-Schritt. Drei Skripte, ein Stylesheet, alle Bibliotheken mit fester Version vom CDN.
+Vite, React 19 und TypeScript im Strict-Modus. Die Seite wird beim Build vorgerendert, damit Inhalt und Suchmaschinen nicht auf JavaScript warten müssen; React übernimmt danach im Browser. Alle Texte stehen typisiert in [`src/content.ts`](src/content.ts).
 
 | Teil | Umsetzung |
 | --- | --- |
-| Seiden-Shader | Eigener WebGL-Fragment-Shader mit Domain-Warping ([`js/silk.js`](js/silk.js)). Rendert mit 42 bis 60 % der Auflösung, pausiert ausserhalb des Sichtfelds und in Hintergrund-Tabs. |
-| 3D-Emblem | Three.js r160, Logo-SVG per `SVGLoader` extrudiert, Studio-Licht über `RoomEnvironment` ([`js/emblem.js`](js/emblem.js)). Wird erst geladen, wenn man in die Nähe scrollt (rund 132 KB). |
-| Scroll-Choreografie | GSAP 3.12 mit ScrollTrigger, sanftes Scrollen mit Lenis ([`js/main.js`](js/main.js)). |
-| Hero-Match | SVG-Pfad mit `stroke-dashoffset`, der Funke folgt `getPointAtLength`. Jedes Kriterium hakt ab, wenn der Faden seine Zeile erreicht. |
+| Seiden-Shader | Eigener WebGL-Fragment-Shader mit Domain-Warping ([`src/lib/silk.ts`](src/lib/silk.ts)). Rendert mit 42 bis 60 % der Auflösung, pausiert ausserhalb des Sichtfelds und in Hintergrund-Tabs. |
+| 3D-Emblem | Three.js, Logo-SVG per `SVGLoader` extrudiert, Studio-Licht über `RoomEnvironment` ([`src/lib/emblem.ts`](src/lib/emblem.ts)). Eigener Chunk, wird erst geladen, wenn man in die Nähe scrollt. |
+| Scroll-Choreografie | GSAP mit ScrollTrigger und `useGSAP`, sanftes Scrollen mit Lenis ([`src/lib/motion.ts`](src/lib/motion.ts)). |
+| Vorrendern | `renderToString` beim Build ([`src/entry-server.tsx`](src/entry-server.tsx), [`scripts/prerender.mjs`](scripts/prerender.mjs)), im Browser `hydrateRoot`. |
+| Hero-Match | SVG-Pfad mit `stroke-dashoffset`, der Funke folgt `getPointAtLength`. Jedes Kriterium hakt ab, wenn der Faden seine Zeile erreicht ([`src/lib/match.ts`](src/lib/match.ts)). |
 | Header | Schwebende Glas-Pille, goldener Marker gleitet zum aktiven Abschnitt, Fortschrittslinie, blendet sich beim Runterscrollen aus. |
 | Barrierefreiheit | Bei «Bewegung reduzieren» bleibt alles still. Menü als modaler Dialog mit `inert`, Laufband pausierbar, Fokus sichtbar, Fehlermeldungen werden vorgelesen. |
 
 ### Gemessen
 
-Mobil mit vierfach gedrosselter CPU und Fast 4G, am 2. November 2026:
+Mobil mit vierfach gedrosselter CPU und Fast 4G, am 2. November 2026 (statische Vorgängerversion; die React-Version wird vorgerendert und hält dasselbe Ziel):
 
 | Largest Contentful Paint | Cumulative Layout Shift | Best Practices | SEO |
 | :---: | :---: | :---: | :---: |
@@ -148,35 +150,52 @@ Texte in Hochdeutsch mit Schweizer Schreibweise, sachlich und ohne Werbefloskeln
 
 ## Lokal starten
 
+Node 20.19 oder neuer.
+
 ```bash
 git clone https://github.com/platret/sponsuno.git
 cd sponsuno
-python3 -m http.server 4317
+npm install
+npm run dev
 ```
 
-Dann http://localhost:4317 öffnen. Die Seite braucht einen Server (nicht per Doppelklick öffnen), weil das 3D-Emblem das Logo-SVG per `fetch` lädt.
+Dann http://localhost:5173/sponsuno/ öffnen. Weitere Befehle: `npm run build` (Typprüfung, Build und Vorrendern nach `dist/`), `npm run preview` (den Build lokal ansehen), `npm run typecheck`.
 
 ```
 sponsuno/
-├── index.html        Inhalt und Struktur
-├── styles.css        Design-Tokens aus dem CD, Layout, Responsive
-├── js/
-│   ├── main.js       Animationen, Header, Menü, Hero-Match, FAQ, Warteliste
-│   ├── silk.js       WebGL-Seiden-Shader (Navy und Gold)
-│   └── emblem.js     3D-Emblem mit Three.js, nachgeladen
-├── assets/           Logos und Symbolbild
-└── docs/             Bilder für dieses README
+├── index.html              Vite-Einstieg, Schriften, Meta-Tags
+├── src/
+│   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
+│   ├── content.ts          Alle Texte der Seite, typisiert
+│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match, Emblem
+│   ├── hooks/              Scroll-Reveals, Kippen, magnetische Buttons
+│   ├── lib/                motion.ts, match.ts, silk.ts (Shader), emblem.ts (3D)
+│   ├── styles/site.css     Design-Tokens aus dem CD und alle Styles
+│   └── assets/             Logos und Symbolbild
+├── scripts/prerender.mjs   Vorrendern beim Build
+├── .github/workflows/      Build bei Pull Requests und auf main, Deploy von main
+├── AGENTS.md               Regeln und Architektur für jede Session
+├── DESIGN.md               Farben, Schrift, Komponenten, Bewegung
+└── docs/                   Bilder für dieses README
 ```
+
+Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie auf GitHub Pages; Pull Requests werden nur gebaut. Voraussetzung (einmalig): unter Settings → Pages ist als Quelle «GitHub Actions» gewählt.
 
 <br>
 
 ## Vor dem Launch
 
-- [ ] Warteliste an einen Dienst anbinden: in [`js/main.js`](js/main.js) `WAITLIST_ENDPOINT` setzen (JSON-POST mit `{ rolle, email }`). Bis dahin speichert das Formular nichts.
+- [ ] Warteliste an einen Dienst anbinden: Repository-Variable `VITE_WAITLIST_ENDPOINT` setzen (JSON-POST mit `{ rolle, email }`). Bis dahin speichert das Formular nichts.
 - [ ] Impressum und Datenschutzerklärung ergänzen, sobald E-Mail-Adressen gesammelt werden.
 - [ ] Provisionsmodell festlegen: Höhe, Auslöser und welche Seite sie trägt sind noch offen.
 - [ ] 3D-Emblem und Wortmarken-Effekt mit dem Branding abstimmen (das CD sieht beim Logo keine Effekte vor).
 - [x] Handy, Tablet und Desktop, «Bewegung reduzieren», Lazy-Loading, Tastaturbedienung.
+
+<br>
+
+## Mitarbeiten
+
+Bevor du etwas änderst: [AGENTS.md](AGENTS.md) (Architektur, Regeln für Texte, Leistung, Barrierefreiheit, Deploy) und [DESIGN.md](DESIGN.md) (Farben, Schrift, Komponenten, Bewegung). Beide gelten für Menschen und KI-Sessions gleichermassen.
 
 <br>
 
@@ -187,7 +206,7 @@ Recherchiert über [Mobbin](https://mobbin.com): Function (Ablauf mit Serifen), 
 <br>
 
 <p align="center">
-  <img src="assets/Sponsuno_Icon.svg" alt="Sponsuno Icon" width="64">
+  <img src="src/assets/Sponsuno_Icon.svg" alt="Sponsuno Icon" width="64">
 </p>
 <p align="center">
   <sub>Team Sponsuno · Youngpreneurs-Programm · Start in der Deutschschweiz</sub>
