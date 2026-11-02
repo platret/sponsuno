@@ -1,0 +1,5 @@
+# Project material (interviews, recordings, CD, pitch) stays local
+_source/
+
+.DS_Store
+.claude/
