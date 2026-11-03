@@ -1,8 +1,11 @@
 /* Audience (Für wen): paper, directly under the proof line (whose hairline separates the two paper bands).
-   Four stock photos (Symbolbilder) with a label and one sentence each. No cards, no overlays, no motion
-   beyond data-reveal. Layouts: >=1024 four columns; 601-1023 two columns; <=600 one column, each photo
-   full width above its text (a small thumbnail made the subjects unreadable). The four files share one
-   colour grade (see DESIGN.md -> Imagery). */
+   Four stock photos (Symbolbilder) with a label and one sentence each. No cards, no overlays.
+   Motion (DESIGN.md -> Motion): head rises, tiles rise with stagger, each photo opens from an inset (4%, 6%/8% on desktop) inside
+   its .aud-frame and settles from 1.18 to 1 (data-scroll primitives in site.css); the note fades in.
+   Without scroll timelines the tiles keep the data-reveal fade.
+   Layouts: >=1024 four columns; 601-1023 two columns; <=600 one column, each photo full width above its
+   text (a small thumbnail made the subjects unreadable). The four files share one colour grade
+   (see DESIGN.md -> Imagery). */
 
 /* .section.aud, not .aud: site.css (.section { padding-block }) loads after this file and would win a tie */
 .section.aud { padding-top: clamp(3.5rem, 2.5rem + 4vw, 6.5rem); }
@@ -11,6 +14,16 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+}
+
+/* Wrapper for the photo primitive (overflow clip, radius, clip-path). Same box as the img, so no layout shift;
+   the img keeps its own radius for the fallback. */
+.aud-frame {
+  display: block; border-radius: var(--radius);
+  /* Photos start with their tile's stagger but all settle within a few vh of each other: with the full
+     stagger the fourth photo of a row would still be zooming with its top at 28% of the viewport.
+     Inherited by the img, so frame clip and image scale stay in step. */
+  --scroll-range-end: cover calc(var(--scroll-dist-long) + var(--scroll-i, 0) * var(--scroll-stagger) / 3);
 }
 
 .aud-photo {
@@ -37,9 +50,23 @@
 .motion .aud-item[data-reveal]:nth-child(3) { transition-delay: .12s; }
 .motion .aud-item[data-reveal]:nth-child(4) { transition-delay: .18s; }
 
+/* Four columns: a calmer row (half the stagger, a shorter rise) and a frame that visibly opens (6% / 8%
+   inset instead of 4%, about 15 x 20px on a 253px tile). The image keeps its 1.18 -> 1 zoom. */
+@media (min-width: 1024px) {
+  .aud-grid { --scroll-stagger: 2vh; }
+  .aud-item { --scroll-y: 32px; }
+  .aud-frame { --scroll-photo-inset: 6% 8%; --scroll-photo-radius: 16px; }
+}
+
 @media (max-width: 1023px) {
   .aud-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
   .motion .aud-item[data-reveal]:nth-child(n) { transition-delay: 0s; }
+}
+
+/* Two columns: stagger per row (0, 1), not across the whole grid (0..3) */
+@media (min-width: 601px) and (max-width: 1023px) {
+  .aud-item:nth-child(odd) { --scroll-i: 0; }
+  .aud-item:nth-child(even) { --scroll-i: 1; }
 }
 
 @media (max-width: 600px) {
@@ -49,4 +76,20 @@
   .aud-text { margin-top: .9rem; }
   .aud-desc { margin-top: .3rem; }
   .aud-note { margin-top: .5rem; }
+}
+
+/* Very tall viewports (portrait tablets such as a 1024 x 1366 iPad Pro, portrait monitors): the hero is
+   capped at 940px, so parts of this section can be in view at scroll 0. Nothing visible at load may start
+   hidden, so whatever can be above the fold there stays static (final state). Thresholds are the smallest
+   measured offsets at any width (head ~1145px, tiles ~1340px, note ~1710px from the top of the page). */
+@media (min-height: 1140px) {
+  .scroll-fx .aud-head { animation: none; }
+}
+@media (min-height: 1340px) {
+  .scroll-fx .aud-item,
+  .scroll-fx .aud-frame,
+  .scroll-fx .aud-photo { animation: none; }
+}
+@media (min-height: 1700px) {
+  .scroll-fx .aud-note { animation: none; }
 }

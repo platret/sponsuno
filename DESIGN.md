@@ -7,12 +7,12 @@ Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.
 ## Principles
 
 1. **Calm, clear, credible.** The page must work for a 22-year-old athlete, a volunteer club board and an SME owner. Clarity first, then atmosphere.
-2. **One signature moment.** The gold line in the hero match card (athlete → four criteria → sponsor) is the only "wow" effect. It echoes once in the steps section. Nothing else moves except quiet fade-ins.
+2. **Calm motion that leads into the content.** Since November 2026 the page moves with the scroll: sections rise in, photos and frames open as you scroll into them, the hero recedes as the page moves on. Every movement is scroll-linked, small and finished by the time an element is comfortably in view; nothing bounces, spins or types. The gold line in the hero match card stays the one time-based "wow" and echoes in the steps line.
 3. **Light page, navy frame, gold accent.** Light surfaces carry about 75% of the page. Navy is used for the hero and the closing waitlist + footer block. Gold is a flat accent (about 5%): never a surface, never a gradient, never a glow.
 4. **Show the product, not decoration.** Product UI (the match card, the KI-Manager draft) explains Sponsuno better than abstract visuals.
 5. **Honest content in honest form.** Fictional examples, AI images and stock photos are labelled (stock photos as "Symbolbild"). No fake logos, numbers or testimonials.
 
-What we removed and should not bring back: WebGL shaders, the 3D emblem, tilted marquees, gold liquid sections, magnetic buttons, card tilt and glare, shine sweeps, rotating borders, scroll hijacking (Lenis), glass navigation.
+What we removed and should not bring back: WebGL shaders, the 3D emblem, tilted marquees, gold liquid sections, magnetic buttons, card tilt and glare, shine sweeps, rotating borders, scroll hijacking (Lenis), smooth-scroll overrides, glass navigation.
 
 ## Colour
 
@@ -60,15 +60,57 @@ Rules: Cormorant never below about 28px and never for UI or body text. Sentence 
 
 ## Motion
 
-| What | How |
-| --- | --- |
-| Hero copy | Fades up once on load (CSS keyframes, staggered 0–0.26 s) |
-| Match card (signature) | Cards visible at once; the gold line draws (1 s), the four criteria tick (0.12 s stagger), the score appears. Starts when the card is on screen. |
-| Steps | The gold line through the step numerals draws once when the track scrolls in |
-| Everything else | `data-reveal`: opacity + 12 px rise, 0.6 s, once |
-| Hover | Colour and underline changes only |
+Plan agreed on 2026-11-03 (replaces the old "one signature moment" budget). CSS scroll-driven animations (`animation-timeline: view()`) as progressive enhancement; no animation or scroll library, no scroll hijacking, no smooth-scroll override, no JS per scroll frame.
 
-No animation library. `lib/motion.ts` provides `observeReveals()` and `onceVisible()`; native scrolling with `scroll-padding`. Without `html.motion` (reduced motion) or without JS, everything shows its final state.
+**Gate.** `index.html` sets `html.motion` unless the visitor prefers reduced motion, and `html.scroll-fx` when motion is on and the browser supports `animation-timeline: view()` (Chrome, Edge, Safari 26). The primitives in `site.css` are additionally wrapped in `@supports` and `prefers-reduced-motion: no-preference`. Section-specific scroll rules are written under `.scroll-fx`.
+- Without `.scroll-fx` but with `.motion` (Firefox): elements keep the `data-reveal` fade (IntersectionObserver, opacity + 12 px, 0.6 s, once). Frames, photos and lines are simply static.
+- Reduced motion, no JS, prerendered HTML: final state, nothing moves. Reduced motion switched on mid-visit also drops all `.scroll-fx` animations.
+
+**Rules.** Animate only `opacity`, `translate`, `scale` (individual transform properties) and `clip-path`; no colour, size, blur or filter animation. Scroll-linked progress is linear; time-based motion uses `--ease-out`. UI scales at most 0.92 → 1 (icons and portraits down to 0.86, the KI device frame 0.8 on desktop); photos 1.18 → 1 inside their frame. Dark surfaces (the KI device) and things inside a block that already fades (icons, portraits) scale without their own fade (`sfx-scale`): stacked or partial opacity turns navy into grey. Opacity reaches 1 at 60 % of an element's range, the motion ends after `--scroll-dist` (40 vh, 32 vh on phones) of scroll from the moment its top enters, i.e. when its top sits at about 60 % of the viewport. Nothing above the fold at scroll 0 is hidden (the hero only recedes on the way out, the proof line is static). Pinned budget: at most two, each at most one extra viewport, none below 600 px. Used: one, the KI-Manager bento (≥ 961 px wide and ≥ 700 px tall, 50 vh hold, see Per section); the sticky titles of Problem and FAQ are plain sticky layout. No layout shift: only transforms, opacity and clips change. `will-change` only on the two signature elements if profiling asks for it.
+
+**Details that keep it honest.**
+- Timelines are measured against the real viewport: the default is `view(block 0px)` and every named `view-timeline` sets `view-timeline-inset: 0px` (the `auto` inset would take `scroll-padding`, i.e. the header on top and the sticky bar on phones, and shift every range; on viewports taller than the 940 px hero cap the hero would load already receded).
+- Focus guard (`site.css`): `.scroll-fx [data-scroll]:focus-within { animation-name: none }`. A block holding focus shows its final state at once, so keyboard focus never lands on half-faded text or a faded focus ring.
+- Tall viewports: where a section can be in view at scroll 0 (portrait tablets and monitors), its scroll animations are switched off by `min-height` media queries (`audience.css` 1140/1340/1700 px, `problems.css` 2000 px), so nothing visible at load starts hidden.
+- Forced colours: the drawn hairlines (`::before` in Problem, Nicht nur Geld, Team) are hidden, the real border shows.
+- Compositing: `opacity`, `translate` and `scale` run on the compositor; never put them on an SVG element (Chrome does not composite individual transforms on SVG), wrap it in a `span` (support icons, price markers). `clip-path` animations (photo frames, the waitlist surface, the check-mark wipe) repaint on the main thread by design; they are few and short (profiled smooth at 4× CPU throttling).
+
+### Primitives (`site.css`, tokens in `tokens.css`)
+
+Put `data-scroll="…"` on an element; keep `data-reveal=""` next to it where a fallback fade is wanted. One value per element, never on an element with its own CSS animation (wrap it). All primitive selectors have zero specificity, so a section class overrides them.
+
+| `data-scroll` | Does | Default range | Tune with |
+| --- | --- | --- | --- |
+| `rise` | opacity 0 → 1, `translate` from (`--scroll-x`, `--scroll-y`) to 0 | `cover 0` → `cover --scroll-dist` | `--scroll-x` (0), `--scroll-y` (40 px, 24 px on phones) |
+| `fade` | opacity 0 → 1 | same | |
+| `zoom-in` | opacity 0 → 1, `scale` `--scroll-zoom-from` → 1, `translate` `--scroll-zoom-y` → 0, origin 50 % 60 % | same | `--scroll-zoom-from` (.92), `--scroll-zoom-y` (16 px) |
+| `draw-x` / `draw-y` | a line grows: `scale` 0 → 1 from the left / top | same | |
+| `photo` | on the frame around an `img`/`picture`/`video`: frame clip `inset(--scroll-photo-inset round r)` → `inset(0 round r)`, image `scale` `--scroll-photo-from` → 1; sets `overflow: clip` and the radius | `cover 0` → `cover --scroll-dist-long` | `--scroll-photo-from` (1.18, 1.12 on phones), `--scroll-photo-inset` (4 %; any `inset()` offsets, e.g. `6% 8%`), `--scroll-photo-radius` (16 px) |
+| `frame` | a surface opens: `clip-path: inset(--scroll-frame-inset round --scroll-frame-radius)` → `inset(0 round --scroll-frame-radius-end)` | `entry 0%` → `entry min(100%, --scroll-dist-long)` (final once fully in view) | `--scroll-frame-inset` (`0 clamp(.5rem, 3vw, 3rem)`, always smaller than the gutter), `--scroll-frame-radius` (28 px, 20 px on phones), `--scroll-frame-radius-end` (0) |
+| `recede` | to opacity `--scroll-recede-opacity`, `translate` `--scroll-recede-y`, `scale` `--scroll-recede-scale` while scrolling out; rest state = start | `exit 0%` → `exit 100%` | `--scroll-recede-y` (−6 vh), `--scroll-recede-scale` (1), `--scroll-recede-opacity` (.4) |
+| `group` | no animation; under `.scroll-fx` its `data-reveal` fade is switched off because its children animate | – | |
+
+Shared knobs: `--scroll-timeline` (default `view()`; set it to a named `view-timeline` such as `--hero` to drive children from a section), `--scroll-range-start` / `--scroll-range-end` (any `animation-range` value; they inherit, so set them on the element unless the whole container should share them), `--scroll-i` (stagger index; each step adds `--scroll-stagger`, 4 vh, 0 on phones). `data-scroll-stagger` on a parent numbers its children 0–5. Keyframes `sfx-rise`, `sfx-fade`, `sfx-zoom`, `sfx-scale` (zoom without the fade, same knobs), `sfx-photo`, `sfx-photo-frame`, `sfx-frame`, `sfx-draw-x`, `sfx-draw-y`, `sfx-recede` may be reused in section CSS with own timelines (for pseudo-elements: name a `view-timeline` on the element and point the pseudo-element at it).
+
+### Per section
+
+| Section | Motion |
+| --- | --- |
+| Hero | Copy fades up once on load (time-based, as before). Match card: the gold line draws (1 s), criteria tick, score appears (time-based signature). On scroll-out (≥ 961 px): the copy recedes (−8 vh, opacity .4), the match card drifts less (−3 vh, scale .96), the glow sinks; all on the hero's `--hero` timeline. Phones: no recede. |
+| Header | Solid bar after 80 px (class toggle from an IntersectionObserver sentinel, no scroll handler). |
+| Proof line | Static (sits at the fold at load). |
+| Für wen | Head rises; tiles rise with stagger (2 vh steps and 32 px on four columns); each photo opens from an inset (6 % / 8 % on four columns, 4 % below) and settles from 1.18 to 1 inside its frame. |
+| Problem | Head rises (sticky on desktop); points rise one by one; their hairlines draw from the left. |
+| Ablauf | Head rises; steps rise; the gold line between the numerals fills with scroll, segment by segment, and each numeral lights up (gold tint disc) as its step reaches the reading line. |
+| KI-Manager (signature 1, "into the product", pinned moment 1 of 2) | The navy device frame zooms from .8 to 1 without fading (a translucent navy frame reads as a grey slab); the draft sheet rises inside it (`cover 20vh` → `45vh`); the two light cards slide in from the right (24 px, 2 vh stagger) and are final before the device. From 961 px wide and 700 px tall the bento sticks below the header for 50 vh of extra scroll (`.ai-pin`: sticky bento plus an empty hold block, under `.scroll-fx` and no-preference only); the device runs on the pin's timeline and settles at 60 % of the hold, before the pin releases. Short desktops (< 700 px tall): no pin, device .8 → 1 over 60 vh. Phones and tablets (≤ 960 px): device .92 → 1 with a 16 px lift, cards rise. |
+| Nicht nur Geld | Gold rule draws; head rises; the three kinds rise with stagger, their hairlines draw, icons scale in (.86 → 1, no own fade; the zoom sits on a `span` around the SVG). |
+| Kosten | Head rises; the card zooms in (.96); the rows stay still; check marks wipe in from the left (clip-path), the open circle scales and fades in from its centre (.6 → 1); each marker is final once its top sits at about 75 % of the viewport (`cover 4vh` → `cover 0.6 × --scroll-dist`); the note fades. |
+| FAQ | Head rises (sticky on desktop); rows rise one by one. Opening a row keeps its native height animation. |
+| Team | Head rises; founders rise with stagger (also on phones, two columns); hairlines draw; portraits scale in (.86 → 1, no own fade). |
+| Warteliste (signature 2, "the page opens") | The navy surface opens from an inset rounded card to full bleed as it enters (ivory behind it, continuous with the team band); from 961 px the inset is `clamp(1.5rem, 4vw, 3.5rem)` on top and `clamp(2rem, 6vw, 6.5rem)` at the sides with 36 px corners, below that `clamp(.75rem, 2vw, 1.5rem)` / `clamp(.5rem, 3vw, 3rem)` with 28 px (20 px on phones). It is full bleed before the footer comes into view. Head and form rise. |
+| Footer | Top rises; the wordmark rises and scales from .9 to 1; both end at `entry min(100%, --scroll-dist)`, final once fully in view or earlier (they sit at the end of the page). |
+| Sticky bar (phones) | Unchanged: slides in after the hero (time-based). |
+| Hover | Colour and underline changes only. |
 
 ## Logo
 

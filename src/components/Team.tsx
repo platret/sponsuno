@@ -15,6 +15,7 @@ function Portrait({ member }: { member: TeamMember }) {
     return (
       <img
         className="team-portrait team-photo"
+        data-scroll="zoom-in"
         src={member.photo.src}
         alt={member.photo.alt}
         width={120}
@@ -24,7 +25,7 @@ function Portrait({ member }: { member: TeamMember }) {
       />
     );
   }
-  return <span className="team-portrait team-mono" aria-hidden="true">{initials(member.name)}</span>;
+  return <span className="team-portrait team-mono" data-scroll="zoom-in" aria-hidden="true">{initials(member.name)}</span>;
 }
 
 /** Ivory section between FAQ and waitlist: the four founders with their provisional focus. */
@@ -32,13 +33,13 @@ export function Team() {
   return (
     <section className="section surface-ivory team" id="team" aria-labelledby="team-title">
       <div className="container">
-        <div className="section-head team-head">
+        <div className="section-head team-head" data-reveal="" data-scroll="rise">
           <h2 id="team-title">{team.title}</h2>
           <p className="section-intro">{team.intro}</p>
         </div>
-        <ul className="team-grid" role="list">
+        <ul className="team-grid" role="list" data-scroll-stagger="">
           {team.members.map((member) => (
-            <li className="team-member" data-reveal="" key={member.name}>
+            <li className="team-member" data-reveal="" data-scroll="rise" key={member.name}>
               <Portrait member={member} />
               <h3 className="team-name">{member.name}</h3>
               <p className="team-focus">{member.focus}</p>

@@ -1,6 +1,10 @@
 /* Footer: second half of the navy closing block (flat navy, same as .wl). A thin rule, claim and links,
-   the logotype at full container width, then the bottom row. Static, no effects on the logo.
-   On sub-pages (Impressum, Datenschutz) it stands alone: .ft-standalone drops the top rule. */
+   the logotype at full container width, then the bottom row.
+   On sub-pages (Impressum, Datenschutz) it stands alone: .ft-standalone drops the top rule; those pages never
+   get .motion or .scroll-fx, so the footer is static there.
+   Motion on the landing page (DESIGN.md -> Motion): the top rises, the wordmark rises and scales .9 -> 1.
+   Both sit at the end of the page, so their range ends at entry 100% (final once fully in view), or after
+   --scroll-dist when that comes first. */
 
 .ft {
   --focus: var(--gold-light);
@@ -17,6 +21,8 @@
   padding-top: clamp(3rem, 2.5rem + 2vw, 4.5rem);
   border-top: 1px solid rgba(243, 239, 230, .12);
 }
+
+.ft-top { --scroll-range-end: entry min(100%, var(--scroll-dist)); }
 
 .ft-sub { max-width: 28ch; font-size: 1rem; line-height: 1.6; color: var(--steel); }
 
@@ -36,6 +42,10 @@
   display: block; width: 100%; height: auto;
   aspect-ratio: 600 / 152; /* explicit ratio for the lazy-loaded SVG */
   margin-top: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  --scroll-zoom-from: .9;
+  --scroll-zoom-y: 24px;
+  --scroll-range-end: entry min(100%, var(--scroll-dist));
+  transform-origin: 50% 100%;
 }
 
 .ft-bottom {

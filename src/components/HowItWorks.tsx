@@ -17,7 +17,8 @@ const NARROW = '(max-width: 960px)';
  * The server and the first client render are identical (both tracks, switch hidden), so without JS
  * both tracks simply stack. Once html.js is set before first paint (index.html), CSS shows the phone
  * layout before hydration and React only adds roles, aria-selected and data-active, so nothing moves.
- * The gold line between the numerals draws once per track.
+ * The gold line between the numerals draws once per track; under html.scroll-fx it fills with scroll
+ * instead, segment by segment, and each numeral lights up as its step reaches the reading line (how.css).
  */
 export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
   const [tabs, setTabs] = useState(false);
@@ -52,7 +53,7 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
   return (
     <section className="how section surface-paper" id="ablauf" aria-labelledby="how-title">
       <div className="container">
-        <header className="section-head" data-reveal="">
+        <header className="section-head" data-reveal="" data-scroll="rise">
           <h2 id="how-title">{howItWorks.title}</h2>
           <p className="section-intro">{howItWorks.intro}</p>
         </header>
@@ -94,13 +95,14 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
                 role={tabs ? 'tabpanel' : undefined}
                 aria-labelledby={tabs ? `how-tab-${t.key}` : undefined}
                 data-reveal=""
+                data-scroll="group"
               >
                 <p className="how-label" id={`how-label-${t.key}`}>{track.label}</p>
                 <ol className="how-steps" role="list" aria-labelledby={`how-label-${t.key}`}>
                   {track.steps.map((step, i) => (
                     <li key={step.title} className="how-step" style={{ '--i': i } as CSSProperties}>
                       <span className="how-num" aria-hidden="true">{i + 1}</span>
-                      <div className="how-step-body">
+                      <div className="how-step-body" data-scroll="rise">
                         <h3>
                           <span className="visually-hidden">{`${track.label}, ${howItWorks.stepLabel} ${i + 1}: `}</span>
                           {step.title}
@@ -110,7 +112,7 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
                     </li>
                   ))}
                 </ol>
-                <a className={`btn ${t.btn} how-cta`} href="#warteliste" onClick={() => onChooseRole(t.role)}>
+                <a className={`btn ${t.btn} how-cta`} href="#warteliste" data-scroll="rise" onClick={() => onChooseRole(t.role)}>
                   {t.cta}
                 </a>
               </div>

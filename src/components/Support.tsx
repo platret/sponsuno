@@ -45,17 +45,20 @@ export function Support() {
   return (
     <section className="section surface-paper sup" id="sachleistungen" aria-labelledby="sup-title">
       <div className="container">
-        <div className="section-head sup-head">
-          <span className="sup-rule" aria-hidden="true" />
+        <div className="section-head sup-head" data-reveal="" data-scroll="rise">
+          <span className="sup-rule" data-scroll="draw-x" aria-hidden="true" />
           <h2 id="sup-title">{support.title}</h2>
           <p className="section-intro">{support.intro}</p>
         </div>
-        <ul className="sup-kinds" role="list">
+        <ul className="sup-kinds" role="list" data-scroll-stagger="">
           {support.kinds.map((kind) => (
-            <li className="sup-kind" data-reveal="" key={kind.icon}>
-              <svg className="sup-icon" viewBox={icons[kind.icon].viewBox} width="40" height="40" aria-hidden="true" focusable="false">
-                {icons[kind.icon].glyph}
-              </svg>
+            <li className="sup-kind" data-reveal="" data-scroll="rise" key={kind.icon}>
+              {/* The wrapper carries the scroll zoom: an SVG with scale/translate would not be composited */}
+              <span className="sup-icon-wrap" data-scroll="zoom-in">
+                <svg className="sup-icon" viewBox={icons[kind.icon].viewBox} width="40" height="40" aria-hidden="true" focusable="false">
+                  {icons[kind.icon].glyph}
+                </svg>
+              </span>
               <h3 className="sup-kind-title">{kind.title}</h3>
               <p className="sup-kind-text">{kind.text}</p>
             </li>

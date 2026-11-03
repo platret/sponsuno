@@ -10,7 +10,11 @@
   <script>
     document.documentElement.classList.add('js');
     // Runs before first paint: .motion enables the CSS start states of reveals and the hero intro.
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('motion');
+      // .scroll-fx enables the scroll-driven primitives (data-scroll, site.css) where the browser supports them
+      if (window.CSS && CSS.supports('animation-timeline', 'view()')) document.documentElement.classList.add('scroll-fx');
+    }
     // Failsafe: if the app never starts, show everything that waits for a reveal (cleared in App.tsx)
     window.__revealFailsafe = setTimeout(function () { document.documentElement.classList.add('reveal-all'); }, 4000);
   </script>

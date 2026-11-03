@@ -36,7 +36,7 @@ npm run typecheck
 Vite + React 19 + TypeScript (strict). No UI framework, no CSS framework.
 
 ```
-index.html              Vite entry. Inline script sets html.motion before first paint, plus a reveal failsafe.
+index.html              Vite entry. Inline script sets html.motion (and html.scroll-fx where scroll timelines work) before first paint, plus a reveal failsafe.
 src/
   main.tsx              Hydrates the prerendered HTML (production) or renders fresh (dev).
   entry-server.tsx      Build-time prerender (renderToString) of the landing page and the legal pages. Never shipped to the browser.
@@ -44,17 +44,17 @@ src/
   content.ts            ALL visible copy, typed. Change text here, not in components.
   components/           One file per section (Hero, ProofLine, Audience, Problems, HowItWorks, AiManager, Support, Pricing,
                         Faq, Team, Waitlist, Footer), plus Header, MobileMenu, MatchCard, StickyCta, LegalPage (Impressum, Datenschutz).
-  lib/motion.ts         motionEnabled(), scrollToHash(), observeReveals(), onceVisible(). No animation library.
+  lib/motion.ts         motionEnabled(), scrollFxEnabled(), scrollToHash(), observeReveals(), onceVisible(). No animation library.
   lib/links.ts          pageHref(), siteHref(): base-aware links between pages (footer links work from every page).
   legal/main.ts         Entry of the legal pages: styles only in production (no React shipped); renders in the browser in dev.
   styles/tokens.css     Design tokens (CD colours, fonts), shared with the demo.
-  styles/site.css       Landing page base layer: type scale, surfaces, buttons, reveals.
+  styles/site.css       Landing page base layer: type scale, surfaces, buttons, reveals, scroll-driven motion primitives (data-scroll).
   styles/sections/      One stylesheet per section, imported by its component.
   assets/               CD logos, header/footer wordmarks cut from them, AI-generated persona photo (demo only, labelled).
   assets/photos/        Stock photos (Pexels, labelled "Symbolbild", credited in photoCredits): match card avatar, audience tiles.
                         Resized copies only; the originals live outside the repo in ../photo-originals/.
   vite-env.d.ts         Types for import.meta.env (VITE_WAITLIST_ENDPOINT) and window.__introFailsafe. Add new env vars here.
-public/                 Copied as-is (favicon.svg). In code, import assets instead of hardcoding /paths.
+public/                 Copied as-is (favicon.svg, robots.txt). In code, import assets instead of hardcoding /paths.
 demo/index.html         Second Vite entry: the clickable demo (client-only, noindex).
 impressum/index.html    Vite entry /impressum/ (data-page="impressum"), prerendered, works without JS.
 datenschutz/index.html  Vite entry /datenschutz/ (data-page="datenschutz"), prerendered, works without JS.
@@ -69,9 +69,10 @@ docs/                   Images for the README only.
 
 - **Copy** comes from `src/content.ts`. Exceptions: a few accessibility labels are inline (skip link in `App.tsx`, nav and logo labels in `Header.tsx`, `aria-label` in `MatchCard.tsx` and `Footer.tsx`, the footer wordmark). Check those too when reviewing copy.
 - **SSR-safe components**: the page is prerendered at build time. Never touch `window`, `document`, `matchMedia` or `localStorage` at module top level or during render; only inside effects or event handlers.
-- **Motion gate**: `html.motion` is set only when the visitor does not prefer reduced motion. Check it with `motionEnabled()`. Every animation needs a still fallback that shows the final state.
-- **Reveals**: add `data-reveal=""` to an element to fade it in on scroll (`observeReveals()` in `App.tsx`, CSS in `site.css`). Do not add other motion without updating the motion budget in DESIGN.md: the hero match card is the one signature moment.
-- **No animation or scroll libraries** (GSAP, Lenis, Three.js were removed in the November 2026 redesign). CSS transitions and IntersectionObserver are enough.
+- **Motion gate**: `html.motion` is set only when the visitor does not prefer reduced motion (`motionEnabled()`). `html.scroll-fx` is set on top of it only when the browser supports `animation-timeline: view()` (`scrollFxEnabled()`). Every animation needs a still fallback that shows the final state: the static styles of an element are its final state, keyframes describe only where it starts.
+- **Scroll motion** (plan and primitives in DESIGN.md → Motion): add `data-scroll="rise | fade | zoom-in | photo | frame | draw-x | draw-y | recede | group"` and keep `data-reveal=""` next to it where Firefox should still get the fade. Tune with the `--scroll-*` custom properties, never by copying the primitives. Section-specific scroll animations go in the section stylesheet under `.scroll-fx` and use `animation-timeline: view()` or a named `view-timeline`; set `animation-timeline` and `animation-range` after any `animation` shorthand (the shorthand resets them). Only `opacity`, `translate`, `scale`, `clip-path`. One `data-scroll` per element; never on an element that has its own CSS animation (wrap it). Every element must be final once its top is about 60 % down the viewport, and nothing visible at scroll 0 may start hidden. Elements at the end of the page (footer) end their range at `entry min(100%, var(--scroll-dist))` (final once fully in view, or earlier). Named `view-timeline`s set `view-timeline-inset: 0px`; never put `scale`/`translate` animations on an SVG element (wrap it in a `span`). A shared focus guard in `site.css` shows any `data-scroll` block holding focus in its final state; do not add per-section copies. Pinned sections: budget in DESIGN.md (max two, each at most one extra viewport, never below 600 px); one is used (KI-Manager).
+- **Reveals**: `data-reveal=""` alone fades an element in once (`observeReveals()` in `App.tsx`, CSS in `site.css`). Under `.scroll-fx`, elements that also carry `data-scroll` are skipped by the observer and the fade is neutralised.
+- **No animation or scroll libraries** (GSAP, Lenis, Three.js were removed in the November 2026 redesign), no smooth-scroll override, no JS that runs on every scroll frame (use IntersectionObserver or CSS scroll timelines).
 - **Section styles**: each section imports its own stylesheet from `src/styles/sections/` and prefixes its classes.
 - **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the fixed header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
 - **Links between pages**: build them with `pageHref()` / `siteHref()` from `lib/links.ts` (base path). Footer link hrefs in `content.ts` are `#id` (landing page section) or `path/` (page); on sub-pages section links lead back to the landing page.
@@ -162,7 +163,7 @@ Targets: LCP under 2.5 s on a throttled mid-range phone, CLS under 0.1, homepage
 1. `npm run build` passes (includes typecheck and prerender).
 2. Push your branch and open a PR so CI builds it (pushes to other branches alone run no CI).
 3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, the hero match card shows and its line draws, in-page links land below the header, the mobile menu opens and closes, the sticky waitlist bar appears on phones after the hero. If you touched the demo, click through both roles at `/demo/`.
-4. Check once with reduced motion emulated: everything visible, nothing moves.
+4. Check once with reduced motion emulated: everything visible, nothing moves. If you touched motion, also scroll slowly at 1440 px and 375 px in Chrome (every element is final by the time it is comfortably in view, nothing is half-faded when you stop) and check Firefox (fade fallback, nothing hidden).
 5. Copy changes: re-read the copy rules above.
 6. Update `DESIGN.md` if you changed tokens, components or motion; update this file if you changed architecture or rules; update `README.md` screenshots if the look changed noticeably.
 7. Work on a branch, open a PR into `main`. Commit messages: imperative subject, short body explaining why.

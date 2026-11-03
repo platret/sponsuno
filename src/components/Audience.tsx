@@ -12,27 +12,31 @@ const images: Record<AudienceImage, string> = { athlete, sportverein, kulturvere
 /**
  * Paper section under the proof line: who Sponsuno is meant for. Four stock photos (Symbolbilder, labelled
  * below the grid, credited in the Impressum), each with a short label and one sentence. No cards.
+ * Scroll motion (DESIGN.md -> Motion): head and tiles rise with stagger, each photo opens inside its frame.
  */
 export function Audience() {
   return (
     <section className="section surface-paper aud" id="fuer-wen" aria-labelledby="aud-title">
       <div className="container">
-        <div className="section-head aud-head">
+        <div className="section-head aud-head" data-reveal="" data-scroll="rise">
           <h2 id="aud-title">{audience.title}</h2>
           <p className="section-intro">{audience.intro}</p>
         </div>
-        <ul className="aud-grid" role="list">
+        <ul className="aud-grid" role="list" data-scroll-stagger="">
           {audience.items.map((item) => (
-            <li className="aud-item" data-reveal="" key={item.image}>
-              <img
-                className="aud-photo"
-                src={images[item.image]}
-                alt={item.alt}
-                width={640}
-                height={480}
-                loading="lazy"
-                decoding="async"
-              />
+            <li className="aud-item" data-reveal="" data-scroll="rise" key={item.image}>
+              {/* Frame for the scroll motion: it opens from a slight inset while the photo settles inside it */}
+              <div className="aud-frame" data-scroll="photo">
+                <img
+                  className="aud-photo"
+                  src={images[item.image]}
+                  alt={item.alt}
+                  width={640}
+                  height={480}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <div className="aud-text">
                 <h3 className="aud-label">{item.label}</h3>
                 <p className="aud-desc">{item.text}</p>
@@ -40,7 +44,7 @@ export function Audience() {
             </li>
           ))}
         </ul>
-        <p className="aud-note">
+        <p className="aud-note" data-reveal="" data-scroll="fade">
           {audience.noteBefore}<a href={pageHref(audience.noteLinkHref)}>{audience.noteLink}</a>{audience.noteAfter}
         </p>
       </div>

@@ -23,6 +23,14 @@
   stroke-linecap: round; stroke-linejoin: round;
 }
 .sup-icon * { vector-effect: non-scaling-stroke; }
+/* Wrapper for the scroll zoom (data-scroll="zoom-in" in Support.tsx). Block box of the icon's width; the SVG
+   stays inline inside it, so the line box and the layout are exactly as before. Icons grow a little more than
+   UI, from their centre, without the lift, and scale only: the kind around them already fades in, and a
+   second fade would multiply into a late, washed-out icon. */
+.sup-icon-wrap {
+  display: block; width: 40px;
+  --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%;
+}
 
 .sup-kind-title { margin-top: 1.5rem; }
 .sup-kind-text { margin-top: .6rem; max-width: 22rem; color: var(--ink); }
@@ -31,8 +39,44 @@
 .motion .sup-kind[data-reveal]:nth-child(2) { transition-delay: .08s; }
 .motion .sup-kind[data-reveal]:nth-child(3) { transition-delay: .16s; }
 
+/* Scroll-driven motion (DESIGN.md -> Motion). Gold rule draws (data-scroll="draw-x"), head and kinds rise
+   with stagger, icons zoom in (attributes in Support.tsx). Here: each kind's hairline draws from the left.
+   The border stays in the layout (transparent), the line is a 1px ::before on top of it, so nothing shifts.
+   Static style = final state, so reduced motion switched on mid-visit simply shows the full line. */
+.scroll-fx .sup-kind {
+  position: relative;
+  border-top-color: transparent;
+  view-timeline: --sup-kind block; view-timeline-inset: 0px;
+}
+.scroll-fx .sup-kind::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: 0 50%;
+  animation: sfx-draw-x linear both;
+  animation-duration: auto;
+  animation-timeline: --sup-kind;
+  /* Same window as the kind's own rise, including its stagger step (--scroll-i is inherited) */
+  animation-range:
+    cover calc(var(--scroll-i, 0) * var(--scroll-stagger))
+    cover calc(var(--scroll-dist) + var(--scroll-i, 0) * var(--scroll-stagger));
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .sup-icon-wrap { animation-name: sfx-scale; }
+  }
+}
+
+/* Forced colours (Windows High Contrast): the ::before would be forced to Canvas and cover the forced border */
+@media (forced-colors: active) {
+  .scroll-fx .sup-kind::before { display: none; }
+}
+
 @media (max-width: 760px) {
-  .sup-kinds { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; }
+  .sup-kinds { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; --scroll-stagger: 0px; }
   .sup-kind { padding-top: 1.75rem; }
   .sup-kind-title { margin-top: 1.25rem; }
   .motion .sup-kind[data-reveal]:nth-child(n) { transition-delay: 0s; }

@@ -18,7 +18,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
   return (
     <footer className={`ft${onLanding ? '' : ' ft-standalone'}`}>
       <div className="container">
-        <div className="ft-top">
+        <div className="ft-top" data-reveal="" data-scroll="rise">
           <p className="ft-sub">{footer.sub}</p>
           <nav className="ft-cols" aria-label="Fusszeile">
             {footer.columns.map((col, i) => (
@@ -42,7 +42,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={600} height={152} loading="lazy" decoding="async" data-reveal="" />
+        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={600} height={152} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>
