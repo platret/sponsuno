@@ -4,7 +4,7 @@ import wordmark from '../assets/wordmark-light.svg';
 import '../styles/sections/footer.css';
 
 type FooterProps = {
-  /** false on sub-pages (Impressum, Datenschutz): section links then lead back to the landing page */
+  /** false on sub-pages (legal pages and guides): section links then lead back to the landing page */
   onLanding?: boolean;
   /** Page path of the current page ('impressum/'), marked with aria-current */
   current?: string;

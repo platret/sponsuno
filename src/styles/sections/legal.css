@@ -1,5 +1,6 @@
-/* Legal pages (Impressum, Datenschutz): slim paper header, one readable column (~42rem) on paper,
-   then the standalone navy footer. No motion. Classes prefixed lg-. */
+/* Sub-pages (legal pages and guides): slim paper header, one readable column (~42rem) on paper,
+   then the standalone navy footer. No motion. Classes prefixed lg-.
+   Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
 .lg-header {
   padding-top: env(safe-area-inset-top, 0px);

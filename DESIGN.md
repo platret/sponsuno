@@ -57,6 +57,8 @@ Rules: Cormorant never below about 28px and never for UI or body text. Sentence 
 - Header: plain bar, transparent over the hero, solid paper with a hairline after 80 px of scroll. Mobile: wordmark, Warteliste button, menu sheet.
 - Phones: the hero fits one screen with the match card starting inside it; a slim sticky waitlist bar appears once the hero has scrolled away.
 - Legal pages (Impressum, Datenschutz): slim static paper header (dark wordmark, "Zur Startseite"), one centred column of max 42rem on paper (the header content uses the same centred measure), an ivory table of contents, sections divided by hairlines, H2 in Cormorant at 28–36 px, then the navy footer standing alone (`.ft-standalone`, no top rule). Missing contact data is shown in Gold dunkel with a short gold rule, never hidden. No motion.
+- Guide pages (Ratgeber, `guide.css`, prefix `gd-`): the legal-page layout (header, 42rem column, ivory table of contents, hairline sections, standalone footer) plus: a byline row ("Team Sponsuno · Stand"), a "planned" note with a 2 px gold rule on the left, numbered steps with Gold dunkel numerals, a letter template as a bordered ivory block (`figure` with a caption, `pre` in Manrope that keeps line breaks, selectable, no copy button), a closing row with the navy primary button (Warteliste) and a quiet underlined demo link with its note, and an ivory "Weiterlesen" box listing the other guides with their descriptions. No motion, no JavaScript.
+- Footer columns: Plattform, Mehr, Ratgeber (the four guides), Rechtliches. They wrap on narrow screens; at 520 px and below they form a 2x2 grid.
 
 ## Motion
 
@@ -114,7 +116,9 @@ Shared knobs: `--scroll-timeline` (default `view()`; set it to a named `view-tim
 
 ## Logo
 
-The current mark (rounded navy square with a serif "S." and the wordmark "Spons|uno") comes from the CD. On the website the header and the footer use the **wordmark alone** (`src/assets/wordmark-light.svg`, `wordmark-dark.svg`, cut from the CD logo files); the square is kept for favicon and app icons.
+The current mark (rounded navy square with a serif "S." and the wordmark "Spons|uno") comes from the CD. On the website the header and the footer use the **wordmark alone** (`src/assets/wordmark-light.svg`, `wordmark-dark.svg`, cut from the CD logo files); the square is kept for favicon and app icons (`public/favicon.svg`, and the PNG/ICO sizes generated from `src/assets/Sponsuno_Icon.svg` by `scripts/icons.mjs`; the apple-touch icon is a full navy square because iOS rounds the corners itself).
+
+Share image (`public/og-image.png`, 1200 × 630, source `scripts/og/og-image.html`): the 135° navy gradient, the light wordmark, one gold hairline, the headline in Cormorant 600 ivory, one line in Manrope steel that says the platform is planned, the domain in Gold hell. No photos, faces or numbers.
 
 Recommendation from the research (needs the team and the CD owner): refine rather than replace. Build on the two-tone "Spons|uno" and the gold thread, e.g. a custom-drawn wordmark where a gold stroke joins "uno". Before any logo work, run a trademark check (Swissreg/IGE, EUIPO): Sponsoo (sponsoo.de) is an established DACH sport-sponsoring marketplace with a similar name and an S monogram.
 

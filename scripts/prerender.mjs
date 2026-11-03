@@ -1,5 +1,9 @@
-// Injects the server-rendered pages into their dist HTML files, then removes the temporary SSR build.
-// Landing page: hydrated by src/main.tsx. Legal pages: static, no JavaScript needed (src/legal/main.ts).
+// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml,
+// then removes the temporary SSR build.
+// Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
+// - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
+// - the empty <div id="root"> gets the server render
+// Landing page: hydrated by src/main.tsx. Legal pages and guides: static, CSS only, no JavaScript (src/static/main.ts).
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -7,23 +11,52 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const pages = [
-  { id: 'home', file: 'index.html' },
-  { id: 'impressum', file: 'impressum/index.html' },
-  { id: 'datenschutz', file: 'datenschutz/index.html' },
-];
+const { render, headFor, titleFor, pages, SITE_URL, missingLegalContact } =
+  await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
-const { render, missingLegalContact } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 // Matches <div id="root"></div> and <div id="root" data-page="…"></div>
-const marker = /<div id="root"([^>]*)><\/div>/;
+const rootMarker = /<div id="root"([^>]*)><\/div>/;
+const titleMarker = /<title>[^<]*<\/title>/;
+const seoMarker = '<!--seo-->';
+const moduleScript = /\s*<script type="module" crossorigin src="\/([^"]+)"><\/script>/g;
+
+// The static pages' entry (src/static/main.ts) only imports CSS, but Vite still emits an empty module for it
+// (nothing but /* empty css */ comments). Drop the <script> tags that load such a module, so these pages ship no JavaScript.
+async function dropEmptyModules(html) {
+  let out = html;
+  for (const [tag, src] of html.matchAll(moduleScript)) {
+    const code = await readFile(path.join(root, 'dist', src), 'utf8');
+    if (code.replace(/\/\*[\s\S]*?\*\//g, '').trim() === '') out = out.replace(tag, '');
+  }
+  return out;
+}
 
 for (const page of pages) {
-  const file = path.join(root, 'dist', page.file);
-  const html = await readFile(file, 'utf8');
-  if (!marker.test(html)) throw new Error(`Empty <div id="root"> not found in dist/${page.file}`);
-  await writeFile(file, html.replace(marker, (_, attrs) => `<div id="root"${attrs}>${render(page.id)}</div>`));
-  console.log(`Prerendered dist/${page.file}`);
+  const file = `${page.path}index.html`;
+  const filePath = path.join(root, 'dist', file);
+  const html = await readFile(filePath, 'utf8');
+  if (!rootMarker.test(html)) throw new Error(`Empty <div id="root"> not found in dist/${file}`);
+  if (!titleMarker.test(html)) throw new Error(`<title> not found in dist/${file}`);
+  if (!html.includes(seoMarker)) throw new Error(`${seoMarker} marker not found in the <head> of dist/${file}`);
+  if (/<meta name="description"|<link rel="canonical"|<meta property="og:|<meta name="twitter:|application\/ld\+json/.test(html)) {
+    throw new Error(`dist/${file} has its own description, canonical, Open Graph/Twitter tags or JSON-LD: remove them, they come from headFor() and src/pages.ts`);
+  }
+  const prerendered = html
+    .replace(titleMarker, `<title>${titleFor(page.id)}</title>`)
+    .replace(seoMarker, headFor(page.id))
+    .replace(rootMarker, (_, attrs) => `<div id="root"${attrs}>${render(page.id)}</div>`);
+  const out = page.kind === 'home' ? prerendered : await dropEmptyModules(prerendered);
+  await writeFile(filePath, out);
+  console.log(`Prerendered dist/${file}`);
 }
+
+// Sitemap: every page with index: true, absolute apex URLs with a trailing slash. No lastmod (nobody would keep it accurate).
+const urls = pages.filter((page) => page.index).map((page) => `  <url><loc>${SITE_URL}${page.path}</loc></url>`);
+await writeFile(
+  path.join(root, 'dist', 'sitemap.xml'),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
+);
+console.log(`Wrote dist/sitemap.xml (${urls.length} URLs)`);
 
 // The controller's contact data is required by DSG Art. 19 and DSGVO Art. 13 as soon as the pages are public.
 const missing = missingLegalContact();

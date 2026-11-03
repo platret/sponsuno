@@ -1,0 +1,14 @@
+# Response headers for Cloudflare Workers static assets (copied to dist/_headers, not served as a file).
+
+# Hashed build output: cache for a year
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Clickable demo with fictional data: keep it out of search results (backup for its meta robots noindex).
+# Not blocked in robots.txt on purpose: crawlers must fetch it to see the noindex.
+/demo/*
+  X-Robots-Tag: noindex
+
+# HTTPS only. No includeSubDomains/preload: keeps the Infomaniak mail hostnames out of it.
+/*
+  Strict-Transport-Security: max-age=31536000
