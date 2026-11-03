@@ -1,11 +1,5 @@
 /* Sponsuno design tokens. Source: CD Manual v1.0 (Nov 2026). Shared by the landing page and the demo. See DESIGN.md. */
 
-@property --angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
 :root {
   --navy: #0B1830;
   --navy-2: #1D2F52;
@@ -16,6 +10,7 @@
   --gold-light: #C4A36B;
   --gold-dark: #6E5228;
   --gold-pale: #D5BF93;
+  --error-on-navy: #F2C5B5;
   --steel: #B9BFCB;
   --ink: #3B4560;
   --card-dark-a: #1A2D50;
@@ -27,9 +22,6 @@
 
   --radius: 16px;
   --gutter: clamp(1rem, 4vw, 2.5rem);
-  --section-pad: clamp(5rem, 10vw, 8.5rem);
-  --header-h: 64px;
-  --header-gap: 14px;
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --focus: var(--gold-dark);
 

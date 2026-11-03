@@ -1,0 +1,112 @@
+/* Waitlist: first half of the navy closing block. Flat navy so it runs into the footer without a seam.
+   Narrow centred column: title, intro, role chips (real radios), one email row, hint. */
+
+.wl {
+  /* Local until a shared token exists (proposed: --error-on-navy in tokens.css). */
+}
+.wl.surface-navy { background: var(--navy); }
+.wl.section { padding-bottom: clamp(4rem, 3rem + 4vw, 6.5rem); }
+
+.wl-inner { max-width: 36rem; margin-inline: auto; }
+
+.wl-head { text-align: center; }
+.wl-title { color: var(--ivory); }
+.wl-intro {
+  margin: 1.1rem auto 0; max-width: 30rem;
+  font-size: var(--fs-lead); line-height: 1.55; color: var(--steel);
+}
+
+.wl-form { margin-top: clamp(2.25rem, 1.75rem + 1.5vw, 3rem); }
+
+/* ---------- Role chips ---------- */
+
+.wl-roles { margin: 0; padding: 0; border: 0; min-width: 0; }
+.wl-legend {
+  padding: 0; margin-bottom: .85rem;
+  font-size: var(--fs-small); font-weight: 600; color: var(--ivory);
+}
+
+.wl-chips {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr; /* both rows share the tallest chip, even when one label wraps */
+  gap: .625rem;
+}
+
+.wl-chip { position: relative; display: grid; cursor: pointer; }
+/* The radio stays a real, focusable input laid over the chip; arrow keys move within the group. */
+.wl-chip-input {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%; margin: 0;
+  opacity: 0; cursor: pointer;
+}
+.wl-chip-box {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: .6rem .9rem;
+  border: 1px solid rgba(243, 239, 230, .4); border-radius: var(--radius-sm);
+  font-size: .9375rem; font-weight: 600; line-height: 1.25; text-align: center;
+  color: var(--ivory);
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.wl-chip:hover .wl-chip-box { border-color: rgba(243, 239, 230, .65); }
+.wl-chip-input:checked + .wl-chip-box { background: var(--ivory); border-color: var(--ivory); color: var(--navy); }
+.wl-chip-input:focus-visible + .wl-chip-box { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* ---------- Email row ---------- */
+
+.wl-row { display: flex; gap: .625rem; margin-top: 1.25rem; }
+
+.wl-email {
+  flex: 1 1 auto; min-width: 0;
+  height: 52px; padding: 0 1rem;
+  border: 1px solid rgba(243, 239, 230, .4); border-radius: var(--radius-sm);
+  background: var(--navy-2); color: var(--ivory);
+  font-size: 1rem;
+  transition: border-color .2s ease;
+}
+.wl-email::placeholder { color: var(--steel); opacity: .8; }
+.wl-email:hover { border-color: rgba(243, 239, 230, .55); }
+.wl-email:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-color: transparent; border-radius: var(--radius-sm); }
+.wl-email[aria-invalid="true"] { border-color: var(--error-on-navy); }
+
+.wl-submit { flex: none; }
+.wl-submit:disabled { opacity: .7; cursor: progress; }
+
+.motion .wl-row.is-shaking { animation: wl-shake .45s ease; }
+@keyframes wl-shake {
+  20% { transform: translateX(-6px); }
+  45% { transform: translateX(5px); }
+  70% { transform: translateX(-3px); }
+  90% { transform: translateX(1px); }
+}
+
+.wl-error { margin-top: .75rem; font-size: var(--fs-small); color: var(--error-on-navy); }
+.wl-hint { margin-top: .85rem; font-size: .875rem; line-height: 1.5; color: var(--steel); }
+
+/* ---------- Success ---------- */
+
+.wl-success {
+  display: flex; align-items: flex-start; gap: .85rem;
+  margin-top: clamp(2.25rem, 1.75rem + 1.5vw, 3rem);
+  padding: 1.25rem 1.4rem;
+  border: 1px solid rgba(243, 239, 230, .25); border-radius: var(--radius-sm);
+  background: var(--navy-2);
+  color: var(--ivory); font-size: 1.0625rem; line-height: 1.55;
+}
+.wl-success:focus { outline: none; }
+.wl-success:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.wl-success svg {
+  width: 24px; height: 24px; flex: none; margin-top: .05rem;
+  fill: none; stroke: var(--gold-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.motion .wl-success { animation: wl-in .5s var(--ease-out) both; }
+@keyframes wl-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 560px) {
+  .wl-row { flex-direction: column; }
+  .wl-submit { width: 100%; }
+}
+@media (max-width: 380px) {
+  .wl-chip-box { padding-inline: .6rem; font-size: .875rem; }
+}

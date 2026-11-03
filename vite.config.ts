@@ -16,6 +16,12 @@ export default defineConfig({
         main: resolve(import.meta.dirname, 'index.html'),
         demo: resolve(import.meta.dirname, 'demo/index.html'),
       },
+      output: {
+        // React is shared by both pages: give its chunk a clear name instead of one borrowed from an asset
+        manualChunks(id) {
+          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react';
+        },
+      },
     },
   },
 });

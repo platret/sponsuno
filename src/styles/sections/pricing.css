@@ -1,0 +1,77 @@
+/* Pricing (Kosten): ivory. Title and intro left, one overview card right with hairline-divided rows
+   (label left, value column right; on phones the value sits under the label).
+   Decided values carry a small check, open ones an outlined "offen" tag. */
+
+.price-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(2.5rem, 1rem + 4vw, 5rem);
+  align-items: start;
+}
+
+.price-head { max-width: 30rem; }
+
+.price-card {
+  margin: 0;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.price-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: .4rem 2rem;
+  align-items: start;
+  padding: 1.35rem 1.75rem;
+}
+.price-row + .price-row { border-top: 1px solid var(--rule); }
+
+.price-label { font-weight: 600; color: var(--navy); line-height: 1.45; }
+
+/* Value column reads as one aligned column: marker first, text with a hanging indent */
+.price-value {
+  margin: 0;
+  display: flex; align-items: flex-start; gap: .6rem;
+  color: var(--ink); line-height: 1.45;
+}
+.price-value-text { min-width: 0; }
+
+/* Every row has the same 16px marker slot, so all value texts start on one line */
+.price-marker {
+  flex: none;
+  width: 16px; height: 16px; margin-top: .25em;
+  fill: none; stroke: var(--gold-dark);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.price-check { stroke-width: 2; }
+.price-marker-open { stroke-width: 1.6; }
+
+/* "offen" tag follows the value text */
+.price-tag {
+  display: inline-block;
+  margin-left: .4rem;
+  padding: 0 .5rem;
+  vertical-align: .1em;
+  border: 1px solid rgba(59, 69, 96, .35); border-radius: 6px;
+  font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--ink);
+  white-space: nowrap;
+}
+
+.price-note {
+  margin-top: 1.25rem;
+  font-size: .9375rem; line-height: 1.55; color: var(--ink);
+}
+
+/* Below 1100px the card takes the full width and each row stacks label over value,
+   so the narrow two-column row never appears */
+@media (max-width: 1100px) {
+  .price-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .price-head { max-width: 40rem; }
+  .price-main { max-width: 44rem; }
+  .price-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .price-row { padding: 1.15rem 1.25rem; }
+}

@@ -1,0 +1,53 @@
+/* Footer: second half of the navy closing block (flat navy, same as .wl). A thin rule, claim and links,
+   the logotype at full container width, then the legal row. Static, no effects on the logo. */
+
+.ft {
+  --focus: var(--gold-light);
+  background: var(--navy);
+  color: var(--steel);
+  padding-bottom: calc(clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem) + env(safe-area-inset-bottom, 0px));
+}
+
+.ft-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2.5rem clamp(2rem, 1rem + 5vw, 6rem);
+  align-items: start;
+  padding-top: clamp(3rem, 2.5rem + 2vw, 4.5rem);
+  border-top: 1px solid rgba(243, 239, 230, .12);
+}
+
+.ft-sub { max-width: 28ch; font-size: 1rem; line-height: 1.6; color: var(--steel); }
+
+.ft-cols { display: flex; gap: clamp(2.5rem, 1.5rem + 4vw, 5.5rem); }
+.ft-head { margin-bottom: .35rem; font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--gold-light); }
+.ft-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: var(--fs-small); color: var(--steel); text-decoration: none;
+  transition: color .2s ease;
+}
+.ft-link:hover { color: var(--ivory); }
+
+.ft-wordmark {
+  display: block; width: 100%; height: auto;
+  margin-top: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+}
+
+.ft-bottom {
+  display: flex; flex-wrap: wrap; gap: .5rem 2rem;
+  margin-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(243, 239, 230, .12);
+  font-size: .875rem; line-height: 1.5; color: var(--steel);
+}
+.ft-legal { margin-left: auto; }
+
+@media (max-width: 760px) {
+  .ft-top { grid-template-columns: minmax(0, 1fr); }
+}
+/* The three legal items only fit on one line from ~1080px; below that, stack them so the note
+   never wraps alone against the right edge. */
+@media (max-width: 1080px) {
+  .ft-bottom { flex-direction: column; gap: .35rem; }
+  .ft-legal { margin-left: 0; }
+}

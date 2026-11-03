@@ -1,50 +1,66 @@
+import type { ReactNode } from 'react';
 import { support } from '../content';
-import { SilkCanvas } from './SilkCanvas';
-import { SplitHeading } from './SplitHeading';
+import '../styles/sections/support.css';
 
-const icons = {
-  money: (
-    <>
-      <circle cx="24" cy="24" r="17" />
-      <circle cx="24" cy="24" r="11" />
-      <path d="M24 17v14M20.5 20.5h5.2a2.6 2.6 0 0 1 0 5.2h-3.4a2.6 2.6 0 0 0 0 5.2h5.2" />
-    </>
-  ),
-  gear: (
-    <>
-      <circle cx="13" cy="31" r="8" />
-      <circle cx="35" cy="31" r="8" />
-      <path d="M13 31l7-12h11l4 12M20 19l5 12h-12M18 15h5M28 15h4l-1 4" />
-    </>
-  ),
-  shared: (
-    <>
-      <path d="M8 36h32M12 36V22l12-8 12 8v14" />
-      <path d="M20 36v-8h8v8" />
-      <circle cx="24" cy="21" r="2.5" />
-    </>
-  ),
+type KindIcon = (typeof support.kinds)[number]['icon'];
+
+/**
+ * Line icons drawn in gold dark (stroke only, see support.css). Each glyph carries its own viewBox,
+ * cropped so the three share a similar optical width (about 36px of the 40px box) and a common bottom edge.
+ */
+const icons: Record<KindIcon, { viewBox: string; glyph: ReactNode }> = {
+  money: {
+    viewBox: '5 -1 38 38',
+    glyph: (
+      <>
+        <rect x="7" y="14" width="34" height="20" rx="3" />
+        <circle cx="24" cy="24" r="4.5" />
+      </>
+    ),
+  },
+  gear: {
+    viewBox: '3 0 42 42',
+    glyph: (
+      <>
+        <circle cx="13" cy="31" r="8" />
+        <circle cx="35" cy="31" r="8" />
+        <path d="M13 31l7-12h11l4 12M20 19l5 12h-12M18 15h5M28 15h4l-1 4" />
+      </>
+    ),
+  },
+  shared: {
+    viewBox: '6 3 36 36',
+    glyph: (
+      <>
+        <path d="M8 36h32M12 36V22l12-8 12 8v14" />
+        <path d="M20 36v-8h8v8" />
+        <circle cx="24" cy="21" r="2.5" />
+      </>
+    ),
+  },
 };
 
-/** The one gold accent section (per CD): liquid-gold shader with ivory cards, no borders. */
+/** Paper section: support is not only money. Three kinds side by side, separated by hairlines, no cards. */
 export function Support() {
   return (
-    <section className="section section-gold" id="sachleistungen" aria-labelledby="sach-title">
-      <SilkCanvas palette="gold" />
+    <section className="section surface-paper sup" id="sachleistungen" aria-labelledby="sup-title">
       <div className="container">
-        <div className="section-head section-head-wide">
-          <SplitHeading id="sach-title" text={support.title} />
-          <p className="section-intro" data-reveal="">{support.intro}</p>
+        <div className="section-head sup-head">
+          <span className="sup-rule" aria-hidden="true" />
+          <h2 id="sup-title">{support.title}</h2>
+          <p className="section-intro">{support.intro}</p>
         </div>
-        <div className="support-kinds">
+        <ul className="sup-kinds" role="list">
           {support.kinds.map((kind) => (
-            <div className="kind" data-reveal="" key={kind.title}>
-              <svg className="kind-icon" viewBox="0 0 48 48" aria-hidden="true">{icons[kind.icon]}</svg>
-              <h3>{kind.title}</h3>
-              <p>{kind.text}</p>
-            </div>
+            <li className="sup-kind" data-reveal="" key={kind.icon}>
+              <svg className="sup-icon" viewBox={icons[kind.icon].viewBox} width="40" height="40" aria-hidden="true" focusable="false">
+                {icons[kind.icon].glyph}
+              </svg>
+              <h3 className="sup-kind-title">{kind.title}</h3>
+              <p className="sup-kind-text">{kind.text}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

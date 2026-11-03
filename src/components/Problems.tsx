@@ -1,22 +1,23 @@
 import { problem } from '../content';
-import { SplitHeading } from './SplitHeading';
+import '../styles/sections/problems.css';
 
+/** Ivory section: what interviewees told us, as three points beside the heading (not a sequence, so no numerals). */
 export function Problems() {
   return (
-    <section className="section section-ivory section-problem" id="problem" aria-labelledby="problem-title">
-      <div className="container">
-        <div className="section-head">
-          <SplitHeading id="problem-title" text={problem.title} />
-          <p className="section-intro" data-reveal="">{problem.intro}</p>
+    <section className="prob section surface-ivory" id="problem" aria-labelledby="problem-title">
+      <div className="container prob-grid">
+        <div className="prob-head">
+          <h2 id="problem-title">{problem.title}</h2>
+          <p className="section-intro">{problem.intro}</p>
         </div>
-        <div className="problems">
+        <ul className="prob-list" role="list">
           {problem.items.map((item) => (
-            <div className="problem" data-reveal="" key={item.title}>
+            <li className="prob-item" key={item.title} data-reveal="">
               <h3>{item.title}</h3>
               <p>{item.text}</p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

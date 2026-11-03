@@ -36,20 +36,19 @@ npm run typecheck
 Vite + React 19 + TypeScript (strict). No UI framework, no CSS framework.
 
 ```
-index.html              Vite entry. Inline script sets html.js / html.motion before first paint, plus the intro failsafe.
+index.html              Vite entry. Inline script sets html.motion before first paint, plus a reveal failsafe.
 src/
   main.tsx              Hydrates the prerendered HTML (production) or renders fresh (dev).
   entry-server.tsx      Build-time prerender (renderToString). Never shipped to the browser.
-  App.tsx               Page order, smooth scrolling, global in-page link handling, shared waitlist role state.
+  App.tsx               Page order, reveal observer, global in-page link handling, shared waitlist role state.
   content.ts            ALL visible copy, typed. Change text here, not in components.
-  components/           One file per section, plus Header, MobileMenu, MatchCard, SplitHeading, SilkCanvas, Emblem.
-  hooks/                useScrollReveals (page-wide reveals), usePointerFx (tilt, magnetic).
-  lib/motion.ts         GSAP + ScrollTrigger + Lenis setup, scrollToHash, motionEnabled(), JOINED_EVENT.
-  lib/match.ts          Hero match animation controller (framework-free).
-  lib/silk.ts           WebGL fragment-shader background (palettes "navy" and "gold").
-  lib/emblem.ts         Three.js 3D logo. Only ever loaded via dynamic import (see Emblem.tsx).
-  styles/site.css       Design tokens (CSS custom properties) and all styles. See DESIGN.md.
-  assets/               Logos (from the CD), AI-generated persona photo (labelled on the page).
+  components/           One file per section (Hero, ProofLine, Problems, HowItWorks, AiManager, Support, Pricing, Faq,
+                        Waitlist, Footer), plus Header, MobileMenu, MatchCard, StickyCta.
+  lib/motion.ts         motionEnabled(), scrollToHash(), observeReveals(), onceVisible(). No animation library.
+  styles/tokens.css     Design tokens (CD colours, fonts), shared with the demo.
+  styles/site.css       Landing page base layer: type scale, surfaces, buttons, reveals.
+  styles/sections/      One stylesheet per section, imported by its component.
+  assets/               CD logos, header/footer wordmarks cut from them, AI-generated persona photo (labelled).
   vite-env.d.ts         Types for import.meta.env (VITE_WAITLIST_ENDPOINT) and window.__introFailsafe. Add new env vars here.
 public/                 Copied as-is (favicon.svg). In code, import assets instead of hardcoding /paths (the base path is /sponsuno/).
 demo/index.html         Second Vite entry: the clickable demo (client-only, noindex).
@@ -62,15 +61,12 @@ docs/                   Images for the README only.
 ### Conventions that the code relies on
 
 - **Copy** comes from `src/content.ts`. Exceptions: a few accessibility labels are inline (skip link in `App.tsx`, nav and logo labels in `Header.tsx`, `aria-label` in `MatchCard.tsx` and `Footer.tsx`, the footer wordmark). Check those too when reviewing copy.
-- **SSR-safe components**: the page is prerendered at build time. Never touch `window`, `document`, `matchMedia` or `localStorage` at module top level or during render; only inside effects, event handlers or `useGSAP`.
+- **SSR-safe components**: the page is prerendered at build time. Never touch `window`, `document`, `matchMedia` or `localStorage` at module top level or during render; only inside effects or event handlers.
 - **Motion gate**: `html.motion` is set only when the visitor does not prefer reduced motion. Check it with `motionEnabled()`. Every animation needs a still fallback that shows the final state.
-- **Reveal hooks**: add `data-reveal=""` to an element to fade it in on scroll. Use `<SplitHeading>` for section titles (words rise in). The hero h1 uses `reveal={false}` because the intro timeline animates it.
-- **Easing**: `gsap.defaults({ ease: 'expo.out' })` is set in `lib/motion.ts`; only pass `ease` when you need something else.
-- **GSAP in React**: use `useGSAP` (from `lib/motion`) with a `scope`, so StrictMode and unmounts revert everything. Wrap async callbacks with `contextSafe`.
-- **Imperative graphics** (`silk.ts`, `emblem.ts`, `match.ts`) return a cleanup function. Keep them framework-free and mount them from a component effect. If a parent may call into one right after hydration (the hero calls the match), create it in `useLayoutEffect`.
-- **Height changes** after load are fine: `useScrollReveals` watches the page height and refreshes ScrollTrigger.
-- **Heavy code is lazy**: Three.js must stay behind `import('../lib/emblem')`. Never import `three` from a file that ends up in the main bundle.
-- **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the floating header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
+- **Reveals**: add `data-reveal=""` to an element to fade it in on scroll (`observeReveals()` in `App.tsx`, CSS in `site.css`). Do not add other motion without updating the motion budget in DESIGN.md: the hero match card is the one signature moment.
+- **No animation or scroll libraries** (GSAP, Lenis, Three.js were removed in the November 2026 redesign). CSS transitions and IntersectionObserver are enough.
+- **Section styles**: each section imports its own stylesheet from `src/styles/sections/` and prefixes its classes.
+- **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the fixed header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
 - **Waitlist**: posts JSON `{ rolle, email }` to `VITE_WAITLIST_ENDPOINT`. If the variable is empty, the form only previews success and stores nothing.
 
 ## The demo (`src/demo/`)
@@ -125,21 +121,18 @@ These come from the team's project rules. Breaking them makes the page say thing
 
 ## Performance budget
 
-Measured on 2 Nov 2026 (mobile, 4× CPU throttling, Fast 4G, pre-React version): LCP 1.6 s, CLS 0.03. Keep it there.
+Targets: LCP under 2.5 s on a throttled mid-range phone, CLS under 0.1, homepage JavaScript under 150 KB gzipped (after the November 2026 redesign it is about 73 KB: React plus the app). Check with a mobile Lighthouse run before releases.
 
-- Main JS bundle: about 140 KB gzipped (React, GSAP, ScrollTrigger, Lenis, app). Do not add dependencies casually; justify each one.
-- Three.js lives only in the lazy `emblem` chunk.
-- Shaders render below native resolution and pause when off-screen or the tab is hidden. Keep it that way for any new canvas.
-- No `backdrop-filter` over animated canvases (expensive repaints). The header pill is the only glass element.
+- Do not add dependencies casually; justify each one. No WebGL on the landing page.
 - Images: sized to their display size (2× max), with `width`/`height`, `loading="lazy"` below the fold.
-- Fonts: only Cormorant Garamond 600/700 and Manrope 400/600 (CD). Do not add weights or families.
+- Fonts: only Cormorant Garamond 600/700 and Manrope 400/600 (CD), self-hosted Latin subsets via `@fontsource`. Do not add weights or families.
 
 ## Accessibility
 
 - Every animation has a reduced-motion path (no movement, final state visible).
 - Visible focus everywhere (`:focus-visible` uses `--focus`, set per surface).
 - The mobile menu is a modal dialog: background `inert`, Escape closes, focus returns to the toggle.
-- Moving content longer than 5 s needs a pause control (the ribbon has one).
+- Moving content longer than 5 s needs a pause control (there is none on the page now; keep it that way).
 - Small text contrast at least 4.5:1. Gold text on light backgrounds only in Gold dunkel (#6E5228).
 - Form errors are announced (`role="alert"`) and linked via `aria-describedby`.
 
@@ -154,7 +147,7 @@ Measured on 2 Nov 2026 (mobile, 4× CPU throttling, Fast 4G, pre-React version):
 
 1. `npm run build` passes (includes typecheck and prerender).
 2. Push your branch and open a PR so CI builds it (pushes to other branches alone run no CI).
-3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, hero match plays, in-page links land below the header, mobile menu opens, scrolls and closes. If you touched the demo, click through both roles at `/sponsuno/demo/`.
+3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, the hero match card shows and its line draws, in-page links land below the header, the mobile menu opens and closes, the sticky waitlist bar appears on phones after the hero. If you touched the demo, click through both roles at `/sponsuno/demo/`.
 4. Check once with reduced motion emulated: everything visible, nothing moves.
 5. Copy changes: re-read the copy rules above.
 6. Update `DESIGN.md` if you changed tokens, components or motion; update this file if you changed architecture or rules; update `README.md` screenshots if the look changed noticeably.
@@ -165,5 +158,7 @@ Measured on 2 Nov 2026 (mobile, 4× CPU throttling, Fast 4G, pre-React version):
 - [ ] Waitlist endpoint (`VITE_WAITLIST_ENDPOINT`) and a double opt-in flow
 - [ ] Impressum and privacy notice
 - [ ] Commission model: rate, trigger, paying side
-- [ ] Branding sign-off for the 3D emblem and the footer wordmark effects (the CD manual says "no effects" on the logo)
+- [ ] Trademark check (Swissreg/IGE, EUIPO): "Sponsoo" (sponsoo.de) is a similar name in the same market
+- [ ] Logo refinement with the CD owner (see DESIGN.md → Logo)
+- [ ] Real, consented photos (athletes, clubs, a local business, the founders) and a founders section
 - [ ] Domain decision (the team prefers a .com; availability is not checked)

@@ -6,5 +6,5 @@ interface ImportMetaEnv {
 }
 
 interface Window {
-  __introFailsafe?: number;
+  __revealFailsafe?: number;
 }
