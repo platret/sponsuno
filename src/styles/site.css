@@ -131,7 +131,109 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 .motion [data-reveal].is-in,
 .reveal-all [data-reveal] { opacity: 1; transform: none; }
 
+/* ---------- Scroll-driven motion (DESIGN.md -> Motion, AGENTS.md -> Motion conventions) ----------
+   Progressive enhancement on top of the reveal above. html.scroll-fx is set in index.html before first
+   paint only when html.motion is set AND the browser supports animation-timeline: view(); the rules are
+   also wrapped in @supports and a no-preference media query. Without it (Firefox, reduced motion, no JS)
+   elements keep the data-reveal fade or simply show their final state.
+
+   API: data-scroll="rise | fade | zoom-in | photo | frame | draw-x | draw-y | recede | group" on an element,
+   tuned with the custom properties in tokens.css (set them on the element or a container). All primitive
+   selectors have zero specificity (:where), so any section class rule overrides them. One data-scroll per
+   element; never on an element that already runs its own CSS animation (wrap it instead).
+   Animated properties: opacity, translate, scale, clip-path only (individual transform properties, so they
+   compose with a section's own transform). */
+
+@keyframes sfx-rise { from { opacity: 0; translate: var(--scroll-x) var(--scroll-y); } 60% { opacity: 1; } to { opacity: 1; translate: 0 0; } }
+@keyframes sfx-fade { from { opacity: 0; } 60%, to { opacity: 1; } }
+@keyframes sfx-zoom { from { opacity: 0; scale: var(--scroll-zoom-from); translate: 0 var(--scroll-zoom-y); } 60% { opacity: 1; } to { opacity: 1; scale: 1; translate: 0 0; } }
+/* Scale only (no fade): for things inside a parent that already fades (icons, portraits) and for dark surfaces
+   that would turn grey at partial opacity. Same knobs as zoom-in. */
+@keyframes sfx-scale { from { scale: var(--scroll-zoom-from); translate: 0 var(--scroll-zoom-y); } to { scale: 1; translate: 0 0; } }
+@keyframes sfx-photo { from { scale: var(--scroll-photo-from); } to { scale: 1; } }
+@keyframes sfx-photo-frame { from { clip-path: inset(var(--scroll-photo-inset) round var(--scroll-photo-radius)); } to { clip-path: inset(0 round var(--scroll-photo-radius)); } }
+@keyframes sfx-frame { from { clip-path: inset(var(--scroll-frame-inset) round var(--scroll-frame-radius)); } to { clip-path: inset(0 round var(--scroll-frame-radius-end)); } }
+@keyframes sfx-draw-x { from { scale: 0 1; } to { scale: 1 1; } }
+@keyframes sfx-draw-y { from { scale: 1 0; } to { scale: 1 1; } }
+@keyframes sfx-recede { to { opacity: var(--scroll-recede-opacity); translate: 0 var(--scroll-recede-y); scale: var(--scroll-recede-scale); } }
+
+/* Stagger helper: children of [data-scroll-stagger] get --scroll-i 0..5 (each step adds --scroll-stagger) */
+:where([data-scroll-stagger]) > :where(:nth-child(2)) { --scroll-i: 1; }
+:where([data-scroll-stagger]) > :where(:nth-child(3)) { --scroll-i: 2; }
+:where([data-scroll-stagger]) > :where(:nth-child(4)) { --scroll-i: 3; }
+:where([data-scroll-stagger]) > :where(:nth-child(5)) { --scroll-i: 4; }
+:where([data-scroll-stagger]) > :where(:nth-child(n+6)) { --scroll-i: 5; }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Elements that also carry data-reveal (the fallback) drop the IntersectionObserver fade here,
+       so a transition never fights the scroll-linked animation. */
+    html.scroll-fx [data-reveal][data-scroll] { opacity: 1; transform: none; transition: none; }
+
+    :where(.scroll-fx [data-scroll]:not([data-scroll="group"])) {
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      /* Inset 0: measured against the real viewport, not the scroll-padding (header on top, sticky bar on
+         phones), so ranges mean what DESIGN.md says at every width */
+      animation-timeline: var(--scroll-timeline, view(block 0px));
+      /* Default window: from the moment the top edge enters, for --scroll-dist of scroll, shifted by the stagger */
+      animation-range:
+        var(--scroll-range-start, cover calc(var(--scroll-i, 0) * var(--scroll-stagger)))
+        var(--scroll-range-end, cover calc(var(--scroll-dist) + var(--scroll-i, 0) * var(--scroll-stagger)));
+    }
+
+    :where(.scroll-fx [data-scroll="rise"]) { animation-name: sfx-rise; }
+    :where(.scroll-fx [data-scroll="fade"]) { animation-name: sfx-fade; }
+    :where(.scroll-fx [data-scroll="zoom-in"]) { animation-name: sfx-zoom; transform-origin: 50% 60%; }
+    :where(.scroll-fx [data-scroll="draw-x"]) { animation-name: sfx-draw-x; transform-origin: 0 50%; }
+    :where(.scroll-fx [data-scroll="draw-y"]) { animation-name: sfx-draw-y; transform-origin: 50% 0; }
+
+    /* photo: put it on the frame around an <img>/<picture>/<video>. The frame opens from a slight inset
+       to its full rounded shape while the image settles from --scroll-photo-from to 1 inside it. */
+    :where(.scroll-fx [data-scroll="photo"]) {
+      overflow: clip;
+      border-radius: var(--scroll-photo-radius);
+      view-timeline: --sfx-photo block;
+      view-timeline-inset: 0px;
+      animation-name: sfx-photo-frame;
+      animation-range:
+        var(--scroll-range-start, cover calc(var(--scroll-i, 0) * var(--scroll-stagger)))
+        var(--scroll-range-end, cover calc(var(--scroll-dist-long) + var(--scroll-i, 0) * var(--scroll-stagger)));
+    }
+    :where(.scroll-fx [data-scroll="photo"]) > :where(img, picture, video) {
+      animation: sfx-photo linear both;
+      animation-duration: auto;
+      animation-timeline: --sfx-photo;
+      animation-range:
+        var(--scroll-range-start, cover calc(var(--scroll-i, 0) * var(--scroll-stagger)))
+        var(--scroll-range-end, cover calc(var(--scroll-dist-long) + var(--scroll-i, 0) * var(--scroll-stagger)));
+    }
+
+    /* frame: a surface opens from an inset rounded card to its full shape. Final when it is fully in view
+       or after --scroll-dist-long, whichever comes first (so whatever follows it never sees the inset). */
+    :where(.scroll-fx [data-scroll="frame"]) {
+      animation-name: sfx-frame;
+      animation-range: var(--scroll-range-start, entry 0%) var(--scroll-range-end, entry min(100%, var(--scroll-dist-long)));
+    }
+
+    /* recede: the element eases back while its timeline scrolls out (rest state = start, so nothing is
+       hidden at the top of the page). Usually driven by a section's named timeline via --scroll-timeline. */
+    :where(.scroll-fx [data-scroll="recede"]) {
+      animation-name: sfx-recede;
+      animation-range: var(--scroll-range-start, exit 0%) var(--scroll-range-end, exit 100%);
+    }
+
+    /* Focus guard: a block that holds keyboard focus (or a clicked control) shows its final state at once,
+       even when the browser moved focus to it without scrolling it further into view. Normal specificity
+       (not :where), so it also beats section-specific animation-name rules. */
+    .scroll-fx [data-scroll]:focus-within { animation-name: none; }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  /* Reduced motion switched on mid-visit: drop scroll-linked animations, static styles are the final state */
+  .scroll-fx *, .scroll-fx *::before, .scroll-fx *::after { animation-name: none !important; }
 }

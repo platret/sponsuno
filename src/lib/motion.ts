@@ -1,8 +1,12 @@
-// Motion and scrolling for the landing page. No animation library: CSS transitions plus one
-// IntersectionObserver. The motion budget is in DESIGN.md (one signature moment, quiet reveals).
+// Motion and scrolling for the landing page. No animation library: CSS scroll-driven animations
+// (data-scroll, site.css) where supported, otherwise CSS transitions plus one IntersectionObserver
+// (data-reveal). Nothing here runs per scroll frame. The motion plan is in DESIGN.md -> Motion.
 
 // index.html sets .motion on <html> before first paint unless the visitor prefers reduced motion.
 export const motionEnabled = (): boolean => document.documentElement.classList.contains('motion');
+
+// index.html also sets .scroll-fx when motion is on and the browser supports animation-timeline: view().
+export const scrollFxEnabled = (): boolean => document.documentElement.classList.contains('scroll-fx');
 
 export function headerOffset(): number {
   return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) + 16;
@@ -23,10 +27,15 @@ export function scrollToHash(hash: string): void {
 /**
  * Adds .is-in to every [data-reveal] element once it scrolls into view. CSS (site.css) fades and
  * lifts it, only under html.motion; without motion or JS everything is simply visible.
+ * Under html.scroll-fx, elements that also carry data-scroll are animated by the scroll timeline
+ * instead: they get .is-in at once and are not observed.
  * Returns a cleanup function.
  */
 export function observeReveals(root: ParentNode = document): () => void {
-  const els = [...root.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-in)')];
+  const all = [...root.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-in)')];
+  const scrollDriven = scrollFxEnabled();
+  const els = scrollDriven ? all.filter((el) => !el.hasAttribute('data-scroll')) : all;
+  if (scrollDriven) all.forEach((el) => { if (el.hasAttribute('data-scroll')) el.classList.add('is-in'); });
   if (!motionEnabled() || !('IntersectionObserver' in window)) {
     els.forEach((el) => el.classList.add('is-in'));
     return () => {};

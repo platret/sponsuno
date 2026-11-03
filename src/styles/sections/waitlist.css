@@ -7,6 +7,35 @@
 .wl.surface-navy { background: var(--navy); }
 .wl.section { padding-bottom: clamp(4rem, 3rem + 4vw, 6.5rem); }
 
+/* ---------- Signature 2: "the page opens" (DESIGN.md -> Motion) ----------
+   With scroll timelines, the navy moves from the section onto .wl-surface, a layer behind the content.
+   It opens (data-scroll="frame") from an inset card with rounded top corners to full bleed while the
+   section enters, over ivory that continues the team band. Bottom inset and radius are 0, and the frame is
+   final once the section is fully in view (or after 60vh), so it is full bleed before the navy footer can
+   show: no seam. The content is never inside the clip (focus outlines stay intact); the top inset is far
+   smaller than the section padding and the side inset narrower than the gutter on phones, and on wide
+   screens the column is centred well away from it. Without .scroll-fx (Firefox, reduced motion, no JS)
+   the layer is not rendered and the section stays flat navy. */
+.wl-surface { display: none; }
+
+.scroll-fx .wl.surface-navy {
+  position: relative;
+  isolation: isolate;
+  background: var(--ivory);
+}
+.scroll-fx .wl-surface {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--navy);
+  --scroll-frame-inset: clamp(.75rem, 2vw, 1.5rem) clamp(.5rem, 3vw, 3rem) 0;
+  --scroll-frame-radius: 28px 28px 0 0;
+}
+
+/* Head, then the form one stagger step later (phones: no stagger, by token) */
+.wl-form { --scroll-i: 1; }
+
 .wl-inner { max-width: 36rem; margin-inline: auto; }
 
 .wl-head { text-align: center; }
@@ -102,6 +131,20 @@
 @keyframes wl-in { from { opacity: 0; transform: translateY(8px); } }
 
 /* ---------- Responsive ---------- */
+
+/* Desktop: a clearly inset card that opens to full bleed. The column is 36rem and centred, so even at 961px
+   (column from ~192px) the side inset (~58px) stays far outside the content. Range unchanged: full bleed
+   once the section is fully in view or after 60vh, before the navy footer can show. */
+@media (min-width: 961px) {
+  .scroll-fx .wl-surface {
+    --scroll-frame-inset: clamp(1.5rem, 4vw, 3.5rem) clamp(2rem, 6vw, 6.5rem) 0;
+    --scroll-frame-radius: 36px 36px 0 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .scroll-fx .wl-surface { --scroll-frame-radius: 20px 20px 0 0; }
+}
 
 @media (max-width: 560px) {
   .wl-row { flex-direction: column; }

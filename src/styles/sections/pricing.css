@@ -37,10 +37,16 @@
 }
 .price-value-text { min-width: 0; }
 
-/* Every row has the same 16px marker slot, so all value texts start on one line */
-.price-marker {
+/* Every row has the same 16px marker slot, so all value texts start on one line. The slot (.price-mark)
+   carries the scroll animation; the SVG inside only draws. */
+.price-mark {
   flex: none;
+  display: block;
   width: 16px; height: 16px; margin-top: .25em;
+}
+.price-marker {
+  display: block;
+  width: 16px; height: 16px;
   fill: none; stroke: var(--gold-dark);
   stroke-linecap: round; stroke-linejoin: round;
 }
@@ -61,6 +67,36 @@
 .price-note {
   margin-top: 1.25rem;
   font-size: .9375rem; line-height: 1.55; color: var(--ink);
+}
+
+/* Scroll-driven motion (DESIGN.md -> Motion). Head rises, the card zooms in gently, the note fades
+   (attributes in Pricing.tsx). The rows themselves do not move. Each check wipes in from the left (clip-path,
+   so it draws like a stroke); an open circle would read as a broken "C" mid-wipe, so it scales and fades in
+   from its centre instead (composited). Both are final once the marker's top sits at ~75% of the viewport:
+   cover 4vh -> cover 24vh on desktop (~19vh on phones). */
+.price-main { --scroll-zoom-from: .96; }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .price-mark {
+      animation: price-wipe linear both;
+      animation-duration: auto;
+      animation-timeline: view(block 0px);
+      animation-range: cover 4vh cover calc(var(--scroll-dist) * .6);
+    }
+    .scroll-fx .price-mark-open {
+      animation-name: price-open;
+      transform-origin: 50% 50%;
+    }
+  }
+}
+@keyframes price-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0); }
+}
+@keyframes price-open {
+  from { opacity: 0; scale: .6; }
+  to   { opacity: 1; scale: 1; }
 }
 
 /* Below 1100px the card takes the full width and each row stacks label over value,

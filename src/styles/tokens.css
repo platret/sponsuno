@@ -25,5 +25,36 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --focus: var(--gold-dark);
 
+  /* Motion (DESIGN.md -> Motion). Time-based motion uses --ease-out; scroll-linked motion is linear and
+     measured in scroll distance: an element starts when its top edge enters the viewport and is final
+     after --scroll-dist more scroll (its top then sits at 60% of the viewport height). */
+  --scroll-dist: 40vh;          /* rise, fade, zoom-in, draw-x/-y */
+  --scroll-dist-long: 60vh;     /* photo, frame, signature moments */
+  --scroll-stagger: 4vh;        /* extra scroll per --scroll-i step (0 on phones, see below) */
+  --scroll-x: 0px;              /* rise: start offset */
+  --scroll-y: 40px;
+  --scroll-zoom-from: .92;      /* zoom-in: start scale (UI) */
+  --scroll-zoom-y: 16px;
+  --scroll-photo-from: 1.18;    /* photo: image scale inside its frame */
+  --scroll-photo-inset: 4%;     /* photo: frame clip at the start */
+  --scroll-photo-radius: var(--radius);
+  --scroll-frame-inset: 0 clamp(.5rem, 3vw, 3rem); /* frame: clip at the start (inset() offsets) */
+  --scroll-frame-radius: 28px;
+  --scroll-frame-radius-end: 0px;
+  --scroll-recede-y: -6vh;      /* recede: end state while the element scrolls out */
+  --scroll-recede-scale: 1;
+  --scroll-recede-opacity: .4;
+
   color-scheme: light;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --scroll-dist: 32vh;
+    --scroll-stagger: 0px;      /* one-column lists stagger by position already */
+    --scroll-y: 24px;
+    --scroll-zoom-y: 12px;
+    --scroll-photo-from: 1.12;
+    --scroll-frame-radius: 20px;
+  }
 }

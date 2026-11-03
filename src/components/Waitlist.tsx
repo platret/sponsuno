@@ -83,9 +83,12 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
 
   return (
     <section className="wl section surface-navy" id="warteliste" aria-labelledby="warteliste-title">
+      {/* Signature 2 ("the page opens"): the navy surface as its own layer, so the scroll-driven clip
+          (data-scroll="frame") never touches the content or its focus outlines. Hidden without .scroll-fx. */}
+      <div className="wl-surface" data-scroll="frame" aria-hidden="true" />
       <div className="container">
         <div className="wl-inner">
-          <div className="wl-head" data-reveal="">
+          <div className="wl-head" data-reveal="" data-scroll="rise">
             <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
             <p className="wl-intro">{waitlist.intro}</p>
           </div>
@@ -97,6 +100,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
               action={ENDPOINT || undefined}
               noValidate
               data-reveal=""
+              data-scroll="rise"
               onSubmit={submit} aria-busy={status === 'sending' || undefined}>
               <fieldset className="wl-roles">
                 <legend className="wl-legend">{waitlist.legend}</legend>

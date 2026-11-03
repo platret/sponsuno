@@ -5,6 +5,13 @@
   display: flex; align-items: center;
   min-height: min(100svh, 940px);
   padding-block: calc(var(--header-h) + clamp(2.5rem, 1.5rem + 4vw, 5rem)) clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  /* Scroll timeline for the recede (the hero clips with overflow, so its children cannot use view()).
+     Inert where scroll timelines are unsupported; only data-scroll elements below reference it. */
+  view-timeline: --hero block;
+  /* Inset 0, not auto: auto takes html's scroll-padding-top (header + 16px), and on viewports taller than the
+     940px cap the hero would already be a few percent into "exit" at scroll 0 (copy faded at load). */
+  view-timeline-inset: 0px;
+  --scroll-timeline: --hero;
 }
 /* One quiet atmosphere layer: a faint gold glow behind the card. No moving background. */
 .hero-glow {
@@ -49,11 +56,25 @@
 .motion .match { animation: hero-in .9s var(--ease-out) .18s both; }
 @keyframes hero-in { from { opacity: 0; transform: translateY(14px); } }
 
+/* Scroll-out (data-scroll="recede", site.css; DESIGN.md -> Motion): on the --hero timeline, exit 0% -> 100%.
+   The hero is at least one viewport tall on desktop or ends above the fold, and the timeline inset is 0, so the
+   recede never starts before scroll 0: the rest state is the static
+   layout and nothing is faded at the top. The copy leaves first, the card drifts less and shrinks a touch
+   (depth), the glow sinks and fades (clipped by the hero's overflow). Values only; the primitive does the rest. */
+.hero-copy { --scroll-recede-y: -8vh; --scroll-recede-opacity: .4; }
+.hero-visual {
+  --scroll-recede-y: -3vh; --scroll-recede-scale: .96; --scroll-recede-opacity: .7;
+  transform-origin: 50% 30%;
+}
+.hero-glow { --scroll-recede-y: 12vh; --scroll-recede-opacity: 0; }
+
 /* ---------- Match card ---------- */
 
+/* Grid item around the card (carries the recede); takes over the card's placement and width. */
+.hero-visual { justify-self: end; width: 100%; max-width: 30rem; }
+
 .match {
-  justify-self: end;
-  width: 100%; max-width: 30rem;
+  width: 100%;
   padding: 1.25rem;
   border-radius: var(--radius-lg);
   background: var(--navy-2);
@@ -134,7 +155,9 @@
 @media (max-width: 960px) {
   .hero { min-height: 0; }
   .hero-grid { grid-template-columns: minmax(0, 1fr); }
-  .match { justify-self: start; max-width: 32rem; }
+  .hero-visual { justify-self: start; max-width: 32rem; }
+  /* The hero is taller than the screen here: no recede, the hero simply scrolls away. */
+  .scroll-fx .hero [data-scroll="recede"] { animation-name: none; }
 }
 
 @media (max-width: 600px) {

@@ -73,6 +73,12 @@
   }
 }
 
+/* ---------- Scroll-driven motion (DESIGN.md -> Motion) ----------
+   Head rises (sticky on desktop; it is final before it sticks), the list is a data-scroll="group" so it
+   no longer fades as a block, and each row rises on its own timeline with a shorter lift. The native
+   ::details-content height animation above is untouched. */
+.faq-item { --scroll-y: 16px; }
+
 /* ---------- Narrow screens: one column, title not sticky ---------- */
 
 @media (max-width: 960px) {

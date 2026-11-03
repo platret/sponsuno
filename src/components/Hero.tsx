@@ -6,9 +6,9 @@ import '../styles/sections/hero.css';
 export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
   return (
     <section className="hero surface-navy" id="top" aria-labelledby="hero-title">
-      <div className="hero-glow" aria-hidden="true" />
+      <div className="hero-glow" data-scroll="recede" aria-hidden="true" />
       <div className="container hero-grid">
-        <div className="hero-copy">
+        <div className="hero-copy" data-scroll="recede">
           <p className="hero-badge">{hero.badge}</p>
           <h1 id="hero-title">
             {hero.titleStart} <span className="hero-accent">{hero.titleAccent}</span>
@@ -26,7 +26,10 @@ export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
             <span className="hero-demo-note">{demo.linkNote}</span>
           </p>
         </div>
-        <MatchCard />
+        {/* Wrapper: .match runs its own load animation, so the scroll recede sits one level up */}
+        <div className="hero-visual" data-scroll="recede">
+          <MatchCard />
+        </div>
       </div>
     </section>
   );

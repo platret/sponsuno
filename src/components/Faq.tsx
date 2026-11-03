@@ -6,15 +6,15 @@ export function Faq() {
   return (
     <section className="section surface-paper" id="fragen" aria-labelledby="fragen-title">
       <div className="container faq-grid">
-        <div className="faq-head" data-reveal="">
+        <div className="faq-head" data-reveal="" data-scroll="rise">
           <h2 id="fragen-title">{faq.title}</h2>
           <p className="section-intro faq-intro">
             {faq.introBefore}<a href="#warteliste">{faq.introLink}</a>{faq.introAfter}
           </p>
         </div>
-        <div className="faq-list" data-reveal="">
+        <div className="faq-list" data-reveal="" data-scroll="group">
           {faq.items.map((item) => (
-            <details className="faq-item" key={item.q}>
+            <details className="faq-item" data-scroll="rise" key={item.q}>
               <summary className="faq-q">
                 <span className="faq-q-text">{item.q}</span>
                 <span className="faq-icon" aria-hidden="true" />

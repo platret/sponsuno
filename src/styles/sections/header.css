@@ -90,3 +90,11 @@
   .header-cta-long { display: none; }
   .header-cta-short { display: inline; }
 }
+
+/* Scroll position marker for the solid state (Header.tsx observes it; no scroll handler). Positioned
+   against the document, 80 px down; invisible and outside the layout. */
+.header-sentinel {
+  position: absolute; top: 80px; left: 0;
+  width: 1px; height: 1px;
+  pointer-events: none; visibility: hidden;
+}

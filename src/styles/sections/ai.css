@@ -1,5 +1,5 @@
 /* KI-Manager: ivory section, bento grid. One navy device frame with a draft (left, ~7/12) and two
-   small light cards (right, ~5/12). Static: no typing, no animated borders; cards only fade in. */
+   small light cards (right, ~5/12). No typing, no animated borders; the scroll motion is at the end. */
 
 .ai-bento {
   display: grid;
@@ -17,7 +17,10 @@
   background: var(--navy);
   border: 1px solid var(--card-dark-line);
   color: var(--steel);
+  /* clip, not hidden: hidden makes the frame a scroll container, and the draft sheet's view() timeline
+     would then track this frame instead of the page (it would freeze half-faded) */
   overflow: hidden;
+  overflow: clip;
 }
 
 .ai-device-bar {
@@ -133,9 +136,79 @@
 }
 .ai-caption .link-arrow { min-height: 44px; font-size: 1rem; color: var(--gold-dark); align-items: center; }
 
-/* Gentle stagger for the two small cards; still within the global reveal */
+/* Gentle stagger for the two small cards in the reveal fallback (no scroll timelines, e.g. Firefox);
+   under .scroll-fx the transition is switched off and data-scroll-stagger on .ai-side staggers instead */
 .motion .ai-side > [data-reveal]:nth-child(1) { transition-delay: .08s; }
 .motion .ai-side > [data-reveal]:nth-child(2) { transition-delay: .16s; }
+
+/* ---------- Scroll-driven (html.scroll-fx, signature 1 "into the product", DESIGN.md -> Motion) ----------
+   The device uses data-scroll="zoom-in" for its knobs and range, but its own keyframe without opacity: a navy
+   frame at partial opacity over ivory reads as a grey slab. It enters from below the fold, so nothing pops.
+   The draft sheet rises inside it on its own range (set explicitly, so it never inherits the device's).
+   Phones and tablets (<= 960 px): device .92 -> 1 with a small lift over the normal range, the cards rise. */
+.ai-draft-sheet {
+  --scroll-y: 24px;
+  --scroll-range-start: cover 20vh;
+  --scroll-range-end: cover 45vh;
+}
+
+@keyframes ai-device-in {
+  from { scale: var(--scroll-zoom-from); translate: 0 var(--scroll-zoom-y); }
+  to   { scale: 1; translate: 0 0; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .ai-device { animation-name: ai-device-in; }
+  }
+}
+
+@media (min-width: 961px) {
+  /* The device frame grows from .8 to 1 over 60vh (final when its top sits at ~40 % of the viewport) */
+  .ai-device {
+    --scroll-zoom-from: .8;
+    --scroll-zoom-y: 0px;
+    --scroll-range-end: cover var(--scroll-dist-long);
+    transform-origin: 50% 30%;
+  }
+  /* The cards slide in from the right (html/body clip overflow-x), the second one a short stagger step later;
+     both are final (top at ~68 % of the viewport) before the device */
+  .ai-side { --scroll-stagger: 2vh; }
+  .ai-side > .ai-card {
+    --scroll-x: 24px; --scroll-y: 0px;
+    --scroll-range-end: cover calc(var(--scroll-dist) * .8 + var(--scroll-i, 0) * var(--scroll-stagger));
+  }
+}
+
+/* Pinned moment 1 of 2 (DESIGN.md -> Motion): on large screens the bento sticks below the header for
+   --ai-pin-hold of extra scroll while the device keeps zooming, and settles at 60 % of the hold, before the
+   pin releases. The hold is an empty block after the bento inside .ai-pin, so the bento slides over it and
+   the caption simply follows. The device runs on the pin's timeline (its own would freeze while stuck):
+   from the moment the bento's top enters until 60 % of the hold after it has stuck. Only with scroll timelines
+   and motion; the viewport must be tall enough for the whole bento below the header (it is ~400-520px tall). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 961px) and (min-height: 700px) {
+    .scroll-fx .ai-pin {
+      --ai-pin-top: calc(var(--header-h) + 2rem);
+      --ai-pin-hold: 50vh;
+      view-timeline: --ai-pin block;
+      view-timeline-inset: 0px;
+    }
+    .scroll-fx .ai-pin::after { content: ""; display: block; height: var(--ai-pin-hold); }
+    .scroll-fx .ai-bento { position: sticky; top: var(--ai-pin-top); }
+    .scroll-fx .ai-device {
+      --scroll-timeline: --ai-pin;
+      --scroll-range-start: cover 0px;
+      --scroll-range-end: cover calc(100vh - var(--ai-pin-top) + var(--ai-pin-hold) * .6);
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  /* Here the device settles after the normal --scroll-dist, so the sheet follows the same pace instead of
+     lagging behind a settled frame: final once its top sits at ~60-68 % of the viewport */
+  .ai-draft-sheet { --scroll-range-start: cover 8vh; --scroll-range-end: cover var(--scroll-dist); }
+}
 
 /* ---------- Responsive ---------- */
 

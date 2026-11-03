@@ -1,6 +1,8 @@
 /* Team: ivory, between FAQ (paper) and the navy waitlist. Four founders in a row, each with a round
    portrait: a monogram (Cormorant initials, ivory on navy, gold hairline ring) until a real photo exists.
-   A photo uses the same circle and ring. No cards, no motion beyond data-reveal. */
+   A photo uses the same circle and ring. No cards.
+   Motion (DESIGN.md -> Motion): head rises; founders rise with stagger, their hairlines draw from the left,
+   portraits zoom in (.86 -> 1). Firefox keeps the data-reveal fade; reduced motion is static. */
 
 .team-grid {
   display: grid;
@@ -28,6 +30,9 @@
   font-variant-numeric: lining-nums;
 }
 .team-photo { object-fit: cover; background: var(--navy); }
+/* zoom-in tuning: grows in place from its centre (the ring scales with it). Scale only (sfx-scale, below):
+   the member around it already fades in, and a second fade turned the navy disc grey mid-scroll. */
+.team-portrait { --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%; }
 
 .team-name { margin-top: 1.6rem; }
 .team-focus { margin-top: .35rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); max-width: 18rem; }
@@ -37,13 +42,51 @@
 .motion .team-member[data-reveal]:nth-child(3) { transition-delay: .12s; }
 .motion .team-member[data-reveal]:nth-child(4) { transition-delay: .18s; }
 
+/* Scroll-driven: the hairline becomes a ::before that draws from the left on the member's own timeline,
+   in step with its rise (same stagger). Static styles stay the final state: without the animation (reduced
+   motion switched on mid-visit) the ::before is simply a full 1px rule where the border was. */
+.scroll-fx .team-member {
+  position: relative;
+  border-top-color: transparent;
+  view-timeline: --team-member block; view-timeline-inset: 0px;
+}
+.scroll-fx .team-member::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: 0 50%;
+  animation: sfx-draw-x linear both;
+  animation-duration: auto;
+  animation-timeline: --team-member;
+  animation-range:
+    cover calc(var(--scroll-i, 0) * var(--scroll-stagger))
+    cover calc(var(--scroll-dist) + var(--scroll-i, 0) * var(--scroll-stagger));
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .team-portrait { animation-name: sfx-scale; }
+  }
+}
+
+/* Forced colours (Windows High Contrast): the ::before would be forced to Canvas and cover the forced border */
+@media (forced-colors: active) {
+  .scroll-fx .team-member::before { display: none; }
+}
+
 @media (max-width: 960px) {
   .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
   .motion .team-member[data-reveal]:nth-child(n) { transition-delay: 0s; }
+  /* Two columns: stagger within a row only (left 0, right 1) */
+  .team-grid > .team-member:nth-child(odd) { --scroll-i: 0; }
+  .team-grid > .team-member:nth-child(even) { --scroll-i: 1; }
 }
 
 @media (max-width: 600px) {
-  .team-grid { column-gap: 1.25rem; row-gap: 2rem; }
+  /* Phones keep two columns, so they keep the row stagger (the token is 0 on phones) */
+  .team-grid { column-gap: 1.25rem; row-gap: 2rem; --scroll-stagger: 4vh; }
   .team-member { padding-top: 1.5rem; }
   .team-portrait { width: 72px; height: 72px; }
   .team-mono { font-size: 1.75rem; }

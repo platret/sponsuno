@@ -55,10 +55,53 @@
 
 .how-cta { align-self: flex-start; margin-top: auto; margin-left: calc(var(--how-num) + var(--how-col)); }
 
-/* Line draw, only under html.motion: three segments with one linear timing read as a single stroke
-   (0.15 s delay + 3 x 0.28 s). Without .motion, or once the reveal failsafe fires, it is fully drawn. */
+/* Line draw fallback (html.motion without scroll timelines, e.g. Firefox): three segments with one
+   linear timing read as a single stroke (0.15 s delay + 3 x 0.28 s). Without .motion, or once the
+   reveal failsafe fires, it is fully drawn. */
 .how-step::before { transition: transform .28s linear calc(.15s + var(--i) * .28s); }
-.motion:not(.reveal-all) .how-track:not(.is-in) .how-step::before { transform: scaleY(0); }
+.motion:not(.scroll-fx):not(.reveal-all) .how-track:not(.is-in) .how-step::before { transform: scaleY(0); }
+
+/* Step text rises a little less than the default: it sits next to the numerals and line */
+.how-step-body { --scroll-y: 16px; }
+
+/* ---------- Scroll-driven (html.scroll-fx, DESIGN.md -> Motion) ----------
+   Each step is a view timeline. The line segment below numeral k fills while step k's top moves from
+   75 % to 45 % of the viewport, so the stroke follows the reader down the list; the numeral gets a
+   gold tint disc while its step's top moves from 80 % to 60 %. Static styles are the final state
+   (full line, no disc outside .scroll-fx), so reduced motion and Firefox stay complete. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .how-step { view-timeline: --how-step block; view-timeline-inset: 0px; }
+
+    .scroll-fx .how-step:not(:last-child)::before {
+      transition: none;
+      animation: sfx-draw-y linear both;
+      animation-duration: auto;
+      animation-timeline: --how-step;
+      animation-range: cover 25vh cover 55vh;
+    }
+
+    /* .how-num is position: relative; z-index: 1, so the disc sits above its paper fill, under the numeral */
+    .scroll-fx .how-num::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: -1;
+      border-radius: 50%;
+      background: rgba(176, 141, 87, .16);
+      pointer-events: none;
+      animation: how-light linear both;
+      animation-duration: auto;
+      animation-timeline: --how-step;
+      animation-range: cover 20vh cover 40vh;
+    }
+  }
+}
+
+@keyframes how-light {
+  from { opacity: 0; scale: .4; }
+  to { opacity: 1; scale: 1; }
+}
 
 /* ---------- Phone switch ---------- */
 
