@@ -1,0 +1,52 @@
+/* Audience (Für wen): paper, directly under the proof line (whose hairline separates the two paper bands).
+   Four stock photos (Symbolbilder) with a label and one sentence each. No cards, no overlays, no motion
+   beyond data-reveal. Layouts: >=1024 four columns; 601-1023 two columns; <=600 one column, each photo
+   full width above its text (a small thumbnail made the subjects unreadable). The four files share one
+   colour grade (see DESIGN.md -> Imagery). */
+
+/* .section.aud, not .aud: site.css (.section { padding-block }) loads after this file and would win a tie */
+.section.aud { padding-top: clamp(3.5rem, 2.5rem + 4vw, 6.5rem); }
+
+.aud-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+}
+
+.aud-photo {
+  width: 100%; height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--ivory);
+}
+
+.aud-text { margin-top: 1.1rem; }
+.aud-desc { margin-top: .45rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); }
+
+.aud-note {
+  margin-top: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: .8125rem; line-height: 1.5; color: var(--ink);
+}
+.aud-note a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
+
+/* Quiet stagger for the reveal (only applies while motion is on) */
+.motion .aud-item[data-reveal]:nth-child(2) { transition-delay: .06s; }
+.motion .aud-item[data-reveal]:nth-child(3) { transition-delay: .12s; }
+.motion .aud-item[data-reveal]:nth-child(4) { transition-delay: .18s; }
+
+@media (max-width: 1023px) {
+  .aud-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+  .motion .aud-item[data-reveal]:nth-child(n) { transition-delay: 0s; }
+}
+
+@media (max-width: 600px) {
+  .aud-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+  .aud-item { padding-block: 1.75rem; border-top: 1px solid var(--rule); }
+  .aud-item:first-child { padding-top: 0; border-top: 0; }
+  .aud-text { margin-top: .9rem; }
+  .aud-desc { margin-top: .3rem; }
+  .aud-note { margin-top: .5rem; }
+}

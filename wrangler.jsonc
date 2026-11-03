@@ -1,0 +1,12 @@
+{
+  "name": "sponsuno",
+  "compatibility_date": "2026-10-20",
+  "assets": { "directory": "./dist" },
+  "routes": [
+    { "pattern": "sponsuno.ch", "custom_domain": true },
+    { "pattern": "www.sponsuno.ch", "custom_domain": true }
+  ],
+  "preview_urls": true,
+  "previews": {},
+  "observability": { "enabled": false }
+}

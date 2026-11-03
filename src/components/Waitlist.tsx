@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { waitlist, type Role } from '../content';
 import { motionEnabled } from '../lib/motion';
 import '../styles/sections/waitlist.css';
@@ -23,6 +23,11 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const emailRef = useRef<HTMLInputElement>(null);
   const [shaking, setShaking] = useState(false);
   const successRef = useRef<HTMLParagraphElement>(null);
+  // Without an endpoint the prerendered form must not submit natively (before hydration or without JS
+  // the browser would POST email and rolle to the page itself, i.e. to the host). The submit button
+  // stays disabled until React has hydrated; a disabled default button also blocks Enter-submission.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   const showError = (message: string) => {
     // Clear first so screen readers announce the alert again on a repeated mistake
@@ -133,7 +138,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                   aria-invalid={invalid || undefined}
                   aria-describedby={invalid ? 'wl-error wl-hint' : 'wl-hint'}
                 />
-                <button className="btn btn-gold wl-submit" type="submit" disabled={status === 'sending'}>
+                <button className="btn btn-gold wl-submit" type="submit" disabled={status === 'sending' || (!ENDPOINT && !hydrated)}>
                   {waitlist.submit}
                 </button>
               </div>

@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-// Hash routing keeps the demo working on GitHub Pages without server rewrites: #/partner/velo
+// Hash routing keeps the demo working without server rewrites: #/partner/velo
 
 export type RouteName = 'uebersicht' | 'partner' | 'partnerschaften' | 'ki-manager' | 'profil' | 'sponsor';
 

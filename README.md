@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://platret.github.io/sponsuno/">
+  <a href="https://sponsuno.ch">
     <img src="docs/banner.jpg" alt="Sponsuno – Sponsoring, das zusammenpasst." width="100%">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://platret.github.io/sponsuno/"><img src="https://img.shields.io/badge/Live--Demo-ansehen-C4A36B?style=for-the-badge&labelColor=0B1830" alt="Live-Demo ansehen"></a>
+  <a href="https://sponsuno.ch"><img src="https://img.shields.io/badge/Live--Demo-ansehen-C4A36B?style=for-the-badge&labelColor=0B1830" alt="Live-Demo ansehen"></a>
   <img src="https://img.shields.io/badge/Status-im%20Aufbau-1D2F52?style=for-the-badge&labelColor=0B1830" alt="Status: im Aufbau">
   <img src="https://img.shields.io/badge/Start-Deutschschweiz-B08D57?style=for-the-badge&labelColor=0B1830" alt="Start: Deutschschweiz">
 </p>
@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <a href="https://platret.github.io/sponsuno/"><b>Live ansehen</b></a>
+  <a href="https://sponsuno.ch"><b>Live ansehen</b></a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="#was-drin-steckt">Was drin steckt</a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -159,11 +159,14 @@ npm install
 npm run dev
 ```
 
-Dann http://localhost:5173/sponsuno/ öffnen. Weitere Befehle: `npm run build` (Typprüfung, Build und Vorrendern nach `dist/`), `npm run preview` (den Build lokal ansehen), `npm run typecheck`.
+Dann http://localhost:5173/ öffnen. Weitere Befehle: `npm run build` (Typprüfung, Build und Vorrendern nach `dist/`), `npm run preview` (den Build lokal ansehen), `npm run typecheck`.
 
 ```
 sponsuno/
 ├── index.html              Vite-Einstieg, Schriften, Meta-Tags
+├── demo/index.html         Klickbarer Prototyp (/demo/)
+├── impressum/index.html    Impressum (/impressum/), vorgerendert, ohne JavaScript
+├── datenschutz/index.html  Datenschutzerklärung (/datenschutz/), vorgerendert, ohne JavaScript
 ├── src/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert
@@ -173,20 +176,21 @@ sponsuno/
 │   ├── styles/site.css     Design-Tokens aus dem CD und alle Styles
 │   └── assets/             Logos und Symbolbild
 ├── scripts/prerender.mjs   Vorrendern beim Build
-├── .github/workflows/      Build bei Pull Requests und auf main, Deploy von main
+├── .github/workflows/      Vorschau bei Pull Requests, Deploy von main (Cloudflare)
+├── wrangler.jsonc          Cloudflare Worker: Domains und Assets
 ├── AGENTS.md               Regeln und Architektur für jede Session
 ├── DESIGN.md               Farben, Schrift, Komponenten, Bewegung
 └── docs/                   Bilder für dieses README
 ```
 
-Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie auf GitHub Pages; Pull Requests werden nur gebaut. Voraussetzung (einmalig): unter Settings → Pages ist als Quelle «GitHub Actions» gewählt.
+Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie über Cloudflare Workers auf https://sponsuno.ch. Pull Requests bekommen eine Vorschau-URL. Details in [AGENTS.md](AGENTS.md#deploy).
 
 <br>
 
 ## Vor dem Launch
 
 - [ ] Warteliste an einen Dienst anbinden: Repository-Variable `VITE_WAITLIST_ENDPOINT` setzen (JSON-POST mit `{ rolle, email }`). Bis dahin speichert das Formular nichts.
-- [ ] Impressum und Datenschutzerklärung ergänzen, sobald E-Mail-Adressen gesammelt werden.
+- [x] Impressum und Datenschutzerklärung (`/impressum/`, `/datenschutz/`). Offen: Postadresse und Kontakt-E-Mail; vor dem Freischalten der Warteliste den Abschnitt «Warteliste» anpassen.
 - [ ] Provisionsmodell festlegen: Höhe, Auslöser und welche Seite sie trägt sind noch offen.
 - [ ] 3D-Emblem und Wortmarken-Effekt mit dem Branding abstimmen (das CD sieht beim Logo keine Effekte vor).
 - [x] Handy, Tablet und Desktop, «Bewegung reduzieren», Lazy-Loading, Tastaturbedienung.

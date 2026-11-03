@@ -6,6 +6,7 @@ _source/
 node_modules/
 dist/
 dist-ssr/
+.wrangler/
 
 # Finder/iCloud duplicate copies
 * 2.*

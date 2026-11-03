@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import photo from '../assets/symbolbild-mtb-192.jpg';
+import photo from '../assets/photos/mtb-athlete-192.jpg';
 import { match } from '../content';
 import { motionEnabled, onceVisible } from '../lib/motion';
 
@@ -27,7 +27,7 @@ export function MatchCard() {
       </figcaption>
 
       <div className="match-party match-athlete">
-        <img className="match-photo" src={photo} alt="" width={52} height={52} decoding="async" fetchPriority="high" />
+        <img className="match-photo" src={photo} alt={match.athlete.photoAlt} width={52} height={52} decoding="async" fetchPriority="high" />
         <div className="match-party-text">
           <p className="match-role">{match.athlete.role}</p>
           <p className="match-name">{match.athlete.name}</p>

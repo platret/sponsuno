@@ -1,0 +1,51 @@
+/* Team: ivory, between FAQ (paper) and the navy waitlist. Four founders in a row, each with a round
+   portrait: a monogram (Cormorant initials, ivory on navy, gold hairline ring) until a real photo exists.
+   A photo uses the same circle and ring. No cards, no motion beyond data-reveal. */
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+.team-member { padding-top: 2rem; border-top: 1px solid var(--rule); }
+
+.team-portrait {
+  display: block;
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  /* Gold hairline ring with an ivory gap, drawn outside the circle (no layout shift). The 5px inset
+     aligns the ring's outer edge with the hairline, name and focus text of the column. */
+  margin-left: 5px;
+  box-shadow: 0 0 0 4px var(--ivory), 0 0 0 5px var(--gold);
+}
+.team-mono {
+  display: grid; place-items: center;
+  background: var(--navy);
+  color: var(--ivory);
+  font: 600 2.25rem/1 var(--serif);
+  letter-spacing: .02em;
+  font-variant-numeric: lining-nums;
+}
+.team-photo { object-fit: cover; background: var(--navy); }
+
+.team-name { margin-top: 1.6rem; }
+.team-focus { margin-top: .35rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); max-width: 18rem; }
+
+/* Quiet stagger for the reveal (only applies while motion is on) */
+.motion .team-member[data-reveal]:nth-child(2) { transition-delay: .06s; }
+.motion .team-member[data-reveal]:nth-child(3) { transition-delay: .12s; }
+.motion .team-member[data-reveal]:nth-child(4) { transition-delay: .18s; }
+
+@media (max-width: 960px) {
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+  .motion .team-member[data-reveal]:nth-child(n) { transition-delay: 0s; }
+}
+
+@media (max-width: 600px) {
+  .team-grid { column-gap: 1.25rem; row-gap: 2rem; }
+  .team-member { padding-top: 1.5rem; }
+  .team-portrait { width: 72px; height: 72px; }
+  .team-mono { font-size: 1.75rem; }
+  .team-name { margin-top: 1.25rem; font-size: 1.0625rem; }
+}
