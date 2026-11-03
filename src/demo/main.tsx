@@ -1,5 +1,10 @@
 import { Component, StrictMode, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
+// Self-hosted fonts (no request to Google): only the CD weights
+import '@fontsource/cormorant-garamond/latin-600.css';
+import '@fontsource/cormorant-garamond/latin-700.css';
+import '@fontsource/manrope/latin-400.css';
+import '@fontsource/manrope/latin-600.css';
 import DemoApp from './DemoApp';
 import { clearStoredDemo, DemoProvider } from './store';
 import { ToastProvider } from './ui';

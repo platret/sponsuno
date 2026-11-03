@@ -1,11 +1,10 @@
-// All visible copy lives here. Rules for writing it are in AGENTS.md (Swiss spelling, formal "Sie",
-// nothing presented as decided or working that the team has not decided or built).
+// All visible copy of the landing page lives here. Rules for writing it are in AGENTS.md (Swiss spelling,
+// formal "Sie", nothing presented as decided or working that the team has not decided or built).
 
-export type SectionId = 'ablauf' | 'fuer-wen' | 'ki-manager' | 'kosten' | 'fragen';
+export type SectionId = 'ablauf' | 'ki-manager' | 'kosten' | 'fragen';
 
 export const nav: { id: SectionId; label: string }[] = [
   { id: 'ablauf', label: 'So funktioniert es' },
-  { id: 'fuer-wen', label: 'Für wen' },
   { id: 'ki-manager', label: 'KI-Manager' },
   { id: 'kosten', label: 'Kosten' },
   { id: 'fragen', label: 'Fragen' },
@@ -20,50 +19,40 @@ export const cta = {
 export const demo = {
   href: 'demo/',
   nav: 'Demo',
-  hero: 'Demo ansehen',
-  heroNote: 'Klickbarer Prototyp mit fiktiven Daten.',
-  aiLink: 'In der Demo ansehen',
+  link: 'Demo ansehen',
+  linkNote: 'Klickbarer Prototyp mit fiktiven Daten',
 };
+
+export type Role = 'athlete' | 'sportverein' | 'kulturverein' | 'sponsor';
 
 export const hero = {
-  kicker: 'Im Aufbau. Start in der Deutschschweiz.',
-  // The soft hyphen (\u00AD) lets "zusammenpasst" break cleanly on narrow screens
-  title: 'Sponsoring, das zusammen\u00ADpasst.',
-  lead: 'Sponsuno bringt Sportlerinnen und Sportler, Sport- und Kulturvereine mit Firmen aus ihrer Region zusammen. Ein persönlicher KI-Manager hilft danach bei Anfragen, Terminen und Gegenleistungen.',
-  note: 'Geplant ist eine Provision für erfolgreiche Vermittlungen, kein Abo.',
+  badge: 'Youngpreneurs-Projekt · Start in der Deutschschweiz',
+  titleStart: 'Sponsoring, das',
+  // The soft hyphen (\u00AD) lets "zusammenpasst" break cleanly on narrow screens.
+  titleAccent: 'zusammen\u00ADpasst.',
+  lead: 'Sponsuno bringt Sportlerinnen, Sportler und Vereine aus Sport und Kultur mit Firmen aus ihrer Region zusammen.',
+  ctaSeeker: { label: 'Ich suche Sponsoren', role: 'athlete' as Role },
+  ctaSponsor: { label: 'Ich möchte sponsern', role: 'sponsor' as Role },
 };
 
-// Fictional example for the hero animation. Keep the caption whenever this changes.
+// Fictional example for the hero card. Keep the label whenever this changes.
 export const match = {
-  athlete: {
-    role: 'Sucht Unterstützung',
-    name: 'Langstrecken-Mountainbikerin',
-    region: 'Zürcher Oberland',
-    need: 'Braucht Material und Beiträge an Reisekosten',
-  },
-  sponsor: {
-    role: 'Möchte sponsern',
-    mark: 'V',
-    name: 'Velogeschäft',
-    region: 'Zürcher Oberland',
-    need: 'Bietet Material und einen Saisonbeitrag',
-  },
-  criteria: [
-    { key: 'Region', value: 'Zürcher Oberland' },
-    { key: 'Unterstützungsart', value: 'Material und Geld' },
-    { key: 'Branche', value: 'Velo und Outdoor' },
-    { key: 'Budget', value: 'Im vorgesehenen Rahmen' },
-  ],
-  result: 'Passt in 4 von 4 Punkten',
-  caption: 'Beispiel mit fiktiven Angaben und KI-generiertem Symbolbild.',
-  replay: 'Nochmals abspielen',
+  label: 'Beispiel mit fiktiven Angaben',
+  athlete: { role: 'Sucht Unterstützung', name: 'Langstrecken-Mountainbikerin', meta: 'Zürcher Oberland', need: 'Material und Reisekosten' },
+  sponsor: { role: 'Möchte sponsern', mark: 'V', name: 'Velogeschäft', meta: 'Zürcher Oberland', need: 'Material und Saisonbeitrag' },
+  criteria: ['Region', 'Unterstützung', 'Branche', 'Budget'],
+  result: 'Passt in 4 von 4 Kriterien',
+  imageNote: 'KI-generiertes Symbolbild',
 };
 
-export const ribbon = {
-  label: 'Für Sport und Kultur, zum Beispiel',
-  items: ['Mountainbike', 'Musikgesellschaft', 'Beachvolleyball', 'Theaterverein', 'Triathlon', 'Jodlerklub', 'Unihockey', 'Chor', 'Snowboard', 'Turnverein', 'Tennis', 'Laufclub'],
-  pause: 'Laufband anhalten',
-  resume: 'Laufband fortsetzen',
+export const proof = {
+  items: [
+    'Entstanden aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer',
+    'Youngpreneurs-Programm',
+    'Für Sport und Kultur in der Deutschschweiz',
+  ],
+  disciplinesLabel: 'Zum Beispiel für',
+  disciplines: ['Mountainbike', 'Unihockey', 'Musikgesellschaft', 'Beachvolleyball', 'Theaterverein', 'Triathlon', 'Chor', 'Turnverein'],
 };
 
 export const problem = {
@@ -72,11 +61,11 @@ export const problem = {
   items: [
     {
       title: 'Ohne Kontakte kein Zugang',
-      text: 'Wer niemanden kennt, weiss nicht, welche Firma überhaupt Interesse hat und wer dort zuständig ist. Bei mehreren Befragten kamen die Sponsoren vor allem aus dem Bekanntenkreis.',
+      text: 'Wer niemanden kennt, weiss nicht, welche Firma Interesse hat und wer dort zuständig ist. Bei mehreren Befragten kamen die Sponsoren vor allem aus dem Bekanntenkreis.',
     },
     {
       title: 'Der Aufwand läuft neben Training und Ehrenamt',
-      text: 'Dossiers schreiben, Anfragen verschicken, Absagen einstecken und bestehende Partner betreuen. All das passiert in der freien Zeit.',
+      text: 'Dossiers schreiben, Anfragen verschicken, Absagen einstecken und Partner betreuen. All das passiert in der freien Zeit.',
     },
     {
       title: 'Was beide Seiten erwarten, bleibt offen',
@@ -85,73 +74,60 @@ export const problem = {
   ],
 };
 
-export const steps = {
-  title: 'So ist Sponsuno gedacht',
-  intro: 'Vom ersten Profil bis zur Bilanz nach der Saison: Sponsuno soll die ganze Partnerschaft begleiten, nicht nur das erste Kennenlernen.',
-  items: [
-    { title: 'Profil anlegen', text: 'Region, Sportart oder Sparte, was Sie brauchen und was Sie bieten. Vorlagen helfen beim Ausfüllen.' },
-    { title: 'Passende Partner sehen', text: 'Sponsuno schlägt Partner nach Region, Budget, Branche und Art der Unterstützung vor.' },
-    { title: 'Vorab klar vereinbaren', text: 'Ziele und Gegenleistungen werden festgehalten, bevor die Zusammenarbeit beginnt.' },
-    { title: 'Gemeinsam prüfen', text: 'Nach einer vereinbarten Zeit schauen beide Seiten, ob die Partnerschaft hält, was sie versprochen hat.' },
-  ],
-};
+export type Track = 'seeker' | 'sponsor';
 
-export const audiences = {
-  title: 'Für beide Seiten einer Partnerschaft',
-  athletes: {
-    title: 'Für Sportlerinnen, Sportler und Vereine',
-    points: [
-      'Kontakt zu Firmen, die selbst angeben, dass sie sponsern möchten',
-      'Vorlagen, die den Aufwand für Anfragen und Dossiers verringern',
-      'Geld und Sachleistungen, auch für kleinere Projekte',
-      'Eine Übersicht über Zusagen, Gegenleistungen und Vertragsenden',
-    ],
-    cta: 'Auf die Warteliste',
-  },
-  sponsors: {
-    title: 'Für Sponsoren',
-    points: [
-      'Sportlerinnen, Sportler und Vereine aus Ihrer Region, die zu Ihrer Firma passen',
-      'Gegenleistungen, die vor Beginn schriftlich festgehalten werden',
-      'Sachleistungen wie Material oder Ausrüstung sind ebenso möglich',
-      'Laufende Partnerschaften und Vertragsenden an einem Ort',
-    ],
-    cta: 'Als Firma eintragen',
+export const howItWorks = {
+  title: 'So ist Sponsuno gedacht',
+  intro: 'Zwei Seiten, ein gemeinsamer Ablauf: vom ersten Profil bis zur Bilanz nach der Saison.',
+  switchLabel: 'Ablauf anzeigen für',
+  tracks: {
+    seeker: {
+      label: 'Sportler und Vereine',
+      steps: [
+        { title: 'Profil anlegen', text: 'Region, Sportart oder Sparte, was Sie brauchen und was Sie als Gegenleistung bieten. Vorlagen helfen beim Ausfüllen.' },
+        { title: 'Passende Firmen sehen', text: 'Sponsuno schlägt Firmen vor, die nach Region, Budget, Branche und Art der Unterstützung zu Ihnen passen.' },
+        { title: 'Anfrage senden', text: 'Der KI-Manager entwirft die Anfrage aus Ihrem Profil. Sie prüfen und entscheiden, was rausgeht.' },
+        { title: 'Vereinbaren und betreuen', text: 'Gegenleistungen und Termine sind festgehalten. Am Ende schauen beide Seiten gemeinsam zurück.' },
+      ],
+    },
+    sponsor: {
+      label: 'Firmen',
+      steps: [
+        { title: 'Firmenprofil anlegen', text: 'Region, Budget, Ziele und welche Unterstützung Sie geben möchten: Geld, Material oder Dienstleistungen.' },
+        { title: 'Vorschläge erhalten', text: 'Sie sehen Sportlerinnen, Sportler und Vereine aus Ihrer Region, die zu Ihrer Firma passen.' },
+        { title: 'Anfragen prüfen', text: 'Sie schlagen ein Gespräch vor oder sagen ab. Ohne Dossierstapel und ohne kalte Anfragen.' },
+        { title: 'Vereinbaren und Wirkung prüfen', text: 'Gegenleistungen werden vor Beginn festgehalten. Nach der Saison ziehen Sie gemeinsam Bilanz.' },
+      ],
+    },
   },
 };
 
 export const aiManager = {
   title: 'Ein KI-Manager für alles, was neben Training und Vereinsarbeit liegen bleibt.',
-  intro: 'Nach der Vermittlung fängt die Arbeit erst an. Der geplante KI-Sponsoringmanager soll Ihnen Schreibarbeit abnehmen und den Überblick behalten.',
-  features: [
-    { title: 'Entwürfe schreiben', text: 'Anfragen, Dossiers und Updates für Sponsoren, passend zu Ihrem Profil.' },
-    { title: 'An Termine erinnern', text: 'Abgabetermine, Anlässe und Vertragsenden, bevor es knapp wird.' },
-    { title: 'Gegenleistungen im Blick', text: 'Was vereinbart ist, was erledigt ist und was noch fehlt.' },
-  ],
-  note: 'Entwürfe gehen erst raus, wenn Sie sie geprüft haben.',
-  panel: {
-    name: 'Ihr KI-Sponsoringmanager',
-    reminder: {
-      label: 'Erinnerung',
-      text: 'Der Vertrag mit dem Velogeschäft endet in sechs Wochen. Soll ich ein Gespräch zur Verlängerung vorschlagen?',
-      primary: 'Entwurf ansehen',
-      secondary: 'Später',
-    },
-    deliverables: {
-      label: 'Gegenleistungen Saison 2027',
-      items: [
-        { text: 'Logo auf dem Trikot', status: 'Erledigt', state: 'done' as const },
-        { text: 'Drei Beiträge auf Instagram', status: '2 von 3', state: 'progress' as const, progress: 2 / 3 },
-        { text: 'Besuch am Firmenanlass', status: 'Offen', state: 'open' as const },
-      ],
-    },
-    draft: {
-      label: 'Entwurf: Anfrage an ein Sportgeschäft',
-      text: 'Guten Tag. Ich fahre Langstreckenrennen im Mountainbike und trainiere im Zürcher Oberland. Für die Saison 2027 suche ich einen Materialpartner aus der Region …',
-      status: 'Wartet auf Ihre Prüfung',
-    },
+  intro: 'Nach der Vermittlung fängt die Arbeit erst an. Der geplante KI-Sponsoringmanager soll Ihnen Schreibarbeit abnehmen und den Überblick behalten. Entwürfe gehen erst raus, wenn Sie sie geprüft haben.',
+  draft: {
+    app: 'Ihr KI-Sponsoringmanager',
+    label: 'Entwurf: Anfrage an ein Sportgeschäft',
+    text: 'Guten Tag. Ich fahre Langstreckenrennen im Mountainbike und trainiere im Zürcher Oberland. Für die Saison 2027 suche ich einen Materialpartner aus der Region …',
+    status: 'Wartet auf Ihre Prüfung',
+    primary: 'Prüfen',
+    secondary: 'Später',
+  },
+  reminder: {
+    title: 'An Termine erinnern',
+    label: 'In sechs Wochen',
+    text: 'Der Vertrag mit dem Velogeschäft endet. Gespräch zur Verlängerung vorschlagen?',
+  },
+  deliverables: {
+    title: 'Gegenleistungen im Blick',
+    items: [
+      { text: 'Logo auf dem Trikot', done: true, note: 'Erledigt' },
+      { text: 'Drei Beiträge auf Instagram', done: false, note: '2 von 3' },
+      { text: 'Besuch am Firmenanlass', done: false, note: 'Offen' },
+    ],
   },
   caption: 'Beispielansicht. Der KI-Manager ist in Entwicklung.',
+  demoLink: 'Im Demo ausprobieren',
 };
 
 export const support = {
@@ -166,17 +142,14 @@ export const support = {
 
 export const pricing = {
   title: 'Provision statt Abo',
-  intro: 'Geplant ist eine Provision für die Vermittlung, kein Abo.',
+  intro: 'So ist das Modell geplant. Was noch offen ist, steht hier als offen.',
   rows: [
-    {
-      title: 'Vermittlung',
-      text: 'Die Provision soll erst anfallen, wenn eine Partnerschaft zustande kommt. Wie hoch sie ist, wann genau sie fällig wird und welche Seite sie trägt, ist noch offen. Wir legen es vor dem Start fest.',
-    },
-    {
-      title: 'Fotos, Videos und Inhalte',
-      text: 'Hilfe bei Inhalten für Ihre Sponsoren soll separat buchbar sein. Sie entscheiden, ob Sie sie brauchen.',
-    },
+    { label: 'Abo oder Grundgebühr', value: 'Keines geplant', state: 'decided' as const },
+    { label: 'Vermittlung', value: 'Provision, wenn eine Partnerschaft zustande kommt', state: 'decided' as const },
+    { label: 'Höhe der Provision und zahlende Seite', value: 'Wird vor dem Start festgelegt', state: 'open' as const },
+    { label: 'Fotos, Videos und Inhalte für Sponsoren', value: 'Separat buchbar geplant', state: 'decided' as const },
   ],
+  note: 'Bei der Festlegung berücksichtigen wir ausdrücklich auch kleine Sponsoringbeträge.',
 };
 
 export const faq = {
@@ -212,8 +185,6 @@ export const faq = {
   ],
 };
 
-export type Role = 'athlete' | 'sportverein' | 'kulturverein' | 'sponsor';
-
 export const waitlist = {
   title: 'Als Erste erfahren, wann es losgeht.',
   intro: 'Tragen Sie sich ein. Wir melden uns, sobald es in der Deutschschweiz losgeht.',
@@ -234,14 +205,12 @@ export const waitlist = {
 };
 
 export const footer = {
-  lead: 'Sponsoring, das zusammenpasst.',
-  sub: 'Für Sport und Kultur in der Deutschschweiz. Sponsuno ist im Aufbau.',
+  sub: 'Sponsoring für Sport und Kultur in der Deutschschweiz. Sponsuno ist im Aufbau.',
   columns: [
     {
       title: 'Plattform',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
-        { href: '#fuer-wen', label: 'Für wen' },
         { href: '#ki-manager', label: 'KI-Manager' },
         { href: '#kosten', label: 'Kosten' },
         { href: 'demo/', label: 'Demo' },
@@ -256,14 +225,17 @@ export const footer = {
       ],
     },
   ],
-  toTop: 'Zum Seitenanfang',
   copyright: '© 2026 Team Sponsuno',
   program: 'Ein Projekt im Youngpreneurs-Programm',
+};
+
+export const stickyCta = {
+  text: 'Sponsuno ist im Aufbau.',
+  button: 'Auf die Warteliste',
 };
 
 export const menu = {
   open: 'Menü öffnen',
   close: 'Menü schliessen',
   label: 'Menü',
-  note: 'Sponsoring für Sport und Kultur. Start in der Deutschschweiz.',
 };

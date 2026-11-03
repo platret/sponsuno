@@ -6,3 +6,6 @@ _source/
 node_modules/
 dist/
 dist-ssr/
+
+# Finder/iCloud duplicate copies
+* 2.*

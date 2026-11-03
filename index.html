@@ -7,15 +7,11 @@
   <meta name="description" content="Sponsuno bringt Sportlerinnen, Sportler sowie Sport- und Kulturvereine mit passenden Sponsoren aus ihrer Region zusammen. Start in der Deutschschweiz.">
   <meta name="theme-color" content="#0B1830">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
   <script>
-    // Runs before first paint: .js and .motion drive the CSS start states of the intro.
-    // The failsafe reveals everything if the app never starts its intro.
-    document.documentElement.classList.add('js');
+    // Runs before first paint: .motion enables the CSS start states of reveals and the hero intro.
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
-    window.__introFailsafe = setTimeout(function () { document.documentElement.classList.add('intro-done'); }, 3500);
+    // Failsafe: if the app never starts, show everything that waits for a reveal (cleared in App.tsx)
+    window.__revealFailsafe = setTimeout(function () { document.documentElement.classList.add('reveal-all'); }, 4000);
   </script>
 </head>
 <body>

@@ -1,0 +1,153 @@
+/* Hero: navy, one viewport tall at most, copy left and the match card right. */
+
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; align-items: center;
+  min-height: min(100svh, 940px);
+  padding-block: calc(var(--header-h) + clamp(2.5rem, 1.5rem + 4vw, 5rem)) clamp(3.5rem, 2.5rem + 4vw, 6rem);
+}
+/* One quiet atmosphere layer: a faint gold glow behind the card. No moving background. */
+.hero-glow {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(640px circle at 76% 48%, rgba(196, 163, 107, .11), transparent 62%);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: clamp(2.5rem, 1rem + 5vw, 5.5rem);
+  align-items: center;
+}
+
+.hero-badge {
+  display: flex; align-items: center; gap: .75rem;
+  margin-bottom: 1.75rem;
+  font-size: .875rem; font-weight: 600; color: var(--steel); letter-spacing: .01em;
+}
+.hero-badge::before { content: ""; width: 28px; height: 1px; background: var(--gold); flex: none; }
+
+.hero h1 { color: var(--ivory); hyphens: manual; }
+.hero-accent { color: var(--gold-light); }
+
+.hero-lead {
+  margin-top: 1.5rem; max-width: 32rem;
+  font-size: var(--fs-lead); line-height: 1.55; color: var(--steel);
+}
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
+
+.hero-demo { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .9rem; margin-top: 1.5rem; }
+.hero-demo .link-arrow { color: var(--gold-light); }
+.hero-demo-note { font-size: .875rem; color: var(--steel); }
+
+/* Entrance: copy fades up once on load (CSS only, no JS needed) */
+.motion .hero-copy > * { animation: hero-in .8s var(--ease-out) both; }
+.motion .hero-copy > :nth-child(2) { animation-delay: .06s; }
+.motion .hero-copy > :nth-child(3) { animation-delay: .14s; }
+.motion .hero-copy > :nth-child(4) { animation-delay: .2s; }
+.motion .hero-copy > :nth-child(5) { animation-delay: .26s; }
+.motion .match { animation: hero-in .9s var(--ease-out) .18s both; }
+@keyframes hero-in { from { opacity: 0; transform: translateY(14px); } }
+
+/* ---------- Match card ---------- */
+
+.match {
+  justify-self: end;
+  width: 100%; max-width: 30rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--navy-2);
+  border: 1px solid var(--card-dark-line);
+  box-shadow: 0 40px 80px -40px rgba(3, 8, 20, .85);
+}
+
+.match-label { margin-bottom: .9rem; font-size: .75rem; color: var(--steel); }
+
+.match-party {
+  display: flex; align-items: center; gap: .9rem;
+  padding: 1rem 1.1rem; border-radius: 14px;
+}
+.match-athlete { background: var(--paper); }
+.match-sponsor { background: var(--navy); border: 1px solid var(--card-dark-line); }
+.match-photo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: none; }
+.match-mark {
+  width: 52px; height: 52px; border-radius: 50%; flex: none;
+  display: grid; place-items: center;
+  background: var(--gold); color: var(--navy);
+  font: 700 1.625rem/1 var(--serif);
+}
+.match-party-text { min-width: 0; }
+.match-role { font-size: .75rem; font-weight: 600; color: var(--gold-dark); }
+.match-sponsor .match-role { color: var(--gold-light); }
+.match-name { margin-top: .1rem; font-weight: 600; font-size: 1.0625rem; line-height: 1.25; color: var(--navy); }
+.match-sponsor .match-name { color: var(--ivory); }
+.match-meta { margin-top: .15rem; font-size: .8125rem; line-height: 1.4; color: var(--ink); }
+.match-sponsor .match-meta { color: var(--steel); }
+
+/* The link between the two cards: the gold line sits on the photo/mark axis */
+.match-link { position: relative; padding: 1.1rem 0 1.1rem 4.25rem; }
+.match-line {
+  position: absolute; top: -6px; bottom: -6px; left: calc(1.1rem + 25px);
+  width: 2px; border-radius: 2px;
+  background: var(--gold-light);
+  transform-origin: top;
+  transition: transform 1s cubic-bezier(.65, 0, .35, 1);
+}
+.match-line::before,
+.match-line::after {
+  content: ""; position: absolute; left: 50%; width: 10px; height: 10px; margin-left: -5px;
+  border-radius: 50%; background: var(--gold-light); box-shadow: 0 0 0 4px var(--navy-2);
+}
+.match-line::before { top: 0; }
+.match-line::after { bottom: 0; }
+
+.match-criteria { display: flex; flex-wrap: wrap; gap: .4rem; }
+.match-criteria li {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .3rem .65rem .3rem .45rem; border-radius: 999px;
+  background: rgba(196, 163, 107, .14);
+  color: var(--ivory); font-size: .8125rem; font-weight: 600;
+  transition: opacity .3s ease calc(.35s + var(--i) * .12s);
+}
+.match-criteria svg { width: 14px; height: 14px; fill: none; stroke: var(--gold-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.match-criteria path { stroke-dasharray: 14; stroke-dashoffset: 0; transition: stroke-dashoffset .35s ease calc(.4s + var(--i) * .12s); }
+
+.match-score {
+  display: inline-block; margin-top: .75rem;
+  padding: .35rem .8rem; border-radius: 999px;
+  background: var(--gold-light); color: var(--navy);
+  font-size: .875rem; font-weight: 600;
+  transition: opacity .4s ease .95s, transform .5s var(--ease-out) .95s;
+}
+
+/* Start state, only while motion is allowed and before the card has played */
+.motion .match:not(.is-played) .match-line { transform: scaleY(0); }
+.motion .match:not(.is-played) .match-criteria li { opacity: .45; }
+.motion .match:not(.is-played) .match-criteria path { stroke-dashoffset: 14; }
+.motion .match:not(.is-played) .match-score { opacity: 0; transform: translateY(6px); }
+.reveal-all .match .match-line { transform: none; }
+.reveal-all .match .match-criteria li, .reveal-all .match .match-score { opacity: 1; transform: none; }
+.reveal-all .match .match-criteria path { stroke-dashoffset: 0; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .hero { min-height: 0; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .match { justify-self: start; max-width: 32rem; }
+}
+
+@media (max-width: 600px) {
+  .hero { padding-top: calc(var(--header-h) + 2rem); padding-bottom: 3rem; }
+  .hero-badge { margin-bottom: 1.25rem; font-size: .8125rem; }
+  .hero-lead { margin-top: 1.1rem; }
+  .hero-actions { flex-direction: column; margin-top: 1.75rem; }
+  .hero-actions .btn { width: 100%; }
+  .match { padding: 1rem; }
+  .match-party { padding: .85rem .9rem; gap: .75rem; }
+  .match-photo, .match-mark { width: 44px; height: 44px; }
+  .match-mark { font-size: 1.375rem; }
+  .match-name { font-size: 1rem; }
+  .match-link { padding-left: 3.6rem; }
+  .match-line { left: calc(.9rem + 21px); }
+}
