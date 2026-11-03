@@ -433,8 +433,8 @@ export const legal = {
   persons: ['Aurel Eugster', 'Alex Platret', 'Maurice Strässle', 'Dozie Ilunga'],
   /** Unknown until the team decides. Never fill in a guess. */
   contact: {
-    postalAddress: null as string[] | null,
-    email: null as string | null,
+    postalAddress: ['Klosterstrasse 34', '8406 Winterthur', 'Schweiz'] as string[] | null,
+    email: 'hello@sponsuno.ch' as string | null,
   },
   contactLabels: { postalAddress: 'Postadresse', email: 'E-Mail' },
   credits: {
@@ -471,7 +471,6 @@ export const legal = {
         title: 'Kontakt',
         blocks: [
           { type: 'contact' },
-          { type: 'p', text: 'Postadresse und E-Mail-Adresse fehlen noch. Wir ergänzen sie in Kürze.' },
         ],
       },
       {
@@ -518,7 +517,7 @@ export const legal = {
             items: [
               'Diese Website setzt keine Cookies und verwendet keine Analyse- oder Trackingdienste.',
               'Es sind keine Inhalte Dritter eingebettet. Schriften und Bilder kommen vom selben Server wie die Website.',
-              'Beim Aufruf speichert unser Hoster GitHub (mit seinem Dienstleister Fastly) technische Zugriffsdaten, darunter Ihre IP-Adresse.',
+              'Beim Aufruf bearbeitet unser Hoster Cloudflare technische Zugriffsdaten, darunter Ihre IP-Adresse.',
               'Die Demo speichert Ihre Änderungen nur in Ihrem Browser. Nichts davon verlässt Ihr Gerät.',
               'Die Warteliste ist noch nicht freigeschaltet. Das Formular übermittelt nichts.',
             ],
@@ -532,14 +531,14 @@ export const legal = {
           { type: 'p', text: 'Verantwortlich für die Bearbeitung von Personendaten auf dieser Website ist das Team des Projekts Sponsuno, ein Projekt in Entwicklung im Youngpreneurs-Programm:' },
           { type: 'persons' },
           { type: 'contact' },
-          { type: 'p', text: 'Über diese Kontaktangaben erreichen Sie uns für alle Fragen zum Datenschutz und um Ihre Rechte auszuüben. Postadresse und E-Mail-Adresse fehlen noch; wir ergänzen sie in Kürze.' },
+          { type: 'p', text: 'Über diese Kontaktangaben erreichen Sie uns für alle Fragen zum Datenschutz und um Ihre Rechte auszuüben.' },
         ],
       },
       {
         id: 'hosting',
-        title: 'Hosting auf GitHub Pages',
+        title: 'Hosting bei Cloudflare',
         blocks: [
-          { type: 'p', text: 'Diese Website wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. Bei jedem Aufruf einer Seite bearbeitet GitHub technische Zugriffsdaten (Server-Logdaten), insbesondere:' },
+          { type: 'p', text: 'Diese Website wird über Cloudflare Workers bereitgestellt, einen Dienst der Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA. Bei jedem Aufruf einer Seite bearbeitet Cloudflare technische Zugriffsdaten, insbesondere:' },
           {
             type: 'list',
             items: [
@@ -550,9 +549,9 @@ export const legal = {
               'die zuvor besuchte Seite (Referrer), sofern Ihr Browser sie übermittelt',
             ],
           },
-          { type: 'p', text: ['Zweck: Ohne diese Daten kann die Website nicht ausgeliefert werden. Sie dienen ausserdem dem sicheren Betrieb und der Abwehr von Missbrauch. Nach Angaben von GitHub wird die IP-Adresse beim Besuch einer GitHub-Pages-Website aus Sicherheitsgründen protokolliert und gespeichert, auch wenn die Besucherin oder der Besucher nicht bei GitHub angemeldet ist (', { label: 'GitHub Docs: Was ist GitHub Pages?', href: 'https://docs.github.com/de/pages/getting-started-with-github-pages/what-is-github-pages' }, ').'] },
-          { type: 'p', text: ['GitHub setzt dafür Dienstleister ein, insbesondere das Content Delivery Network der Fastly, Inc. (USA), über dessen Server die Seiten ausgeliefert werden (', { label: 'Liste der Unterauftragsbearbeiter von GitHub', href: 'https://docs.github.com/en/site-policy/privacy-policies/github-subprocessors' }, ').'] },
-          { type: 'p', text: ['Wir selbst erhalten diese Logdaten nicht und werten sie nicht aus. Wie lange GitHub sie aufbewahrt, legt GitHub fest; eine konkrete Frist nennt GitHub nicht. Nach eigenen Angaben bewahrt GitHub Personendaten nur so lange auf, wie es für den jeweiligen Zweck (etwa Sicherheit und Betrieb) und für gesetzliche Pflichten nötig ist (', { label: 'Datenschutzerklärung von GitHub', href: 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement' }, ').'] },
+          { type: 'p', text: 'Zweck: Ohne diese Daten kann die Website nicht ausgeliefert werden. Sie dienen ausserdem dem sicheren Betrieb und der Abwehr von Angriffen und Missbrauch.' },
+          { type: 'p', text: ['Cloudflare bearbeitet diese Daten in unserem Auftrag. Für Daten, die Cloudflare zum Schutz seines Netzwerks verwendet, ist Cloudflare nach eigenen Angaben selbst verantwortlich (', { label: 'Datenschutzerklärung von Cloudflare', href: 'https://www.cloudflare.com/privacypolicy/' }, '). Mit Cloudflare besteht eine Vereinbarung zur Auftragsbearbeitung (', { label: 'Cloudflare Data Processing Addendum', href: 'https://www.cloudflare.com/cloudflare-customer-dpa/' }, ').'] },
+          { type: 'p', text: 'Wir haben keine Protokollierung einzelner Zugriffe eingerichtet und werten keine Zugriffsdaten aus. In unserem Cloudflare-Konto sehen wir zusammengefasste Zugriffsstatistiken und, falls eine Sicherheitsfunktion eingreift, eine Stichprobe dieser Ereignisse der letzten 31\u00A0Tage. Wie lange Cloudflare die Daten darüber hinaus aufbewahrt, legt Cloudflare fest; eine konkrete Frist nennt Cloudflare nicht.' },
           { type: 'p', text: 'Rechtsgrundlage für Besucherinnen und Besucher aus der EU und dem EWR: unser berechtigtes Interesse an einer sicheren und funktionsfähigen Website (Art. 6 Abs. 1 lit. f DSGVO).' },
         ],
       },
@@ -560,15 +559,15 @@ export const legal = {
         id: 'usa',
         title: 'Übermittlung in die USA',
         blocks: [
-          { type: 'p', text: ['GitHub und Fastly bearbeiten die Zugriffsdaten auch in den USA. GitHub, Inc. und Fastly, Inc. sind nach eigenen Angaben nach dem Swiss-U.S. Data Privacy Framework, dem EU-U.S. Data Privacy Framework und dessen Erweiterung für das Vereinigte Königreich zertifiziert. Den aktuellen Stand können Sie in der ', { label: 'offiziellen Liste des Data Privacy Framework', href: 'https://www.dataprivacyframework.gov/list' }, ' prüfen (Einträge «GitHub, Inc.» und «Fastly, Inc.»).'] },
-          { type: 'p', text: ['Der Bundesrat anerkennt seit dem 15.\u00A0September\u00A02024 für US-Unternehmen mit dieser Zertifizierung ein angemessenes Datenschutzniveau (', { label: 'Medienmitteilung des Bundesrates vom 14.\u00A0August\u00A02024', href: 'https://www.admin.ch/gov/de/start/dokumentation/medienmitteilungen/bundesrat.msg-id-102054.html' }, '). Für Übermittlungen aus der EU und dem EWR gilt der Angemessenheitsbeschluss der EU-Kommission zum EU-U.S. Data Privacy Framework (Art. 45 DSGVO). Zusätzlich stützt sich GitHub nach eigenen Angaben auf die Standardvertragsklauseln der EU-Kommission.'] },
+          { type: 'p', text: ['Cloudflare bearbeitet die Zugriffsdaten auch in den USA. Cloudflare, Inc. ist nach dem Swiss-U.S. Data Privacy Framework, dem EU-U.S. Data Privacy Framework und dessen Erweiterung für das Vereinigte Königreich zertifiziert. Den aktuellen Stand können Sie in der ', { label: 'offiziellen Liste des Data Privacy Framework', href: 'https://www.dataprivacyframework.gov/participant/5666' }, ' prüfen.'] },
+          { type: 'p', text: ['Der Bundesrat anerkennt seit dem 15.\u00A0September\u00A02024 für US-Unternehmen mit dieser Zertifizierung ein angemessenes Datenschutzniveau (', { label: 'Medienmitteilung des Bundesrates vom 14.\u00A0August\u00A02024', href: 'https://www.admin.ch/gov/de/start/dokumentation/medienmitteilungen/bundesrat.msg-id-102054.html' }, '). Für Übermittlungen aus der EU und dem EWR gilt der Angemessenheitsbeschluss der EU-Kommission zum EU-U.S. Data Privacy Framework (Art. 45 DSGVO). Sollte die Zertifizierung entfallen, stützt sich Cloudflare nach eigenen Angaben auf die Standardvertragsklauseln der EU-Kommission.'] },
         ],
       },
       {
         id: 'cookies',
         title: 'Keine Cookies, kein Tracking, keine Einbettungen',
         blocks: [
-          { type: 'p', text: 'Diese Website setzt keine Cookies und verwendet weder Analyse- noch Tracking- oder Werbedienste. Es sind keine Inhalte Dritter eingebettet, etwa Videos, Karten oder Social-Media-Schaltflächen. Schriften und Bilder werden vom selben Server ausgeliefert wie die Website; beim Laden werden keine Daten an Google oder andere Anbieter übermittelt.' },
+          { type: 'p', text: 'Diese Website setzt keine Cookies und verwendet weder Analyse- noch Tracking- oder Werbedienste. Funktionen von Cloudflare, die Cookies setzen (etwa Bot Fight Mode oder Challenges), haben wir nicht aktiviert. Es sind keine Inhalte Dritter eingebettet, etwa Videos, Karten oder Social-Media-Schaltflächen. Schriften und Bilder werden vom selben Server ausgeliefert wie die Website; beim Laden werden keine Daten an Google oder andere Anbieter übermittelt.' },
         ],
       },
       {
@@ -609,7 +608,7 @@ export const legal = {
               'Herausgabe oder Übertragung Ihrer Personendaten in einem gängigen elektronischen Format',
             ],
           },
-          { type: 'p', text: 'Besucherinnen und Besucher aus der EU und dem EWR haben zudem das Recht auf Einschränkung der Bearbeitung. Da wir selbst keine Zugriffsdaten erhalten, können wir zu den Server-Logdaten von GitHub keine Auskunft geben; dafür ist GitHub zuständig.' },
+          { type: 'p', text: 'Besucherinnen und Besucher aus der EU und dem EWR haben zudem das Recht auf Einschränkung der Bearbeitung. Da wir selbst keine Zugriffsdaten erhalten, können wir zu den Zugriffsdaten bei Cloudflare keine Auskunft geben; dafür ist Cloudflare zuständig.' },
           { type: 'h3', text: 'Beschwerde bei einer Aufsichtsbehörde' },
           { type: 'p', text: ['In der Schweiz ist der Eidgenössische Datenschutz- und Öffentlichkeitsbeauftragte (EDÖB), Feldeggweg 1, 3003 Bern, zuständig. Wie Sie eine Anzeige einreichen, erklärt der EDÖB auf der Seite ', { label: '«Eine Anzeige beim EDÖB erstatten»', href: 'https://www.edoeb.admin.ch/de/anzeige-einreichen' }, '; dort finden Sie auch die Anzeigeformulare.'] },
           { type: 'p', text: ['Besucherinnen und Besucher aus der EU und dem EWR können sich bei der Datenschutz-Aufsichtsbehörde ihres Wohnsitzlandes beschweren. Eine ', { label: 'Liste der Aufsichtsbehörden', href: 'https://www.edpb.europa.eu/about-edpb/about-edpb/members_en' }, ' führt der Europäische Datenschutzausschuss.'] },

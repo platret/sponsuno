@@ -78,7 +78,7 @@ Recommendation from the research (needs the team and the CD owner): refine rathe
 
 ## Demo app
 
-The demo (`/sponsuno/demo/`) uses the same tokens (`src/styles/tokens.css`) in an app layout:
+The demo (`/demo/`) uses the same tokens (`src/styles/tokens.css`) in an app layout:
 
 - Shell: navy sidebar (268 px, full height) with the role switch and navigation; the gold banner ("Demo mit fiktiven Daten") sits on top of the ivory content column (max 1180 px). Below 900 px the sidebar becomes a navy bottom tab bar, the role switch moves into a row above the view, and toasts appear at the top.
 - Active navigation: gold-light icon, faint gold background, a 2 px gold inset line on the left.

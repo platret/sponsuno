@@ -8,12 +8,12 @@ Sponsuno is a startup project of a four-person team in the Youngpreneurs program
 
 This repo holds two things:
 
-1. The public **landing page** (`/sponsuno/`). It explains the idea and collects interest on a waitlist.
-2. A **clickable demo** (`/sponsuno/demo/`) with fictional data, used to show the idea to sponsors, club boards and in pitches.
+1. The public **landing page** (`/`). It explains the idea and collects interest on a waitlist.
+2. A **clickable demo** (`/demo/`) with fictional data, used to show the idea to sponsors, club boards and in pitches.
 
 **The product does not exist yet.** Neither page may suggest otherwise.
 
-- Live: https://platret.github.io/sponsuno/ and https://platret.github.io/sponsuno/demo/
+- Live: https://sponsuno.ch and https://sponsuno.ch/demo/ (www.sponsuno.ch redirects to sponsuno.ch)
 - Repo: https://github.com/platret/sponsuno (public)
 - Language of the page: German, Swiss spelling, formal "Sie"
 
@@ -23,9 +23,9 @@ Node 20.19 or newer (CI uses 22).
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/sponsuno/ and /sponsuno/demo/
+npm run dev        # http://localhost:5173/ and /demo/
 npm run build      # typecheck, client build, prerender into dist/
-npm run preview    # serve dist/ at http://localhost:4173/sponsuno/
+npm run preview    # serve dist/ at http://localhost:4173/
 npm run typecheck
 ```
 
@@ -54,13 +54,14 @@ src/
   assets/photos/        Stock photos (Pexels, labelled "Symbolbild", credited in photoCredits): match card avatar, audience tiles.
                         Resized copies only; the originals live outside the repo in ../photo-originals/.
   vite-env.d.ts         Types for import.meta.env (VITE_WAITLIST_ENDPOINT) and window.__introFailsafe. Add new env vars here.
-public/                 Copied as-is (favicon.svg). In code, import assets instead of hardcoding /paths (the base path is /sponsuno/).
+public/                 Copied as-is (favicon.svg). In code, import assets instead of hardcoding /paths.
 demo/index.html         Second Vite entry: the clickable demo (client-only, noindex).
 impressum/index.html    Vite entry /impressum/ (data-page="impressum"), prerendered, works without JS.
 datenschutz/index.html  Vite entry /datenschutz/ (data-page="datenschutz"), prerendered, works without JS.
 src/demo/               The demo app, see "The demo" below.
 scripts/prerender.mjs   Injects the server render into dist/index.html, dist/impressum/ and dist/datenschutz/.
-.github/workflows/      Builds on pushes to main, on pull requests and on manual runs; deploys only from main.
+.github/workflows/      deploy.yml: Cloudflare production deploy on main, preview per pull request.
+wrangler.jsonc          Cloudflare Worker config: assets from dist/, custom domains sponsuno.ch and www.sponsuno.ch.
 docs/                   Images for the README only.
 ```
 
@@ -81,7 +82,7 @@ docs/                   Images for the README only.
 
 ## The demo (`src/demo/`)
 
-A small React app with hash routing (`#/partner/velo`), so it works on GitHub Pages without server rewrites. It is not prerendered and carries `noindex`.
+A small React app with hash routing (`#/partner/velo`), so it works without server rewrites. It is not prerendered and carries `noindex`.
 
 ```
 types.ts        Data model: SeekerProfile, Sponsor, Partnership, Draft, Reminder, DemoState
@@ -120,7 +121,7 @@ These come from the team's project rules. Breaking them makes the page say thing
 5. Interviews (five, autumn 2026, from the team's personal network) are not representative. Phrase findings as "mehrere Befragte", never as market facts. Never quote interviewees by name on the page.
 6. Fictional examples (the mountain biker, the bike shop) must stay labelled as fictional, AI-generated images as AI-generated, and stock photos as "Symbolbild".
 7. Culture clubs are part of the target group. Do not write copy that only speaks to sport.
-8. Do not present the name, trademark or a domain as secured. No `@sponsuno.com` addresses until a domain exists.
+8. Do not present the name or trademark as secured. The domain sponsuno.ch and the address hello@sponsuno.ch exist; do not invent other addresses.
 9. Sustainability claims (reused equipment, shared event tech) are ideas being checked, not results.
 
 ## Rules for data and privacy
@@ -148,16 +149,19 @@ Targets: LCP under 2.5 s on a throttled mid-range phone, CLS under 0.1, homepage
 
 ## Deploy
 
-- Push to `main` → GitHub Actions builds and deploys to GitHub Pages (`.github/workflows/deploy.yml`). Pull requests get a build check but no deploy.
-- **One-time setting:** Settings → Pages → Build and deployment → Source must be **GitHub Actions**. With "Deploy from a branch" GitHub would serve the unbuilt `index.html` and the site would be blank.
-- The site is served under `/sponsuno/`; `vite.config.ts` sets `base` from `BASE_PATH` (default `/sponsuno/`). For a root domain (e.g. Vercel), build with `BASE_PATH=/`.
+- Hosting: Cloudflare Workers with static assets (`wrangler.jsonc`, Worker `sponsuno`, serves `dist/`). Custom domains sponsuno.ch and www.sponsuno.ch; a Cloudflare Redirect Rule sends www to the apex.
+- Push to `main` → `.github/workflows/deploy.yml` builds and runs `wrangler deploy` (production). Pull requests from this repo run `wrangler preview --name pr-<number>` and get a preview URL on workers.dev.
+- GitHub secrets: `CLOUDFLARE_API_TOKEN` (account-owned token: Workers Admin, Zone › Workers Routes › Edit on sponsuno.ch) and `CLOUDFLARE_ACCOUNT_ID`.
+- DNS for sponsuno.ch is on Cloudflare. Never change or proxy the Infomaniak mail records (MX, SPF, DKIM `20261103._domainkey`, `_dmarc`, `autoconfig`, `autodiscover`).
+- Keep Bot Fight Mode and other cookie-setting Cloudflare features off: the Datenschutzerklärung says no cookies are set.
+- Workers observability is off (`observability.enabled: false`): the Datenschutzerklärung says no per-request logging is set up.
 - To store real sign-ups, set the repository variable `VITE_WAITLIST_ENDPOINT` (Settings → Secrets and variables → Actions → Variables).
 
 ## Before you finish
 
 1. `npm run build` passes (includes typecheck and prerender).
 2. Push your branch and open a PR so CI builds it (pushes to other branches alone run no CI).
-3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, the hero match card shows and its line draws, in-page links land below the header, the mobile menu opens and closes, the sticky waitlist bar appears on phones after the hero. If you touched the demo, click through both roles at `/sponsuno/demo/`.
+3. Check `npm run preview` in a browser at 1440 px and 375 px wide: no console errors, no horizontal scroll, the hero match card shows and its line draws, in-page links land below the header, the mobile menu opens and closes, the sticky waitlist bar appears on phones after the hero. If you touched the demo, click through both roles at `/demo/`.
 4. Check once with reduced motion emulated: everything visible, nothing moves.
 5. Copy changes: re-read the copy rules above.
 6. Update `DESIGN.md` if you changed tokens, components or motion; update this file if you changed architecture or rules; update `README.md` screenshots if the look changed noticeably.
@@ -167,10 +171,10 @@ Targets: LCP under 2.5 s on a throttled mid-range phone, CLS under 0.1, homepage
 
 - [ ] Waitlist endpoint (`VITE_WAITLIST_ENDPOINT`) and a double opt-in flow
 - [x] Impressum and privacy notice (`/impressum/`, `/datenschutz/`, November 2026). The waitlist section must be rewritten before the endpoint goes live
-- [ ] **Blocks merging the legal pages to `main`:** postal address (a c/o address is fine; no founder's home address without that founder's consent) and a working contact e-mail (not `@sponsuno`) in `legal.contact`. DSG Art. 19 and DSGVO Art. 13 require the controller's contact data as soon as the pages are public, not only once the waitlist opens
+- [x] Contact data in `legal.contact` (Klosterstrasse 34, 8406 Winterthur; hello@sponsuno.ch)
 - [ ] Commission model: rate, trigger, paying side
 - [ ] Name decision. Desk trademark check done 2026-11-03 (not legal advice): no SPONSUNO mark, company or domain anywhere checked (CH, EU, DE, AT, WIPO). Risk low to medium in CH (Sponsoo is active via sponsoo.ch but has no Swiss mark), high for an EU filing or DACH expansion: SPONSOO (EUTM 013271473) and SPONSU / SPONSUU / SPONZU (DBG, EUTM 019156718 / 019156613 / 019156702) cover sponsorship search in class 35. Next: attorney or IGE clearance opinion, then domains and a Swiss filing (IGE, CHF 350 online for 3 classes), or a rename away from SPONS-. Until decided, the page must not present the name as secured
 - [ ] Logo refinement with the CD owner (see DESIGN.md → Logo)
 - [x] Founders section (`#team`, November 2026) with monograms, and stock photos (Symbolbilder) for the match card and the audience section
 - [ ] Real, consented photos of the founders (the team section is ready for them, see "Team section" above) and, later, own photos of athletes, clubs and a local business to replace the stock Symbolbilder
-- [ ] Domain decision (the team prefers a .com; availability is not checked)
+- [x] Domain sponsuno.ch on Cloudflare (November 2026). sponsuno.com was free on 2026-11-03 but is not registered

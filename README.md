@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://platret.github.io/sponsuno/">
+  <a href="https://sponsuno.ch">
     <img src="docs/banner.jpg" alt="Sponsuno – Sponsoring, das zusammenpasst." width="100%">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://platret.github.io/sponsuno/"><img src="https://img.shields.io/badge/Live--Demo-ansehen-C4A36B?style=for-the-badge&labelColor=0B1830" alt="Live-Demo ansehen"></a>
+  <a href="https://sponsuno.ch"><img src="https://img.shields.io/badge/Live--Demo-ansehen-C4A36B?style=for-the-badge&labelColor=0B1830" alt="Live-Demo ansehen"></a>
   <img src="https://img.shields.io/badge/Status-im%20Aufbau-1D2F52?style=for-the-badge&labelColor=0B1830" alt="Status: im Aufbau">
   <img src="https://img.shields.io/badge/Start-Deutschschweiz-B08D57?style=for-the-badge&labelColor=0B1830" alt="Start: Deutschschweiz">
 </p>
@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <a href="https://platret.github.io/sponsuno/"><b>Live ansehen</b></a>
+  <a href="https://sponsuno.ch"><b>Live ansehen</b></a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="#was-drin-steckt">Was drin steckt</a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -159,7 +159,7 @@ npm install
 npm run dev
 ```
 
-Dann http://localhost:5173/sponsuno/ öffnen. Weitere Befehle: `npm run build` (Typprüfung, Build und Vorrendern nach `dist/`), `npm run preview` (den Build lokal ansehen), `npm run typecheck`.
+Dann http://localhost:5173/ öffnen. Weitere Befehle: `npm run build` (Typprüfung, Build und Vorrendern nach `dist/`), `npm run preview` (den Build lokal ansehen), `npm run typecheck`.
 
 ```
 sponsuno/
@@ -176,13 +176,14 @@ sponsuno/
 │   ├── styles/site.css     Design-Tokens aus dem CD und alle Styles
 │   └── assets/             Logos und Symbolbild
 ├── scripts/prerender.mjs   Vorrendern beim Build
-├── .github/workflows/      Build bei Pull Requests und auf main, Deploy von main
+├── .github/workflows/      Vorschau bei Pull Requests, Deploy von main (Cloudflare)
+├── wrangler.jsonc          Cloudflare Worker: Domains und Assets
 ├── AGENTS.md               Regeln und Architektur für jede Session
 ├── DESIGN.md               Farben, Schrift, Komponenten, Bewegung
 └── docs/                   Bilder für dieses README
 ```
 
-Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie auf GitHub Pages; Pull Requests werden nur gebaut. Voraussetzung (einmalig): unter Settings → Pages ist als Quelle «GitHub Actions» gewählt.
+Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie über Cloudflare Workers auf https://sponsuno.ch. Pull Requests bekommen eine Vorschau-URL. Details in [AGENTS.md](AGENTS.md#deploy).
 
 <br>
 

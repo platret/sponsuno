@@ -1,5 +1,4 @@
-// Base-aware links. The site is served under a base path (/sponsuno/ on GitHub Pages, see vite.config.ts),
-// so links between pages are built from import.meta.env.BASE_URL instead of hardcoded paths.
+// Base-aware links: links between pages are built from import.meta.env.BASE_URL instead of hardcoded paths.
 
 const BASE = import.meta.env.BASE_URL;
 
