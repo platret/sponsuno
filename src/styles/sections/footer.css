@@ -1,5 +1,6 @@
 /* Footer: second half of the navy closing block (flat navy, same as .wl). A thin rule, claim and links,
-   the logotype at full container width, then the legal row. Static, no effects on the logo. */
+   the logotype at full container width, then the bottom row. Static, no effects on the logo.
+   On sub-pages (Impressum, Datenschutz) it stands alone: .ft-standalone drops the top rule. */
 
 .ft {
   --focus: var(--gold-light);
@@ -19,17 +20,21 @@
 
 .ft-sub { max-width: 28ch; font-size: 1rem; line-height: 1.6; color: var(--steel); }
 
-.ft-cols { display: flex; gap: clamp(2.5rem, 1.5rem + 4vw, 5.5rem); }
+.ft-standalone .ft-top { border-top: 0; }
+
+.ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2.5rem, 1.5rem + 4vw, 5.5rem); }
 .ft-head { margin-bottom: .35rem; font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--gold-light); }
 .ft-link {
   display: inline-flex; align-items: center; min-height: 44px;
   font-size: var(--fs-small); color: var(--steel); text-decoration: none;
   transition: color .2s ease;
 }
-.ft-link:hover { color: var(--ivory); }
+.ft-link:hover,
+.ft-link[aria-current] { color: var(--ivory); }
 
 .ft-wordmark {
   display: block; width: 100%; height: auto;
+  aspect-ratio: 600 / 152; /* explicit ratio for the lazy-loaded SVG */
   margin-top: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
 }
 
@@ -40,14 +45,9 @@
   border-top: 1px solid rgba(243, 239, 230, .12);
   font-size: .875rem; line-height: 1.5; color: var(--steel);
 }
-.ft-legal { margin-left: auto; }
-
 @media (max-width: 760px) {
   .ft-top { grid-template-columns: minmax(0, 1fr); }
 }
-/* The three legal items only fit on one line from ~1080px; below that, stack them so the note
-   never wraps alone against the right edge. */
-@media (max-width: 1080px) {
+@media (max-width: 520px) {
   .ft-bottom { flex-direction: column; gap: .35rem; }
-  .ft-legal { margin-left: 0; }
 }

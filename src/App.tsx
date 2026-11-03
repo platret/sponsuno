@@ -4,12 +4,14 @@ import { observeReveals, scrollToHash } from './lib/motion';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ProofLine } from './components/ProofLine';
+import { Audience } from './components/Audience';
 import { Problems } from './components/Problems';
 import { HowItWorks } from './components/HowItWorks';
 import { AiManager } from './components/AiManager';
 import { Support } from './components/Support';
 import { Pricing } from './components/Pricing';
 import { Faq } from './components/Faq';
+import { Team } from './components/Team';
 import { Waitlist } from './components/Waitlist';
 import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
@@ -45,12 +47,14 @@ export default function App() {
       <main id="inhalt">
         <Hero onChooseRole={setRole} />
         <ProofLine />
+        <Audience />
         <Problems />
         <HowItWorks onChooseRole={setRole} />
         <AiManager />
         <Support />
         <Pricing />
         <Faq />
+        <Team />
         <Waitlist role={role} onRoleChange={setRole} />
       </main>
       <Footer />

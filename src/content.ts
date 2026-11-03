@@ -36,13 +36,20 @@ export const hero = {
 };
 
 // Fictional example for the hero card. Keep the label whenever this changes.
+// The photo is a stock photo (Pexels, see photoCredits), not the person described: hence "Symbolbild".
 export const match = {
   label: 'Beispiel mit fiktiven Angaben',
-  athlete: { role: 'Sucht Unterstützung', name: 'Langstrecken-Mountainbikerin', meta: 'Zürcher Oberland', need: 'Material und Reisekosten' },
+  athlete: {
+    role: 'Sucht Unterstützung',
+    name: 'Langstrecken-Mountainbikerin',
+    meta: 'Zürcher Oberland',
+    need: 'Material und Reisekosten',
+    photoAlt: 'Mountainbikerin mit Helm und Sportbrille auf einem Waldweg',
+  },
   sponsor: { role: 'Möchte sponsern', mark: 'V', name: 'Velogeschäft', meta: 'Zürcher Oberland', need: 'Material und Saisonbeitrag' },
   criteria: ['Region', 'Unterstützung', 'Branche', 'Budget'],
   result: 'Passt in 4 von 4 Kriterien',
-  imageNote: 'KI-generiertes Symbolbild',
+  imageNote: 'Symbolbild',
 };
 
 export const proof = {
@@ -53,6 +60,45 @@ export const proof = {
   ],
   disciplinesLabel: 'Zum Beispiel für',
   disciplines: ['Mountainbike', 'Unihockey', 'Musikgesellschaft', 'Beachvolleyball', 'Theaterverein', 'Triathlon', 'Chor', 'Turnverein'],
+};
+
+// Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits):
+// the people shown have nothing to do with Sponsuno. Keep the note whenever the photos change.
+export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
+
+export const audience = {
+  title: 'Für wen Sponsuno gedacht ist',
+  intro: 'Für alle, die in ihrer Region Unterstützung suchen oder geben möchten, im Sport wie in der Kultur.',
+  items: [
+    {
+      image: 'athlete',
+      label: 'Sportlerinnen und Sportler',
+      text: 'Sie trainieren neben Ausbildung oder Beruf und suchen Unterstützung für Material, Startgelder oder Reisen.',
+      alt: 'Eine Person läuft auf einem schmalen Bergweg durch grüne Hänge mit blühenden Alpenrosen.',
+    },
+    {
+      image: 'sportverein',
+      label: 'Sportvereine',
+      text: 'Ehrenamtliche Vorstände, die Partner für Trikots, Trainingslager oder Turniere suchen.',
+      alt: 'Ein Ruderboot mit drei Personen von oben auf einem Fluss in der Abendsonne.',
+    },
+    {
+      image: 'kulturverein',
+      label: 'Kulturvereine',
+      text: 'Musikgesellschaften, Chöre und Theatervereine, die Instrumente, Kostüme oder Aufführungen finanzieren müssen.',
+      alt: 'Musikanten in Tracht und Filzhut spielen Posaune, vorne ein Notenhalter.',
+    },
+    {
+      image: 'firma',
+      label: 'Firmen aus der Region',
+      text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
+      alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
+    },
+  ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
+  noteBefore: 'Symbolbilder: Die abgebildeten Personen haben keinen Bezug zu Sponsuno. Bildnachweise im ',
+  noteLink: 'Impressum',
+  noteLinkHref: 'impressum/',
+  noteAfter: '.',
 };
 
 export const problem = {
@@ -187,6 +233,31 @@ export const faq = {
   ],
 };
 
+// Founders section (id="team"), between FAQ and waitlist. Team decision (2026-11-03): full names allowed here.
+// Nothing else personal (no ages, schools, home addresses, private e-mails, social handles).
+// Without a photo the card shows a monogram. To add a real, consented photo later: put a square JPEG
+// (at least 240 x 240 px, under 40 KB) in src/assets/photos/, import it at the top of this file and set
+// `photo: { src: importedFile, alt: 'Porträt von …' }` on the person.
+export type TeamMember = {
+  name: string;
+  /** Provisional focus in the team */
+  focus: string;
+  photo?: { src: string; alt: string };
+};
+
+const teamMembers: TeamMember[] = [
+  { name: 'Aurel Eugster', focus: 'Medien und Content' },
+  { name: 'Alex Platret', focus: 'Technik' },
+  { name: 'Maurice Strässle', focus: 'Branding, Marketing, Sales und Partnerschaften' },
+  { name: 'Dozie Ilunga', focus: 'Organisation und Prozesse' },
+];
+
+export const team = {
+  title: 'Wer hinter Sponsuno steht',
+  intro: 'Wir sind vier Gründer im Youngpreneurs-Programm und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
+  members: teamMembers,
+};
+
 export const waitlist = {
   title: 'Als Erste erfahren, wann es losgeht.',
   intro: 'Tragen Sie sich ein. Wir melden uns, sobald es in der Deutschschweiz losgeht.',
@@ -209,9 +280,12 @@ export const waitlist = {
   previewSuccess: 'So sieht die Bestätigung aus. Gespeichert wurde nichts, die Warteliste ist noch nicht freigeschaltet.',
 };
 
+// Footer link hrefs: '#id' = section of the landing page, 'path/' = page relative to the site root
+// (resolved with the base path by siteHref() in lib/links.ts, so they work from every page).
+export type FooterLink = { href: string; label: string };
+
 export const footer = {
   sub: 'Sponsoring für Sport und Kultur in der Deutschschweiz. Sponsuno ist im Aufbau.',
-  legalNote: 'Impressum und Datenschutzerklärung folgen vor dem Start.',
   columns: [
     {
       title: 'Plattform',
@@ -226,11 +300,19 @@ export const footer = {
       title: 'Mehr',
       links: [
         { href: '#fragen', label: 'Fragen' },
+        { href: '#team', label: 'Team' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
     },
-  ],
+    {
+      title: 'Rechtliches',
+      links: [
+        { href: 'impressum/', label: 'Impressum' },
+        { href: 'datenschutz/', label: 'Datenschutz' },
+      ],
+    },
+  ] satisfies { title: string; links: FooterLink[] }[],
   copyright: '© 2026 Team Sponsuno',
   program: 'Ein Projekt im Youngpreneurs-Programm',
 };
@@ -245,3 +327,303 @@ export const menu = {
   close: 'Menü schliessen',
   label: 'Menü',
 };
+
+// ---------- Legal pages: Impressum (/impressum/) and Datenschutzerklärung (/datenschutz/) ----------
+// Rendered by src/components/LegalPage.tsx and prerendered at build time. Rules:
+// - Never invent contact data. Unknown fields stay null and render as pending (legal.pending).
+//   The contact data is legally required as soon as the pages are public (DSG Art. 19 Abs. 2 lit. a,
+//   DSGVO Art. 13 Abs. 1 lit. a): fill it in before deploying. The build warns while a field is null.
+//   No @sponsuno addresses until a domain exists (AGENTS.md, copy rule 8).
+// - No statement about a commercial-register entry, either way.
+// - Team decision (2026-11-03): the four founders appear with full names here and in the founders section.
+//   Nothing else personal about them (no ages, schools, home addresses, private e-mails, social handles).
+// - Update `legal.updated` and the Datenschutz text before the waitlist endpoint is switched on.
+
+/** A link inside legal text. `href` is either absolute (https://…) or a page path relative to the site root ('demo/'). */
+export type LegalLink = { label: string; href: string };
+/** Plain text, or text with inline links. */
+export type LegalText = string | (string | LegalLink)[];
+
+export type LegalBlock =
+  | { type: 'p'; text: LegalText }
+  | { type: 'list'; items: LegalText[] }
+  | { type: 'h3'; text: string }
+  /** The four responsible persons */
+  | { type: 'persons' }
+  /** Postal address and e-mail from legal.contact (null fields show the pending note) */
+  | { type: 'contact' }
+  /** Image credits: photoCredits plus the AI-generated images */
+  | { type: 'credits' };
+
+export type LegalSection = { id: string; title: string; blocks: LegalBlock[] };
+
+export type LegalPageContent = {
+  title: string;
+  intro: LegalText;
+  sections: LegalSection[];
+};
+
+/** A stock or commissioned photo used on the site. Filled in by whoever adds a photo; listed in the Impressum. */
+export type PhotoCredit = {
+  /** What the photo shows and where it is used, e.g. 'Unihockey-Training, Abschnitt "Nicht nur Geld"' */
+  subject: string;
+  photographer: string;
+  /** Platform or archive, e.g. 'Unsplash' */
+  source: string;
+  /** Page of the photo at the source */
+  sourceUrl: string;
+  /** Licence name, e.g. 'Unsplash-Lizenz' */
+  licence: string;
+  licenceUrl?: string;
+};
+
+/** Every third-party photo on the site, in page order. Listed in the Impressum. Originals stay outside the repo. */
+export const photoCredits: PhotoCredit[] = [
+  {
+    subject: 'Mountainbikerin in der Beispielkarte (Startseite), Symbolbild',
+    photographer: 'Corneliu Stefan Esanu',
+    source: 'Pexels',
+    sourceUrl: 'https://www.pexels.com/photo/woman-riding-on-a-mountain-bike-23410483/',
+    licence: 'Pexels-Lizenz',
+    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
+  },
+  {
+    subject: 'Traillauf auf einem Bergweg, Abschnitt «Für wen Sponsuno gedacht ist», Symbolbild',
+    photographer: 'Alin Serban',
+    source: 'Pexels',
+    sourceUrl: 'https://www.pexels.com/photo/trail-runner-in-green-mountain-landscape-30932860/',
+    licence: 'Pexels-Lizenz',
+    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
+  },
+  {
+    subject: 'Ruderteam auf dem Fluss, Abschnitt «Für wen Sponsuno gedacht ist», Symbolbild',
+    photographer: 'Adrian Jozefowicz',
+    source: 'Pexels',
+    sourceUrl: 'https://www.pexels.com/photo/three-people-on-brown-canoe-sailing-on-calm-water-1046231/',
+    licence: 'Pexels-Lizenz',
+    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
+  },
+  {
+    subject: 'Blasmusik in Tracht, Abschnitt «Für wen Sponsuno gedacht ist», Symbolbild',
+    photographer: 'Bastian Riccardi',
+    source: 'Pexels',
+    sourceUrl: 'https://www.pexels.com/photo/traditional-bavarian-musicians-playing-trombones-34013753/',
+    licence: 'Pexels-Lizenz',
+    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
+  },
+  {
+    subject: 'Schreinerei, Abschnitt «Für wen Sponsuno gedacht ist», Symbolbild',
+    photographer: 'cottonbro studio',
+    source: 'Pexels',
+    sourceUrl: 'https://www.pexels.com/photo/men-looking-at-a-piece-of-wood-7484154/',
+    licence: 'Pexels-Lizenz',
+    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
+  },
+];
+
+export const legal = {
+  updated: 'Stand: November 2026',
+  skipLink: 'Zum Inhalt springen',
+  backHome: 'Zur Startseite',
+  homeLabel: 'Sponsuno, zur Startseite',
+  tocLabel: 'Auf dieser Seite',
+  pending: 'fehlt noch, wird in Kürze ergänzt.',
+  project: 'Sponsuno',
+  projectNote: 'Projekt in Entwicklung im Youngpreneurs-Programm',
+  persons: ['Aurel Eugster', 'Alex Platret', 'Maurice Strässle', 'Dozie Ilunga'],
+  /** Unknown until the team decides. Never fill in a guess. */
+  contact: {
+    postalAddress: null as string[] | null,
+    email: null as string | null,
+  },
+  contactLabels: { postalAddress: 'Postadresse', email: 'E-Mail' },
+  credits: {
+    teamWork: 'Texte, Gestaltung, Logo und Corporate Design: Team Sponsuno.',
+    photosLabel: 'Fotos',
+    photosNone: 'Derzeit verwendet diese Website keine Fotos von Dritten.',
+    photoBy: 'Foto',
+    aiLabel: 'KI-generierte Bilder',
+    aiImages: ['Porträt der Mountainbikerin in der Demo (Profil und Sponsor-Cockpit): KI-generiert, Symbolbild ohne reale Person.'],
+    fonts: 'Schriften: Cormorant Garamond und Manrope, beide unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
+  },
+
+  impressum: {
+    title: 'Impressum',
+    intro: 'Angaben zum Projekt Sponsuno und zu dieser Website.',
+    sections: [
+      {
+        id: 'betreiber',
+        title: 'Betreiber',
+        blocks: [
+          { type: 'p', text: 'Diese Website gehört zum Projekt Sponsuno. Sponsuno ist ein Projekt in Entwicklung im Youngpreneurs-Programm und wird von einem Team aus vier Personen getragen.' },
+        ],
+      },
+      {
+        id: 'verantwortlich',
+        title: 'Verantwortliche Personen',
+        blocks: [
+          { type: 'p', text: 'Für den Inhalt dieser Website verantwortlich:' },
+          { type: 'persons' },
+        ],
+      },
+      {
+        id: 'kontakt',
+        title: 'Kontakt',
+        blocks: [
+          { type: 'contact' },
+          { type: 'p', text: 'Postadresse und E-Mail-Adresse fehlen noch. Wir ergänzen sie in Kürze.' },
+        ],
+      },
+      {
+        id: 'hinweis',
+        title: 'Hinweis zum Inhalt',
+        blocks: [
+          { type: 'p', text: 'Diese Website beschreibt eine geplante Plattform. Sponsuno ist noch nicht in Betrieb: Vermittlung, KI-Sponsoringmanager und Zahlungen gibt es noch nicht. Angaben zu Funktionen, Kosten und Abläufen geben den aktuellen Planungsstand wieder und können sich ändern.' },
+          { type: 'p', text: ['Die ', { label: 'Demo', href: 'demo/' }, ' ist ein klickbarer Prototyp mit fiktiven Daten. Personen, Firmen, Vereine und Beträge darin sind erfunden. Ähnlichkeiten mit realen Personen oder Firmen sind nicht beabsichtigt.'] },
+        ],
+      },
+      {
+        id: 'haftung',
+        title: 'Haftungsausschluss',
+        blocks: [
+          { type: 'h3', text: 'Inhalte' },
+          { type: 'p', text: 'Wir erstellen die Inhalte dieser Website mit Sorgfalt. Für ihre Richtigkeit, Vollständigkeit und Aktualität übernehmen wir jedoch keine Gewähr. Haftungsansprüche wegen Schäden, die aus dem Zugriff auf diese Website, ihrer Nutzung oder aus technischen Störungen entstehen, sind ausgeschlossen, soweit das Gesetz dies zulässt.' },
+          { type: 'h3', text: 'Links' },
+          { type: 'p', text: 'Diese Website enthält Links zu Websites Dritter. Auf deren Inhalte haben wir keinen Einfluss; dafür ist allein der jeweilige Anbieter verantwortlich. Beim Setzen der Links waren keine rechtswidrigen Inhalte erkennbar. Erfahren wir von einem Rechtsverstoss, entfernen wir den betreffenden Link.' },
+        ],
+      },
+      {
+        id: 'urheberrecht',
+        title: 'Urheberrecht und Bildnachweise',
+        blocks: [
+          { type: 'p', text: 'Texte, Gestaltung, Logo und Bilder dieser Website sind urheberrechtlich geschützt. Ohne vorherige schriftliche Zustimmung der Rechteinhaber dürfen sie nicht kopiert, verändert oder weiterverwendet werden, soweit das Gesetz es nicht ausdrücklich erlaubt.' },
+          { type: 'credits' },
+        ],
+      },
+    ],
+  } satisfies LegalPageContent,
+
+  datenschutz: {
+    // Soft hyphen (\u00AD): the long word breaks cleanly in the H1 on phones.
+    // Dates use no-break spaces (\u00A0) so "15." never ends a line on its own.
+    title: 'Datenschutz\u00ADerklärung',
+    intro: 'Hier erfahren Sie, welche Personendaten beim Besuch dieser Website bearbeitet werden, wozu das geschieht und welche Rechte Sie haben. Die Erklärung richtet sich nach dem Schweizer Datenschutzgesetz (DSG). Für Besucherinnen und Besucher aus der EU und dem EWR enthält sie auch die Angaben nach Art. 13 der Datenschutz-Grundverordnung (DSGVO).',
+    sections: [
+      {
+        id: 'kurz',
+        title: 'Kurz zusammengefasst',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Diese Website setzt keine Cookies und verwendet keine Analyse- oder Trackingdienste.',
+              'Es sind keine Inhalte Dritter eingebettet. Schriften und Bilder kommen vom selben Server wie die Website.',
+              'Beim Aufruf speichert unser Hoster GitHub (mit seinem Dienstleister Fastly) technische Zugriffsdaten, darunter Ihre IP-Adresse.',
+              'Die Demo speichert Ihre Änderungen nur in Ihrem Browser. Nichts davon verlässt Ihr Gerät.',
+              'Die Warteliste ist noch nicht freigeschaltet. Das Formular übermittelt nichts.',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'verantwortlich',
+        title: 'Verantwortlich',
+        blocks: [
+          { type: 'p', text: 'Verantwortlich für die Bearbeitung von Personendaten auf dieser Website ist das Team des Projekts Sponsuno, ein Projekt in Entwicklung im Youngpreneurs-Programm:' },
+          { type: 'persons' },
+          { type: 'contact' },
+          { type: 'p', text: 'Über diese Kontaktangaben erreichen Sie uns für alle Fragen zum Datenschutz und um Ihre Rechte auszuüben. Postadresse und E-Mail-Adresse fehlen noch; wir ergänzen sie in Kürze.' },
+        ],
+      },
+      {
+        id: 'hosting',
+        title: 'Hosting auf GitHub Pages',
+        blocks: [
+          { type: 'p', text: 'Diese Website wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. Bei jedem Aufruf einer Seite bearbeitet GitHub technische Zugriffsdaten (Server-Logdaten), insbesondere:' },
+          {
+            type: 'list',
+            items: [
+              'IP-Adresse des aufrufenden Geräts',
+              'Datum und Uhrzeit des Zugriffs',
+              'aufgerufene Seite oder Datei',
+              'Browser und Betriebssystem (User-Agent)',
+              'die zuvor besuchte Seite (Referrer), sofern Ihr Browser sie übermittelt',
+            ],
+          },
+          { type: 'p', text: ['Zweck: Ohne diese Daten kann die Website nicht ausgeliefert werden. Sie dienen ausserdem dem sicheren Betrieb und der Abwehr von Missbrauch. Nach Angaben von GitHub wird die IP-Adresse beim Besuch einer GitHub-Pages-Website aus Sicherheitsgründen protokolliert und gespeichert, auch wenn die Besucherin oder der Besucher nicht bei GitHub angemeldet ist (', { label: 'GitHub Docs: Was ist GitHub Pages?', href: 'https://docs.github.com/de/pages/getting-started-with-github-pages/what-is-github-pages' }, ').'] },
+          { type: 'p', text: ['GitHub setzt dafür Dienstleister ein, insbesondere das Content Delivery Network der Fastly, Inc. (USA), über dessen Server die Seiten ausgeliefert werden (', { label: 'Liste der Unterauftragsbearbeiter von GitHub', href: 'https://docs.github.com/en/site-policy/privacy-policies/github-subprocessors' }, ').'] },
+          { type: 'p', text: ['Wir selbst erhalten diese Logdaten nicht und werten sie nicht aus. Wie lange GitHub sie aufbewahrt, legt GitHub fest; eine konkrete Frist nennt GitHub nicht. Nach eigenen Angaben bewahrt GitHub Personendaten nur so lange auf, wie es für den jeweiligen Zweck (etwa Sicherheit und Betrieb) und für gesetzliche Pflichten nötig ist (', { label: 'Datenschutzerklärung von GitHub', href: 'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement' }, ').'] },
+          { type: 'p', text: 'Rechtsgrundlage für Besucherinnen und Besucher aus der EU und dem EWR: unser berechtigtes Interesse an einer sicheren und funktionsfähigen Website (Art. 6 Abs. 1 lit. f DSGVO).' },
+        ],
+      },
+      {
+        id: 'usa',
+        title: 'Übermittlung in die USA',
+        blocks: [
+          { type: 'p', text: ['GitHub und Fastly bearbeiten die Zugriffsdaten auch in den USA. GitHub, Inc. und Fastly, Inc. sind nach eigenen Angaben nach dem Swiss-U.S. Data Privacy Framework, dem EU-U.S. Data Privacy Framework und dessen Erweiterung für das Vereinigte Königreich zertifiziert. Den aktuellen Stand können Sie in der ', { label: 'offiziellen Liste des Data Privacy Framework', href: 'https://www.dataprivacyframework.gov/list' }, ' prüfen (Einträge «GitHub, Inc.» und «Fastly, Inc.»).'] },
+          { type: 'p', text: ['Der Bundesrat anerkennt seit dem 15.\u00A0September\u00A02024 für US-Unternehmen mit dieser Zertifizierung ein angemessenes Datenschutzniveau (', { label: 'Medienmitteilung des Bundesrates vom 14.\u00A0August\u00A02024', href: 'https://www.admin.ch/gov/de/start/dokumentation/medienmitteilungen/bundesrat.msg-id-102054.html' }, '). Für Übermittlungen aus der EU und dem EWR gilt der Angemessenheitsbeschluss der EU-Kommission zum EU-U.S. Data Privacy Framework (Art. 45 DSGVO). Zusätzlich stützt sich GitHub nach eigenen Angaben auf die Standardvertragsklauseln der EU-Kommission.'] },
+        ],
+      },
+      {
+        id: 'cookies',
+        title: 'Keine Cookies, kein Tracking, keine Einbettungen',
+        blocks: [
+          { type: 'p', text: 'Diese Website setzt keine Cookies und verwendet weder Analyse- noch Tracking- oder Werbedienste. Es sind keine Inhalte Dritter eingebettet, etwa Videos, Karten oder Social-Media-Schaltflächen. Schriften und Bilder werden vom selben Server ausgeliefert wie die Website; beim Laden werden keine Daten an Google oder andere Anbieter übermittelt.' },
+        ],
+      },
+      {
+        id: 'demo',
+        title: 'Demo',
+        blocks: [
+          { type: 'p', text: ['Die ', { label: 'Demo', href: 'demo/' }, ' ist ein Prototyp mit fiktiven Daten. Damit Ihre Änderungen (zum Beispiel ein bearbeitetes Profil oder ein Entwurf) beim nächsten Besuch noch da sind, speichert die Demo sie im lokalen Speicher Ihres Browsers (localStorage, Schlüssel «sponsuno-demo-v2»). Diese Daten bleiben auf Ihrem Gerät und werden weder an uns noch an Dritte übermittelt.'] },
+          { type: 'p', text: 'Löschen können Sie die Daten jederzeit, indem Sie in Ihrem Browser die Websitedaten dieser Seite löschen. Die Demo zeigt danach wieder den Ausgangszustand.' },
+        ],
+      },
+      {
+        id: 'warteliste',
+        title: 'Warteliste',
+        blocks: [
+          { type: 'p', text: 'Die Warteliste ist noch nicht freigeschaltet. Das Formular zeigt nur eine Vorschau der Bestätigung; Ihre E-Mail-Adresse und Ihre Auswahl werden weder gespeichert noch übermittelt.' },
+          { type: 'p', text: 'Bevor wir die Warteliste freischalten, ergänzen wir diese Datenschutzerklärung: welche Daten wir dann speichern, bei welchem Anbieter, wie lange und wie Sie sich wieder austragen können.' },
+        ],
+      },
+      {
+        id: 'links',
+        title: 'Links zu anderen Websites',
+        blocks: [
+          { type: 'p', text: 'Diese Website enthält Links zu Websites Dritter. Erst wenn Sie einem solchen Link folgen, erhält der jeweilige Anbieter Daten von Ihrem Browser, etwa Ihre IP-Adresse. Für die Datenbearbeitung auf diesen Websites ist der jeweilige Anbieter verantwortlich.' },
+        ],
+      },
+      {
+        id: 'rechte',
+        title: 'Ihre Rechte',
+        blocks: [
+          { type: 'p', text: 'Sie haben im Rahmen des anwendbaren Datenschutzrechts insbesondere folgende Rechte:' },
+          {
+            type: 'list',
+            items: [
+              'Auskunft darüber, ob und welche Personendaten wir über Sie bearbeiten',
+              'Berichtigung unrichtiger Personendaten',
+              'Löschung Ihrer Personendaten',
+              'Widerspruch gegen die Bearbeitung Ihrer Personendaten',
+              'Herausgabe oder Übertragung Ihrer Personendaten in einem gängigen elektronischen Format',
+            ],
+          },
+          { type: 'p', text: 'Besucherinnen und Besucher aus der EU und dem EWR haben zudem das Recht auf Einschränkung der Bearbeitung. Da wir selbst keine Zugriffsdaten erhalten, können wir zu den Server-Logdaten von GitHub keine Auskunft geben; dafür ist GitHub zuständig.' },
+          { type: 'h3', text: 'Beschwerde bei einer Aufsichtsbehörde' },
+          { type: 'p', text: ['In der Schweiz ist der Eidgenössische Datenschutz- und Öffentlichkeitsbeauftragte (EDÖB), Feldeggweg 1, 3003 Bern, zuständig. Wie Sie eine Anzeige einreichen, erklärt der EDÖB auf der Seite ', { label: '«Eine Anzeige beim EDÖB erstatten»', href: 'https://www.edoeb.admin.ch/de/anzeige-einreichen' }, '; dort finden Sie auch die Anzeigeformulare.'] },
+          { type: 'p', text: ['Besucherinnen und Besucher aus der EU und dem EWR können sich bei der Datenschutz-Aufsichtsbehörde ihres Wohnsitzlandes beschweren. Eine ', { label: 'Liste der Aufsichtsbehörden', href: 'https://www.edpb.europa.eu/about-edpb/about-edpb/members_en' }, ' führt der Europäische Datenschutzausschuss.'] },
+        ],
+      },
+      {
+        id: 'aenderungen',
+        title: 'Änderungen',
+        blocks: [
+          { type: 'p', text: 'Wir passen diese Datenschutzerklärung an, wenn sich die Website oder die Rechtslage ändert, spätestens bevor die Warteliste freigeschaltet wird. Es gilt die hier veröffentlichte Fassung.' },
+        ],
+      },
+    ],
+  } satisfies LegalPageContent,
+};
+
+export type LegalPageId = 'impressum' | 'datenschutz';

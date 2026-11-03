@@ -164,6 +164,9 @@ Dann http://localhost:5173/sponsuno/ öffnen. Weitere Befehle: `npm run build` (
 ```
 sponsuno/
 ├── index.html              Vite-Einstieg, Schriften, Meta-Tags
+├── demo/index.html         Klickbarer Prototyp (/demo/)
+├── impressum/index.html    Impressum (/impressum/), vorgerendert, ohne JavaScript
+├── datenschutz/index.html  Datenschutzerklärung (/datenschutz/), vorgerendert, ohne JavaScript
 ├── src/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert
@@ -186,7 +189,7 @@ Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie auf GitHub 
 ## Vor dem Launch
 
 - [ ] Warteliste an einen Dienst anbinden: Repository-Variable `VITE_WAITLIST_ENDPOINT` setzen (JSON-POST mit `{ rolle, email }`). Bis dahin speichert das Formular nichts.
-- [ ] Impressum und Datenschutzerklärung ergänzen, sobald E-Mail-Adressen gesammelt werden.
+- [x] Impressum und Datenschutzerklärung (`/impressum/`, `/datenschutz/`). Offen: Postadresse und Kontakt-E-Mail; vor dem Freischalten der Warteliste den Abschnitt «Warteliste» anpassen.
 - [ ] Provisionsmodell festlegen: Höhe, Auslöser und welche Seite sie trägt sind noch offen.
 - [ ] 3D-Emblem und Wortmarken-Effekt mit dem Branding abstimmen (das CD sieht beim Logo keine Effekte vor).
 - [x] Handy, Tablet und Desktop, «Bewegung reduzieren», Lazy-Loading, Tastaturbedienung.

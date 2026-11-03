@@ -39,21 +39,27 @@ Vite + React 19 + TypeScript (strict). No UI framework, no CSS framework.
 index.html              Vite entry. Inline script sets html.motion before first paint, plus a reveal failsafe.
 src/
   main.tsx              Hydrates the prerendered HTML (production) or renders fresh (dev).
-  entry-server.tsx      Build-time prerender (renderToString). Never shipped to the browser.
+  entry-server.tsx      Build-time prerender (renderToString) of the landing page and the legal pages. Never shipped to the browser.
   App.tsx               Page order, reveal observer, global in-page link handling, shared waitlist role state.
   content.ts            ALL visible copy, typed. Change text here, not in components.
-  components/           One file per section (Hero, ProofLine, Problems, HowItWorks, AiManager, Support, Pricing, Faq,
-                        Waitlist, Footer), plus Header, MobileMenu, MatchCard, StickyCta.
+  components/           One file per section (Hero, ProofLine, Audience, Problems, HowItWorks, AiManager, Support, Pricing,
+                        Faq, Team, Waitlist, Footer), plus Header, MobileMenu, MatchCard, StickyCta, LegalPage (Impressum, Datenschutz).
   lib/motion.ts         motionEnabled(), scrollToHash(), observeReveals(), onceVisible(). No animation library.
+  lib/links.ts          pageHref(), siteHref(): base-aware links between pages (footer links work from every page).
+  legal/main.ts         Entry of the legal pages: styles only in production (no React shipped); renders in the browser in dev.
   styles/tokens.css     Design tokens (CD colours, fonts), shared with the demo.
   styles/site.css       Landing page base layer: type scale, surfaces, buttons, reveals.
   styles/sections/      One stylesheet per section, imported by its component.
-  assets/               CD logos, header/footer wordmarks cut from them, AI-generated persona photo (labelled).
+  assets/               CD logos, header/footer wordmarks cut from them, AI-generated persona photo (demo only, labelled).
+  assets/photos/        Stock photos (Pexels, labelled "Symbolbild", credited in photoCredits): match card avatar, audience tiles.
+                        Resized copies only; the originals live outside the repo in ../photo-originals/.
   vite-env.d.ts         Types for import.meta.env (VITE_WAITLIST_ENDPOINT) and window.__introFailsafe. Add new env vars here.
 public/                 Copied as-is (favicon.svg). In code, import assets instead of hardcoding /paths (the base path is /sponsuno/).
 demo/index.html         Second Vite entry: the clickable demo (client-only, noindex).
+impressum/index.html    Vite entry /impressum/ (data-page="impressum"), prerendered, works without JS.
+datenschutz/index.html  Vite entry /datenschutz/ (data-page="datenschutz"), prerendered, works without JS.
 src/demo/               The demo app, see "The demo" below.
-scripts/prerender.mjs   Injects the server render into dist/index.html (landing page only).
+scripts/prerender.mjs   Injects the server render into dist/index.html, dist/impressum/ and dist/datenschutz/.
 .github/workflows/      Builds on pushes to main, on pull requests and on manual runs; deploys only from main.
 docs/                   Images for the README only.
 ```
@@ -67,7 +73,11 @@ docs/                   Images for the README only.
 - **No animation or scroll libraries** (GSAP, Lenis, Three.js were removed in the November 2026 redesign). CSS transitions and IntersectionObserver are enough.
 - **Section styles**: each section imports its own stylesheet from `src/styles/sections/` and prefixes its classes.
 - **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the fixed header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
-- **Waitlist**: posts JSON `{ rolle, email }` to `VITE_WAITLIST_ENDPOINT`. If the variable is empty, the form only previews success and stores nothing.
+- **Links between pages**: build them with `pageHref()` / `siteHref()` from `lib/links.ts` (base path). Footer link hrefs in `content.ts` are `#id` (landing page section) or `path/` (page); on sub-pages section links lead back to the landing page.
+- **Legal pages**: all text in `content.ts` → `legal` (and `photoCredits`). Unknown contact data stays `null` and renders as pending (`legal.pending`); `npm run build` prints a warning while a `legal.contact` field is null. Every third-party photo added to the site gets an entry in `photoCredits`, which the Impressum lists.
+- **Photos**: stock photos only under the Pexels or Unsplash licence, labelled "Symbolbild", never presented as Sponsuno users. Rules for choosing and preparing them are in DESIGN.md → Imagery.
+- **Team section** (`#team`, between FAQ and waitlist): names and provisional focus come from `team` in `content.ts`. Without a photo each person shows a monogram. A real, consented photo is added by importing a square JPEG in `content.ts` and setting `photo: { src, alt }` on that person; never use stock or generated faces for the founders.
+- **Waitlist**: posts JSON `{ rolle, email }` to `VITE_WAITLIST_ENDPOINT`. If the variable is empty, the form only previews success and stores nothing; its submit button stays disabled until React has hydrated, so the prerendered form can never POST natively to the host.
 
 ## The demo (`src/demo/`)
 
@@ -108,7 +118,7 @@ These come from the team's project rules. Breaking them makes the page say thing
 3. **The product is planned, not live.** Describe features with "soll", "geplant" or "ist gedacht". Never claim that matching, the AI manager or payments work today.
 4. **Open decisions stay open.** Commission rate, what triggers it and which side pays are not decided. Treatment of existing contacts, renewals and in-kind sponsoring is not decided. Say so; do not guess. The only fixed points: commission instead of subscription; marketing services billed separately (model undecided).
 5. Interviews (five, autumn 2026, from the team's personal network) are not representative. Phrase findings as "mehrere Befragte", never as market facts. Never quote interviewees by name on the page.
-6. Fictional examples (the mountain biker, the bike shop) must stay labelled as fictional, and AI-generated images as AI-generated.
+6. Fictional examples (the mountain biker, the bike shop) must stay labelled as fictional, AI-generated images as AI-generated, and stock photos as "Symbolbild".
 7. Culture clubs are part of the target group. Do not write copy that only speaks to sport.
 8. Do not present the name, trademark or a domain as secured. No `@sponsuno.com` addresses until a domain exists.
 9. Sustainability claims (reused equipment, shared event tech) are ideas being checked, not results.
@@ -116,8 +126,8 @@ These come from the team's project rules. Breaking them makes the page say thing
 ## Rules for data and privacy
 
 - The team's research material (interview recordings, transcripts, persona sources, pitch, CD manual PDF) lives outside this repo and must never be committed. `.gitignore` excludes `_source/`.
-- No personal data of interviewees or team members beyond first names in commits, docs or code.
-- The waitlist collects e-mail addresses. Before connecting a real endpoint, an Impressum and a privacy notice (Swiss revDSG) must exist on the site.
+- No personal data of interviewees or team members beyond first names in commits, docs or code. Exception (team decision, 2026-11-03): the four founders' full names (Aurel Eugster, Alex Platret, Maurice Strässle, Dozie Ilunga) appear in the Impressum, the Datenschutzerklärung and the founders section. Nothing else personal about them (no ages, schools, home addresses, private e-mails, social handles).
+- The waitlist collects e-mail addresses. Impressum and Datenschutzerklärung exist (`/impressum/`, `/datenschutz/`). Before connecting a real endpoint: add the postal address and contact e-mail (`legal.contact`), and rewrite the "Warteliste" section of the Datenschutzerklärung (provider, data, storage period, unsubscribe), then update `legal.updated`.
 
 ## Performance budget
 
@@ -156,9 +166,11 @@ Targets: LCP under 2.5 s on a throttled mid-range phone, CLS under 0.1, homepage
 ## Open before launch
 
 - [ ] Waitlist endpoint (`VITE_WAITLIST_ENDPOINT`) and a double opt-in flow
-- [ ] Impressum and privacy notice
+- [x] Impressum and privacy notice (`/impressum/`, `/datenschutz/`, November 2026). The waitlist section must be rewritten before the endpoint goes live
+- [ ] **Blocks merging the legal pages to `main`:** postal address (a c/o address is fine; no founder's home address without that founder's consent) and a working contact e-mail (not `@sponsuno`) in `legal.contact`. DSG Art. 19 and DSGVO Art. 13 require the controller's contact data as soon as the pages are public, not only once the waitlist opens
 - [ ] Commission model: rate, trigger, paying side
-- [ ] Trademark check (Swissreg/IGE, EUIPO): "Sponsoo" (sponsoo.de) is a similar name in the same market
+- [ ] Name decision. Desk trademark check done 2026-11-03 (not legal advice): no SPONSUNO mark, company or domain anywhere checked (CH, EU, DE, AT, WIPO). Risk low to medium in CH (Sponsoo is active via sponsoo.ch but has no Swiss mark), high for an EU filing or DACH expansion: SPONSOO (EUTM 013271473) and SPONSU / SPONSUU / SPONZU (DBG, EUTM 019156718 / 019156613 / 019156702) cover sponsorship search in class 35. Next: attorney or IGE clearance opinion, then domains and a Swiss filing (IGE, CHF 350 online for 3 classes), or a rename away from SPONS-. Until decided, the page must not present the name as secured
 - [ ] Logo refinement with the CD owner (see DESIGN.md → Logo)
-- [ ] Real, consented photos (athletes, clubs, a local business, the founders) and a founders section
+- [x] Founders section (`#team`, November 2026) with monograms, and stock photos (Symbolbilder) for the match card and the audience section
+- [ ] Real, consented photos of the founders (the team section is ready for them, see "Team section" above) and, later, own photos of athletes, clubs and a local business to replace the stock Symbolbilder
 - [ ] Domain decision (the team prefers a .com; availability is not checked)
