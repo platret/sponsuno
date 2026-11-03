@@ -1,0 +1,29 @@
+/* Problems: ivory, heading and intro left, three points right, divided by hairlines.
+   No cards, no icons, no numerals (the points are not a sequence). */
+
+.prob-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 1rem + 5vw, 6rem);
+  align-items: start;
+}
+
+.prob-head { max-width: 30rem; }
+@media (min-width: 961px) {
+  .prob-head { position: sticky; top: calc(var(--header-h) + 2.5rem); }
+}
+
+.prob-item {
+  padding-block: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+  border-top: 1px solid var(--rule);
+}
+.prob-item:first-child { padding-top: 0; border-top: 0; }
+.prob-item:last-child { padding-bottom: 0; }
+
+.prob-item p { margin-top: .6rem; max-width: 36rem; line-height: 1.6; }
+
+@media (max-width: 960px) {
+  .prob-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .prob-head { max-width: 40rem; }
+}
+

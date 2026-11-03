@@ -1,0 +1,39 @@
+/* Support (Sachleistungen): paper, short and flat. A gold rule above the title, three kinds in a row,
+   each separated by a hairline on top. No cards, no gold surfaces. */
+
+.sup-rule {
+  display: block; width: 48px; height: 2px; margin-bottom: 1.75rem;
+  background: var(--gold);
+}
+
+.sup-kinds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 1rem + 3vw, 3.5rem);
+}
+
+.sup-kind {
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.sup-icon {
+  width: 40px; height: 40px;
+  fill: none; stroke: var(--gold-dark); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.sup-icon * { vector-effect: non-scaling-stroke; }
+
+.sup-kind-title { margin-top: 1.5rem; }
+.sup-kind-text { margin-top: .6rem; max-width: 22rem; color: var(--ink); }
+
+/* Quiet stagger for the reveal (only applies while motion is on) */
+.motion .sup-kind[data-reveal]:nth-child(2) { transition-delay: .08s; }
+.motion .sup-kind[data-reveal]:nth-child(3) { transition-delay: .16s; }
+
+@media (max-width: 760px) {
+  .sup-kinds { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; }
+  .sup-kind { padding-top: 1.75rem; }
+  .sup-kind-title { margin-top: 1.25rem; }
+  .motion .sup-kind[data-reveal]:nth-child(n) { transition-delay: 0s; }
+}

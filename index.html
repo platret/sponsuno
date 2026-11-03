@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#0B1830">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script>
+    document.documentElement.classList.add('js');
     // Runs before first paint: .motion enables the CSS start states of reveals and the hero intro.
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
     // Failsafe: if the app never starts, show everything that waits for a reveal (cleared in App.tsx)

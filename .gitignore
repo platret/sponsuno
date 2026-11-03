@@ -9,3 +9,6 @@ dist-ssr/
 
 # Finder/iCloud duplicate copies
 * 2.*
+
+# Local QA screenshots and reports
+qa/

@@ -1,0 +1,121 @@
+/* Ablauf: two tracks of four steps. Desktop side by side; phones switch between them with tabs.
+   The gold line between the numerals echoes the hero match line and draws once per track. */
+
+.how-tracks {
+  --how-gutter: clamp(2rem, .5rem + 3.5vw, 4.5rem);
+  --how-num: 44px;    /* numeral circle */
+  --how-col: 1.25rem; /* numeral to step text */
+  --how-row: 2.25rem; /* step to step */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.how-track { display: flex; flex-direction: column; min-width: 0; }
+.how-track-seeker { padding-right: var(--how-gutter); }
+.how-track-sponsor { padding-left: var(--how-gutter); border-left: 1px solid var(--rule); }
+
+/* Track label: heads its column, so it sits above the step titles in size, with a short gold-dark rule */
+.how-label {
+  display: flex; align-items: center; gap: .75rem;
+  margin-bottom: 2rem;
+  font-size: var(--fs-lead); font-weight: 600; line-height: 1.3; color: var(--navy);
+}
+.how-label::before { content: ""; width: 28px; height: 1px; background: var(--gold-dark); flex: none; }
+
+/* ---------- Steps ---------- */
+
+.how-steps { display: grid; gap: var(--how-row); margin-bottom: 2.75rem; }
+
+.how-step {
+  position: relative;
+  display: grid; grid-template-columns: var(--how-num) minmax(0, 1fr); column-gap: var(--how-col);
+}
+
+/* One segment of the gold line from this numeral down to the next */
+.how-step:not(:last-child)::before {
+  content: ""; position: absolute;
+  left: calc(var(--how-num) / 2 - .5px); top: var(--how-num); bottom: calc(-1 * var(--how-row));
+  width: 1px; background: var(--gold);
+  transform-origin: top;
+}
+
+.how-num {
+  position: relative; z-index: 1;
+  display: grid; place-items: center;
+  width: var(--how-num); height: var(--how-num);
+  border: 1px solid var(--gold); border-radius: 50%;
+  background: var(--paper);
+  font: 600 1.75rem/1 var(--serif); color: var(--gold-dark);
+  font-variant-numeric: lining-nums;
+  padding-bottom: 3px; /* optical centring: Cormorant figures sit high on their line box */
+}
+
+.how-step-body { padding-top: .55rem; }
+.how-step-body p { margin-top: .4rem; max-width: 30rem; font-size: 1rem; line-height: 1.6; color: var(--ink); }
+
+.how-cta { align-self: flex-start; margin-top: auto; margin-left: calc(var(--how-num) + var(--how-col)); }
+
+/* Line draw, only under html.motion: three segments with one linear timing read as a single stroke
+   (0.15 s delay + 3 x 0.28 s). Without .motion, or once the reveal failsafe fires, it is fully drawn. */
+.how-step::before { transition: transform .28s linear calc(.15s + var(--i) * .28s); }
+.motion:not(.reveal-all) .how-track:not(.is-in) .how-step::before { transform: scaleY(0); }
+
+/* ---------- Phone switch ---------- */
+
+.how-switch-wrap[hidden] { display: none; }
+.how-switch-wrap { margin-bottom: 2.25rem; }
+.how-switch-label { margin-bottom: .6rem; font-size: var(--fs-small); color: var(--ink); }
+
+.how-switch {
+  display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 4px;
+  max-width: 30rem; padding: 4px;
+  border: 1px solid var(--rule); border-radius: 12px;
+  background: var(--ivory);
+}
+.how-tab {
+  min-height: 44px; padding: .5rem .75rem;
+  border: 0; border-radius: 8px; cursor: pointer;
+  background: transparent; color: var(--navy);
+  font-size: .9375rem; font-weight: 600; line-height: 1.25;
+  transition: background-color .2s ease, color .2s ease;
+}
+@media (hover: hover) {
+  .how-tab:hover:not([aria-selected="true"]) { background: rgba(11, 24, 48, .05); }
+}
+.how-tab[aria-selected="true"] { background: var(--navy); color: var(--ivory); }
+.how-tab:focus-visible { outline-offset: 2px; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .how-tracks { grid-template-columns: minmax(0, 1fr); }
+  .how-track-seeker { padding-right: 0; }
+  /* Without JS (or if the app never starts) both tracks stack, separated by a hairline */
+  .how-track-sponsor { padding-left: 0; border-left: 0; margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--rule); }
+
+  /* Phone switch: one track at a time. After hydration React drives it with data-active; before
+     hydration html.js (set before first paint) gives the same layout, so hydration moves nothing.
+     html.reveal-all means the app never started, so the stacked no-JS layout stays. */
+  .js:not(.reveal-all) .how-switch-wrap[hidden] { display: block; }
+
+  .how-tracks[data-active] .how-track-sponsor,
+  .js:not(.reveal-all) .how-track-sponsor { margin-top: 0; padding-top: 0; border-top: 0; }
+
+  .how-tracks[data-active="seeker"] .how-track-sponsor,
+  .how-tracks[data-active="sponsor"] .how-track-seeker,
+  .js:not(.reveal-all) .how-tracks:not([data-active]) .how-track-sponsor { display: none; }
+
+  /* The tab already names the track; keep the label for assistive technology only */
+  .how-tracks[data-active] .how-label,
+  .js:not(.reveal-all) .how-label {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .how-tracks { --how-row: 2rem; --how-col: 1rem; }
+  .how-steps { margin-bottom: 2.25rem; }
+  .how-cta { margin-left: 0; align-self: stretch; }
+  .how-step-body p { font-size: .9375rem; }
+}

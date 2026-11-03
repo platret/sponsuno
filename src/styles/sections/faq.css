@@ -1,0 +1,86 @@
+/* FAQ: paper surface. Title and intro left (sticky on desktop), questions right as native <details> rows. */
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 1rem + 5vw, 6rem);
+  align-items: start;
+}
+
+.faq-head {
+  position: sticky;
+  top: calc(var(--header-h) + 2rem);
+}
+.faq-intro { max-width: 26rem; text-wrap: pretty; }
+
+/* ---------- Rows ---------- */
+
+.faq-list { border-top: 1px solid var(--rule); }
+.faq-item { border-bottom: 1px solid var(--rule); }
+
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  min-height: 56px;
+  /* Whole-pixel geometry (20px + 24px lines) keeps the icon bars crisp in every row.
+     Inline padding with a matching negative margin gives the focus ring room inside the
+     column while the text stays aligned with the rules. */
+  padding: 1.25rem .75rem;
+  margin-inline: -.75rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--sans); font-weight: 600;
+  font-size: clamp(1.0625rem, 1rem + .2vw, 1.125rem); line-height: 1.5rem;
+  color: var(--navy);
+  transition: color .2s ease;
+}
+.faq-q::-webkit-details-marker { display: none; }
+.faq-q::marker { content: ""; }
+@media (hover: hover) {
+  .faq-q:hover { color: var(--gold-dark); }
+}
+.faq-q:focus-visible { outline-offset: -3px; border-radius: 6px; }
+.faq-q-text { min-width: 0; text-wrap: pretty; }
+
+/* Plus that turns into an x when the row is open (CSS only) */
+.faq-icon {
+  position: relative; flex: none;
+  width: 16px; height: 16px;
+  color: var(--gold-dark);
+  transition: transform .3s var(--ease-out);
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: ""; position: absolute; left: 0; top: 7px;
+  width: 16px; height: 2px; margin: 0;
+  border-radius: 1px; background: currentColor;
+}
+.faq-icon::after { transform: rotate(90deg); }
+.faq-item[open] .faq-icon { transform: rotate(45deg); }
+
+.faq-a { padding: 0 2.5rem 1.6rem 0; }
+.faq-a p { max-width: 40rem; text-wrap: pretty; font-size: var(--fs-body); line-height: 1.65; color: var(--ink); }
+
+/* Gentle height animation where the browser supports it natively; others simply open instantly. */
+@supports (interpolate-size: allow-keywords) {
+  @media (prefers-reduced-motion: no-preference) {
+    .faq-list { interpolate-size: allow-keywords; }
+    .faq-item::details-content {
+      block-size: 0; overflow: clip;
+      opacity: 0;
+      transition: block-size .4s var(--ease-out), opacity .3s ease, content-visibility .4s allow-discrete;
+    }
+    .faq-item[open]::details-content { block-size: auto; opacity: 1; }
+  }
+}
+
+/* ---------- Narrow screens: one column, title not sticky ---------- */
+
+@media (max-width: 960px) {
+  .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .faq-head { position: static; }
+  .faq-intro { max-width: 40rem; }
+}
+@media (max-width: 560px) {
+  .faq-q { padding-block: 1rem; gap: 1rem; }
+  .faq-a { padding-right: 0; }
+}

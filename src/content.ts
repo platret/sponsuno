@@ -80,6 +80,7 @@ export const howItWorks = {
   title: 'So ist Sponsuno gedacht',
   intro: 'Zwei Seiten, ein gemeinsamer Ablauf: vom ersten Profil bis zur Bilanz nach der Saison.',
   switchLabel: 'Ablauf anzeigen für',
+  stepLabel: 'Schritt',
   tracks: {
     seeker: {
       label: 'Sportler und Vereine',
@@ -150,6 +151,7 @@ export const pricing = {
     { label: 'Fotos, Videos und Inhalte für Sponsoren', value: 'Separat buchbar geplant', state: 'decided' as const },
   ],
   note: 'Bei der Festlegung berücksichtigen wir ausdrücklich auch kleine Sponsoringbeträge.',
+  openLabel: 'offen',
 };
 
 export const faq = {
@@ -202,10 +204,14 @@ export const waitlist = {
   invalid: 'Bitte geben Sie eine gültige E-Mail-Adresse ein, zum Beispiel name@beispiel.ch.',
   failed: 'Die Anmeldung hat nicht geklappt. Bitte versuchen Sie es in ein paar Minuten nochmals.',
   success: 'Danke. Sie stehen auf der Warteliste. Wir melden uns, sobald es losgeht.',
+  // Shown while no VITE_WAITLIST_ENDPOINT is configured: the form works, but nothing is stored
+  previewNote: 'Vorschau: Die Warteliste ist noch nicht freigeschaltet. Ihre Adresse wird nicht gespeichert.',
+  previewSuccess: 'So sieht die Bestätigung aus. Gespeichert wurde nichts, die Warteliste ist noch nicht freigeschaltet.',
 };
 
 export const footer = {
   sub: 'Sponsoring für Sport und Kultur in der Deutschschweiz. Sponsuno ist im Aufbau.',
+  legalNote: 'Impressum und Datenschutzerklärung folgen vor dem Start.',
   columns: [
     {
       title: 'Plattform',

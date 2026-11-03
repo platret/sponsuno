@@ -1,4 +1,48 @@
-// Placeholder: rebuilt in the section workflow.
+import { pricing } from '../content';
+import '../styles/sections/pricing.css';
+
+// Interim until content.ts gets pricing.openLabel (proposed in the redesign hand-off); then use pricing.openLabel.
+
+/** Ivory section: the planned cost model as one overview card. Decided points get a check, open ones a tag. */
 export function Pricing() {
-  return <section className="section surface-paper"><div className="container"><h2>Pricing</h2></div></section>;
+  return (
+    <section className="section surface-ivory price" id="kosten" aria-labelledby="price-title">
+      <div className="container price-grid">
+        <div className="price-head">
+          <h2 id="price-title">{pricing.title}</h2>
+          <p className="section-intro">{pricing.intro}</p>
+        </div>
+        <div className="price-main" data-reveal="">
+          <dl className="price-card">
+            {pricing.rows.map((row) => (
+              <div className={`price-row price-row-${row.state}`} key={row.label}>
+                <dt className="price-label">{row.label}</dt>
+                <dd className="price-value">
+                  {row.state === 'open' ? (
+                    <svg className="price-marker price-marker-open" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+                      <circle cx="8" cy="8" r="5" />
+                    </svg>
+                  ) : (
+                    <svg className="price-marker price-check" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+                      <path d="M3.5 8.5l3 3 6-7" />
+                    </svg>
+                  )}
+                  <span className="price-value-text">
+                    {row.value}
+                    {row.state === 'open' && (
+                      <>
+                        {' '}
+                        <span className="price-tag">{pricing.openLabel}</span>
+                      </>
+                    )}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="price-note">{pricing.note}</p>
+        </div>
+      </div>
+    </section>
+  );
 }
