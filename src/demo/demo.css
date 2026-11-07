@@ -141,6 +141,8 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   font-size: .875rem; line-height: 1.45;
 }
 .demo-waitlist .ui-btn { width: 100%; }
+/* Short screens: the button alone, so the sidebar (nav, link, account card) still fits without scrolling */
+@media (max-height: 640px) { .demo-waitlist p { display: none; } }
 
 .demo-account {
   display: flex; align-items: center; gap: .75rem;

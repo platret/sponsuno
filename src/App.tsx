@@ -22,9 +22,16 @@ export default function App() {
 
   // Entry points elsewhere (guides, demo) link to /?rolle=<role>#warteliste to preselect the waitlist role
   useEffect(() => {
-    const wanted = new URLSearchParams(window.location.search).get(ROLE_PARAM);
+    const params = new URLSearchParams(window.location.search);
+    const wanted = params.get(ROLE_PARAM);
     const preset = waitlist.roles.find((r) => r.value === wanted);
     if (preset) setRole(preset.value);
+    // Drop the parameter so in-page links and a shared URL do not carry a stale role
+    if (wanted === null) return;
+    params.delete(ROLE_PARAM);
+    const rest = params.toString();
+    const { pathname, hash } = window.location;
+    window.history.replaceState(window.history.state, '', `${pathname}${rest ? `?${rest}` : ''}${hash}`);
   }, []);
 
   // Reveals start once the app runs; the inline failsafe in index.html is no longer needed.

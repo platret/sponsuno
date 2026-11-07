@@ -361,6 +361,8 @@ export const team = {
 export const waitlist = {
   title: 'Als Erste erfahren, wann es losgeht.',
   intro: 'Tragen Sie sich ein. Wir melden uns, sobald es in der Deutschschweiz losgeht.',
+  // Replaces intro while the form stores nothing (no VITE_WAITLIST_ENDPOINT); without a contact address no intro is shown
+  previewIntro: 'Schreiben Sie uns eine E-Mail, dann melden wir uns, sobald es in der Deutschschweiz losgeht.',
   legend: 'Ich bin',
   roles: [
     { value: 'athlete', label: 'Sportlerin oder Sportler' },
@@ -377,7 +379,8 @@ export const waitlist = {
   success: 'Danke. Sie stehen auf der Warteliste. Wir melden uns, sobald es losgeht.',
   // Shown while no VITE_WAITLIST_ENDPOINT is configured: nothing is stored, so visitors are offered an
   // e-mail to legal.contact.email instead (subject and body prefilled with the chosen role).
-  previewNote: 'Die Warteliste ist noch nicht freigeschaltet, das Formular speichert nichts. Bis dahin erreichen Sie uns per E-Mail:',
+  previewNote: 'Die Warteliste ist noch nicht freigeschaltet, das Formular speichert nichts.',
+  previewMailLead: 'Bis dahin erreichen Sie uns per E-Mail:',
   previewSuccess: 'Ihre Adresse wurde nicht gespeichert, die Warteliste ist noch nicht freigeschaltet.',
   previewMailIntro: 'Schreiben Sie uns eine kurze E-Mail, dann melden wir uns, sobald es losgeht.',
   previewMailButton: 'E-Mail schreiben',
@@ -390,14 +393,8 @@ export const waitlist = {
     '',
     'Freundliche Grüsse',
   ].join('\r\n'),
-  // After a (preview or real) sign-up: one fitting next step per role
+  // After a (preview or real) sign-up: one fitting next step per role (waitlistNext, after the guides)
   nextLabel: 'Bis es losgeht:',
-  next: {
-    athlete: { href: pageMeta('sponsoring-dossier').path, label: 'Ratgeber «Sponsoring-Dossier erstellen»' },
-    sportverein: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber «Sponsoren finden in der Region»' },
-    kulturverein: { href: pageMeta('kultursponsoring').path, label: 'Ratgeber «Sponsoren für Kulturvereine finden»' },
-    sponsor: { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' },
-  } satisfies Record<Role, FooterLink>,
 };
 
 export const footer = {
@@ -1268,4 +1265,13 @@ export const guides: Record<GuideId, GuideContent> = {
     related: ['sponsoren-finden', 'sponsoring-anfrage', 'sponsoring-dossier'],
     waitlistRole: 'kulturverein',
   },
+};
+
+// Next step shown after a waitlist sign-up (Waitlist.tsx), one per role. Guide labels follow the guide titles.
+const guideStep = (id: GuideId): FooterLink => ({ href: pageMeta(id).path, label: `Ratgeber «${guides[id].title}»` });
+export const waitlistNext: Record<Role, FooterLink> = {
+  athlete: guideStep('sponsoring-dossier'),
+  sportverein: guideStep('sponsoren-finden'),
+  kulturverein: guideStep('kultursponsoring'),
+  sponsor: { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' },
 };
