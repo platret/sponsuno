@@ -101,12 +101,26 @@
   .st-art .it-legend .lg { flex-direction: column; align-items: flex-end; }
 }
 
+/* Faint pairs ("heute" and the findings): a dimmed card, not an ivory bar. The seeker row drops its fill and
+   reads like the company row, the score waits for "sortiert". */
+.st-art:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .it-pair :is(.pc-row, .pc-name, .pc-meta) {
+  background: transparent; color: var(--steel);
+}
+.st-art:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .it-pair .pc-score { opacity: 0; }
+
 /* The match card carries its own "fiktiv" label; in "danach" it is smaller and the label would be too small */
 .st-art[data-step="danach"] .match-label { opacity: 0; }
 
 /* Short stages: the pair column, the legend and the match card scale down so nothing overlaps */
 @container (max-height: 600px) { .it-pair, .it-legend { --k: .88; } .it-match { --k: .9; } }
 @container (max-height: 500px) { .it-pair, .it-legend { --k: .72; } .it-match { --k: .78; } }
+/* Narrow desktop stages (961-1200 px wide screens): the loose seeker cards and the "danach" pieces scale down,
+   so nothing is cut at the stage edges and the KI draft only covers the match card's empty corner. On short
+   desktop stages the two KI pieces get smaller still, so they do not cover each other. */
+@media (min-width: 961px) {
+  @container (max-width: 720px) { :is(.it-seeker, .it-firm) { --k: .9; } .st-art[data-step="danach"] .it-match { --k: .78; } .it-ki { --k: .88; } }
+  @container (max-height: 500px) { .it-ki { --k: .8; } }
+}
 
 /* ---------- Motion on the live stage (CSS transitions retarget, so a fast flick lands on the last state) ---------- */
 
@@ -126,6 +140,9 @@
 .motion .st-live .pc-score { transition: opacity .4s ease calc(var(--d, 0ms) + 1050ms); }
 .motion .st-live:not([data-step="sortiert"]) .pc-dot { opacity: .3; scale: .7; transition-delay: 0ms; }
 .motion .st-live:not([data-step="sortiert"]) .pc-score { opacity: 0; transition-delay: 0ms; }
+/* The faint pairs change colour together with their own fade, so a skipped step ("erwartungen" straight to
+   "sortiert" or back) never snaps; on the usual path through "linie" the change happens while they are hidden */
+.motion .st-live .it-pair :is(.pc-row, .pc-name, .pc-meta) { transition: background-color .45s ease var(--d, 0ms), color .45s ease var(--d, 0ms); }
 /* The legend's checks tick together with the lead pair's dots */
 .motion .st-live .lg-chk { transition: opacity .3s ease, scale .3s var(--ease-out); transition-delay: calc(650ms + var(--k) * 90ms); }
 .motion .st-live:not([data-step="sortiert"]) .lg-chk { opacity: .3; scale: .7; transition-delay: 0ms; }
@@ -235,12 +252,17 @@
 @media (min-width: 761px) and (max-width: 960px) {
   .st-stage .st-art { max-width: 640px; margin-inline: auto; }
 }
+/* Tall tablets (portrait): a taller stage, so the pairs are not scaled down to .72 and their text stays readable */
+@media (min-width: 761px) and (max-width: 960px) and (min-height: 960px) {
+  .js .st-stage .st-art { --st-h: clamp(420px, 52svh, 540px); }
+}
 
 /* ---------- Stage geometry on phones and tablets ---------- */
 
 @media (max-width: 960px) {
   .st-art { --lx: 40; }
-  .st-art { --pc-w: min(300px, (100 - var(--lx)) * 1cqw - 16px); }
+  /* The pairs fill the window right of the line at their scale (--k), so the names fit on narrow stages */
+  .st-art .it-pair { --pc-w: min(300px, ((100 - var(--lx)) * 1cqw - 16px) / var(--k, 1)); }
   .st-art .it-paper { --k: .7; }
   .st-art :is(.it-seeker, .it-firm) { --k: .8; }
   /* Legend under the pairs, starting at the line; wraps to two rows where the window is narrow */
@@ -272,7 +294,11 @@
 /* Phones: the seeker cards are narrower and smaller, so their text stays inside the window left of the line */
 @media (max-width: 760px) {
   .st-art .it-seeker { width: 200px; --k: .74; }
+  /* Column heads on two lines, so "Sucht Unterstützung" stays left of the line */
+  .st-art .head-t { width: min-content; white-space: normal; text-align: center; line-height: 1.3; }
 }
+/* Narrow stages (the snapshots inside the page gutter on phones) */
+@container (max-width: 360px) { .st-art .it-seeker { --k: .7; } }
 
 /* Forced colours and print: the picture goes, the text stays */
 @media (forced-colors: active) { .st-stage, .st-snap { display: none !important; } }

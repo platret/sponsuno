@@ -9,8 +9,8 @@ type Vars = CSSProperties & Record<`--${string}`, string | number>;
 // Its own papers (never the ones on the story stage, which fades in as this picture fades out).
 // x in px from the line (negative = left), y in % of the art height; m = phone position or null (hidden).
 const PAPERS: { kind: PaperKind; x: number; y: number; m: [number, number] | null }[] = [
-  { kind: 'anfrage', x: -34, y: 50, m: [-22, 52] },      // being taken in by the line: its right edge is behind it
-  { kind: 'praesentation', x: -190, y: 36, m: [-80, 30] },
+  { kind: 'anfrage', x: -34, y: 50, m: [-22, 64] },      // being taken in by the line: its right edge is behind it
+  { kind: 'praesentation', x: -190, y: 36, m: [-80, 25] },
   { kind: 'rueckruf', x: -200, y: 84, m: null },
   { kind: 'nachfassen', x: -350, y: 60, m: null },
   { kind: 'fragen', x: -364, y: 18, m: null },
