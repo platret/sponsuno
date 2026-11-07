@@ -3,9 +3,9 @@ import type { Role } from './content';
 import { observeReveals, scrollToHash } from './lib/motion';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { Story } from './components/Story';
 import { ProofLine } from './components/ProofLine';
 import { Audience } from './components/Audience';
-import { Problems } from './components/Problems';
 import { HowItWorks } from './components/HowItWorks';
 import { AiManager } from './components/AiManager';
 import { Support } from './components/Support';
@@ -46,9 +46,9 @@ export default function App() {
       <Header />
       <main id="inhalt">
         <Hero onChooseRole={setRole} />
+        <Story />
         <ProofLine />
         <Audience />
-        <Problems />
         <HowItWorks onChooseRole={setRole} />
         <AiManager />
         <Support />

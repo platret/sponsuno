@@ -37,7 +37,7 @@ export const hero = {
   ctaSponsor: { label: 'Ich möchte sponsern', role: 'sponsor' as Role },
 };
 
-// Fictional example for the hero card. Keep the label whenever this changes.
+// Fictional example for the match card on the story stage ("Ein Match" step). Keep the label whenever this changes.
 // The photo is a stock photo (Pexels, see photoCredits), not the person described: hence "Symbolbild".
 export const match = {
   label: 'Beispiel mit fiktiven Angaben',
@@ -46,7 +46,6 @@ export const match = {
     name: 'Langstrecken-Mountainbikerin',
     meta: 'Zürcher Oberland',
     need: 'Material und Reisekosten',
-    photoAlt: 'Mountainbikerin mit Helm und Sportbrille auf einem Waldweg',
   },
   sponsor: { role: 'Möchte sponsern', mark: 'V', name: 'Velogeschäft', meta: 'Zürcher Oberland', need: 'Material und Saisonbeitrag' },
   criteria: ['Region', 'Unterstützung', 'Branche', 'Budget'],
@@ -120,6 +119,81 @@ export const problem = {
       text: 'Gegenleistungen sind oft nicht klar vereinbart. Später bleibt unklar, ob sich die Partnerschaft für beide gelohnt hat.',
     },
   ],
+};
+
+// Scroll story right under the hero (Story.tsx). It replaces the old Problem section: problem.title is the
+// story's H2, problem.intro and the three points are its first steps, word for word. The solution steps reuse
+// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf).
+// Everything on the stage is a fictional example: generic names, real regions, no companies, no amounts.
+export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
+
+export const story = {
+  // Labels before the step headings (short gold rule in front)
+  labels: { heute: 'Heute', solution: 'So ist Sponsuno gedacht', planned: 'Geplant' },
+  // Which finding (problem.items, in order) belongs to which stage state
+  findingStates: ['kontakte', 'aufwand', 'erwartungen'] as StoryState[],
+  steps: [
+    {
+      state: 'linie' as StoryState,
+      title: 'Beide Seiten an einem Ort',
+      text: 'Sportlerinnen, Sportler und Vereine zeigen, was sie brauchen und was sie als Gegenleistung bieten. Firmen zeigen, wie sie unterstützen möchten: mit Geld, Material oder Dienstleistungen.',
+    },
+    {
+      state: 'sortiert' as StoryState,
+      title: 'Vorschläge statt kalter Anfragen',
+      text: 'Sponsuno schlägt Firmen vor, die nach Region, Budget, Branche und Art der Unterstützung zu Ihnen passen. Firmen sehen umgekehrt Sportlerinnen, Sportler und Vereine aus ihrer Region.',
+    },
+    {
+      state: 'match' as StoryState,
+      title: 'Ein Match, bei dem beide wissen, warum',
+      text: 'Bevor jemand schreibt, sehen beide Seiten, worin sie zusammenpassen. Gegenleistungen werden vor Beginn festgehalten.',
+    },
+  ],
+  after: {
+    state: 'danach' as StoryState,
+    title: 'Und danach: der KI-Manager',
+    text: 'Nach dem Match soll ein KI-Manager Anfragen vorbereiten und an vereinbarte Gegenleistungen erinnern. Sie prüfen jeden Entwurf selbst.',
+    link: 'Mehr zum KI-Manager',
+    href: '#ki-manager',
+  },
+  // Text alternative for the decorative graphic (given once, in the hero)
+  artAlt: 'Grafik: Anfragen, Dossiers und Absagen laufen auf eine goldene Linie zu. Rechts davon stehen geordnete Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit den vier Kriterien.',
+  captions: {
+    heute: 'Beispiel mit fiktiven Angaben',
+    solution: 'Beispiel mit fiktiven Angaben · So ist Sponsuno gedacht',
+    planned: 'Beispielansicht. Der KI-Manager ist in Entwicklung.',
+  },
+  columns: { seeker: 'Sucht Unterstützung', sponsor: 'Möchte sponsern' },
+  // The raw papers left of the line. Short labels only; they illustrate the three findings. The hero start
+  // frame uses its own set (anfrage, liste, nachfassen, praesentation, fragen, rueckruf), the story stage the
+  // rest, so the two pictures never show the same papers at once.
+  papers: {
+    anfrage: 'Anfrage: Trikot\u00ADsponsoring',
+    dossier: 'Sponsoring\u00ADdossier.pdf',
+    absage: 'Danke für Ihre Anfrage. Leider …',
+    antwort: 'Noch keine Antwort',
+    zustaendig: 'Wer ist dort zuständig?',
+    liste: 'Firmenliste Region',
+    training: 'Nach dem Training schreiben',
+    gegenleistung: 'Gegenleistung: ?',
+    gelohnt: 'Hat es sich gelohnt?',
+    nachfassen: 'Re: Sponsoringanfrage',
+    praesentation: 'Vereins\u00ADmappe.pdf',
+    fragen: 'Wen könnten wir fragen?',
+    rueckruf: 'Rückruf: offen',
+    pdfTag: 'PDF',
+  },
+  // Fictional pairs (seeker + company from the same region). The first is the match card's example.
+  pairs: [
+    { seeker: { mark: 'L', name: 'Mountainbikerin' }, firm: { mark: 'V', name: 'Velogeschäft' }, region: 'Zürcher Oberland', score: 4 },
+    { seeker: { mark: 'M', name: 'Musikgesellschaft' }, firm: { mark: 'S', name: 'Schreinerei' }, region: 'Emmental', score: 4 },
+    { seeker: { mark: 'U', name: 'Unihockeyverein' }, firm: { mark: 'G', name: 'Garage' }, region: 'Seeland', score: 3 },
+    { seeker: { mark: 'T', name: 'Theaterverein' }, firm: { mark: 'D', name: 'Druckerei' }, region: 'Zürcher Weinland', score: 4 },
+    { seeker: { mark: 'C', name: 'Chor' }, firm: { mark: 'B', name: 'Bäckerei' }, region: 'Toggenburg', score: 4 },
+  ],
+  // Short score on the pair cards; the lead card uses match.result ("Passt in 4 von 4 Kriterien").
+  // A 3 marks the last criterion (Budget) as partly matching, as in the demo.
+  scoreShort: (n: number) => `${n} von 4`,
 };
 
 export type Track = 'seeker' | 'sponsor';

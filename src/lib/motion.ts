@@ -50,15 +50,3 @@ export function observeReveals(root: ParentNode = document): () => void {
   els.forEach((el) => io.observe(el));
   return () => io.disconnect();
 }
-
-/** Calls `onEnter` once when `el` becomes at least `threshold` visible. Returns a cleanup function. */
-export function onceVisible(el: Element, onEnter: () => void, threshold = 0.35): () => void {
-  if (!('IntersectionObserver' in window)) { onEnter(); return () => {}; }
-  const io = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    io.disconnect();
-    onEnter();
-  }, { threshold });
-  io.observe(el);
-  return () => io.disconnect();
-}
