@@ -2,7 +2,8 @@
    portrait: a monogram (Cormorant initials, ivory on navy, gold hairline ring) until a real photo exists.
    A photo uses the same circle and ring. No cards.
    Motion (DESIGN.md -> Motion): head rises; founders rise with stagger, their hairlines draw from the left,
-   portraits zoom in (.86 -> 1). Firefox keeps the data-reveal fade; reduced motion is static. */
+   portraits zoom in (.86 -> 1); the project status head and steps rise. Firefox keeps the data-reveal fade;
+   reduced motion is static. */
 
 .team-grid {
   display: grid;
@@ -65,6 +66,49 @@
     cover calc(var(--scroll-dist) + var(--scroll-i, 0) * var(--scroll-stagger));
 }
 
+/* Stand des Projekts: under the founders, above a hairline. Head in the first column, the steps beside it as
+   a short vertical sequence: a hairline runs through the markers (filled = done, ring = planned, dashed line
+   after planned steps). The state is also written out; the markers are decorative. */
+.team-status {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+}
+.team-status-intro { margin-top: .6rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); }
+.team-status-intro a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
+
+.team-steps { grid-column: 2 / -1; max-width: 38rem; display: grid; gap: 1.5rem; }
+.team-step { position: relative; padding-left: 1.75rem; }
+/* Line to the next marker, 1px clear of both: starts below this marker (.375rem + 9px), ends above the next one
+   (list gap 1.5rem + marker offset .375rem) */
+.team-step::before {
+  content: "";
+  position: absolute;
+  left: 4px; top: 1rem; bottom: calc(1px - 1.875rem);
+  border-left: 1px solid var(--rule);
+}
+.team-step:not(.is-done)::before { border-left-style: dashed; }
+.team-step:last-child::before { display: none; }
+/* Marker, centred on the meta line */
+.team-step::after {
+  content: "";
+  position: absolute;
+  left: 0; top: .375rem;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-dark);
+  background: var(--ivory);
+}
+.team-step.is-done::after { background: var(--gold-dark); }
+
+.team-step-meta { display: flex; flex-wrap: wrap; gap: .25rem .75rem; font-size: var(--fs-small); line-height: 1.4; }
+.team-step-when { font-weight: 600; color: var(--gold-dark); font-variant-numeric: lining-nums; }
+.team-step-state { color: var(--ink); }
+.team-step-text { margin-top: .3rem; color: var(--ink); line-height: 1.55; }
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .scroll-fx .team-portrait { animation-name: sfx-scale; }
@@ -78,6 +122,9 @@
 
 @media (max-width: 960px) {
   .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+  .team-status { grid-template-columns: minmax(0, 1fr); row-gap: 1.75rem; }
+  .team-status-head { max-width: 36rem; }
+  .team-steps { grid-column: auto; }
   .motion .team-member[data-reveal]:nth-child(n) { transition-delay: 0s; }
   /* Two columns: stagger within a row only (left 0, right 1) */
   .team-grid > .team-member:nth-child(odd) { --scroll-i: 0; }
