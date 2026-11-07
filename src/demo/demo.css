@@ -134,8 +134,17 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .demo-nav .ui-icon { stroke: currentColor; }
 .demo-nav a.is-active .ui-icon { stroke: var(--gold-light); }
 
-.demo-account {
+.demo-waitlist {
   margin-top: auto;
+  display: grid; gap: .75rem;
+  padding: 0 .4rem;
+  font-size: .875rem; line-height: 1.45;
+}
+.demo-waitlist .ui-btn { width: 100%; }
+/* Short screens: the button alone, so the sidebar (nav, link, account card) still fits without scrolling */
+@media (max-height: 640px) { .demo-waitlist p { display: none; } }
+
+.demo-account {
   display: flex; align-items: center; gap: .75rem;
   padding: .85rem; border-radius: 14px;
   background: rgba(11, 24, 48, .5); border: 1px solid var(--card-dark-line);
@@ -152,6 +161,9 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 
 .demo-tabbar { display: none; }
 
+/* Narrow screens only (the sidebar carries it on wide ones): a quiet closing row under every view */
+.demo-waitlist-end { display: none; }
+
 @media (max-width: 900px) {
   .demo-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr; }
   /* Focused elements scroll into view above the fixed tab bar, not under it */
@@ -159,6 +171,12 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   .demo-sidebar { display: none; }
   .demo-mobile-role { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; padding: 1rem clamp(1rem, 3.5vw, 3rem) 0; }
   .demo-main { padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)); }
+  .demo-waitlist-end {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem;
+    margin-top: 2.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink); font-size: .9375rem;
+  }
   .demo-tabbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
     display: flex; align-items: stretch; gap: 2px;

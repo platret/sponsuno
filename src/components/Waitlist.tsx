@@ -1,12 +1,23 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { waitlist, type Role } from '../content';
+import { legal, waitlist, waitlistNext, type Role } from '../content';
+import { siteHref } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import '../styles/sections/waitlist.css';
 
 // Set VITE_WAITLIST_ENDPOINT (e.g. a Formspree form URL) to store sign-ups. It receives a JSON POST
-// of { rolle, email }. Without it the form only previews the success state and stores nothing
-// (see AGENTS.md); waitlist.previewNote and previewSuccess say so, so nobody believes they signed up.
+// of { rolle, email }. Without it the form stores nothing (see AGENTS.md); waitlist.previewIntro,
+// previewNote and previewSuccess say so and offer an e-mail to the team instead, so nobody believes they signed up.
 const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT?.trim() ?? '';
+const CONTACT = legal.contact.email;
+const INTRO = ENDPOINT ? waitlist.intro : CONTACT ? waitlist.previewIntro : null;
+
+/** mailto: link to the team with subject and body prefilled for the chosen role. */
+function mailHref(role: Role): string {
+  const label = waitlist.roles.find((r) => r.value === role)?.label ?? '';
+  const subject = encodeURIComponent(waitlist.mailSubject(label));
+  const body = encodeURIComponent(waitlist.mailBody(label));
+  return `mailto:${CONTACT}?subject=${subject}&body=${body}`;
+}
 
 type Status = 'idle' | 'sending' | 'done';
 
@@ -22,7 +33,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const [status, setStatus] = useState<Status>('idle');
   const emailRef = useRef<HTMLInputElement>(null);
   const [shaking, setShaking] = useState(false);
-  const successRef = useRef<HTMLParagraphElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
   // Without an endpoint the prerendered form must not submit natively (before hydration or without JS
   // the browser would POST email and rolle to the page itself, i.e. to the host). The submit button
   // stays disabled until React has hydrated; a disabled default button also blocks Enter-submission.
@@ -90,7 +101,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
         <div className="wl-inner">
           <div className="wl-head" data-reveal="" data-scroll="rise">
             <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
-            <p className="wl-intro">{waitlist.intro}</p>
+            {INTRO && <p className="wl-intro">{INTRO}</p>}
           </div>
 
           {status !== 'done' ? (
@@ -147,13 +158,34 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                 </button>
               </div>
               <p className="wl-error" id="wl-error" role="alert" hidden={!invalid}>{error}</p>
-              <p className="wl-hint" id="wl-hint">{ENDPOINT ? waitlist.hint : waitlist.previewNote}</p>
+              <p className="wl-hint" id="wl-hint">
+                {ENDPOINT ? waitlist.hint : waitlist.previewNote}
+                {!ENDPOINT && CONTACT && <> {waitlist.previewMailLead} <a href={mailHref(role)}>{CONTACT}</a></>}
+              </p>
             </form>
           ) : (
-            <p className="wl-success" role="status" tabIndex={-1} ref={successRef}>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-              <span>{ENDPOINT ? waitlist.success : waitlist.previewSuccess}</span>
-            </p>
+            <div className="wl-success" role="status" tabIndex={-1} ref={successRef}>
+              <div className="wl-success-main">
+                {ENDPOINT
+                  ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                  : <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2" /><path d="M4 7l8 6 8-6" /></svg>}
+                <div>
+                  <p>{ENDPOINT ? waitlist.success : waitlist.previewSuccess}</p>
+                  {!ENDPOINT && CONTACT && (
+                    <>
+                      <p>{waitlist.previewMailIntro}</p>
+                      <p className="wl-mail">
+                        <a className="btn btn-gold" href={mailHref(role)}>{waitlist.previewMailButton}</a>
+                        <span className="wl-mail-address">{CONTACT}</span>
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+              <p className="wl-next">
+                {waitlist.nextLabel} <a href={siteHref(waitlistNext[role].href, true)}>{waitlistNext[role].label}</a>
+              </p>
+            </div>
           )}
         </div>
       </div>

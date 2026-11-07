@@ -59,7 +59,8 @@ Rules: Cormorant never below about 28px and never for UI or body text. One excep
 - Phones: the hero fits one screen with the start frame (one locked pair on the line) inside it; a slim sticky waitlist bar appears once the hero and the story have scrolled away.
 - Legal pages (Impressum, Datenschutz): slim static paper header (dark wordmark, "Zur Startseite"), one centred column of max 42rem on paper (the header content uses the same centred measure), an ivory table of contents, sections divided by hairlines, H2 in Cormorant at 28–36 px, then the navy footer standing alone (`.ft-standalone`, no top rule). Missing contact data is shown in Gold dunkel with a short gold rule, never hidden. No motion.
 - Guide pages (Ratgeber, `guide.css`, prefix `gd-`): the legal-page layout (header, 42rem column, ivory table of contents, hairline sections, standalone footer) plus: a byline row ("Team Sponsuno · Stand"), a "planned" note with a 2 px gold rule on the left, numbered steps with Gold dunkel numerals, a letter template as a bordered ivory block (`figure` with a caption, `pre` in Manrope that keeps line breaks, selectable, no copy button), a closing row with the navy primary button (Warteliste) and a quiet underlined demo link with its note, and an ivory "Weiterlesen" box listing the other guides with their descriptions. No motion, no JavaScript.
-- Footer columns: Plattform, Mehr, Ratgeber (the four guides), Rechtliches. They wrap on narrow screens; at 520 px and below they form a 2x2 grid.
+- Waitlist confirmation: a navy-2 box with a gold icon (check when stored; envelope while no endpoint is set, with the gold "E-Mail schreiben" button and the address as text beside it), then under a hairline one next-step link per role. Links on navy are ivory with a gold underline.
+- Footer columns: Plattform, Mehr, Ratgeber (the four guides), Rechtliches. Below 1024 px the claim sits above them instead of beside them; they wrap on narrow screens; at 520 px and below they form a 2x2 grid.
 
 ## Motion
 
@@ -143,6 +144,7 @@ Recommendation from the research (needs the team and the CD owner): refine rathe
 The demo (`/demo/`) uses the same tokens (`src/styles/tokens.css`) in an app layout:
 
 - Shell: navy sidebar (268 px, full height) with the role switch and navigation; the gold banner ("Demo mit fiktiven Daten") sits on top of the ivory content column (max 1180 px). Below 900 px the sidebar becomes a navy bottom tab bar, the role switch moves into a row above the view, and toasts appear at the top.
+- Way back to the waitlist: in the sidebar a short note and a full-width gold button ("Auf die Warteliste") above the account card; below 900 px a closing row under every view (hairline, note, navy button).
 - Active navigation: gold-light icon, faint gold background, a 2 px gold inset line on the left.
 - Cards: same light and dark card styles as the landing page, smaller padding (1.1–1.5 rem). Headings in Cormorant, body in Manrope 1 rem.
 - Match criteria always appear in the same order with the same marks: gold check (passt), half circle (teilweise), muted cross (passt nicht), each with a text equivalent.
