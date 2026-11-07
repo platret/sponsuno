@@ -86,7 +86,8 @@ export function Header() {
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
             <img className="brand-on-dark" src={wordmarkLight} alt="" width={118} height={30} />
-            <img className="brand-on-light" src={wordmarkDark} alt="" width={118} height={30} />
+            {/* Hidden until the bar turns paper: low priority, so React does not preload it with the first screen */}
+            <img className="brand-on-light" src={wordmarkDark} alt="" width={118} height={30} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>
