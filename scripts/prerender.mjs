@@ -40,17 +40,18 @@ async function inlineTinyCss(html) {
   let out = html;
   for (const [tag, href] of html.matchAll(stylesheet)) {
     const css = (await readFile(path.join(root, 'dist', href), 'utf8')).trim();
-    if (css.length < INLINE_CSS_MAX && !/url\(\s*(?!["']?(\/|data:))/.test(css)) out = out.replace(tag, `<style>${css}</style>`);
+    if (css.length < INLINE_CSS_MAX && !/url\(\s*(?!["']?(\/|data:))/.test(css)) out = out.replace(tag, () => `<style>${css}</style>`);
   }
   return out;
 }
 
 // The font preloads of the HTML entries end up before the stylesheets and scripts that Vite adds at the end of the
 // head. Move them behind those, so the CSS is requested first (over HTTP/1.1 the six connections go in document order).
-const fontPreload = /\n\s*<link rel="preload" href="[^"]+\.woff2" as="font"[^>]*>/g;
+// A comment right above a preload moves with it.
+const fontPreload = /\n\s*(?:<!--(?:(?!-->)[\s\S])*-->\s*)?<link rel="preload" href="[^"]+\.woff2" as="font"[^>]*>/g;
 function fontPreloadsLast(html) {
   const tags = html.match(fontPreload) ?? [];
-  return tags.length ? html.replace(fontPreload, '').replace('</head>', `${tags.join('').slice(1)}\n</head>`) : html;
+  return tags.length ? html.replace(fontPreload, '').replace('</head>', () => `${tags.join('').slice(1)}\n</head>`) : html;
 }
 
 for (const page of pages) {
