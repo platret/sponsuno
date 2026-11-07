@@ -1,6 +1,5 @@
-import { Fragment } from 'react';
 import { projectStatus, team, type TeamMember } from '../content';
-import { siteHref } from '../lib/links';
+import { rich } from './rich';
 import '../styles/sections/team.css';
 
 /** "Aurel Eugster" -> "AE": first letter of the first and the last name. */
@@ -36,16 +35,10 @@ function ProjectStatus() {
   return (
     <div className="team-status">
       <div className="team-status-head" data-reveal="" data-scroll="rise">
-        <h3>{projectStatus.title}</h3>
-        <p className="team-status-intro">
-          {projectStatus.intro.map((part, i) =>
-            typeof part === 'string'
-              ? <Fragment key={i}>{part}</Fragment>
-              : <a key={i} href={siteHref(part.href, true)}>{part.label}</a>,
-          )}
-        </p>
+        <h3 id="team-status-title">{projectStatus.title}</h3>
+        <p className="team-status-intro">{rich(projectStatus.intro)}</p>
       </div>
-      <ol className="team-steps" data-reveal="" data-scroll="rise">
+      <ol className="team-steps" role="list" aria-labelledby="team-status-title" data-reveal="" data-scroll="rise">
         {projectStatus.steps.map((step) => (
           <li className={`team-step${step.done ? ' is-done' : ''}`} key={step.when}>
             <p className="team-step-meta">

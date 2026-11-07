@@ -80,13 +80,14 @@
 .team-status-intro { margin-top: .6rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); }
 .team-status-intro a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
 
-.team-steps { grid-column: 2 / -1; max-width: 38rem; list-style: none; padding: 0; display: grid; gap: 1.5rem; }
+.team-steps { grid-column: 2 / -1; max-width: 38rem; display: grid; gap: 1.5rem; }
 .team-step { position: relative; padding-left: 1.75rem; }
-/* Line to the next marker */
+/* Line to the next marker, 1px clear of both: starts below this marker (.375rem + 9px), ends above the next one
+   (list gap 1.5rem + marker offset .375rem) */
 .team-step::before {
   content: "";
   position: absolute;
-  left: 4px; top: 1rem; bottom: -1.5rem;
+  left: 4px; top: 1rem; bottom: calc(1px - 1.875rem);
   border-left: 1px solid var(--rule);
 }
 .team-step:not(.is-done)::before { border-left-style: dashed; }

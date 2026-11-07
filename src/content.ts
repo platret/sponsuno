@@ -354,7 +354,7 @@ const teamMembers: TeamMember[] = [
 
 export const team = {
   title: 'Wer hinter Sponsuno steht',
-  intro: 'Wir sind vier Gründer im Youngpreneurs-Programm und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
+  intro: 'Wir sind vier Gründer und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
   members: teamMembers,
 };
 
@@ -381,7 +381,7 @@ export const projectStatus = {
     { when: 'Herbst 2026', text: 'Gespräche mit vier Sportlerinnen und Sportlern und einem Tennistrainer.', done: true },
     { when: 'November 2026', text: 'Website und klickbare Demo mit fiktiven Daten sind online.', done: true },
     { when: 'Als Nächstes', text: 'Gespräche mit Firmen und Kulturvereinen in der Region Winterthur.', done: false },
-    { when: 'Danach', text: 'Die Warteliste freischalten. Die Plattform selbst ist geplant, einen Starttermin gibt es noch nicht.', done: false },
+    { when: 'Später', text: 'Eintragungen in die Warteliste direkt speichern. Die Plattform selbst ist geplant, einen Starttermin gibt es noch nicht.', done: false },
   ] satisfies StatusStep[],
 };
 
