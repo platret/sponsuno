@@ -1,5 +1,11 @@
 /* Sponsuno design tokens. Source: CD Manual v1.0 (Nov 2026). Shared by the landing page and the demo. See DESIGN.md. */
 
+/* Metric-matched fallbacks: until the self-hosted fonts arrive, text is set in Arial / Times scaled to the same
+   width and line box, so the swap (font-display: swap) moves nothing (CLS). Measured in Chrome, November 2026. */
+@font-face { font-family: "Manrope Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 400; size-adjust: 103.7%; ascent-override: 102.8%; descent-override: 28.9%; line-gap-override: 0%; }
+@font-face { font-family: "Manrope Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 600 700; size-adjust: 99.5%; ascent-override: 107.1%; descent-override: 30.2%; line-gap-override: 0%; }
+@font-face { font-family: "Cormorant Fallback"; src: local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"); font-weight: 600 700; size-adjust: 91.8%; ascent-override: 100.7%; descent-override: 31.3%; line-gap-override: 0%; }
+
 :root {
   --navy: #0B1830;
   --navy-2: #1D2F52;
@@ -17,8 +23,8 @@
   --card-dark-b: #132442;
   --card-dark-line: #33476F;
 
-  --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: "Manrope", "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --serif: "Cormorant Garamond", "Cormorant Fallback", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: "Manrope", "Manrope Fallback", "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
 
   --radius: 16px;
   --gutter: clamp(1rem, 4vw, 2.5rem);

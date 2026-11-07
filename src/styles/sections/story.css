@@ -1,0 +1,279 @@
+/* Scroll story (Story.tsx), right under the hero, in place of the old Problem section. DESIGN.md -> Story.
+
+   Two presentations of the same content:
+   - Pinned (JS on, screen at least 561 px tall, and not "phone + reduced motion"): the stage is sticky
+     (desktop: right column, text steps left; phones and tablets: under the opening heading, the steps scroll
+     up beneath it). The observers in Story.tsx set data-step on the live stage; CSS transitions move the items.
+     Gated on .js alone (set before first paint), so a late reveal failsafe never flips the layout; if the app
+     never starts, the stage simply stays on "heute" beside fully readable text.
+   - Snapshots (default: no JS, short screens, phones with reduced motion): every step shows its own static
+     picture next to (desktop) or above (phones) its text. Nothing hidden, nothing moves.
+   Item positions per state come from lib/storyLayout.ts (rendered as a <style> tag). */
+
+.story {
+  position: relative;
+  --st-read: 50;  /* reading line in % of the viewport height (Story.tsx reads it) */
+  padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  background: var(--navy);
+  color: var(--steel);
+  --focus: var(--gold-light);
+}
+.story h2, .story h3 { color: var(--ivory); }
+
+/* ---------- Text steps ---------- */
+
+.st-step h2 { font-size: clamp(2.125rem, 1.4rem + 2.2vw, 3.25rem); line-height: 1.04; max-width: 14em; }
+.st-intro { margin-top: 1.1rem; max-width: 30rem; font-size: var(--fs-lead); line-height: 1.55; }
+.st-label {
+  display: flex; align-items: center; gap: .65rem;
+  font-size: .875rem; font-weight: 600; color: var(--gold-light);
+}
+.st-label::before { content: ""; width: 24px; height: 1px; background: var(--gold); flex: none; }
+/* Story headings in Cormorant (the story reads as one editorial piece with the H1 above it) */
+.st-step h3 {
+  margin-top: .75rem;
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(1.75rem, 1.25rem + 1.4vw, 2.375rem); line-height: 1.08; letter-spacing: -0.01em;
+  text-wrap: balance; max-width: 18ch;
+}
+.st-copy > p:not(.st-label):not(.st-intro) { margin-top: .9rem; max-width: 30rem; }
+.st-more { margin-top: 1.25rem; }
+.st-more .link-arrow { min-height: 44px; color: var(--gold-light); }
+
+/* ---------- Stage (shared by the live stage and the snapshots) ---------- */
+
+.st-art {
+  position: relative; overflow: hidden;
+  container-type: size;
+  height: var(--st-h, 460px);
+  --lx: 52;
+}
+.st-win { position: absolute; top: 0; bottom: 0; overflow: hidden; }
+.st-win-l { left: 0; width: calc(var(--lx) * 1cqw); }
+.st-win-r { left: calc(var(--lx) * 1cqw); right: 0; }
+/* Scan haze just before the line: very soft, no edge, only while the line works */
+.st-win-l::after {
+  content: ""; position: absolute; top: 6%; bottom: 6%; right: 0; width: 34%; pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
+  background: linear-gradient(90deg, rgba(29, 47, 82, 0), rgba(29, 47, 82, .36));
+  opacity: 0;
+}
+.st-art:is([data-step="linie"], [data-step="sortiert"]) .st-win-l::after { opacity: 1; }
+
+/* Every item: centred on (x % of the stage + xo, y % + yo). Only translate, opacity and scale change. */
+.it {
+  position: absolute; left: 0; top: 0;
+  translate: calc(var(--x) * 1cqw + var(--xo) - var(--ax, 50%)) calc(var(--y) * 1cqh + var(--yo) - 50%);
+  opacity: var(--o); scale: calc(var(--s) * var(--k, 1));
+}
+.st-win-r .it { translate: calc((var(--x) - var(--lx)) * 1cqw + var(--xo) - var(--ax, 50%)) calc(var(--y) * 1cqh + var(--yo) - 50%); }
+.it-seeker { width: 210px; height: 56px; }
+.it-pair, .it-legend { --ax: 0%; transform-origin: 0 50%; }  /* scales keep the left edge on the line */
+.face { position: absolute; inset: 0; }
+.face-raw { opacity: calc(1 - var(--f)); rotate: var(--t, 0deg); }
+.face-clean { opacity: var(--f); }
+
+.it-line { width: 12px; height: 90cqh; }
+.ln { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--gold-light); }
+.ln::before, .ln::after { content: ""; position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--gold-light); }
+.ln::before { top: -3px; }
+.ln::after { bottom: -3px; }
+.head-t { display: block; font-size: .8125rem; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+.it-match { width: min(27rem, 72cqw); }
+
+/* Caption: centred under the picture on desktop, a bar on the stage's bottom edge on phones */
+.st-cap {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: grid; justify-items: center;
+  padding: .5rem 1rem;
+  font-size: .8125rem; line-height: 1.4; color: var(--steel); text-align: center;
+}
+.cap { grid-area: 1 / 1; }
+.st-live .cap { opacity: 0; }
+.st-live:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .cap-heute,
+.st-live:is([data-step="linie"], [data-step="sortiert"]) .cap-solution,
+.st-live[data-step="danach"] .cap-planned { opacity: 1; }
+
+/* Desktop: the legend is a column right-aligned against the line, beside the lead pair */
+@media (min-width: 961px) {
+  .st-art .it-legend { --ax: 100%; transform-origin: 100% 50%; }
+  .st-art .it-legend .lg { flex-direction: column; align-items: flex-end; }
+}
+
+/* The match card carries its own "fiktiv" label; in "danach" it is smaller and the label would be too small */
+.st-art[data-step="danach"] .match-label { opacity: 0; }
+
+/* Short stages: the pair column, the legend and the match card scale down so nothing overlaps */
+@container (max-height: 600px) { .it-pair, .it-legend { --k: .88; } .it-match { --k: .9; } }
+@container (max-height: 500px) { .it-pair, .it-legend { --k: .72; } .it-match { --k: .78; } }
+
+/* ---------- Motion on the live stage (CSS transitions retarget, so a fast flick lands on the last state) ---------- */
+
+.motion .st-live .it { transition: translate .8s var(--ease-out) var(--d, 0ms), opacity .45s ease var(--d, 0ms), scale .6s var(--ease-out) var(--d, 0ms); }
+.motion .st-live .face { transition: opacity .4s ease var(--d, 0ms); }
+.motion .st-live .cap, .motion .st-live .st-win-l::after { transition: opacity .4s ease; }
+.motion .st-live[data-step="linie"] .it-firm { --d: calc(120ms + var(--i, 0) * 80ms); }
+.motion .st-live[data-step="linie"] .it-seeker { --d: calc(var(--i, 0) * 60ms); }
+.motion .st-live[data-step="sortiert"] :is(.it-pair, .it-firm, .it-seeker) { --d: calc(var(--i, 0) * 120ms); }
+.motion .st-live[data-step="sortiert"] .it-lock { --d: calc(500ms + var(--i, 0) * 120ms); }
+.motion .st-live[data-step="danach"] .it-ki-deliv { --d: 120ms; }
+/* "Ein Match": the other pairs leave first, the lead pair a moment later while the card grows out of it */
+.motion .st-live[data-step="match"] .it-pair-0 { --d: 120ms; }
+.motion .st-live .match-label { transition: opacity .3s ease; }
+/* Criteria dots tick and the score appears once a pair has come out of the line */
+.motion .st-live .pc-dot { transition: opacity .3s ease, scale .3s var(--ease-out); transition-delay: calc(var(--d, 0ms) + 650ms + var(--k) * 90ms); }
+.motion .st-live .pc-score { transition: opacity .4s ease calc(var(--d, 0ms) + 1050ms); }
+.motion .st-live:not([data-step="sortiert"]) .pc-dot { opacity: .3; scale: .7; transition-delay: 0ms; }
+.motion .st-live:not([data-step="sortiert"]) .pc-score { opacity: 0; transition-delay: 0ms; }
+/* The legend's checks tick together with the lead pair's dots */
+.motion .st-live .lg-chk { transition: opacity .3s ease, scale .3s var(--ease-out); transition-delay: calc(650ms + var(--k) * 90ms); }
+.motion .st-live:not([data-step="sortiert"]) .lg-chk { opacity: .3; scale: .7; transition-delay: 0ms; }
+/* Match card: the gold line draws and the criteria tick when the stage reaches "match" */
+.motion .st-live .match-line { transition: scale 1s cubic-bezier(.65, 0, .35, 1) .25s; }
+.motion .st-live .match-criteria li { transition: opacity .3s ease calc(.6s + var(--i) * .12s); }
+.motion .st-live .match-criteria path { transition: stroke-dashoffset .35s ease calc(.65s + var(--i) * .12s); }
+.motion .st-live .match-score { transition: opacity .4s ease 1.2s, translate .5s var(--ease-out) 1.2s; }
+.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-line { scale: 1 0; transition-delay: 0s; }
+.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-criteria li { opacity: .45; transition-delay: 0s; }
+.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-criteria path { stroke-dashoffset: 14; transition-delay: 0s; }
+.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-score { opacity: 0; translate: 0 6px; transition-delay: 0s; }
+
+/* The stage fades in as it enters, so it continues the hero picture (which fades out) instead of doubling it */
+@supports (animation-timeline: view()) {
+  .scroll-fx .st-stage .st-art {
+    animation: st-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 60%;
+  }
+}
+@keyframes st-in { from { opacity: 0; } }
+
+/* ---------- Snapshots (default) ---------- */
+
+.st-stage { display: none; }
+.st-layout { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.st-step {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 1rem + 4vw, 5rem); align-items: center;
+  padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+}
+.st-text > *, .st-step + .st-step, .st-findings > .st-step + .st-step { border-top: 1px solid var(--card-dark-line); }
+.st-snap { order: 2; }
+.st-snap .st-art { --st-h: clamp(340px, 100svh - var(--header-h) - 3rem, 600px); border-radius: 20px; background: rgba(29, 47, 82, .28); }
+/* Hidden or off-screen snapshots skip style and layout work */
+.st-snap { content-visibility: auto; contain-intrinsic-size: auto 600px; }
+
+/* ---------- Pinned ---------- */
+
+@media (min-height: 561px) and (min-width: 761px), (min-height: 561px) and (prefers-reduced-motion: no-preference) {
+  .js .st-stage { display: block; }
+  .js .st-snap { display: none; }
+  .js .st-step { display: block; }
+  .js :is(.st-text, .st-head) .st-step, .js .st-text > * { border: 0; }
+  /* The steps not being shown recede a little (motion only; focus brings them back). Only the headings and
+     the label rule dim: body text and labels keep full contrast (WCAG 1.4.3). */
+  .motion.story-ready .st-step :is(h2, h3) { transition: opacity .45s ease; }
+  .motion.story-ready .st-label::before { transition: opacity .45s ease; }
+  .motion.story-ready .st-step:not(.is-active):not(:focus-within) :is(h2, h3) { opacity: .6; }
+  .motion.story-ready .st-step:not(.is-active):not(:focus-within) .st-label::before { opacity: .35; }
+}
+
+/* Desktop: text left (opening heading, then the steps), sticky stage right (bleeding to the viewport edge) */
+@media (min-height: 561px) and (min-width: 961px) {
+  .js .st-layout {
+    display: grid;
+    grid-template-columns: minmax(0, clamp(19rem, 29vw, 27rem)) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(2.5rem, 5vw, 5.5rem);
+    max-width: none;
+    padding-left: max(var(--gutter), (100vw - var(--container)) / 2 + var(--gutter));
+    padding-right: 0;
+  }
+  .js .st-head { grid-column: 1; grid-row: 1; }
+  .js .st-text { grid-column: 1; grid-row: 2; padding-bottom: 26svh; }
+  .js .st-stage { grid-column: 2; grid-row: 1 / 3; }
+  .js .st-stage .st-art {
+    --st-h: clamp(420px, 100svh - var(--header-h) - 2rem, 640px);
+    position: sticky;
+    top: calc(var(--header-h) + (100svh - var(--header-h) - var(--st-h)) / 2);
+    -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, #000 90%, transparent);
+  }
+  .js .st-step {
+    min-height: 44svh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-block: 2rem;
+  }
+  .js .st-head > .st-step { min-height: 60svh; justify-content: flex-start; padding-top: 12svh; }
+}
+
+/* Phones and tablets: the opening heading scrolls normally, then the stage sticks under the header and the
+   steps scroll up beneath it */
+@media (min-height: 561px) and (max-width: 960px) and (min-width: 761px), (min-height: 561px) and (max-width: 960px) and (prefers-reduced-motion: no-preference) {
+  .js .story { --st-read: 66; }
+  .js .st-layout { padding: 0; }
+  .js .st-head { padding-inline: var(--gutter); }
+  .js .st-head > .st-step { padding-block: 0 1.75rem; }
+  .js .st-stage {
+    position: sticky; top: var(--header-h); z-index: 2;
+    background: var(--navy);
+  }
+  /* Soft lower edge: text slides under the stage without a hard cut and never shows through. It ends above
+     the reading line, so a step that becomes current is already at full contrast. */
+  .js .st-stage::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 2.5rem; pointer-events: none;
+    background: linear-gradient(var(--navy) 30%, rgba(11, 24, 48, 0));
+  }
+  .js .st-stage .st-art { --st-h: clamp(290px, 45svh, 420px); }
+  .js .st-text { position: relative; z-index: 1; padding-inline: var(--gutter); }
+  .js .st-text .st-step { min-height: 44svh; padding-block: 1.75rem 1rem; }
+  .js .st-text > .st-step:last-child { min-height: 0; padding-bottom: 2rem; }
+}
+
+/* Tablets: the composition keeps phone proportions, centred in the full-width navy stage */
+@media (min-width: 761px) and (max-width: 960px) {
+  .st-stage .st-art { max-width: 640px; margin-inline: auto; }
+}
+
+/* ---------- Stage geometry on phones and tablets ---------- */
+
+@media (max-width: 960px) {
+  .st-art { --lx: 40; }
+  .st-art { --pc-w: min(300px, (100 - var(--lx)) * 1cqw - 16px); }
+  .st-art .it-paper { --k: .7; }
+  .st-art :is(.it-seeker, .it-firm) { --k: .8; }
+  /* Legend under the pairs, starting at the line; wraps to two rows where the window is narrow */
+  .st-art .it-legend .lg { flex-wrap: wrap; width: calc((100 - var(--lx)) * 1cqw - 16px); padding-left: 2px; }
+  .it-match { width: 20.5rem; }
+  /* A tighter match card so it fits the 45svh stage */
+  .st-art .match { padding: .8rem; }
+  .st-art .match-label { margin-bottom: .55rem; }
+  .st-art .match-party { padding: .6rem .75rem; gap: .7rem; }
+  .st-art .match-photo, .st-art .match-mark { width: 40px; height: 40px; }
+  .st-art .match-mark { font-size: 1.25rem; }
+  .st-art .match-name { font-size: .9375rem; }
+  .st-art .match-meta { font-size: .75rem; }
+  .st-art .match-link { padding: .7rem 0 .7rem 3.2rem; }
+  .st-art .match-line { left: calc(.75rem + 19px); }
+  .st-art .match-criteria li { font-size: .75rem; padding: .2rem .55rem .2rem .4rem; }
+  .st-art .match-score { margin-top: .5rem; font-size: .8125rem; }
+  .ki-draft { width: min(300px, 84cqw); }
+  /* Caption as a bar on the bottom edge */
+  .st-art .st-cap { padding-block: .4rem; background: var(--navy); border-top: 1px solid rgba(51, 71, 111, .7); font-size: .75rem; }
+}
+
+@media (max-width: 960px) {
+  .st-step { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .st-snap { order: 0; contain-intrinsic-size: auto 390px; }
+  .st-snap .st-art { --st-h: 390px; border-radius: 16px; }
+}
+
+/* Phones: the seeker cards are narrower and smaller, so their text stays inside the window left of the line */
+@media (max-width: 760px) {
+  .st-art .it-seeker { width: 200px; --k: .74; }
+}
+
+/* Forced colours and print: the picture goes, the text stays */
+@media (forced-colors: active) { .st-stage, .st-snap { display: none !important; } }
+@media print { .st-stage, .st-snap { display: none !important; } }

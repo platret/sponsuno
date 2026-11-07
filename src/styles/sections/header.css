@@ -1,4 +1,5 @@
-/* Header: transparent on the navy hero, solid paper bar after scrolling. Mobile: paper sheet menu. */
+/* Header: transparent at the top, solid navy over the hero and the story, solid paper bar over the light page.
+   Without JS it is always solid navy (nothing runs under it). Mobile: paper sheet menu. */
 
 .site-header {
   position: fixed; inset: 0 0 auto; z-index: 50;
@@ -7,6 +8,11 @@
   border-bottom: 1px solid transparent;
   transition: background-color .25s ease, border-color .25s ease, color .25s ease;
   --focus: var(--gold-light);
+}
+.site-header.is-dark,
+html:not(.js) .site-header {
+  background: var(--navy);
+  border-bottom-color: var(--card-dark-line);
 }
 .site-header.is-solid {
   background: var(--paper);

@@ -5,11 +5,13 @@ import { cta, demo, menu, nav, type SectionId } from '../content';
 import { MobileMenu } from './MobileMenu';
 import '../styles/sections/header.css';
 
-/** Plain full-width bar: transparent over the navy hero, solid paper once the page scrolls. */
+/** Plain full-width bar: transparent at the top, solid navy while the hero and the story run under it,
+    solid paper once the light page reaches it. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLSpanElement>(null);
   const [solid, setSolid] = useState(false);
+  const [dark, setDark] = useState(true);
   const [active, setActive] = useState<SectionId | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -34,7 +36,30 @@ export function Header() {
     }, { rootMargin: '-35% 0px -64% 0px' });
     sections.forEach((s) => activeIo.observe(s.el));
 
-    return () => { solidIo.disconnect(); activeIo.disconnect(); };
+    // While the navy hero or the navy story runs under the bar, the solid bar stays navy (no paper strip over
+    // the pinned stage); it turns paper once the light page reaches it. The band is the bar's own height.
+    const darkZones = [document.getElementById('top'), document.getElementById('problem')].filter((el): el is HTMLElement => el !== null);
+    const underBar = new Map<Element, boolean>();
+    let darkIo: IntersectionObserver | undefined;
+    const buildDark = () => {
+      darkIo?.disconnect();
+      const barH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 72;
+      darkIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => underBar.set(entry.target, entry.isIntersecting));
+        setDark(darkZones.some((el) => underBar.get(el)));
+      }, { rootMargin: `0px 0px ${-Math.max(0, window.innerHeight - barH)}px 0px` });
+      darkZones.forEach((el) => darkIo!.observe(el));
+    };
+    buildDark();
+    let resizeTimer = 0;
+    const onResize = () => { window.clearTimeout(resizeTimer); resizeTimer = window.setTimeout(buildDark, 150); };
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      solidIo.disconnect(); activeIo.disconnect(); darkIo?.disconnect();
+      window.removeEventListener('resize', onResize);
+      window.clearTimeout(resizeTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -51,12 +76,13 @@ export function Header() {
     };
   }, [menuOpen]);
 
-  const isSolid = solid || menuOpen;
+  const isSolid = (solid && !dark) || menuOpen;
+  const isDark = solid && dark && !menuOpen;
 
   return (
     <>
       <span ref={sentinelRef} className="header-sentinel" aria-hidden="true" />
-      <header className={`site-header${isSolid ? ' is-solid' : ''}`}>
+      <header className={`site-header${isSolid ? ' is-solid' : ''}${isDark ? ' is-dark' : ''}`}>
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
             <img className="brand-on-dark" src={wordmarkLight} alt="" width={118} height={30} />
