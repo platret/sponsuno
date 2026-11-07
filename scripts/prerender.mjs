@@ -1,17 +1,18 @@
-// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml,
-// then removes the temporary SSR build.
+// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml and the Word
+// versions of the guide templates (dist/vorlagen/*.docx), then removes the temporary SSR build.
 // Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
 // - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
 // - the empty <div id="root"> gets the server render
+// - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
 // Landing page: hydrated by src/main.tsx. Legal pages and guides: static, CSS only, no JavaScript (src/static/main.ts).
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const { render, headFor, titleFor, pages, SITE_URL, missingLegalContact } =
+const { render, headFor, titleFor, pages, SITE_URL, missingLegalContact, templateFiles } =
   await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
 // Matches <div id="root"></div> and <div id="root" data-page="…"></div>
@@ -31,6 +32,28 @@ async function dropEmptyModules(html) {
   return out;
 }
 
+// Tiny stylesheets (the @font-face rules, a few hundred bytes each) go inline: one render-blocking request less for
+// each. Only when every url() in them is absolute or a data: URI, so the inlined rules still point to the same files.
+const stylesheet = /<link rel="stylesheet" crossorigin href="\/([^"]+\.css)">/g;
+const INLINE_CSS_MAX = 4096;
+async function inlineTinyCss(html) {
+  let out = html;
+  for (const [tag, href] of html.matchAll(stylesheet)) {
+    const css = (await readFile(path.join(root, 'dist', href), 'utf8')).trim();
+    if (css.length < INLINE_CSS_MAX && !/url\(\s*(?!["']?(\/|data:))/.test(css)) out = out.replace(tag, () => `<style>${css}</style>`);
+  }
+  return out;
+}
+
+// The font preloads of the HTML entries end up before the stylesheets and scripts that Vite adds at the end of the
+// head. Move them behind those, so the CSS is requested first (over HTTP/1.1 the six connections go in document order).
+// A comment right above a preload moves with it.
+const fontPreload = /\n\s*(?:<!--(?:(?!-->)[\s\S])*-->\s*)?<link rel="preload" href="[^"]+\.woff2" as="font"[^>]*>/g;
+function fontPreloadsLast(html) {
+  const tags = html.match(fontPreload) ?? [];
+  return tags.length ? html.replace(fontPreload, '').replace('</head>', () => `${tags.join('').slice(1)}\n</head>`) : html;
+}
+
 for (const page of pages) {
   const file = `${page.path}index.html`;
   const filePath = path.join(root, 'dist', file);
@@ -45,7 +68,7 @@ for (const page of pages) {
     .replace(titleMarker, `<title>${titleFor(page.id)}</title>`)
     .replace(seoMarker, headFor(page.id))
     .replace(rootMarker, (_, attrs) => `<div id="root"${attrs}>${render(page.id)}</div>`);
-  const out = page.kind === 'home' ? prerendered : await dropEmptyModules(prerendered);
+  const out = fontPreloadsLast(await inlineTinyCss(page.kind === 'home' ? prerendered : await dropEmptyModules(prerendered)));
   await writeFile(filePath, out);
   console.log(`Prerendered dist/${file}`);
 }
@@ -57,6 +80,18 @@ await writeFile(
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
 );
 console.log(`Wrote dist/sitemap.xml (${urls.length} URLs)`);
+
+// Guide templates as Word files (src/lib/templates.ts, from the same text as the pages). Linked from the guides only:
+// not in the sitemap, noindex in public/_headers.
+const templates = templateFiles();
+if (new Set(templates.map((t) => t.path)).size !== templates.length) {
+  throw new Error('Two templates share a file name: give each template its own file name in src/content.ts');
+}
+for (const { path: file, bytes } of templates) {
+  await mkdir(path.dirname(path.join(root, 'dist', file)), { recursive: true });
+  await writeFile(path.join(root, 'dist', file), bytes);
+  console.log(`Wrote dist/${file} (${bytes.length} bytes)`);
+}
 
 // The controller's contact data is required by DSG Art. 19 and DSGVO Art. 13 as soon as the pages are public.
 const missing = missingLegalContact();

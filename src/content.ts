@@ -803,8 +803,12 @@ export type GuideBlock =
   /** Numbered list for steps that build on each other */
   | { type: 'steps'; items: LegalText[] }
   | { type: 'h3'; text: string }
-  /** A letter or text to copy and adapt: shown as a bordered, selectable block (no copy button) */
-  | { type: 'template'; label: string; text: string }
+  /**
+   * A letter or outline to copy and adapt: shown as a bordered, selectable block (no copy button), with a link to
+   * the same text as a Word file (built at build time by src/lib/templates.ts, served from /vorlagen/<file>).
+   * Placeholders in [eckigen Klammern].
+   */
+  | { type: 'template'; label: string; text: string; file: `${string}-vorlage.docx` }
   /** Links to the waitlist and the demo (end of every guide) */
   | { type: 'cta' };
 
@@ -831,6 +835,11 @@ export const guidePage = {
   ctaDemo: 'Demo ansehen',
   ctaDemoHref: 'demo/',
   ctaDemoNote: 'Klickbarer Prototyp mit fiktiven Daten',
+  /** Download link under each template block */
+  templateDownload: 'Als Word-Datei herunterladen',
+  templateFileInfo: (kb: number) => `DOCX, ${kb} KB`,
+  /** Footer line of the Word files */
+  templateFooter: (guideTitle: string) => `Vorlage aus dem Ratgeber «${guideTitle}» auf sponsuno.ch. Vor dem Versand löschen.`,
 };
 
 const estvLink: LegalLink = { label: 'Eidgenössischen Steuerverwaltung ESTV', href: 'https://www.estv.admin.ch/' };
@@ -1010,6 +1019,7 @@ export const guides: Record<GuideId, GuideContent> = {
           {
             type: 'template',
             label: 'Musterbrief für Sportlerinnen, Sportler und Vereine',
+            file: 'sponsoring-anfrage-vorlage.docx',
             text: [
               'Betreff: Sponsoringanfrage: [Vorhaben] von [Name oder Verein]',
               '',
@@ -1123,6 +1133,45 @@ export const guides: Record<GuideId, GuideContent> = {
             ],
           },
           { type: 'p', text: 'Halten Sie jede Seite knapp. Eine Firma soll schon beim Durchblättern verstehen, wer Sie sind, was Sie brauchen und was sie dafür bekommt. Ein Foto vom Training, von einer Probe oder einem Auftritt sagt dabei oft mehr als ein langer Text.' },
+          { type: 'p', text: 'Die folgende Gliederung fasst diese Seiten zusammen. Ersetzen Sie alles in [eckigen Klammern] durch Ihre Angaben und streichen Sie, was für Sie nicht passt. Wie Sie die Pakete aufbauen, steht im nächsten Abschnitt.' },
+          {
+            type: 'template',
+            label: 'Gliederung für Ihr Dossier',
+            file: 'sponsoring-dossier-vorlage.docx',
+            text: [
+              'Sponsoring-Dossier [Name oder Verein] · [Saison oder Projekt]',
+              '',
+              '1. Titelseite',
+              '[Name] · [Sportart oder Sparte] · [Saison oder Projekt]',
+              '[Ein gutes Foto, zum Beispiel vom Training, von einer Probe oder einem Auftritt]',
+              '',
+              '2. Über uns',
+              '[Wer Sie sind, seit wann Sie Ihren Sport betreiben oder es den Verein gibt, wo Sie trainieren, proben oder auftreten, was Sie ausmacht]',
+              '',
+              '3. Ziele',
+              '[Was Sie in der Saison oder im Jahr vorhaben]',
+              '[Wofür Sie die Unterstützung einsetzen]',
+              '',
+              '4. Publikum und Reichweite',
+              '[Wer Sie sieht und hört, etwa Zuschauerinnen und Zuschauer, Mitglieder, Follower oder Medienberichte]',
+              '[Nur eigene, echte Zahlen, jeweils mit Quelle]',
+              '',
+              '5. Gegenleistungen',
+              '– [Gegenleistung, so konkret wie möglich]',
+              '– [Gegenleistung]',
+              '– [Gegenleistung]',
+              '',
+              '6. Pakete',
+              'Hauptpartner: [Beitrag oder Sachleistung] – [Gegenleistungen]',
+              'Partner: [Beitrag oder Sachleistung] – [Gegenleistungen]',
+              'Gönner: [Beitrag oder Sachleistung] – [Gegenleistungen]',
+              '',
+              '7. Kontakt',
+              '[Vorname Name], [Funktion, Verein]',
+              '[Telefon] · [E-Mail]',
+              'Nächster Schritt: [zum Beispiel ein kurzes Gespräch, und wann Sie sich melden]',
+            ].join('\n'),
+          },
         ],
       },
       {

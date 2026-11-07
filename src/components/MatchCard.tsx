@@ -1,4 +1,4 @@
-import photo from '../assets/photos/mtb-athlete-192.jpg';
+import photo from '../assets/photos/mtb-athlete-104.jpg';
 import type { CSSProperties } from 'react';
 import { match } from '../content';
 
