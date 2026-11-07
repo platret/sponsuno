@@ -3,6 +3,7 @@
 // Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
 // - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
 // - the empty <div id="root"> gets the server render
+// - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
 // Landing page: hydrated by src/main.tsx. Legal pages and guides: static, CSS only, no JavaScript (src/static/main.ts).
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -31,6 +32,27 @@ async function dropEmptyModules(html) {
   return out;
 }
 
+// Tiny stylesheets (the @font-face rules, a few hundred bytes each) go inline: one render-blocking request less for
+// each. Only when every url() in them is absolute or a data: URI, so the inlined rules still point to the same files.
+const stylesheet = /<link rel="stylesheet" crossorigin href="\/([^"]+\.css)">/g;
+const INLINE_CSS_MAX = 4096;
+async function inlineTinyCss(html) {
+  let out = html;
+  for (const [tag, href] of html.matchAll(stylesheet)) {
+    const css = (await readFile(path.join(root, 'dist', href), 'utf8')).trim();
+    if (css.length < INLINE_CSS_MAX && !/url\(\s*(?!["']?(\/|data:))/.test(css)) out = out.replace(tag, `<style>${css}</style>`);
+  }
+  return out;
+}
+
+// The font preloads of the HTML entries end up before the stylesheets and scripts that Vite adds at the end of the
+// head. Move them behind those, so the CSS is requested first (over HTTP/1.1 the six connections go in document order).
+const fontPreload = /\n\s*<link rel="preload" href="[^"]+\.woff2" as="font"[^>]*>/g;
+function fontPreloadsLast(html) {
+  const tags = html.match(fontPreload) ?? [];
+  return tags.length ? html.replace(fontPreload, '').replace('</head>', `${tags.join('').slice(1)}\n</head>`) : html;
+}
+
 for (const page of pages) {
   const file = `${page.path}index.html`;
   const filePath = path.join(root, 'dist', file);
@@ -45,7 +67,7 @@ for (const page of pages) {
     .replace(titleMarker, `<title>${titleFor(page.id)}</title>`)
     .replace(seoMarker, headFor(page.id))
     .replace(rootMarker, (_, attrs) => `<div id="root"${attrs}>${render(page.id)}</div>`);
-  const out = page.kind === 'home' ? prerendered : await dropEmptyModules(prerendered);
+  const out = fontPreloadsLast(await inlineTinyCss(page.kind === 'home' ? prerendered : await dropEmptyModules(prerendered)));
   await writeFile(filePath, out);
   console.log(`Prerendered dist/${file}`);
 }

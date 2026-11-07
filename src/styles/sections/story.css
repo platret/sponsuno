@@ -7,7 +7,9 @@
      Gated on .js alone (set before first paint), so a late reveal failsafe never flips the layout; if the app
      never starts, the stage simply stays on "heute" beside fully readable text.
    - Snapshots (default: no JS, short screens, phones with reduced motion): every step shows its own static
-     picture next to (desktop) or above (phones) its text. Nothing hidden, nothing moves.
+     picture next to (desktop) or above (phones) its text. Nothing hidden, nothing moves. They are in the
+     prerendered HTML; while pinned, Story.tsx drops them after hydration (its PINNED query mirrors the media
+     query of "Pinned" below: change both together).
    Item positions per state come from lib/storyLayout.ts (rendered as a <style> tag). */
 
 .story {

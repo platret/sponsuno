@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { problem, story, type StoryState } from '../content';
 import { stageCss } from '../lib/storyLayout';
 import { StageArt } from './StoryArt';
@@ -6,11 +6,14 @@ import '../styles/sections/story.css';
 
 const Label = ({ children }: { children: string }) => <p className="st-label">{children}</p>;
 
+// Where the stage is pinned (story.css, "Pinned"; keep the two in step). There the snapshots are display: none.
+const PINNED = '(min-height: 561px) and (min-width: 761px), (min-height: 561px) and (prefers-reduced-motion: no-preference)';
+
 /** One text step. The snapshot (static picture of its state) shows only where the stage is not pinned. */
-function Step({ state, as: Tag = 'div', children }: { state: StoryState; as?: 'div' | 'li'; children: ReactNode }) {
+function Step({ state, snap, as: Tag = 'div', children }: { state: StoryState; snap: boolean; as?: 'div' | 'li'; children: ReactNode }) {
   return (
     <Tag className="st-step" data-story-step={state}>
-      <div className="st-snap" aria-hidden="true"><StageArt state={state} /></div>
+      <div className="st-snap" aria-hidden="true">{snap && <StageArt state={state} />}</div>
       <div className="st-copy">{children}</div>
     </Tag>
   );
@@ -24,10 +27,21 @@ function Step({ state, as: Tag = 'div', children }: { state: StoryState; as?: 'd
  * data-step on the stage; CSS transitions do the rest. No scroll handler, no hijacking.
  * Without JS, under reduced motion on phones and on short screens every step shows its own static picture
  * instead (story.css). DESIGN.md -> Story.
+ * The snapshots are in the prerendered HTML (the no-JS path). Once hydrated, they are dropped while the stage is
+ * pinned (about half of the page's elements) and come back when the screen stops matching PINNED.
  */
 export function Story() {
   const stageRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const [snaps, setSnaps] = useState(true);
+
+  useEffect(() => {
+    const pinned = window.matchMedia(PINNED);
+    const update = () => setSnaps(!pinned.matches);
+    update();
+    pinned.addEventListener('change', update);
+    return () => pinned.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -99,7 +113,7 @@ export function Story() {
         {/* The opening step comes before the stage in the source: on phones and tablets the story opens with
             its heading, unpinned, and the sticky picture follows (desktop places it beside the text). */}
         <div className="st-head">
-          <Step state="heute">
+          <Step state="heute" snap={snaps}>
             <h2 id="story-title">{problem.title}</h2>
             <p className="st-intro">{problem.intro}</p>
           </Step>
@@ -113,7 +127,7 @@ export function Story() {
 
           <ul className="st-findings" role="list">
             {problem.items.map((item, i) => (
-              <Step key={item.title} state={story.findingStates[i]} as="li">
+              <Step key={item.title} state={story.findingStates[i]} snap={snaps} as="li">
                 <Label>{story.labels.heute}</Label>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
@@ -122,14 +136,14 @@ export function Story() {
           </ul>
 
           {story.steps.map((s) => (
-            <Step key={s.state} state={s.state}>
+            <Step key={s.state} state={s.state} snap={snaps}>
               <Label>{story.labels.solution}</Label>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
             </Step>
           ))}
 
-          <Step state={story.after.state}>
+          <Step state={story.after.state} snap={snaps}>
             <Label>{story.labels.planned}</Label>
             <h3>{story.after.title}</h3>
             <p>{story.after.text}</p>
