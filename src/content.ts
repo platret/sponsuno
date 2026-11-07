@@ -56,7 +56,7 @@ export const match = {
 export const proof = {
   items: [
     'Entstanden aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer',
-    'Youngpreneurs-Programm',
+    'Teil von Youngpreneurs Zürich',
     'Für Sport und Kultur in der Deutschschweiz',
   ],
   disciplinesLabel: 'Zum Beispiel für',
@@ -358,6 +358,33 @@ export const team = {
   members: teamMembers,
 };
 
+// "Stand des Projekts" block at the end of the team section. Sources and rules: AGENTS.md -> Project status.
+// Every step must stay true and dated: move a step to done only once it has happened, and update this list
+// when the waitlist goes live. Never "gefördert durch" or "Partner": the programme is a course, not an endorsement.
+export type StatusStep = {
+  /** Date or position in the sequence, e.g. "Herbst 2026" or "Als Nächstes" */
+  when: string;
+  text: string;
+  done: boolean;
+};
+
+export const projectStatus = {
+  title: 'Stand des Projekts',
+  intro: [
+    'Sponsuno ist ein Projekt im Programm ',
+    { href: 'https://youngpreneurs.org/zuerich/', label: 'Youngpreneurs Zürich' },
+    ' 2026/27.',
+  ] satisfies LegalText,
+  doneLabel: 'Erledigt',
+  plannedLabel: 'Geplant',
+  steps: [
+    { when: 'Herbst 2026', text: 'Gespräche mit vier Sportlerinnen und Sportlern und einem Tennistrainer.', done: true },
+    { when: 'November 2026', text: 'Website und klickbare Demo mit fiktiven Daten sind online.', done: true },
+    { when: 'Als Nächstes', text: 'Gespräche mit Firmen und Kulturvereinen in der Region Winterthur.', done: false },
+    { when: 'Danach', text: 'Die Warteliste freischalten. Die Plattform selbst ist geplant, einen Starttermin gibt es noch nicht.', done: false },
+  ] satisfies StatusStep[],
+};
+
 export const waitlist = {
   title: 'Als Erste erfahren, wann es losgeht.',
   intro: 'Tragen Sie sich ein. Wir melden uns, sobald es in der Deutschschweiz losgeht.',
@@ -431,7 +458,7 @@ export const footer = {
     },
   ] satisfies { title: string; links: FooterLink[] }[],
   copyright: '© 2026 Team Sponsuno',
-  program: 'Ein Projekt im Youngpreneurs-Programm',
+  program: 'Ein Projekt im Programm Youngpreneurs Zürich',
 };
 
 export const stickyCta = {

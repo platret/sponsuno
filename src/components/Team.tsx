@@ -1,4 +1,6 @@
-import { team, type TeamMember } from '../content';
+import { Fragment } from 'react';
+import { projectStatus, team, type TeamMember } from '../content';
+import { siteHref } from '../lib/links';
 import '../styles/sections/team.css';
 
 /** "Aurel Eugster" -> "AE": first letter of the first and the last name. */
@@ -28,6 +30,36 @@ function Portrait({ member }: { member: TeamMember }) {
   return <span className="team-portrait team-mono" data-scroll="zoom-in" aria-hidden="true">{initials(member.name)}</span>;
 }
 
+/** "Stand des Projekts": the programme with a link, then the steps so far and the planned ones as a short
+    vertical sequence. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
+function ProjectStatus() {
+  return (
+    <div className="team-status">
+      <div className="team-status-head" data-reveal="" data-scroll="rise">
+        <h3>{projectStatus.title}</h3>
+        <p className="team-status-intro">
+          {projectStatus.intro.map((part, i) =>
+            typeof part === 'string'
+              ? <Fragment key={i}>{part}</Fragment>
+              : <a key={i} href={siteHref(part.href, true)}>{part.label}</a>,
+          )}
+        </p>
+      </div>
+      <ol className="team-steps" data-reveal="" data-scroll="rise">
+        {projectStatus.steps.map((step) => (
+          <li className={`team-step${step.done ? ' is-done' : ''}`} key={step.when}>
+            <p className="team-step-meta">
+              <span className="team-step-when">{step.when}</span>
+              <span className="team-step-state">{step.done ? projectStatus.doneLabel : projectStatus.plannedLabel}</span>
+            </p>
+            <p className="team-step-text">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 /** Ivory section between FAQ and waitlist: the four founders with their provisional focus. */
 export function Team() {
   return (
@@ -46,6 +78,7 @@ export function Team() {
             </li>
           ))}
         </ul>
+        <ProjectStatus />
       </div>
     </section>
   );
