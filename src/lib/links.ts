@@ -1,5 +1,7 @@
 // Base-aware links: links between pages are built from import.meta.env.BASE_URL instead of hardcoded paths.
 
+import type { Role } from '../content';
+
 const BASE = import.meta.env.BASE_URL;
 
 /** Absolute href for a page path relative to the site root: '' = landing page, 'demo/', 'impressum/'. */
@@ -18,3 +20,9 @@ export function siteHref(href: string, onLanding: boolean): string {
 
 /** True for links that leave the site. */
 export const isExternal = (href: string): boolean => /^https?:\/\//i.test(href);
+
+/** Query parameter that preselects a role in the landing page waitlist (read in App.tsx): /?rolle=sponsor#warteliste */
+export const ROLE_PARAM = 'rolle';
+
+/** Link to the landing page waitlist from another page, optionally with a preselected role. */
+export const waitlistHref = (role?: Role): string => `${BASE}${role ? `?${ROLE_PARAM}=${role}` : ''}#warteliste`;

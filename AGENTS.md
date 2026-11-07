@@ -95,11 +95,12 @@ docs/                   Images for the README only.
 - **Section styles**: each section imports its own stylesheet from `src/styles/sections/` and prefixes its classes.
 - **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the fixed header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
 - **Links between pages**: build them with `pageHref()` / `siteHref()` from `lib/links.ts` (base path). Footer link hrefs in `content.ts` are `#id` (landing page section) or `path/` (page); on sub-pages section links lead back to the landing page.
-- **Guide pages**: copy in `content.ts` → `guides` (blocks: `p`, `list`, `steps`, `h3`, `template`, `cta`), shared labels in `guidePage`, links between guides via `guideLinks` (footer column "Ratgeber", FAQ intro). Title and description in `src/pages.ts`. Layout = legal pages (`legal.css`) plus `guide.css` (prefix `gd-`). Every guide ends with "Wie Sponsuno dabei helfen soll" in planned wording, the `cta` block (waitlist, demo) and "Weiterlesen".
+- **Guide pages**: copy in `content.ts` → `guides` (blocks: `p`, `list`, `steps`, `h3`, `template`, `cta`), shared labels in `guidePage`, links between guides via `guideLinks` (footer column "Ratgeber", FAQ intro). Title and description in `src/pages.ts`. Layout = legal pages (`legal.css`) plus `guide.css` (prefix `gd-`). Every guide ends with "Wie Sponsuno dabei helfen soll" in planned wording, the `cta` block (waitlist with the guide's `waitlistRole`, demo) and "Weiterlesen".
 - **Legal pages**: all text in `content.ts` → `legal` (and `photoCredits`). Unknown contact data stays `null` and renders as pending (`legal.pending`); `npm run build` prints a warning while a `legal.contact` field is null. Every third-party photo added to the site gets an entry in `photoCredits`, which the Impressum lists.
 - **Photos**: stock photos only under the Pexels or Unsplash licence, labelled "Symbolbild", never presented as Sponsuno users. Rules for choosing and preparing them are in DESIGN.md → Imagery.
 - **Team section** (`#team`, between FAQ and waitlist): names and provisional focus come from `team` in `content.ts`. Without a photo each person shows a monogram. A real, consented photo is added by importing a square JPEG in `content.ts` and setting `photo: { src, alt }` on that person; never use stock or generated faces for the founders.
-- **Waitlist**: posts JSON `{ rolle, email }` to `VITE_WAITLIST_ENDPOINT`. If the variable is empty, the form only previews success and stores nothing; its submit button stays disabled until React has hydrated, so the prerendered form can never POST natively to the host.
+- **Waitlist**: posts JSON `{ rolle, email }` to `VITE_WAITLIST_ENDPOINT`. If the variable is empty (the case in production until the team sets up storage), the form stores nothing and says so: the hint and the confirmation offer a `mailto:` link to `legal.contact.email` with subject ("Warteliste: Sportverein") and body prefilled for the chosen role (`waitlist.mailSubject`, `mailBody`). The Datenschutzerklärung covers this ("Warteliste", "Kontakt per E-Mail", mail at Infomaniak); keep them in step. Its submit button stays disabled until React has hydrated, so the prerendered form can never POST natively to the host. After a (preview or real) success the box shows one next step for the chosen role (`waitlist.next`: a guide, or the sponsor cockpit in the demo).
+- **Waitlist role from the URL**: `/?rolle=<Role>#warteliste` (values of `Role` in `content.ts`: `athlete`, `sportverein`, `kulturverein`, `sponsor`) preselects the role; `App.tsx` reads it in an effect after hydration and ignores unknown values. Build such links with `waitlistHref(role)` from `lib/links.ts`. Used by the guides' cta block (`waitlistRole` per guide, default role if unset) and by the demo (`../?rolle=…`, by the perspective shown). On the landing page itself the role buttons keep calling `onChooseRole` with plain `#warteliste` links.
 
 ## The demo (`src/demo/`)
 
@@ -116,6 +117,9 @@ ui.tsx          UI kit (Button, Card, Badge, CriteriaList, ScoreBadge, Tabs, Fie
 demo.css        Shell and UI kit styles (classes ui-*, demo-*)
 DemoApp.tsx     Shell: banner, sidebar with role switch, mobile role row and tab bar, view switch, focus on route change.
                 The URL decides the role: seeker views switch to the seeker, #/sponsor to the sponsor.
+                "Auf die Warteliste" (sidebar on wide screens, end of every view below 900 px) leads to the landing page
+                waitlist with the role of the perspective shown (seeker: athlete, sponsor: sponsor). The demo's few
+                strings are inline, so content.ts stays out of the demo bundle.
 main.tsx        Error boundary with a reset, in case stored data does not fit the code.
 views/          One view per route, each with its own CSS file and class prefix
 ```

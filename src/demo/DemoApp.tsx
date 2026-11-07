@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import logoDark from '../assets/Sponsuno_Logo_dunkel.svg';
+import type { Role as WaitlistRole } from '../content';
 import { href, navigate, useRoute, type RouteName } from './router';
 import { useDemo } from './store';
 import { Avatar, Icon, useToast, type IconName } from './ui';
@@ -30,6 +31,19 @@ const NAV: Record<Role, NavItem[]> = {
 };
 
 const HOME: Record<Role, RouteName> = { seeker: 'uebersicht', sponsor: 'sponsor' };
+
+/** Waitlist role preselected on the landing page (?rolle=, see App.tsx) for the perspective the visitor is viewing */
+const WAITLIST_ROLE: Record<Role, WaitlistRole> = { seeker: 'athlete', sponsor: 'sponsor' };
+
+/** Way back to the landing page waitlist: in the sidebar on wide screens, at the end of the view on narrow ones. */
+function WaitlistCta({ role, className, tone }: { role: Role; className: string; tone: 'gold' | 'navy' }) {
+  return (
+    <div className={className}>
+      <p>Sponsuno ist im Aufbau. Möchten Sie beim Start dabei sein?</p>
+      <a className={`ui-btn ui-btn-md ui-btn-${tone}`} href={`../?rolle=${WAITLIST_ROLE[role]}#warteliste`}>Auf die Warteliste</a>
+    </div>
+  );
+}
 
 const ROLES: { role: Role; label: string }[] = [
   { role: 'seeker', label: 'Sportlerin' },
@@ -154,6 +168,8 @@ export default function DemoApp() {
             </ul>
           </nav>
 
+          <WaitlistCta role={state.role} className="demo-waitlist" tone="gold" />
+
           <div className="demo-account">
             {state.role === 'seeker'
               ? <Avatar name={seeker.name} size={40} />
@@ -172,6 +188,7 @@ export default function DemoApp() {
 
         <main className="demo-main" id="demo-main" ref={mainRef} tabIndex={-1}>
           {view}
+          <WaitlistCta role={state.role} className="demo-waitlist-end" tone="navy" />
         </main>
       </div>
 

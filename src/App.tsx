@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { Role } from './content';
+import { waitlist, type Role } from './content';
 import { observeReveals, scrollToHash } from './lib/motion';
+import { ROLE_PARAM } from './lib/links';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Story } from './components/Story';
@@ -18,6 +19,13 @@ import { StickyCta } from './components/StickyCta';
 
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
+
+  // Entry points elsewhere (guides, demo) link to /?rolle=<role>#warteliste to preselect the waitlist role
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get(ROLE_PARAM);
+    const preset = waitlist.roles.find((r) => r.value === wanted);
+    if (preset) setRole(preset.value);
+  }, []);
 
   // Reveals start once the app runs; the inline failsafe in index.html is no longer needed.
   useEffect(() => {

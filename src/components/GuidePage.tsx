@@ -1,6 +1,6 @@
 import { guidePage, guides, legal, type GuideBlock, type GuideId } from '../content';
 import { pageMeta } from '../pages';
-import { pageHref, siteHref } from '../lib/links';
+import { pageHref, siteHref, waitlistHref } from '../lib/links';
 import { Footer } from './Footer';
 import { PageHeader } from './PageHeader';
 import { rich } from './rich';
@@ -39,7 +39,7 @@ export function GuidePage({ id }: { id: GuideId }) {
             {guide.sections.map((section) => (
               <section className="lg-section" key={section.id} aria-labelledby={section.id}>
                 <h2 id={section.id}>{section.title}</h2>
-                {section.blocks.map((block, i) => <Block block={block} key={i} />)}
+                {section.blocks.map((block, i) => <Block block={block} key={i} id={id} />)}
               </section>
             ))}
 
@@ -65,7 +65,7 @@ export function GuidePage({ id }: { id: GuideId }) {
   );
 }
 
-function Block({ block }: { block: GuideBlock }) {
+function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
   switch (block.type) {
     case 'p':
       return <p>{rich(block.text)}</p>;
@@ -85,7 +85,7 @@ function Block({ block }: { block: GuideBlock }) {
     case 'cta':
       return (
         <div className="gd-cta">
-          <a className="btn btn-navy" href={siteHref(guidePage.ctaWaitlistHref, false)}>{guidePage.ctaWaitlist}</a>
+          <a className="btn btn-navy" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
             <span className="gd-cta-demo-note">{guidePage.ctaDemoNote}</span>

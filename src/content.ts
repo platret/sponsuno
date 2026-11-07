@@ -375,9 +375,29 @@ export const waitlist = {
   invalid: 'Bitte geben Sie eine gültige E-Mail-Adresse ein, zum Beispiel name@beispiel.ch.',
   failed: 'Die Anmeldung hat nicht geklappt. Bitte versuchen Sie es in ein paar Minuten nochmals.',
   success: 'Danke. Sie stehen auf der Warteliste. Wir melden uns, sobald es losgeht.',
-  // Shown while no VITE_WAITLIST_ENDPOINT is configured: the form works, but nothing is stored
-  previewNote: 'Vorschau: Die Warteliste ist noch nicht freigeschaltet. Ihre Adresse wird nicht gespeichert.',
-  previewSuccess: 'So sieht die Bestätigung aus. Gespeichert wurde nichts, die Warteliste ist noch nicht freigeschaltet.',
+  // Shown while no VITE_WAITLIST_ENDPOINT is configured: nothing is stored, so visitors are offered an
+  // e-mail to legal.contact.email instead (subject and body prefilled with the chosen role).
+  previewNote: 'Die Warteliste ist noch nicht freigeschaltet, das Formular speichert nichts. Bis dahin erreichen Sie uns per E-Mail:',
+  previewSuccess: 'Ihre Adresse wurde nicht gespeichert, die Warteliste ist noch nicht freigeschaltet.',
+  previewMailIntro: 'Schreiben Sie uns eine kurze E-Mail, dann melden wir uns, sobald es losgeht.',
+  previewMailButton: 'E-Mail schreiben',
+  mailSubject: (roleLabel: string) => `Warteliste: ${roleLabel}`,
+  mailBody: (roleLabel: string) => [
+    'Guten Tag',
+    '',
+    'Bitte informieren Sie mich, sobald Sponsuno startet.',
+    `Ich bin: ${roleLabel}`,
+    '',
+    'Freundliche Grüsse',
+  ].join('\r\n'),
+  // After a (preview or real) sign-up: one fitting next step per role
+  nextLabel: 'Bis es losgeht:',
+  next: {
+    athlete: { href: pageMeta('sponsoring-dossier').path, label: 'Ratgeber «Sponsoring-Dossier erstellen»' },
+    sportverein: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber «Sponsoren finden in der Region»' },
+    kulturverein: { href: pageMeta('kultursponsoring').path, label: 'Ratgeber «Sponsoren für Kulturvereine finden»' },
+    sponsor: { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' },
+  } satisfies Record<Role, FooterLink>,
 };
 
 export const footer = {
@@ -620,6 +640,7 @@ export const legal = {
               'Beim Aufruf bearbeitet unser Hoster Cloudflare technische Zugriffsdaten, darunter Ihre IP-Adresse.',
               'Die Demo speichert Ihre Änderungen nur in Ihrem Browser. Nichts davon verlässt Ihr Gerät.',
               'Die Warteliste ist noch nicht freigeschaltet. Das Formular übermittelt nichts.',
+              'Wenn Sie uns eine E-Mail schreiben, liegt sie bei unserem E-Mail-Anbieter Infomaniak in der Schweiz.',
             ],
           },
         ],
@@ -682,8 +703,19 @@ export const legal = {
         id: 'warteliste',
         title: 'Warteliste',
         blocks: [
-          { type: 'p', text: 'Die Warteliste ist noch nicht freigeschaltet. Das Formular zeigt nur eine Vorschau der Bestätigung; Ihre E-Mail-Adresse und Ihre Auswahl werden weder gespeichert noch übermittelt.' },
+          { type: 'p', text: 'Die Warteliste ist noch nicht freigeschaltet. Das Formular speichert und übermittelt nichts: Ihre E-Mail-Adresse und Ihre Auswahl verlassen Ihren Browser nicht.' },
+          { type: 'p', text: 'Stattdessen bietet das Formular einen Link an, mit dem Sie uns eine E-Mail schreiben können. Der Link öffnet Ihr E-Mail-Programm mit vorausgefülltem Betreff und Text (darin Ihre Auswahl, zum Beispiel «Sportverein»). Gesendet wird erst, wenn Sie die E-Mail selbst abschicken; dafür gilt der Abschnitt «Kontakt per E-Mail».' },
           { type: 'p', text: 'Bevor wir die Warteliste freischalten, ergänzen wir diese Datenschutzerklärung: welche Daten wir dann speichern, bei welchem Anbieter, wie lange und wie Sie sich wieder austragen können.' },
+        ],
+      },
+      {
+        id: 'e-mail',
+        title: 'Kontakt per E-Mail',
+        blocks: [
+          { type: 'p', text: 'Wenn Sie uns eine E-Mail schreiben, bearbeiten wir Ihre E-Mail-Adresse, Ihren Namen, falls Sie ihn angeben, und den Inhalt Ihrer Nachricht. Wir verwenden diese Angaben nur, um Ihre Nachricht zu beantworten, und, wenn Sie uns darum bitten, um Sie über den Start von Sponsuno zu informieren.' },
+          { type: 'p', text: 'Unser E-Mail-Postfach wird von Infomaniak Network SA, Genf, Schweiz, betrieben. Infomaniak bearbeitet die Nachrichten dabei in unserem Auftrag.' },
+          { type: 'p', text: 'Wir bewahren Ihre Nachricht so lange auf, wie wir sie für Ihr Anliegen brauchen. Möchten Sie keine Nachricht mehr von uns erhalten, genügt eine kurze E-Mail; dann löschen wir Ihre Adresse.' },
+          { type: 'p', text: 'Rechtsgrundlage für Besucherinnen und Besucher aus der EU und dem EWR: unser berechtigtes Interesse, Ihre Nachricht zu beantworten (Art. 6 Abs. 1 lit. f DSGVO), und, wenn Sie über den Start informiert werden möchten, Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), die Sie jederzeit widerrufen können.' },
         ],
       },
       {
@@ -761,6 +793,8 @@ export type GuideContent = {
   sections: GuideSection[];
   /** Guides shown under "Weiterlesen" */
   related: GuideId[];
+  /** Role preselected by the waitlist link of the cta block (default: the form's default role) */
+  waitlistRole?: Role;
 };
 
 /** Labels shared by all guide pages */
@@ -770,7 +804,6 @@ export const guidePage = {
   plannedNote: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Die Tipps auf dieser Seite gelten unabhängig davon.',
   relatedTitle: 'Weiterlesen',
   ctaWaitlist: 'Auf die Warteliste',
-  ctaWaitlistHref: '#warteliste',
   ctaDemo: 'Demo ansehen',
   ctaDemoHref: 'demo/',
   ctaDemoNote: 'Klickbarer Prototyp mit fiktiven Daten',
@@ -1233,5 +1266,6 @@ export const guides: Record<GuideId, GuideContent> = {
       },
     ],
     related: ['sponsoren-finden', 'sponsoring-anfrage', 'sponsoring-dossier'],
+    waitlistRole: 'kulturverein',
   },
 };
