@@ -9,6 +9,12 @@
 /demo/*
   X-Robots-Tag: noindex
 
+# Word versions of the guide templates (written by scripts/prerender.mjs). Same URL after a text change, so cache
+# briefly; noindex keeps the files out of search results (the guide pages are what should be found).
+/vorlagen/*
+  Cache-Control: public, max-age=3600
+  X-Robots-Tag: noindex
+
 # HTTPS only. No includeSubDomains/preload: keeps the Infomaniak mail hostnames out of it.
 /*
   Strict-Transport-Security: max-age=31536000

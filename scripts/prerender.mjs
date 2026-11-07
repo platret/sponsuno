@@ -1,18 +1,18 @@
-// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml,
-// then removes the temporary SSR build.
+// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml and the Word
+// versions of the guide templates (dist/vorlagen/*.docx), then removes the temporary SSR build.
 // Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
 // - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
 // - the empty <div id="root"> gets the server render
 // - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
 // Landing page: hydrated by src/main.tsx. Legal pages and guides: static, CSS only, no JavaScript (src/static/main.ts).
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const { render, headFor, titleFor, pages, SITE_URL, missingLegalContact } =
+const { render, headFor, titleFor, pages, SITE_URL, missingLegalContact, templateFiles } =
   await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
 // Matches <div id="root"></div> and <div id="root" data-page="…"></div>
@@ -80,6 +80,18 @@ await writeFile(
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
 );
 console.log(`Wrote dist/sitemap.xml (${urls.length} URLs)`);
+
+// Guide templates as Word files (src/lib/templates.ts, from the same text as the pages). Linked from the guides only:
+// not in the sitemap, noindex in public/_headers.
+const templates = templateFiles();
+if (new Set(templates.map((t) => t.path)).size !== templates.length) {
+  throw new Error('Two templates share a file name: give each template its own file name in src/content.ts');
+}
+for (const { path: file, bytes } of templates) {
+  await mkdir(path.dirname(path.join(root, 'dist', file)), { recursive: true });
+  await writeFile(path.join(root, 'dist', file), bytes);
+  console.log(`Wrote dist/${file} (${bytes.length} bytes)`);
+}
 
 // The controller's contact data is required by DSG Art. 19 and DSGVO Art. 13 as soon as the pages are public.
 const missing = missingLegalContact();

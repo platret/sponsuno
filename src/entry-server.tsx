@@ -9,6 +9,7 @@ import { faq, legal } from './content';
 import { absoluteUrl, pageMeta, pages, site, SITE_URL, type PageId } from './pages';
 
 export { pages, SITE_URL };
+export { templateFiles } from './lib/templates';
 export type { PageId };
 
 export function render(id: PageId = 'home'): string {
