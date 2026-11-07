@@ -51,8 +51,13 @@
   --scroll-recede-scale: 1;
   --scroll-recede-opacity: .4;
 
-  color-scheme: light;
+  /* "light dark" tells Safari's Adaptive Dark Mode and dark-mode extensions (Noir, Dark Reader) that the page
+     handles dark mode itself, so they leave the CD colours alone. The page keeps one look: body pins the
+     UA defaults (form controls, scrollbars) to light, and every surface sets its own colours. */
+  color-scheme: light dark;
 }
+
+body { color-scheme: light; }
 
 @media (max-width: 600px) {
   :root {
