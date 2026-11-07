@@ -354,7 +354,7 @@ const teamMembers: TeamMember[] = [
 
 export const team = {
   title: 'Wer hinter Sponsuno steht',
-  intro: 'Wir sind vier Gründer und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
+  intro: 'Wir sind ein Team aus vier Personen und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
   members: teamMembers,
 };
 
