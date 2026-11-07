@@ -7,14 +7,15 @@ type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
 // Start frame of the story (Harvey-style): raw papers left of a thin gold line, ordered pairs right of it.
 // Its own papers (never the ones on the story stage, which fades in as this picture fades out).
-// x in px from the line (negative = left), y in % of the art height; m = phone position or null (hidden).
-const PAPERS: { kind: PaperKind; x: number; y: number; m: [number, number] | null }[] = [
-  { kind: 'anfrage', x: -34, y: 50, m: [-22, 64] },      // being taken in by the line: its right edge is behind it
-  { kind: 'praesentation', x: -190, y: 36, m: [-80, 25] },
-  { kind: 'rueckruf', x: -200, y: 84, m: null },
-  { kind: 'nachfassen', x: -350, y: 60, m: null },
-  { kind: 'fragen', x: -364, y: 18, m: null },
-  { kind: 'liste', x: -500, y: 46, m: null },
+// x in px from the line (negative = left), y in % of the art height; m = phone position or null (hidden);
+// b = height on the moving belt (html.motion), in array order along the belt.
+const PAPERS: { kind: PaperKind; x: number; y: number; m: [number, number] | null; b: number }[] = [
+  { kind: 'anfrage', x: -34, y: 50, m: [-22, 64], b: 50 },
+  { kind: 'fragen', x: -364, y: 18, m: null, b: 22 },
+  { kind: 'rueckruf', x: -200, y: 84, m: null, b: 82 },
+  { kind: 'praesentation', x: -190, y: 36, m: [-80, 25], b: 40 },
+  { kind: 'nachfassen', x: -350, y: 60, m: null, b: 72 },
+  { kind: 'liste', x: -500, y: 46, m: null, b: 24 },
 ];
 
 /** Navy hero, centred (Harvey frame): badge, H1, lead, the two audience buttons, the demo link, then the start
@@ -48,12 +49,12 @@ export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
       <figure className="hero-art" data-scroll="recede">
         <div className="ha-canvas" aria-hidden="true">
           <div className="ha-win ha-win-l">
-            {PAPERS.map((p) => (
+            {PAPERS.map((p, i) => (
               <Paper
                 key={p.kind}
                 kind={p.kind}
                 className={`ha-paper${p.m ? '' : ' ha-mhide'}${p.x < -300 ? ' ha-far' : ''}`}
-                style={{ '--hx': `${p.x}px`, '--hy': `${p.y}%`, '--mx': `${p.m?.[0] ?? 0}px`, '--my': `${p.m?.[1] ?? 0}%` }}
+                style={{ '--hx': `${p.x}px`, '--hy': `${p.y}%`, '--mx': `${p.m?.[0] ?? 0}px`, '--my': `${p.m?.[1] ?? 0}%`, '--by': `${p.b}%`, '--i': i }}
               />
             ))}
           </div>
