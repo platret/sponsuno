@@ -1,6 +1,5 @@
 /* Hero: navy, centred copy (Harvey frame), then the start frame of the scroll story inside the first viewport.
-   The art is static: raw papers left of a thin gold line, ordered pairs right of it. On load the lead pair
-   comes out from behind the line once (time-based, under .motion only). The pieces (papers, pair cards, lock
+   Raw papers left of a thin gold line, ordered pairs right of it; under .motion it runs as a belt (Load below). The pieces (papers, pair cards, lock
    disc) are styled in story-art.css, shared with the story stage. */
 
 .hero {
@@ -110,24 +109,45 @@
 @keyframes hero-in { from { opacity: 0; translate: 0 14px; } }
 @keyframes hero-rise { from { translate: 0 14px; } }
 
-/* Start frame, about 2 s in all, then still: the line draws, the lead pair comes out from behind it
-   (clipped by the right window), the lock disc sets, the criteria dots tick, the score appears. */
-.motion .ha-paper { animation: ha-fade .9s ease .15s both; }
+/* Start frame. Without motion it stands still (the layout above). With motion it runs as a slow belt, CSS only:
+   the line draws, then the papers drift into it and are taken in, and the pairs come out of it and travel off
+   to the right, all at about 45 px/s. Each item's negative delay spreads them evenly along the belt; the dots
+   on a pair tick as it leaves the line. Papers: 6 spaced --belt-gap; pairs: 5 spaced --belt-step. */
+.hero-art { --belt-gap: 150px; --belt-in: 20s; --belt-step: calc(var(--pc-w) + 40px); --belt-out: 32s; }
+.motion .ha-win { animation: ha-fade .9s ease .15s both; }
 .motion .ha-line { animation: ha-draw .8s cubic-bezier(.65, 0, .35, 1) .2s both; }
-.motion .ha-pair:not(.ha-lead) { animation: ha-fade .9s ease .35s both; }
-.motion .ha-lead { animation: ha-out 1s var(--ease-out) .55s both; }
-.motion .ha-lock { animation: ha-lock .45s var(--ease-out) 1.25s both; }
-.motion .ha-lead .pc-dot { animation: ha-dot .3s ease both; animation-delay: calc(1.35s + var(--k) * .12s); }
-.motion .ha-lead .pc-score { animation: ha-fade .45s ease 1.9s both; }
-.motion .ha-legend { animation: ha-fade .5s ease 1.2s both; }
-.motion .ha-legend .lg-chk { animation: ha-dot .3s ease both; animation-delay: calc(1.35s + var(--k) * .12s); }
+.motion .ha-lock { animation: ha-lock .45s var(--ease-out) .9s both; }
+.motion .ha-legend { animation: ha-fade .5s ease 1s both; }
+.motion .ha-paper {
+  display: block; top: var(--by);
+  animation: ha-in var(--belt-in) linear calc(var(--i) * var(--belt-in) / -6) infinite;
+}
+.motion .ha-pair {
+  display: block; left: 0;
+  animation: ha-out var(--belt-out) linear calc((var(--n) + 1) * var(--belt-out) / -5) infinite;
+}
+.motion .ha-pair .pc-dot {
+  animation: ha-tick var(--belt-out) linear calc((var(--n) + 1) * var(--belt-out) / -5 + var(--k) * .25s) infinite;
+}
 @keyframes ha-fade { from { opacity: 0; } }
 @keyframes ha-draw { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
-@keyframes ha-out { from { translate: -100% -50%; } }
 @keyframes ha-lock { from { opacity: 0; scale: .4; } }
-@keyframes ha-dot { from { opacity: .25; scale: .6; } }
-/* App never started: show the final frame */
-.reveal-all .hero * { animation: none !important; }
+@keyframes ha-in {
+  from { translate: calc(-6 * var(--belt-gap)) -50%; opacity: 0; }
+  8% { opacity: .7; }
+  to { translate: 0 -50%; opacity: .7; }
+}
+@keyframes ha-out {
+  from { translate: calc(-1 * var(--belt-step)) -50%; opacity: 1; }
+  25% { opacity: 1; }
+  to { translate: calc(4 * var(--belt-step)) -50%; opacity: 0; }
+}
+@keyframes ha-tick {
+  0%, 17% { opacity: .25; scale: .6; }
+  18%, 100% { opacity: 1; scale: 1; }
+}
+/* App never started: the copy shows its final frame (the belt needs no script and keeps running) */
+.reveal-all .hero :not(.ha-paper, .ha-pair, .pc-dot) { animation: none !important; }
 
 /* Scroll-out (data-scroll="recede", site.css; DESIGN.md -> Motion): on the --hero timeline, exit 0% -> 100%.
    The hero's top sits at the page top, so the recede never starts before scroll 0. The copy leaves first,
