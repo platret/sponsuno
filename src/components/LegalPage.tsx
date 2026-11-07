@@ -1,13 +1,13 @@
-import { Fragment, type ReactNode } from 'react';
-import { legal, photoCredits, type LegalBlock, type LegalPageId, type LegalText } from '../content';
-import { isExternal, pageHref } from '../lib/links';
-import wordmarkDark from '../assets/wordmark-dark.svg';
+import { Fragment } from 'react';
+import { legal, photoCredits, type LegalBlock, type LegalPageId } from '../content';
 import { Footer } from './Footer';
+import { PageHeader } from './PageHeader';
+import { rich } from './rich';
 import '../styles/sections/legal.css';
 
 /**
  * Impressum and Datenschutzerklärung (/impressum/, /datenschutz/). Static: prerendered at build time
- * and shipped without JavaScript (src/legal/main.ts only loads the styles). All text is in content.ts → legal.
+ * and shipped without JavaScript (src/static/main.ts only loads the styles). All text is in content.ts → legal.
  */
 export function LegalPage({ page }: { page: LegalPageId }) {
   const content = legal[page];
@@ -15,15 +15,7 @@ export function LegalPage({ page }: { page: LegalPageId }) {
 
   return (
     <>
-      <a className="skip-link" href="#inhalt">{legal.skipLink}</a>
-      <header className="lg-header" id="top">
-        <div className="container lg-header-inner">
-          <a className="lg-brand" href={pageHref('')} aria-label={legal.homeLabel}>
-            <img src={wordmarkDark} alt="" width={118} height={30} />
-          </a>
-          <a className="lg-home" href={pageHref('')}>{legal.backHome}</a>
-        </div>
-      </header>
+      <PageHeader />
 
       <main id="inhalt" className="lg">
         <div className="container">
@@ -117,15 +109,5 @@ function Credits() {
       <ul className="lg-list">{c.aiImages.map((text) => <li key={text}>{text}</li>)}</ul>
       <p>{c.fonts}</p>
     </>
-  );
-}
-
-/** Renders LegalText: plain strings, or strings mixed with links (site paths or external URLs). */
-function rich(text: LegalText): ReactNode {
-  if (typeof text === 'string') return text;
-  return text.map((part, i) =>
-    typeof part === 'string'
-      ? <Fragment key={i}>{part}</Fragment>
-      : <a key={i} href={isExternal(part.href) ? part.href : pageHref(part.href)}>{part.label}</a>,
   );
 }

@@ -12,6 +12,11 @@
   top: calc(var(--header-h) + 2rem);
 }
 .faq-intro { max-width: 26rem; text-wrap: pretty; }
+/* Links into the guides (Ratgeber) under the intro */
+.faq-guides { margin-top: 1rem; max-width: 26rem; font-size: var(--fs-small); line-height: 1.9; color: var(--ink); }
+.faq-guides a, .faq-more a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
+.faq-guides a { white-space: nowrap; }
+.faq-guides a:hover, .faq-more a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Rows ---------- */
 
@@ -59,6 +64,7 @@
 
 .faq-a { padding: 0 2.5rem 1.6rem 0; }
 .faq-a p { max-width: 40rem; text-wrap: pretty; font-size: var(--fs-body); line-height: 1.65; color: var(--ink); }
+.faq-a .faq-more { margin-top: .6rem; }
 
 /* Gentle height animation where the browser supports it natively; others simply open instantly. */
 @supports (interpolate-size: allow-keywords) {
@@ -84,7 +90,7 @@
 @media (max-width: 960px) {
   .faq-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
   .faq-head { position: static; }
-  .faq-intro { max-width: 40rem; }
+  .faq-intro, .faq-guides { max-width: 40rem; }
 }
 @media (max-width: 560px) {
   .faq-q { padding-block: 1rem; gap: 1rem; }

@@ -1,6 +1,8 @@
 // All visible copy of the landing page lives here. Rules for writing it are in AGENTS.md (Swiss spelling,
 // formal "Sie", nothing presented as decided or working that the team has not decided or built).
 
+import { pageMeta } from './pages';
+
 export type SectionId = 'ablauf' | 'ki-manager' | 'kosten' | 'fragen';
 
 export const nav: { id: SectionId; label: string }[] = [
@@ -67,7 +69,7 @@ export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma'
 
 export const audience = {
   title: 'Für wen Sponsuno gedacht ist',
-  intro: 'Für alle, die in ihrer Region Unterstützung suchen oder geben möchten, im Sport wie in der Kultur.',
+  intro: 'Für alle, die in ihrer Region Sponsoren finden oder selbst sponsern möchten, im Sport wie in der Kultur.',
   items: [
     {
       image: 'athlete',
@@ -196,9 +198,22 @@ export const story = {
 
 export type Track = 'seeker' | 'sponsor';
 
+// Site link hrefs (footer, FAQ): '#id' = section of the landing page, 'path/' = page relative to the site root
+// (resolved with the base path by siteHref() in lib/links.ts, so they work from every page).
+export type FooterLink = { href: string; label: string };
+
+/** The four guide pages (/sponsoren-finden/ …), linked from the FAQ intro and the footer column "Ratgeber". */
+// Paths come from src/pages.ts, so a changed path updates canonicals, the sitemap and every internal link together.
+export const guideLinks: FooterLink[] = [
+  { href: pageMeta('sponsoren-finden').path, label: 'Sponsoren finden' },
+  { href: pageMeta('sponsoring-anfrage').path, label: 'Sponsoring-Anfrage' },
+  { href: pageMeta('sponsoring-dossier').path, label: 'Sponsoring-Dossier' },
+  { href: pageMeta('kultursponsoring').path, label: 'Kultursponsoring' },
+];
+
 export const howItWorks = {
   title: 'So ist Sponsuno gedacht',
-  intro: 'Zwei Seiten, ein gemeinsamer Ablauf: vom ersten Profil bis zur Bilanz nach der Saison.',
+  intro: 'Zwei Seiten, ein gemeinsamer Ablauf: für alle, die Sponsoren suchen, und für Firmen, die sponsern möchten, vom ersten Profil bis zur Bilanz nach der Saison.',
   switchLabel: 'Ablauf anzeigen für',
   stepLabel: 'Schritt',
   tracks: {
@@ -274,11 +289,17 @@ export const pricing = {
   openLabel: 'offen',
 };
 
+/** One FAQ row. `link` (page path or '#id') is shown after the answer. FAQ answers also feed the FAQPage JSON-LD. */
+export type FaqItem = { q: string; a: string; link?: FooterLink };
+
 export const faq = {
   title: 'Fragen, die wir oft hören',
   introBefore: 'Ihre Frage fehlt? Tragen Sie sich auf der ',
   introLink: 'Warteliste',
   introAfter: ' ein, wir melden uns.',
+  // Links from the landing page into the guides (shown under the intro)
+  guidesLabel: 'Ratgeber:',
+  guides: guideLinks,
   items: [
     {
       q: 'Bleibt nach der Provision genug übrig?',
@@ -294,17 +315,22 @@ export const faq = {
     },
     {
       q: 'Lohnt sich der Aufwand für die Gegenleistungen?',
-      a: 'Gegenleistungen werden vor Beginn vereinbart. So sehen Sie früh, ob Aufwand und Unterstützung zusammenpassen, und können ablehnen, bevor Sie etwas zusagen.',
+      a: 'Gegenleistungen sollen vor Beginn vereinbart werden. So sehen Sie früh, ob Aufwand und Unterstützung zusammenpassen, und können ablehnen, bevor Sie etwas zusagen.',
     },
     {
       q: 'Für wen ist Sponsuno gedacht?',
-      a: 'Für Sportlerinnen und Sportler, Sport- und Kulturvereine sowie Firmen, die in ihrer Region sponsern möchten. Wir starten in der Deutschschweiz.',
+      a: 'Für Sportlerinnen und Sportler sowie Sport- und Kulturvereine, die Sponsoren finden möchten, und für Firmen, die in ihrer Region sponsern möchten. Wir starten in der Deutschschweiz.',
+    },
+    {
+      q: 'Wie finde ich heute schon Sponsoren?',
+      a: 'Solange es Sponsuno noch nicht gibt: über Ihr Umfeld, Firmen aus der Region und eine gut vorbereitete Anfrage. In unseren Gesprächen mit Sportlerinnen, Sportlern und einem Trainer haben mehrere Befragte ihre Sponsoren vor allem über den Bekanntenkreis gefunden. Wie Sie vorgehen können, beschreiben wir in einem Ratgeber.',
+      link: { href: pageMeta('sponsoren-finden').path, label: 'Zum Ratgeber «Sponsoren finden»' },
     },
     {
       q: 'Wann geht es los?',
       a: 'Sponsuno ist im Aufbau. Wer auf der Warteliste steht, erfährt zuerst, wann es losgeht.',
     },
-  ],
+  ] satisfies FaqItem[],
 };
 
 // Founders section (id="team"), between FAQ and waitlist. Team decision (2026-11-03): full names allowed here.
@@ -354,12 +380,8 @@ export const waitlist = {
   previewSuccess: 'So sieht die Bestätigung aus. Gespeichert wurde nichts, die Warteliste ist noch nicht freigeschaltet.',
 };
 
-// Footer link hrefs: '#id' = section of the landing page, 'path/' = page relative to the site root
-// (resolved with the base path by siteHref() in lib/links.ts, so they work from every page).
-export type FooterLink = { href: string; label: string };
-
 export const footer = {
-  sub: 'Sponsoring für Sport und Kultur in der Deutschschweiz. Sponsuno ist im Aufbau.',
+  sub: 'Sponsoren finden für Sport und Kultur in der Deutschschweiz. Sponsuno ist im Aufbau.',
   columns: [
     {
       title: 'Plattform',
@@ -378,6 +400,10 @@ export const footer = {
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
+    },
+    {
+      title: 'Ratgeber',
+      links: guideLinks,
     },
     {
       title: 'Rechtliches',
@@ -700,3 +726,512 @@ export const legal = {
 };
 
 export type LegalPageId = 'impressum' | 'datenschutz';
+
+// ---------- Guide pages (Ratgeber): /sponsoren-finden/, /sponsoring-anfrage/, /sponsoring-dossier/, /kultursponsoring/ ----------
+// Rendered by src/components/GuidePage.tsx, prerendered at build time, shipped without JavaScript.
+// Title and meta description of each page live in src/pages.ts. Rules on top of AGENTS.md (copy rules 1–9):
+// - General, practical advice written by the team. No numbers, amounts, success rates, CHF figures, named
+//   companies, their sponsoring programmes or deadlines, quotes, or claims about competitors.
+// - Interview findings only as "mehrere Befragte", and only the three points already on the landing page
+//   (sponsors came mostly from people they knew; the work runs alongside training and volunteering; what each
+//   side expects is often not agreed). The interviews were with athletes and a trainer: never attribute
+//   findings to culture clubs or companies.
+// - Tax: one neutral sentence and a link to the ESTV, no advice.
+// - Every guide ends with "Wie Sponsuno dabei helfen soll" in planned wording and a `cta` block.
+
+export type GuideId = 'sponsoren-finden' | 'sponsoring-anfrage' | 'sponsoring-dossier' | 'kultursponsoring';
+
+export type GuideBlock =
+  | { type: 'p'; text: LegalText }
+  | { type: 'list'; items: LegalText[] }
+  /** Numbered list for steps that build on each other */
+  | { type: 'steps'; items: LegalText[] }
+  | { type: 'h3'; text: string }
+  /** A letter or text to copy and adapt: shown as a bordered, selectable block (no copy button) */
+  | { type: 'template'; label: string; text: string }
+  /** Links to the waitlist and the demo (end of every guide) */
+  | { type: 'cta' };
+
+export type GuideSection = { id: string; title: string; blocks: GuideBlock[] };
+
+export type GuideContent = {
+  /** H1 (the <title> is in src/pages.ts) */
+  title: string;
+  intro: LegalText;
+  sections: GuideSection[];
+  /** Guides shown under "Weiterlesen" */
+  related: GuideId[];
+};
+
+/** Labels shared by all guide pages */
+export const guidePage = {
+  byline: 'Team Sponsuno',
+  updated: 'Stand: November 2026',
+  plannedNote: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Die Tipps auf dieser Seite gelten unabhängig davon.',
+  relatedTitle: 'Weiterlesen',
+  ctaWaitlist: 'Auf die Warteliste',
+  ctaWaitlistHref: '#warteliste',
+  ctaDemo: 'Demo ansehen',
+  ctaDemoHref: 'demo/',
+  ctaDemoNote: 'Klickbarer Prototyp mit fiktiven Daten',
+};
+
+const estvLink: LegalLink = { label: 'Eidgenössischen Steuerverwaltung ESTV', href: 'https://www.estv.admin.ch/' };
+const taxNote: LegalText = [
+  'Sponsoring und Spenden können steuerlich unterschiedlich behandelt werden, etwa bei der Mehrwertsteuer; allgemeine Informationen finden Sie bei der ',
+  estvLink,
+  '.',
+];
+const ablaufLink: LegalLink = { label: 'So funktioniert es', href: '#ablauf' };
+const link = (id: GuideId, label: string): LegalLink => ({ label, href: pageMeta(id).path });
+
+export const guides: Record<GuideId, GuideContent> = {
+  'sponsoren-finden': {
+    title: 'Sponsoren finden in der Region',
+    intro: 'Ob Einzelsportlerin, Turnverein oder Musikgesellschaft: Passende Sponsoren findet man oft eher im eigenen Umfeld und in der Region als über Serienmails. Dieser Ratgeber zeigt Schritt für Schritt, wie Sie Firmen finden, ansprechen und als Partner behalten.',
+    sections: [
+      {
+        id: 'angebot',
+        title: 'Was Sie einem Sponsor bieten können',
+        blocks: [
+          { type: 'p', text: 'Sponsoring ist ein Austausch: Eine Firma unterstützt Sie, und Sie bieten ihr dafür etwas, das für sie einen Wert hat. Bevor Sie die erste Firma ansprechen, lohnt sich deshalb eine ehrliche Liste Ihrer möglichen Gegenleistungen.' },
+          {
+            type: 'list',
+            items: [
+              'Sichtbarkeit vor Ort: Logo auf Trikot, Startnummer, Velo oder Vereinsbus, Banden und Banner, eine Anzeige im Match- oder Konzertprogramm',
+              'Präsenz an Anlässen: Erwähnung bei Heimspielen, Turnieren, Konzerten oder Aufführungen, ein Stand oder Prospekte vor Ort',
+              'Online: Logo und Link auf Ihrer Website, Beiträge auf Social Media oder im Newsletter',
+              'Persönliche Einsätze: ein Auftritt, ein Referat oder ein Training an einem Firmenanlass, gemeinsame Aktionen mit den Mitarbeitenden',
+              'Zugang: Tickets oder reservierte Plätze für Kundinnen, Kunden und Mitarbeitende',
+            ],
+          },
+          { type: 'p', text: 'Versprechen Sie nur, was Sie zuverlässig liefern können. Eine kleine Gegenleistung, die eingehalten wird, wirkt besser als ein grosses Paket, das im Saisonstress untergeht.' },
+        ],
+      },
+      {
+        id: 'wo-suchen',
+        title: 'Wo Sie suchen',
+        blocks: [
+          { type: 'p', text: 'Die naheliegendsten Sponsoren sind oft Firmen, zu denen Sie oder Ihre Mitglieder schon eine Verbindung haben. Auch in unseren Gesprächen mit Sportlerinnen, Sportlern und einem Trainer haben mehrere Befragte ihre Sponsoren vor allem über den Bekanntenkreis gefunden. Beginnen Sie deshalb im eigenen Umfeld und gehen Sie dann Schritt für Schritt weiter:' },
+          {
+            type: 'list',
+            items: [
+              'Ihr Umfeld: Familie, Freundeskreis, Arbeitgeber oder Ausbildungsbetrieb',
+              'Mitglieder, Eltern und Ehemalige: Wo arbeiten sie, wer führt einen eigenen Betrieb?',
+              'Gewerbe und KMU vor Ort: Garage, Bäckerei, Schreinerei, Elektrofirma, Treuhandbüro oder Restaurant',
+              'Regionale Banken und Versicherungsagenturen: Schauen Sie auf deren Website nach, ob es Kriterien oder ein Formular für Sponsoringanfragen gibt.',
+              'Ihre eigenen Lieferanten: das Sportgeschäft, der Musikalienhandel oder die Druckerei, bei denen Sie ohnehin einkaufen',
+              'Gönnerinnen und Gönner: Privatpersonen und Firmen, die mit einem Beitrag unterstützen, ohne eine grosse Gegenleistung zu erwarten',
+            ],
+          },
+          { type: 'p', text: 'Führen Sie von Anfang an eine einfache Liste mit Firma, Ansprechperson, Kontaktweg, Datum der Anfrage und Antwort. So behalten Sie den Überblick, fragen niemanden doppelt an und wissen im nächsten Jahr, wo Sie schon angeklopft haben.' },
+        ],
+      },
+      {
+        id: 'auswahl',
+        title: 'Die passende Firma auswählen',
+        blocks: [
+          { type: 'p', text: 'Nicht jede Firma passt zu jedem Verein oder jeder Sportlerin. Prüfen Sie vor der Anfrage vier Punkte:' },
+          {
+            type: 'list',
+            items: [
+              'Region: Firmen engagieren sich gern dort, wo ihre Kundschaft und ihre Mitarbeitenden leben. Je näher, desto einfacher lässt sich der Bezug erklären.',
+              'Branche: Gibt es einen natürlichen Zusammenhang? Ein Velogeschäft und ein Bikerennen, ein Musikhaus und eine Brassband, eine Bäckerei und das Dorffest.',
+              'Grösse: Ein kleiner Betrieb gibt eher Material oder einen kleineren Beitrag. Eine grössere Firma hat vielleicht ein festes Budget und einen eigenen Ablauf für Anfragen.',
+              'Art der Unterstützung: Geld ist nicht alles. Material, Ausrüstung, Druckkosten, Transporte oder Dienstleistungen helfen oft genauso viel.',
+            ],
+          },
+          { type: 'p', text: 'Fragen Sie lieber wenige, gut ausgewählte Firmen persönlich an als viele mit derselben Mail. Wer sieht, dass Sie sich mit seiner Firma beschäftigt haben, liest weiter.' },
+        ],
+      },
+      {
+        id: 'anfrage-dossier',
+        title: 'Anfrage und Dossier',
+        blocks: [
+          { type: 'p', text: ['Die erste Anfrage ist kurz: wer Sie sind, warum gerade diese Firma, was Sie brauchen, was Sie bieten und wie es weitergeht. Wie das konkret aussieht, zeigt der Ratgeber ', link('sponsoring-anfrage', 'Sponsoring-Anfrage schreiben'), ' mit einem Musterbrief zum Anpassen.'] },
+          { type: 'p', text: ['Möchte die Firma mehr wissen oder verlangt ein Formular Unterlagen, brauchen Sie ein Dossier. Was hineingehört und wie Sie Pakete schnüren, steht im Ratgeber ', link('sponsoring-dossier', 'Sponsoring-Dossier erstellen'), '.'] },
+          { type: 'p', text: ['Chöre, Musikgesellschaften und Theatervereine haben zusätzliche Wege, etwa Stiftungen und die öffentliche Kulturförderung. Mehr dazu im Ratgeber ', link('kultursponsoring', 'Kultursponsoring'), '.'] },
+          { type: 'p', text: 'Am meisten bewirkt ein persönlicher Kontakt: ein Anruf, ein Besuch im Laden oder eine Einführung durch jemanden, der die Firma kennt. Die schriftliche Anfrage folgt dann als Zusammenfassung.' },
+        ],
+      },
+      {
+        id: 'nachfassen',
+        title: 'Nachfassen und mit Absagen umgehen',
+        blocks: [
+          { type: 'p', text: 'Keine Antwort heisst nicht automatisch Nein. Anfragen gehen unter, Zuständige sind in den Ferien oder warten auf einen Entscheid. Melden Sie sich nach ein bis zwei Wochen einmal freundlich, am besten telefonisch.' },
+          {
+            type: 'list',
+            items: [
+              'Bedanken Sie sich auch für eine Absage. Wer freundlich bleibt, kann im nächsten Jahr wieder anfragen.',
+              'Fragen Sie nach dem Grund: Budget schon vergeben, falscher Zeitpunkt, passt nicht zur Firma? Das hilft bei der nächsten Anfrage.',
+              'Fragen Sie, wann die Firma ihr Budget für das nächste Jahr plant, und melden Sie sich rechtzeitig davor.',
+            ],
+          },
+          { type: 'p', text: 'Nehmen Sie Absagen nicht persönlich. Oft haben sie mit dem Budget oder dem Zeitpunkt zu tun, nicht mit Ihnen oder Ihrem Verein.' },
+        ],
+      },
+      {
+        id: 'pflegen',
+        title: 'Die Partnerschaft pflegen',
+        blocks: [
+          { type: 'p', text: 'Einen Sponsor zu halten ist oft einfacher, als einen neuen zu finden. Mehrere Befragte haben uns erzählt, dass oft nicht klar vereinbart ist, was beide Seiten erwarten. Das lässt sich vermeiden:' },
+          {
+            type: 'list',
+            items: [
+              'Halten Sie schriftlich fest, was Sie vereinbart haben: Unterstützung, Gegenleistungen, Dauer und Ansprechpersonen. Eine einfache Vereinbarung genügt.',
+              'Liefern Sie die Gegenleistungen und zeigen Sie es: ein Foto vom neuen Trikot, ein Link zum Beitrag, ein Programmheft mit dem Logo.',
+              'Laden Sie Ihre Sponsoren ein, an ein Spiel, ein Konzert oder den Saisonabschluss.',
+              'Ziehen Sie nach der Saison gemeinsam Bilanz: Was hat funktioniert, was ändern Sie? Danach ist ein guter Moment, über eine Verlängerung zu sprechen.',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'sponsoring-oder-spende',
+        title: 'Sponsoring oder Spende?',
+        blocks: [
+          { type: 'p', text: 'Bei einer Spende erwartet die Firma keine Gegenleistung. Beim Sponsoring erhält sie eine, zum Beispiel Werbung oder einen Auftritt an ihrem Anlass.' },
+          { type: 'p', text: taxNote },
+        ],
+      },
+      {
+        id: 'sponsuno',
+        title: 'Wie Sponsuno dabei helfen soll',
+        blocks: [
+          { type: 'p', text: 'Sponsuno ist eine geplante Plattform aus der Schweiz. Sie soll Sportlerinnen, Sportlern sowie Sport- und Kulturvereinen helfen, Firmen aus ihrer Region zu finden, die nach Region, Branche, Budget und Art der Unterstützung zu ihnen passen. Ein KI-Sponsoringmanager soll beim Schreiben von Anfragen und beim Betreuen der Partnerschaft helfen. Noch ist Sponsuno nicht in Betrieb.' },
+          { type: 'p', text: ['Wie der Ablauf gedacht ist, lesen Sie unter ', ablaufLink, '. Wenn Sie erfahren möchten, wann es losgeht, tragen Sie sich auf der Warteliste ein.'] },
+          { type: 'cta' },
+        ],
+      },
+    ],
+    related: ['sponsoring-anfrage', 'sponsoring-dossier', 'kultursponsoring'],
+  },
+
+  'sponsoring-anfrage': {
+    title: 'Sponsoring-Anfrage schreiben',
+    intro: 'Eine gute Sponsoring-Anfrage ist kurz, persönlich und zeigt der Firma, was sie davon hat. Hier finden Sie den Aufbau, einen Musterbrief zum Anpassen und die häufigsten Fehler, für Sportlerinnen, Sportler, Sport- und Kulturvereine.',
+    sections: [
+      {
+        id: 'vorbereitung',
+        title: 'Vor dem Schreiben',
+        blocks: [
+          { type: 'p', text: 'Klären Sie vor dem ersten Satz drei Dinge:' },
+          {
+            type: 'list',
+            items: [
+              'Wer ist zuständig? In kleinen Betrieben entscheidet meist die Inhaberin oder der Inhaber, in grösseren Firmen oft die Marketing- oder Kommunikationsabteilung. Ein kurzer Anruf beim Empfang klärt das.',
+              'Gibt es einen festen Ablauf? Grössere Firmen nehmen Anfragen oft nur über ein Onlineformular an, teils mit Eingabefristen. Suchen Sie auf der Website der Firma nach einer Seite zu Sponsoring oder Engagement.',
+              'Was genau brauchen Sie? Geld, Material oder eine Dienstleistung, wofür und ab wann. Je konkreter Ihr Anliegen, desto leichter fällt der Firma die Entscheidung.',
+            ],
+          },
+          { type: 'p', text: 'Gibt es ein Formular, nutzen Sie es. Eine Mail am Formular vorbei landet leicht im falschen Postfach.' },
+        ],
+      },
+      {
+        id: 'aufbau',
+        title: 'So ist eine gute Anfrage aufgebaut',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              'Betreff: kurz und konkret, zum Beispiel «Sponsoringanfrage: neue Trikots für die Juniorinnen des FC [Ort]».',
+              'Wer Sie sind: wenige Sätze zu Ihnen oder Ihrem Verein, mit Sportart oder Sparte und Ort.',
+              'Warum diese Firma: der Bezug zur Region, zur Branche oder eine persönliche Verbindung. Dieser Teil zeigt, dass es keine Serienmail ist.',
+              'Was Sie brauchen: das konkrete Vorhaben, etwa neue Trikots, Startgelder für die Saison oder Instrumente für die Jugendmusik.',
+              'Was Sie bieten: die Gegenleistungen, die zu dieser Firma passen.',
+              'Nächster Schritt: ein Vorschlag für ein kurzes Gespräch, und wann Sie sich wieder melden.',
+            ],
+          },
+          { type: 'p', text: 'Die Anfrage selbst passt auf eine Bildschirmseite. Details gehören in ein Dossier im Anhang oder ins Gespräch.' },
+        ],
+      },
+      {
+        id: 'musterbrief',
+        title: 'Musterbrief',
+        blocks: [
+          { type: 'p', text: 'Passen Sie den Brief an Ihre Situation an und ersetzen Sie alles in [eckigen Klammern] durch Ihre Angaben. Schreiben Sie ihn nicht einfach ab: Der Absatz, warum Sie gerade diese Firma anfragen, entsteht für jede Firma neu.' },
+          {
+            type: 'template',
+            label: 'Musterbrief für Sportlerinnen, Sportler und Vereine',
+            text: [
+              'Betreff: Sponsoringanfrage: [Vorhaben] von [Name oder Verein]',
+              '',
+              'Sehr geehrte Frau [Name] / Sehr geehrter Herr [Name]',
+              '',
+              'Mein Name ist [Vorname Name]. Ich [bin Sportlerin oder Sportler in … / bin im Vorstand des Vereins …] in [Ort]. [Ein, zwei Sätze zu Ihnen oder Ihrem Verein: was Sie machen und was Sie vorhaben.]',
+              '',
+              'Ich schreibe Ihnen, weil [Bezug zur Firma: Sie sind in unserer Gemeinde verwurzelt / wir kaufen seit Jahren bei Ihnen ein / Ihre Produkte passen zu unserem Sport].',
+              '',
+              'Für [Saison oder Projekt] [suche ich / suchen wir] [Unterstützung: einen Beitrag an … / Material wie … / eine Dienstleistung wie …].',
+              '',
+              'Als Gegenleistung [biete ich / bieten wir] Ihnen zum Beispiel:',
+              '– [Gegenleistung, etwa Ihr Logo auf …]',
+              '– [Gegenleistung, etwa eine Erwähnung an …]',
+              '– [Gegenleistung, etwa ein Auftritt an Ihrem Firmenanlass]',
+              '',
+              'Gerne stelle ich Ihnen das Vorhaben in einem kurzen Gespräch vor. Falls ich bis dahin nichts von Ihnen höre, melde ich mich in der Woche vom [Datum] telefonisch bei Ihnen.',
+              '',
+              'Freundliche Grüsse',
+              '[Vorname Name]',
+              '[Funktion, Verein]',
+              '[Telefon] · [E-Mail]',
+            ].join('\n'),
+          },
+          { type: 'p', text: ['Für Kulturvereine: Ersetzen Sie Sportart und Saison durch Ensemble und Projekt, etwa ein Jahreskonzert, eine Theaterproduktion oder neue Instrumente. Passende Gegenleistungen sind dann zum Beispiel eine Anzeige im Programmheft, ein Dank von der Bühne oder ein Ständchen am Firmenanlass. Mehr dazu im Ratgeber ', link('kultursponsoring', 'Kultursponsoring'), '.'] },
+        ],
+      },
+      {
+        id: 'fehler',
+        title: 'Häufige Fehler',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Serienmail an viele Firmen gleichzeitig, womöglich mit allen Adressen sichtbar',
+              'Nur bitten, nichts anbieten: Die Firma sieht nicht, was sie davon hat.',
+              'Zu lang: Lebenslauf, Vereinsgeschichte und Saisonplan gehören in den Anhang, nicht in die Mail.',
+              'Keine Ansprechperson: Eine Anfrage an «Sehr geehrte Damen und Herren» wirkt wie eine Serienmail.',
+              'Unklares Vorhaben: Die Firma muss raten, wofür ihre Unterstützung gedacht ist.',
+              'Kein nächster Schritt: Niemand weiss, wer sich wann meldet.',
+              'Tippfehler oder ein falsch geschriebener Firmenname: Lassen Sie die Anfrage vor dem Senden gegenlesen.',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'nachfassen',
+        title: 'Nachfassen',
+        blocks: [
+          { type: 'p', text: 'Melden Sie sich, wie im Brief angekündigt. Ein kurzer Anruf ist persönlicher als eine zweite Mail und klärt meist schneller, ob die Anfrage angekommen ist und wer entscheidet.' },
+          {
+            type: 'list',
+            items: [
+              'Fragen Sie, ob die Anfrage angekommen ist und ob Unterlagen fehlen.',
+              'Bieten Sie ein Treffen an, oder laden Sie an ein Training, eine Probe oder einen Anlass ein.',
+              'Bei einer Absage: bedanken, nach dem Grund fragen und im Kontakt bleiben.',
+            ],
+          },
+          { type: 'p', text: ['Wie Sie eine Partnerschaft danach pflegen, beschreibt der Ratgeber ', link('sponsoren-finden', 'Sponsoren finden'), '. Wenn die Firma Unterlagen möchte, hilft der Ratgeber ', link('sponsoring-dossier', 'Sponsoring-Dossier erstellen'), '.'] },
+        ],
+      },
+      {
+        id: 'sponsuno',
+        title: 'Wie Sponsuno dabei helfen soll',
+        blocks: [
+          { type: 'p', text: 'Sponsuno ist als Plattform geplant und noch nicht in Betrieb. Dazu gehören soll ein KI-Sponsoringmanager: Er soll aus Ihrem Profil einen Entwurf für die Anfrage schreiben, der auf die jeweilige Firma eingeht. Sie sollen den Entwurf prüfen, ändern und selbst entscheiden, was gesendet wird. Diesen KI-Manager gibt es noch nicht. Wie er gedacht ist, zeigt die Demo mit fiktiven Daten.' },
+          { type: 'p', text: ['Den ganzen geplanten Ablauf finden Sie unter ', ablaufLink, '. Wenn Sie erfahren möchten, wann es losgeht, tragen Sie sich auf der Warteliste ein.'] },
+          { type: 'cta' },
+        ],
+      },
+    ],
+    related: ['sponsoren-finden', 'sponsoring-dossier', 'kultursponsoring'],
+  },
+
+  'sponsoring-dossier': {
+    title: 'Sponsoring-Dossier erstellen',
+    intro: 'Ein Sponsoring-Dossier stellt Sie oder Ihren Verein einer Firma vor und zeigt, was eine Partnerschaft bringt. Hier lesen Sie, wann Sie eines brauchen, was hineingehört und wie Sie Sponsoringpakete zusammenstellen, für Sportlerinnen, Sportler, Sport- und Kulturvereine.',
+    sections: [
+      {
+        id: 'wozu',
+        title: 'Wozu ein Dossier, und wann eine kurze Mail reicht',
+        blocks: [
+          { type: 'p', text: 'Ein Dossier, auch Sponsoringmappe oder Sponsoringkonzept genannt, sammelt alles, was eine Firma für ihren Entscheid braucht. Nützlich ist es, wenn:' },
+          {
+            type: 'list',
+            items: [
+              'eine Firma nach dem ersten Kontakt mehr wissen möchte',
+              'ein Onlineformular Unterlagen verlangt',
+              'Ihre Anfrage intern weitergereicht wird, etwa an die Geschäftsleitung',
+              'Sie mehrere Pakete mit unterschiedlichen Gegenleistungen anbieten',
+            ],
+          },
+          { type: 'p', text: ['Für einen kleinen Beitrag oder Material vom Geschäft um die Ecke reicht oft eine kurze, persönliche Anfrage, wie im Ratgeber ', link('sponsoring-anfrage', 'Sponsoring-Anfrage schreiben'), ' beschrieben. Das Dossier kann dann später folgen.'] },
+        ],
+      },
+      {
+        id: 'aufbau',
+        title: 'Aufbau Seite für Seite',
+        blocks: [
+          { type: 'p', text: 'Eine klare Reihenfolge hilft. Jede Seite beantwortet eine Frage, die sich die Firma stellt:' },
+          {
+            type: 'steps',
+            items: [
+              'Titelseite: Name, Sportart oder Sparte, ein gutes Foto, die Saison oder das Projekt.',
+              'Über uns: wer Sie sind, seit wann Sie Ihren Sport betreiben oder es den Verein gibt, wo Sie trainieren, proben oder auftreten, was Sie ausmacht.',
+              'Ziele: was Sie in der Saison oder im Jahr vorhaben, und wofür Sie die Unterstützung einsetzen.',
+              'Publikum und Reichweite: wer Sie sieht und hört, etwa Zuschauerinnen und Zuschauer, Mitglieder, Follower oder Medienberichte. Nennen Sie nur eigene, echte Zahlen und schreiben Sie dazu, woher sie stammen.',
+              'Gegenleistungen: was die Firma von Ihnen bekommt, so konkret wie möglich.',
+              'Pakete: wenige Stufen, aus denen die Firma wählen kann (siehe unten).',
+              'Kontakt: Ansprechperson mit Telefon und E-Mail, und der nächste Schritt.',
+            ],
+          },
+          { type: 'p', text: 'Halten Sie jede Seite knapp. Eine Firma soll schon beim Durchblättern verstehen, wer Sie sind, was Sie brauchen und was sie dafür bekommt. Ein Foto vom Training, von einer Probe oder einem Auftritt sagt dabei oft mehr als ein langer Text.' },
+        ],
+      },
+      {
+        id: 'pakete',
+        title: 'Sponsoringpakete schnüren',
+        blocks: [
+          { type: 'p', text: 'Pakete machen es der Firma leicht, sich zu entscheiden. Eine mögliche Struktur:' },
+          {
+            type: 'list',
+            items: [
+              'Hauptpartner: die sichtbarste Präsenz, etwa das Logo auf der Trikotbrust oder im Titel des Jahreskonzerts, dazu Einladungen und ein gemeinsamer Anlass.',
+              'Partner: gute Sichtbarkeit, etwa das Logo auf dem Ärmel, eine Bande oder eine Anzeige im Programm, dazu eine Erwähnung online.',
+              'Gönner: ein kleinerer Beitrag mit Nennung auf der Website oder einer Gönnertafel, ohne weitere Pflichten.',
+            ],
+          },
+          { type: 'p', text: 'Die Beträge legen Sie selbst fest. Überlegen Sie, was Sie brauchen und was Ihre Gegenleistungen für die Firma wert sind. Fragen Sie im Zweifel bei befreundeten Vereinen nach, wie sie es handhaben. Sachleistungen wie Material oder Transporte lassen sich in jedes Paket einbauen.' },
+          { type: 'p', text: 'Lassen Sie Raum für das Gespräch: Ein Paket ist ein Vorschlag, kein Vertrag. Manche Firmen möchten lieber etwas Eigenes zusammenstellen.' },
+        ],
+      },
+      {
+        id: 'gestaltung',
+        title: 'Gestaltung',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Kurz halten: lieber wenige, gut gefüllte Seiten als ein langes Heft.',
+              'Fotos nur verwenden, wenn Sie die Rechte daran haben und die abgebildeten Personen einverstanden sind, bei Kindern und Jugendlichen auch die Eltern.',
+              'Lesbare Schrift, genug Weissraum, Ihr Logo und Ihre Farben.',
+              'Als PDF senden, mit einem Dateinamen, der sagt, was drin ist, etwa «Sponsoring-Dossier [Verein] [Saison].pdf».',
+              'Auf die Dateigrösse achten: Ein Anhang, der im Postfach hängen bleibt, wird nicht gelesen.',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'checkliste',
+        title: 'Checkliste vor dem Versand',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Ist der Name der Firma richtig geschrieben, und stimmt die Ansprechperson?',
+              'Steht auf der ersten Seite, wer Sie sind und worum es geht?',
+              'Sind alle Zahlen eigene, überprüfbare Angaben?',
+              'Sind die Gegenleistungen konkret, und können Sie sie zuverlässig liefern?',
+              'Sind Kontakt und nächster Schritt klar?',
+              'Hat jemand das Dossier gegengelesen?',
+              'Ist die Begleitmail kurz und persönlich?',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'sponsuno',
+        title: 'Wie Sponsuno dabei helfen soll',
+        blocks: [
+          { type: 'p', text: 'Bei Sponsuno ist ein Profil geplant, das die wichtigsten Angaben eines Dossiers enthält: wer Sie sind, was Sie brauchen und welche Gegenleistungen Sie bieten. Firmen sollen diese Angaben sehen, wenn Sponsuno Sie ihnen als passend vorschlägt, und Vorlagen sollen beim Ausfüllen helfen. Sponsuno ist im Aufbau und noch nicht in Betrieb.' },
+          { type: 'p', text: ['Wie der Ablauf gedacht ist, lesen Sie unter ', ablaufLink, '. Wenn Sie erfahren möchten, wann es losgeht, tragen Sie sich auf der Warteliste ein.'] },
+          { type: 'cta' },
+        ],
+      },
+    ],
+    related: ['sponsoren-finden', 'sponsoring-anfrage', 'kultursponsoring'],
+  },
+
+  kultursponsoring: {
+    title: 'Sponsoren für Kulturvereine finden',
+    intro: 'Musikgesellschaften, Chöre, Theatervereine und Bands suchen genauso Unterstützung wie Sportvereine: für Instrumente, Kostüme, Proberäume oder Aufführungen. Dieser Ratgeber zeigt, was Kulturvereine Firmen bieten können, wo sie neben Sponsoren Unterstützung finden und wie sie anfragen.',
+    sections: [
+      {
+        id: 'angebot',
+        title: 'Was Kulturvereine Firmen bieten können',
+        blocks: [
+          { type: 'p', text: 'An einem Konzert oder einer Aufführung sitzt das Publikum einen ganzen Abend im Saal und hält das Programm in der Hand. Das bietet Firmen andere Möglichkeiten als der Rand eines Spielfelds:' },
+          {
+            type: 'list',
+            items: [
+              'Programmheft und Plakate: Logo, Anzeige oder ein Dank im Programm',
+              'Erwähnung bei der Aufführung: ein Dank von der Bühne, ein Banner im Saal',
+              'Ein Auftritt für die Firma: ein Ständchen am Firmenjubiläum, Musik am Kundenanlass, eine kurze Szene an der Weihnachtsfeier',
+              'Ein Konzert mit Namen: «Jahreskonzert, präsentiert von …» für den Hauptpartner',
+              'Tickets und reservierte Plätze für Kundinnen, Kunden und Mitarbeitende',
+              'Online: Website, Newsletter und Social Media des Vereins',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'firmen',
+        title: 'Welche Firmen passen',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Lokales Gewerbe mit Verbindung zum Verein: Mitglieder mit eigenem Betrieb, Lieferanten, Nachbarn des Probelokals',
+              'Firmen mit Bezug zur Sparte: Musikalienhandel, Instrumentenbau, Ton- und Lichttechnik, Druckerei, Stoff- und Kostümgeschäft',
+              'Gastronomie und Hotellerie: das Restaurant, in dem man sich nach der Aufführung trifft, oder das Hotel, das auswärtige Gäste beherbergt',
+              'Regionale Banken und Versicherungsagenturen: Schauen Sie auf deren Website nach, ob sie Kultur unterstützen und wie man anfragt.',
+            ],
+          },
+          { type: 'p', text: 'Auch in der Kultur zählt der persönliche Kontakt. Fragen Sie im Verein, wer wen kennt, bevor Sie fremde Firmen anschreiben.' },
+        ],
+      },
+      {
+        id: 'foerderung',
+        title: 'Sponsoring, Gönner, Stiftungen und öffentliche Förderung',
+        blocks: [
+          { type: 'p', text: 'Kulturvereine haben mehr Möglichkeiten als Sponsoring allein. Es lohnt sich, die Unterschiede zu kennen:' },
+          {
+            type: 'list',
+            items: [
+              'Sponsoring: Eine Firma unterstützt Sie und erhält eine Gegenleistung, etwa Werbung im Programmheft.',
+              'Gönnerinnen und Gönner: Privatpersonen oder Firmen geben einen Beitrag, meist ohne Gegenleistung ausser einer Nennung. Ein Gönnerverein oder eine Gönnerliste kann sie längerfristig an Sie binden.',
+              'Stiftungen: Viele Stiftungen fördern Kulturprojekte, mit eigenen Kriterien und Eingabefristen. Sie erwarten keine Werbung, aber ein sorgfältiges Gesuch und oft einen Bericht nach dem Projekt sowie eine Nennung als Förderin.',
+              'Öffentliche Kulturförderung: Kantone und viele Gemeinden unterstützen Kulturprojekte, teils auch über regionale Stellen oder kantonale Lotteriefonds. Schauen Sie auf der Website Ihres Kantons und Ihrer Gemeinde nach, welche Projekte unterstützt werden und bis wann Gesuche eingereicht werden müssen.',
+            ],
+          },
+          { type: 'p', text: 'Oft lassen sich die Wege kombinieren, etwa wenn ein Projekt teils von der Gemeinde, teils von Sponsoren und Gönnern getragen wird. Prüfen Sie dabei die Bedingungen: Manche Förderstellen haben Vorgaben zu Werbung oder zu Eigenleistungen.' },
+          { type: 'p', text: taxNote },
+        ],
+      },
+      {
+        id: 'sachleistungen',
+        title: 'Instrumente, Kostüme und Technik als Sachleistung',
+        blocks: [
+          { type: 'p', text: 'Nicht jede Unterstützung muss Geld sein. Für Kulturvereine sind Sachleistungen oft besonders wertvoll:' },
+          {
+            type: 'list',
+            items: [
+              'Instrumente, Noten oder Reparaturen vom Musikalienhandel',
+              'Stoffe, Kostüme oder Requisiten',
+              'Licht-, Ton- und Bühnentechnik, geliehen statt gekauft',
+              'Druck von Plakaten, Flyern und Programmheften',
+              'Räume für Proben oder Aufführungen, Transporte, Verpflegung',
+            ],
+          },
+          { type: 'p', text: 'Halten Sie auch bei Sachleistungen fest, was vereinbart ist und welche Gegenleistung dazugehört. Für geliehenes Material braucht es zudem eine klare Abmachung zu Versicherung und Rückgabe.' },
+        ],
+      },
+      {
+        id: 'anfragen',
+        title: 'So fragen Sie an',
+        blocks: [
+          { type: 'p', text: ['Der Aufbau ist derselbe wie im Sport: wer Sie sind, warum diese Firma, was Sie brauchen, was Sie bieten und wie es weitergeht. Einen Musterbrief mit einem Hinweis für Kulturvereine finden Sie im Ratgeber ', link('sponsoring-anfrage', 'Sponsoring-Anfrage schreiben'), '. Was in die Unterlagen gehört, steht im Ratgeber ', link('sponsoring-dossier', 'Sponsoring-Dossier erstellen'), '.'] },
+          {
+            type: 'list',
+            items: [
+              'Laden Sie die Firma an eine Probe oder ein Konzert ein, bevor Sie nach Unterstützung fragen. Wer Ihren Verein erlebt hat, versteht leichter, wofür er sich engagiert.',
+              'Planen Sie früh: Programmhefte und Plakate gehen lange vor der Aufführung in Druck. Wer darin erscheinen soll, muss rechtzeitig zusagen.',
+              'Nutzen Sie besondere Anlässe: Ein Vereinsjubiläum, eine neue Uniform oder eine grosse Produktion geben einer Anfrage einen klaren Grund.',
+            ],
+          },
+          { type: 'p', text: ['Wo Sie Firmen finden und wie Sie eine Partnerschaft pflegen, beschreibt der Ratgeber ', link('sponsoren-finden', 'Sponsoren finden'), '.'] },
+        ],
+      },
+      {
+        id: 'sponsuno',
+        title: 'Wie Sponsuno dabei helfen soll',
+        blocks: [
+          { type: 'p', text: 'Sponsuno ist nicht nur für den Sport gedacht. Die geplante Plattform soll auch Musikgesellschaften, Chören, Theatervereinen und anderen Kulturvereinen helfen, Firmen aus ihrer Region zu finden, die zu ihnen passen, und neben Geld auch Material und Dienstleistungen vermitteln. Sponsuno ist im Aufbau und noch nicht in Betrieb.' },
+          { type: 'p', text: ['Wie der Ablauf gedacht ist, lesen Sie unter ', ablaufLink, '. Wenn Sie erfahren möchten, wann es losgeht, tragen Sie sich auf der Warteliste ein.'] },
+          { type: 'cta' },
+        ],
+      },
+    ],
+    related: ['sponsoren-finden', 'sponsoring-anfrage', 'sponsoring-dossier'],
+  },
+};

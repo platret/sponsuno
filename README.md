@@ -167,15 +167,19 @@ sponsuno/
 ├── demo/index.html         Klickbarer Prototyp (/demo/)
 ├── impressum/index.html    Impressum (/impressum/), vorgerendert, ohne JavaScript
 ├── datenschutz/index.html  Datenschutzerklärung (/datenschutz/), vorgerendert, ohne JavaScript
+├── sponsoren-finden/ …     Vier Ratgeber (/sponsoren-finden/, /sponsoring-anfrage/, /sponsoring-dossier/,
+│                           /kultursponsoring/), vorgerendert, ohne JavaScript
 ├── src/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert
+│   ├── pages.ts            Alle Seiten mit Titel und Beschreibung (Head-Tags, Sitemap)
 │   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match, Emblem
 │   ├── hooks/              Scroll-Reveals, Kippen, magnetische Buttons
 │   ├── lib/                motion.ts, match.ts, silk.ts (Shader), emblem.ts (3D)
 │   ├── styles/site.css     Design-Tokens aus dem CD und alle Styles
 │   └── assets/             Logos und Symbolbild
-├── scripts/prerender.mjs   Vorrendern beim Build
+├── scripts/prerender.mjs   Vorrendern beim Build, Head-Tags und sitemap.xml
+├── scripts/og/, icons.mjs  Quellen für Vorschaubild und Icons in public/
 ├── .github/workflows/      Vorschau bei Pull Requests, Deploy von main (Cloudflare)
 ├── wrangler.jsonc          Cloudflare Worker: Domains und Assets
 ├── AGENTS.md               Regeln und Architektur für jede Session

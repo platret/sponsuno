@@ -6,12 +6,14 @@ Read this first in every session. It says what this project is, how it is built,
 
 Sponsuno is a startup project of a four-person team in the Youngpreneurs programme. The planned platform matches athletes, sport clubs and culture clubs with sponsors from their region, starting in German-speaking Switzerland (long term: DACH). A personal AI sponsoring manager is planned to help with the partnership afterwards, plus separately billed marketing services (photo, video, content).
 
-This repo holds two things:
+This repo holds:
 
 1. The public **landing page** (`/`). It explains the idea and collects interest on a waitlist.
 2. A **clickable demo** (`/demo/`) with fictional data, used to show the idea to sponsors, club boards and in pitches.
+3. Four **guide pages** (Ratgeber: `/sponsoren-finden/`, `/sponsoring-anfrage/`, `/sponsoring-dossier/`, `/kultursponsoring/`) with practical advice, so the site can be found for searches like "Sponsoren finden" (see "SEO").
+4. The legal pages `/impressum/` and `/datenschutz/`.
 
-**The product does not exist yet.** Neither page may suggest otherwise.
+**The product does not exist yet.** No page may suggest otherwise.
 
 - Live: https://sponsuno.ch and https://sponsuno.ch/demo/ (www.sponsuno.ch redirects to sponsuno.ch)
 - Repo: https://github.com/platret/sponsuno (public)
@@ -39,16 +41,21 @@ Vite + React 19 + TypeScript (strict). No UI framework, no CSS framework.
 index.html              Vite entry. Inline script sets html.motion (and html.scroll-fx where scroll timelines work) before first paint, plus a reveal failsafe.
 src/
   main.tsx              Hydrates the prerendered HTML (production) or renders fresh (dev).
-  entry-server.tsx      Build-time prerender (renderToString) of the landing page and the legal pages. Never shipped to the browser.
+  pages.ts              The list of prerendered pages: path, <title>, meta description, kind, sitemap flag. Plain data
+                        (vite.config.ts imports it too). Drives the Vite inputs, the head tags and dist/sitemap.xml.
+  entry-server.tsx      Build-time prerender (renderToString) of every page in pages.ts, plus headFor(): description,
+                        canonical, Open Graph/Twitter tags and (landing page only) the JSON-LD graph. Never shipped to the browser.
   App.tsx               Page order, reveal observer, global in-page link handling, shared waitlist role state.
   content.ts            ALL visible copy, typed. Change text here, not in components.
   components/           One file per section (Hero, Story, ProofLine, Audience, HowItWorks, AiManager, Support, Pricing,
                         Faq, Team, Waitlist, Footer), plus Header, MobileMenu, StoryArt (papers, pair cards, stage), MatchCard,
-                        StickyCta, LegalPage (Impressum, Datenschutz).
+                        StickyCta. Static pages: StaticPage (picks LegalPage for Impressum/Datenschutz or GuidePage for the
+                        guides), PageHeader (their shared header), rich.tsx (text with inline links).
   lib/motion.ts         motionEnabled(), scrollFxEnabled(), scrollToHash(), observeReveals(). No animation library.
   lib/links.ts          pageHref(), siteHref(): base-aware links between pages (footer links work from every page).
   lib/storyLayout.ts    Positions of every item on the scroll-story stage per state and layout, turned into CSS at build time.
-  legal/main.ts         Entry of the legal pages: styles only in production (no React shipped); renders in the browser in dev.
+  static/main.ts        Entry of the static pages (legal pages, guides): styles only in production (no React shipped);
+                        renders in the browser in dev (static/dev-render.tsx, by data-page on #root).
   styles/tokens.css     Design tokens (CD colours, fonts), shared with the demo.
   styles/site.css       Landing page base layer: type scale, surfaces, buttons, reveals, scroll-driven motion primitives (data-scroll).
   styles/sections/      One stylesheet per section, imported by its component.
@@ -56,12 +63,20 @@ src/
   assets/photos/        Stock photos (Pexels, labelled "Symbolbild", credited in photoCredits): match card avatar, audience tiles.
                         Resized copies only; the originals live outside the repo in ../photo-originals/.
   vite-env.d.ts         Types for import.meta.env (VITE_WAITLIST_ENDPOINT) and window.__introFailsafe. Add new env vars here.
-public/                 Copied as-is (favicon.svg, robots.txt). In code, import assets instead of hardcoding /paths.
-demo/index.html         Second Vite entry: the clickable demo (client-only, noindex).
-impressum/index.html    Vite entry /impressum/ (data-page="impressum"), prerendered, works without JS.
-datenschutz/index.html  Vite entry /datenschutz/ (data-page="datenschutz"), prerendered, works without JS.
+public/                 Copied as-is: favicon.svg, favicon.ico, apple-touch-icon.png, icon-192.png, icon-512.png, og-image.png,
+                        robots.txt, _headers (Cloudflare response headers). In code, import assets instead of hardcoding /paths.
+                        Exception: icons and the share image live here on purpose, because crawlers and share previews
+                        need stable, unhashed URLs. They are generated, not drawn by hand (see "SEO").
+demo/index.html         Second Vite entry: the clickable demo (client-only, noindex, not in pages.ts or the sitemap).
+<page>/index.html       One small Vite entry per static page in pages.ts (impressum/, datenschutz/, sponsoren-finden/,
+                        sponsoring-anfrage/, sponsoring-dossier/, kultursponsoring/): data-page="<id>", a <title>
+                        placeholder and the <!--seo--> marker in the head; prerendered, works without JS.
 src/demo/               The demo app, see "The demo" below.
-scripts/prerender.mjs   Injects the server render into dist/index.html, dist/impressum/ and dist/datenschutz/.
+scripts/prerender.mjs   For every page in pages.ts: replaces <title> and <!--seo--> in dist/<path>index.html, injects the
+                        server render, drops the empty module script of the static pages, then writes dist/sitemap.xml.
+                        Fails if a marker is missing.
+scripts/og/og-image.html  Source of public/og-image.png (rendered once with headless Chrome, see "SEO").
+scripts/icons.mjs       Regenerates the PNG/ICO icons in public/ from src/assets/Sponsuno_Icon.svg (see "SEO").
 .github/workflows/      deploy.yml: Cloudflare production deploy on main, preview per pull request.
 wrangler.jsonc          Cloudflare Worker config: assets from dist/, custom domains sponsuno.ch and www.sponsuno.ch.
 docs/                   Images for the README only.
@@ -79,6 +94,7 @@ docs/                   Images for the README only.
 - **Section styles**: each section imports its own stylesheet from `src/styles/sections/` and prefixes its classes.
 - **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the fixed header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
 - **Links between pages**: build them with `pageHref()` / `siteHref()` from `lib/links.ts` (base path). Footer link hrefs in `content.ts` are `#id` (landing page section) or `path/` (page); on sub-pages section links lead back to the landing page.
+- **Guide pages**: copy in `content.ts` → `guides` (blocks: `p`, `list`, `steps`, `h3`, `template`, `cta`), shared labels in `guidePage`, links between guides via `guideLinks` (footer column "Ratgeber", FAQ intro). Title and description in `src/pages.ts`. Layout = legal pages (`legal.css`) plus `guide.css` (prefix `gd-`). Every guide ends with "Wie Sponsuno dabei helfen soll" in planned wording, the `cta` block (waitlist, demo) and "Weiterlesen".
 - **Legal pages**: all text in `content.ts` → `legal` (and `photoCredits`). Unknown contact data stays `null` and renders as pending (`legal.pending`); `npm run build` prints a warning while a `legal.contact` field is null. Every third-party photo added to the site gets an entry in `photoCredits`, which the Impressum lists.
 - **Photos**: stock photos only under the Pexels or Unsplash licence, labelled "Symbolbild", never presented as Sponsuno users. Rules for choosing and preparing them are in DESIGN.md → Imagery.
 - **Team section** (`#team`, between FAQ and waitlist): names and provisional focus come from `team` in `content.ts`. Without a photo each person shows a monogram. A real, consented photo is added by importing a square JPEG in `content.ts` and setting `photo: { src, alt }` on that person; never use stock or generated faces for the founders.
@@ -127,6 +143,28 @@ These come from the team's project rules. Breaking them makes the page say thing
 7. Culture clubs are part of the target group. Do not write copy that only speaks to sport.
 8. Do not present the name or trademark as secured. The domain sponsuno.ch and the address hello@sponsuno.ch exist; do not invent other addresses.
 9. Sustainability claims (reused equipment, shared event tech) are ideas being checked, not results.
+
+## SEO
+
+Goal: sponsuno.ch is the first result for "Sponsuno", and the guides can be found for "Sponsoren finden", "Sponsoring-Anfrage", "Sponsoring-Dossier" and "Kultursponsoring". Plan of November 2026; most of the brand-name work is outside the repo (see "Open before launch").
+
+Rules for every page:
+- **Every new indexable page** gets an entry in `src/pages.ts` with its own `title` (about 60 characters at most) and `description` (about 120–160), plus a Vite entry `<path>/index.html` with a `<title>` placeholder and the `<!--seo-->` marker (copy an existing guide entry). Canonical (absolute apex URL with a trailing slash), Open Graph and Twitter tags and the sitemap entry then come automatically. Do not write description, canonical, Open Graph/Twitter tags or JSON-LD into the HTML by hand: the build fails if it finds them.
+- **Internal links** always end with a slash (`sponsoren-finden/`); Cloudflare answers `/folder` with a 307 to `/folder/`.
+- **Structured data** only on the landing page, generated in `headFor('home')` from `pages.ts` and `content.ts`: WebSite, Organization (name, URL, logo, e-mail, postal address from `legal.contact`) and FAQPage from `faq.items`. Never Review, AggregateRating, Product or Offer markup (there are none). No `sameAs` until official profiles exist; no `founder` unless the team decides it.
+- **Copy for search**: write for people, not keywords. No hidden text, keyword lists or doorway pages; no "Sponsor-Finder" phrasing. The guides follow the copy rules below like every other page: general advice, no numbers or amounts, interview findings only as "mehrere Befragte" and only those already on the landing page, tax only as one neutral sentence with a link to the ESTV, Sponsuno always described as planned, culture clubs always included. The team reads every new guide before it is merged.
+- **Demo** stays `noindex` (meta tag plus `X-Robots-Tag` in `public/_headers`) and out of `pages.ts`; do not block it in `robots.txt`, or crawlers cannot see the noindex.
+- **Brand name**: the name is not secured (see "Open before launch"). Do not present it as a registered mark in titles, descriptions or structured data.
+
+Generated files in `public/` (commit the outputs; neither runs during `npm run build`, neither adds a dependency):
+- Share image `public/og-image.png` (1200 × 630, under 200 KB): edit `scripts/og/og-image.html`, then
+  `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars --window-size=1200,630 --screenshot=public/og-image.png scripts/og/og-image.html`
+  Its text is approved by the team; keep it in planned wording.
+- Icons `favicon.ico` (16/32/48), `apple-touch-icon.png` (180, full navy square), `icon-192.png`, `icon-512.png` (also the Organization logo): `node scripts/icons.mjs` (macOS: Chrome and `sips`). Check the mark is still readable at 16 px.
+
+`public/_headers` (Cloudflare Workers static assets): long cache for `/assets/*` (hashed), `X-Robots-Tag: noindex` for `/demo/*`, HSTS without `includeSubDomains`/`preload` (keeps the Infomaniak mail hostnames out of it). `vite preview` ignores this file; check it on a PR preview with `curl -sI`.
+
+PR previews on `*.workers.dev` already get `x-robots-tag: noindex` from Cloudflare; the canonical tags point to the apex as a second safeguard. Do not change `workers_dev` or `preview_urls` for SEO reasons.
 
 ## Rules for data and privacy
 
@@ -182,3 +220,5 @@ Targets: LCP under 2.5 s on a throttled mid-range phone, CLS under 0.1, homepage
 - [x] Founders section (`#team`, November 2026) with monograms, and stock photos (Symbolbilder) for the match card and the audience section
 - [ ] Real, consented photos of the founders (the team section is ready for them, see "Team section" above) and, later, own photos of athletes, clubs and a local business to replace the stock Symbolbilder
 - [x] Domain sponsuno.ch on Cloudflare (November 2026). sponsuno.com was free on 2026-11-03 but is not registered
+- [ ] Search visibility (outside the repo, see "SEO"): unpublish the old GitHub Pages copy of the site and set the repo website to https://sponsuno.ch; Google Search Console domain property (new DNS TXT record on `@`, never touch the SPF or other mail records), submit `https://sponsuno.ch/sitemap.xml` and request indexing for `/` and the guides; Bing Webmaster Tools (import from Search Console)
+- [ ] Official profiles (LinkedIn company page, Instagram) with the same name, URL, e-mail and town; then add them to `sameAs` and the footer

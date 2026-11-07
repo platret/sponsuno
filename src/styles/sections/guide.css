@@ -1,0 +1,68 @@
+/* Guide pages (Ratgeber): the legal-page layout (legal.css) plus the blocks only guides use. Classes prefixed gd-.
+   No motion. Light surfaces only, so gold text is Gold dunkel (DESIGN.md → Colour). */
+
+/* "Sponsuno is planned" note under the byline: a gold hairline on the left, small ink text */
+.gd-note {
+  margin-top: 1.25rem;
+  padding: .15rem 0 .15rem 1rem;
+  border-left: 2px solid var(--gold);
+  font-size: var(--fs-small); line-height: 1.55; color: var(--ink);
+}
+
+/* Numbered steps: numerals in Gold dunkel, same rhythm as .lg-list */
+.gd-steps { margin-top: .9rem; padding-left: 1.5rem; list-style: decimal; }
+.gd-steps li { padding-left: .25rem; }
+.gd-steps li + li { margin-top: .5rem; }
+.gd-steps li::marker { color: var(--gold-dark); font-weight: 600; }
+
+/* Letter template: bordered, selectable plain text that keeps its line breaks. No copy button. */
+.gd-template {
+  margin: 1.25rem 0 0;
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  background: var(--ivory);
+  overflow: hidden;
+}
+.gd-template figcaption {
+  padding: .75rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--fs-small); font-weight: 600; color: var(--navy);
+}
+.gd-template pre {
+  margin: 0;
+  padding: 1.1rem 1.25rem 1.25rem;
+  font: 400 .9375rem/1.6 var(--sans); color: var(--ink);
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  user-select: text;
+}
+
+/* Closing links: waitlist as the primary button, the demo as a quiet link with its note */
+.gd-cta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem;
+  margin-top: 1.5rem;
+}
+.lg-section .gd-cta .btn { color: var(--ivory); text-decoration: none; }
+.lg-section .gd-cta .gd-cta-demo {
+  display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
+  text-decoration: none;
+}
+.gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+.gd-cta-demo:hover .gd-cta-demo-label { text-decoration-thickness: 2px; }
+.gd-cta-demo-note { font-size: .875rem; font-weight: 400; color: var(--ink); }
+
+/* "Weiterlesen": the other guides, each with its description */
+.gd-related {
+  margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  padding: 1.25rem 1.5rem 1.5rem;
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  background: var(--ivory);
+}
+.gd-related-title { font-size: var(--fs-small); font-weight: 600; color: var(--navy); }
+.gd-related ul { margin-top: .5rem; }
+.gd-related li + li { border-top: 1px solid var(--rule); }
+.gd-related a { display: block; padding-block: .85rem; text-decoration: none; color: var(--ink); }
+.gd-related-name {
+  display: block; font-weight: 600; color: var(--navy);
+  text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px;
+}
+.gd-related a:hover .gd-related-name { text-decoration-thickness: 2px; }
+.gd-related-desc { display: block; margin-top: .25rem; font-size: var(--fs-small); line-height: 1.5; }
