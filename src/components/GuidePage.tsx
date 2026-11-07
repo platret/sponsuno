@@ -77,7 +77,7 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
     case 'steps':
       return <ol className="gd-steps">{block.items.map((item, i) => <li key={i}>{rich(item)}</li>)}</ol>;
     case 'template': {
-      // The same text as a Word file, written to dist/ by scripts/prerender.mjs; size in whole KB, rounded up
+      // The same text as a Word file, written to dist/ by scripts/prerender.mjs; size in whole KB, rounded to the nearest
       const file = templateFile(id, block);
       return (
         <figure className="gd-template">
@@ -88,8 +88,10 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
               <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
                 <path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="gd-template-download-label">{guidePage.templateDownload}</span>
-              <span className="gd-template-download-info">{guidePage.templateFileInfo(Math.ceil(file.bytes.length / 1024))}</span>
+              <span className="gd-template-download-text">
+                <span className="gd-template-download-label">{guidePage.templateDownload}</span>{' '}
+                <span className="gd-template-download-info">{guidePage.templateFileInfo(Math.max(1, Math.round(file.bytes.length / 1024)))}</span>
+              </span>
             </a>
           </p>
         </figure>

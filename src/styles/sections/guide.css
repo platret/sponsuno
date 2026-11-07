@@ -35,17 +35,20 @@
   user-select: text;
 }
 
-/* Word download under the template: a quiet underlined link (like the demo link), file type and size beside it */
+/* Word download under the template: a quiet underlined link (like the demo link), file type and size beside it.
+   .5rem padding leaves room for the 3px focus ring at offset 3px, which the figure's overflow: hidden would clip. */
 .gd-template-download {
-  padding: .25rem 1.25rem;
+  padding: .5rem 1.25rem;
   border-top: 1px solid var(--rule);
 }
 .lg-section .gd-template-download { margin-top: 0; }
 .lg-section .gd-template-download a {
-  display: inline-flex; flex-wrap: wrap; align-items: center; gap: .1rem .5rem; min-height: 44px;
+  display: inline-flex; align-items: center; gap: .5rem; min-height: 44px;
   text-decoration: none;
 }
 .gd-template-download svg { flex: none; color: var(--gold-dark); }
+/* Label and size wrap inside their own box, so on phones the size lines up under the label, not under the icon */
+.gd-template-download-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .5rem; }
 .gd-template-download-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 .gd-template-download a:hover .gd-template-download-label { text-decoration-thickness: 2px; }
 .gd-template-download-info { font-size: .875rem; font-weight: 400; color: var(--ink); }

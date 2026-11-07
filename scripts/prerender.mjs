@@ -61,8 +61,10 @@ console.log(`Wrote dist/sitemap.xml (${urls.length} URLs)`);
 // Guide templates as Word files (src/lib/templates.ts, from the same text as the pages). Linked from the guides only:
 // not in the sitemap, noindex in public/_headers.
 const templates = templateFiles();
+if (new Set(templates.map((t) => t.path)).size !== templates.length) {
+  throw new Error('Two templates share a file name: give each template its own file name in src/content.ts');
+}
 for (const { path: file, bytes } of templates) {
-  if (templates.filter((other) => other.path === file).length > 1) throw new Error(`Two templates write dist/${file}: give each its own file name in src/content.ts`);
   await mkdir(path.dirname(path.join(root, 'dist', file)), { recursive: true });
   await writeFile(path.join(root, 'dist', file), bytes);
   console.log(`Wrote dist/${file} (${bytes.length} bytes)`);
