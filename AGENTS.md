@@ -53,6 +53,8 @@ src/
                         guides), PageHeader (their shared header), rich.tsx (text with inline links).
   lib/motion.ts         motionEnabled(), scrollFxEnabled(), scrollToHash(), observeReveals(). No animation library.
   lib/links.ts          pageHref(), siteHref(): base-aware links between pages (footer links work from every page).
+  lib/templates.ts      Word (.docx) versions of the guide templates, built from the same text: a minimal writer
+                        (stored ZIP, fixed date, so the same text gives the same bytes). No dependency.
   lib/storyLayout.ts    Positions of every item on the scroll-story stage per state and layout, turned into CSS at build time.
   static/main.ts        Entry of the static pages (legal pages, guides): styles only in production (no React shipped);
                         renders in the browser in dev (static/dev-render.tsx, by data-page on #root).
@@ -73,8 +75,8 @@ demo/index.html         Second Vite entry: the clickable demo (client-only, noin
                         placeholder and the <!--seo--> marker in the head; prerendered, works without JS.
 src/demo/               The demo app, see "The demo" below.
 scripts/prerender.mjs   For every page in pages.ts: replaces <title> and <!--seo--> in dist/<path>index.html, injects the
-                        server render, drops the empty module script of the static pages, then writes dist/sitemap.xml.
-                        Fails if a marker is missing.
+                        server render, drops the empty module script of the static pages, then writes dist/sitemap.xml
+                        and the guide templates as Word files (dist/vorlagen/*.docx). Fails if a marker is missing.
 scripts/og/og-image.html  Source of public/og-image.png (rendered once with headless Chrome, see "SEO").
 scripts/icons.mjs       Regenerates the PNG/ICO icons in public/ from src/assets/Sponsuno_Icon.svg (see "SEO").
 .github/workflows/      deploy.yml: Cloudflare production deploy on main, preview per pull request.
@@ -95,7 +97,7 @@ docs/                   Images for the README only.
 - **Section styles**: each section imports its own stylesheet from `src/styles/sections/` and prefixes its classes.
 - **In-page links**: plain `<a href="#id">`. `App.tsx` intercepts them, scrolls below the fixed header and moves focus. A handler that does its own scrolling calls `preventDefault()`.
 - **Links between pages**: build them with `pageHref()` / `siteHref()` from `lib/links.ts` (base path). Footer link hrefs in `content.ts` are `#id` (landing page section) or `path/` (page); on sub-pages section links lead back to the landing page.
-- **Guide pages**: copy in `content.ts` → `guides` (blocks: `p`, `list`, `steps`, `h3`, `template`, `cta`), shared labels in `guidePage`, links between guides via `guideLinks` (footer column "Ratgeber", FAQ intro). Title and description in `src/pages.ts`. Layout = legal pages (`legal.css`) plus `guide.css` (prefix `gd-`). Every guide ends with "Wie Sponsuno dabei helfen soll" in planned wording, the `cta` block (waitlist with the guide's `waitlistRole`, demo) and "Weiterlesen".
+- **Guide pages**: copy in `content.ts` → `guides` (blocks: `p`, `list`, `steps`, `h3`, `template`, `cta`), shared labels in `guidePage`, links between guides via `guideLinks` (footer column "Ratgeber", FAQ intro). Title and description in `src/pages.ts`. Layout = legal pages (`legal.css`) plus `guide.css` (prefix `gd-`). Every `template` block (letter or outline, placeholders in [eckigen Klammern]) names its Word file (`file: '<name>-vorlage.docx'`): the build writes the same text to `dist/vorlagen/<file>` (`lib/templates.ts`, A4, Arial, de-CH, a footer line naming sponsuno.ch from `guidePage.templateFooter`) and the block shows a plain `<a download>` with type and size (`DOCX, 7 KB`, computed from the file). Edit the text in `content.ts` only, never a .docx by hand. The files exist only after `npm run build` (the links 404 in `npm run dev`); they are not in the sitemap and get `noindex` and a one-hour cache in `public/_headers`. Every guide ends with "Wie Sponsuno dabei helfen soll" in planned wording, the `cta` block (waitlist with the guide's `waitlistRole`, demo) and "Weiterlesen".
 - **Legal pages**: all text in `content.ts` → `legal` (and `photoCredits`). Unknown contact data stays `null` and renders as pending (`legal.pending`); `npm run build` prints a warning while a `legal.contact` field is null. Every third-party photo added to the site gets an entry in `photoCredits`, which the Impressum lists.
 - **Photos**: stock photos only under the Pexels or Unsplash licence, labelled "Symbolbild", never presented as Sponsuno users. Rules for choosing and preparing them are in DESIGN.md → Imagery.
 - **Team section** (`#team`, between FAQ and waitlist): names and provisional focus come from `team` in `content.ts`. Without a photo each person shows a monogram. A real, consented photo is added by importing a square JPEG in `content.ts` and setting `photo: { src, alt }` on that person; never use stock or generated faces for the founders.
@@ -167,7 +169,7 @@ Generated files in `public/` (commit the outputs; neither runs during `npm run b
   Its text is approved by the team; keep it in planned wording.
 - Icons `favicon.ico` (16/32/48), `apple-touch-icon.png` (180, full navy square), `icon-192.png`, `icon-512.png` (also the Organization logo): `node scripts/icons.mjs` (macOS: Chrome and `sips`). Check the mark is still readable at 16 px.
 
-`public/_headers` (Cloudflare Workers static assets): long cache for `/assets/*` (hashed), `X-Robots-Tag: noindex` for `/demo/*`, HSTS without `includeSubDomains`/`preload` (keeps the Infomaniak mail hostnames out of it). `vite preview` ignores this file; check it on a PR preview with `curl -sI`.
+`public/_headers` (Cloudflare Workers static assets): long cache for `/assets/*` (hashed), `X-Robots-Tag: noindex` for `/demo/*`, one-hour cache and `noindex` for `/vorlagen/*` (the guide templates as Word files: unhashed URLs), HSTS without `includeSubDomains`/`preload` (keeps the Infomaniak mail hostnames out of it). `vite preview` ignores this file; check it on a PR preview with `curl -sI`.
 
 PR previews on `*.workers.dev` already get `x-robots-tag: noindex` from Cloudflare; the canonical tags point to the apex as a second safeguard. Do not change `workers_dev` or `preview_urls` for SEO reasons.
 
