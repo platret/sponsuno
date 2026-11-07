@@ -140,9 +140,9 @@
 .motion .st-live .pc-score { transition: opacity .4s ease calc(var(--d, 0ms) + 1050ms); }
 .motion .st-live:not([data-step="sortiert"]) .pc-dot { opacity: .3; scale: .7; transition-delay: 0ms; }
 .motion .st-live:not([data-step="sortiert"]) .pc-score { opacity: 0; transition-delay: 0ms; }
-/* The faint pairs take their full colours back only once they have faded out ("linie"): a switch, never a fade */
-.motion .st-live .it-pair :is(.pc-row, .pc-name, .pc-meta) { transition: background-color 0s .45s, color 0s .45s; }
-.motion .st-live:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .it-pair :is(.pc-row, .pc-name, .pc-meta) { transition: none; }
+/* The faint pairs change colour together with their own fade, so a skipped step ("erwartungen" straight to
+   "sortiert" or back) never snaps; on the usual path through "linie" the change happens while they are hidden */
+.motion .st-live .it-pair :is(.pc-row, .pc-name, .pc-meta) { transition: background-color .45s ease var(--d, 0ms), color .45s ease var(--d, 0ms); }
 /* The legend's checks tick together with the lead pair's dots */
 .motion .st-live .lg-chk { transition: opacity .3s ease, scale .3s var(--ease-out); transition-delay: calc(650ms + var(--k) * 90ms); }
 .motion .st-live:not([data-step="sortiert"]) .lg-chk { opacity: .3; scale: .7; transition-delay: 0ms; }
@@ -252,6 +252,10 @@
 @media (min-width: 761px) and (max-width: 960px) {
   .st-stage .st-art { max-width: 640px; margin-inline: auto; }
 }
+/* Tall tablets (portrait): a taller stage, so the pairs are not scaled down to .72 and their text stays readable */
+@media (min-width: 761px) and (max-width: 960px) and (min-height: 960px) {
+  .js .st-stage .st-art { --st-h: clamp(420px, 52svh, 540px); }
+}
 
 /* ---------- Stage geometry on phones and tablets ---------- */
 
@@ -291,7 +295,7 @@
 @media (max-width: 760px) {
   .st-art .it-seeker { width: 200px; --k: .74; }
   /* Column heads on two lines, so "Sucht Unterstützung" stays left of the line */
-  .head-t { width: min-content; white-space: normal; text-align: center; line-height: 1.3; }
+  .st-art .head-t { width: min-content; white-space: normal; text-align: center; line-height: 1.3; }
 }
 /* Narrow stages (the snapshots inside the page gutter on phones) */
 @container (max-width: 360px) { .st-art .it-seeker { --k: .7; } }

@@ -61,24 +61,24 @@ export const STAGE_ITEMS: StageItem[] = [
   //      the line) slides behind it in "linie"; the left column queues at the line. ----
   paper('p-dossier', ['aufwand'], { x: 14, y: 14 }, { x: 12, y: 15 }, { dl: atLine(22) }),
   paper('p-absage', ['aufwand'], { x: 38, y: 12 }, { x: 25, y: 37 }),
-  paper('p-training', ['aufwand'], { x: 38, y: 32 }, null),
+  paper('p-training', ['aufwand'], { x: 41, y: 32 }, null),
   paper('p-antwort', ['kontakte'], { x: 38, y: 52 }, null),
   paper('p-zustaendig', ['kontakte'], { x: 13, y: 60 }, { x: 29, y: 15 }, { dl: atLine(50) }),
   paper('p-gelohnt', ['erwartungen'], { x: 38, y: 67 }, null),
-  paper('p-gegenleistung', ['erwartungen'], { x: 38, y: 79 }, { x: 24, y: 66 }, {
-    dl: atLine(77), ds: { o: .18 },
-    ml: { x: ML - 6, y: 9, o: .2, s: .9 }, ms: { o: .14 },
+  paper('p-gegenleistung', ['erwartungen'], { x: 38, y: 77 }, { x: 24, y: 66 }, {
+    dl: atLine(77), ds: { o: 0 },
+    ml: { x: ML - 6, y: 9, o: .2, s: .9 }, ms: { o: 0 },
   }),
 
   // ---- seekers: raw (tilted, role line) in the heap, clean in the queue, then behind the line ----
   {
     key: 's-0', chaos: true, spot: ['kontakte'],
-    d: { heute: { x: 16, y: 38 }, linie: { x: 20, y: 34, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
+    d: { heute: { x: 16, y: 37 }, linie: { x: 20, y: 34, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
     m: { heute: { x: 23, y: 52 }, linie: { x: 23, y: 38, f: 1, o: 1, s: 1 }, sortiert: { x: ML + 22, o: 0, f: 1 }, match: off },
   },
   {
     key: 's-1', chaos: true, spot: ['erwartungen'],
-    d: { heute: { x: 16, y: 83 }, linie: { x: 20, y: 50, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
+    d: { heute: { x: 16, y: 88 }, linie: { x: 20, y: 50, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
     m: { heute: { x: 23, y: 80 }, linie: { x: 23, y: 64, f: 1, o: 1, s: 1 }, sortiert: { x: ML + 22, o: 0, f: 1 }, match: off },
   },
   {
