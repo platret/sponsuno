@@ -111,10 +111,18 @@
 .wl-error { margin-top: .75rem; font-size: var(--fs-small); color: var(--error-on-navy); }
 .wl-hint { margin-top: .85rem; font-size: .875rem; line-height: 1.5; color: var(--steel); }
 
+/* Links in the hint and the success box: ivory, underlined in gold (hover: thicker) */
+.wl-hint a, .wl-next a {
+  color: var(--ivory); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--gold-light);
+  text-underline-offset: 3px; text-decoration-thickness: 1px;
+  overflow-wrap: anywhere;
+}
+.wl-hint a:hover, .wl-next a:hover { text-decoration-thickness: 2px; }
+
 /* ---------- Success ---------- */
 
 .wl-success {
-  display: flex; align-items: flex-start; gap: .85rem;
   margin-top: clamp(2.25rem, 1.75rem + 1.5vw, 3rem);
   padding: 1.25rem 1.4rem;
   border: 1px solid rgba(243, 239, 230, .25); border-radius: var(--radius-sm);
@@ -123,9 +131,23 @@
 }
 .wl-success:focus { outline: none; }
 .wl-success:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.wl-success-main { display: flex; align-items: flex-start; gap: .85rem; }
+.wl-success-main p + p { margin-top: .5rem; }
 .wl-success svg {
   width: 24px; height: 24px; flex: none; margin-top: .05rem;
   fill: none; stroke: var(--gold-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+/* Interim e-mail (no endpoint yet): the gold button, the address as text beside it for copying */
+.wl-success .wl-mail {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem;
+  margin-top: 1rem;
+}
+.wl-mail-address { font-size: var(--fs-small); color: var(--steel); overflow-wrap: anywhere; }
+/* One next step per role, under a hairline */
+.wl-next {
+  margin-top: 1.1rem; padding-top: 1rem;
+  border-top: 1px solid var(--card-dark-line);
+  font-size: var(--fs-small); color: var(--steel);
 }
 .motion .wl-success { animation: wl-in .5s var(--ease-out) both; }
 @keyframes wl-in { from { opacity: 0; transform: translateY(8px); } }

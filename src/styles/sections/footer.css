@@ -55,7 +55,8 @@
   border-top: 1px solid rgba(243, 239, 230, .12);
   font-size: .875rem; line-height: 1.5; color: var(--steel);
 }
-@media (max-width: 760px) {
+/* Below 1024 px the four link columns leave the claim too narrow (it overflowed at 768 px): stack them */
+@media (max-width: 1023px) {
   .ft-top { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 520px) {
