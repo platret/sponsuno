@@ -8,8 +8,10 @@ const { draft, reminder, deliverables } = aiManager;
 /**
  * Ivory section, the body of /ki-manager/ (InfoPage): what the planned AI manager is meant to do after a match.
  * Its title is the page's H1, the card titles are H2 (styled as H3, .pg-h3). A bento grid shows one illustrative
- * draft (navy device frame) and two small light cards. The page is static (no JS, no html.scroll-fx), so the
- * scroll motion in ai.css (device zoom, pin, cards sliding in) stays dormant and the final layout shows.
+ * draft (navy device frame) and two small light cards. The page ships no JavaScript module; an inline script in its
+ * head sets html.scroll-fx (`scrollFx` in pages.ts, entry-server.tsx), so the scroll motion in ai.css runs: from
+ * 961 x 700 px the bento pins while the device zooms in. The draft sheet and the cards stay still there (they sit in
+ * the first screen); with reduced motion or without scroll timelines the final layout shows.
  */
 export function AiManager() {
   return (

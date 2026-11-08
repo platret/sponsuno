@@ -25,8 +25,9 @@ const closingLine = (live: string, preview: string): string | null =>
 
 /**
  * Topic pages reached from the header (/fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/). Static:
- * prerendered at build time, shipped without JavaScript and without motion (CSS from src/static/sections.ts; Für Firmen
- * only needs the guide styles of src/static/main.ts).
+ * prerendered at build time, shipped without a JavaScript module (CSS from src/static/sections.ts; Für Firmen only
+ * needs the guide styles of src/static/main.ts). No motion, except /ki-manager/: its pinned bento runs on CSS scroll
+ * timelines once an inline head script sets html.scroll-fx (`scrollFx` in pages.ts).
  * KI-Manager, Kosten, Fragen and Über uns show the sections that used to be on the landing page; the first
  * section's title is the page's H1. Für Firmen uses the reading column of the guides. Every page ends with a
  * way back to the waitlist on the landing page.

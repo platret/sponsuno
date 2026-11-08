@@ -201,8 +201,23 @@
       --scroll-range-start: cover 0px;
       --scroll-range-end: cover calc(100vh - var(--ai-pin-top) + var(--ai-pin-hold) * .6);
     }
+    /* On its static page (/ki-manager/, main.pg) the header scrolls away (not fixed): the bento sticks 2rem from
+       the top. The bento is already in the first screen there (its top at ~60 % of the viewport), so the device
+       starts from a still .86 at load and zooms only once the bento's top has risen to 40 % of the viewport + 2rem,
+       through the hold; never a frame that is half-way through its zoom when the page opens. */
+    .scroll-fx .pg .ai-pin { --ai-pin-top: 2rem; }
+    .scroll-fx .pg .ai-device {
+      --scroll-zoom-from: .86;
+      --scroll-range-start: cover calc(60vh - var(--ai-pin-top));
+    }
   }
 }
+
+/* Static page: the draft sheet and the two cards sit in the first screen at load (beside the device from 961 px,
+   right under it on tablets), so they keep their final state instead of starting half-risen; the device carries
+   the motion. */
+.scroll-fx .pg .ai-draft-sheet,
+.scroll-fx .pg .ai-side > .ai-card { animation-name: none; }
 
 @media (max-width: 960px) {
   /* Here the device settles after the normal --scroll-dist, so the sheet follows the same pace instead of

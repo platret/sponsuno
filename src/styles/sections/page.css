@@ -1,6 +1,7 @@
 /* Topic pages reached from the header (InfoPage.tsx: /ki-manager/, /kosten/, /fragen/, /ueber-uns/). They show the
    former landing page sections with their own stylesheets; this file only adapts them to a page of their own and adds
-   the closing block. Static: no JavaScript, no html.motion or html.scroll-fx, so every section shows its final layout.
+   the closing block. No JavaScript module and never html.motion. Only /ki-manager/ gets html.scroll-fx (an inline
+   script from headFor, `scrollFx` in pages.ts) for the pinned bento in ai.css; the others show their final layout.
    Classes prefixed pg-. Loaded before the section stylesheets (src/static/sections.ts), so section rules win a tie. */
 
 /* The first section sits under the slim static header: the top space of the legal pages, not a full section pad */
