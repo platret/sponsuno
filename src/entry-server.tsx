@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server';
 import App from './App';
 import { StaticPage, type StaticPageId } from './components/StaticPage';
 import { faq, legal } from './content';
+import { MOVED_SECTIONS, pageHref } from './lib/links';
 import { absoluteUrl, htmlFile, pageMeta, pages, site, SITE_URL, type PageId } from './pages';
 
 export { htmlFile, pages, SITE_URL };
@@ -28,8 +29,8 @@ export const titleFor = (id: PageId): string => escapeAttr(pageMeta(id).title);
 
 /**
  * Head tags of a page, injected at the <!--seo--> marker: description, canonical, Open Graph, Twitter card,
- * on the landing page the robots preview hint and the JSON-LD graph (WebSite, Organization), on /fragen/ the
- * FAQPage JSON-LD. Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
+ * on the landing page the robots preview hint, the JSON-LD graph (WebSite, Organization) and the redirect of old
+ * section links (movedScript), on /fragen/ the FAQPage JSON-LD. Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
  * unknown URL, so a canonical or og:url would point to the wrong place.
  */
 export function headFor(id: PageId): string {
@@ -56,9 +57,19 @@ export function headFor(id: PageId): string {
     meta('property', 'og:image:alt', site.ogImageAlt),
     meta('name', 'twitter:card', 'summary_large_image'),
   ];
-  if (id === 'home') tags.push(`<script type="application/ld+json">${jsonLd(homeGraph())}</script>`);
+  if (id === 'home') tags.push(`<script type="application/ld+json">${jsonLd(homeGraph())}</script>`, movedScript());
   if (id === 'fragen') tags.push(`<script type="application/ld+json">${jsonLd(faqGraph())}</script>`);
   return tags.join('\n  ');
+}
+
+/**
+ * Old links to sections that moved to their own page (/#kosten → /kosten/): an inline script in the landing page's
+ * head sends them on before the first paint, so the homepage never flashes first. Built from MOVED_SECTIONS, so it
+ * cannot drift; App.tsx keeps the same redirect for dev (no prerender) and for hash changes on the open page.
+ */
+function movedScript(): string {
+  const targets = Object.fromEntries(Object.entries(MOVED_SECTIONS).map(([id, path]) => [id, pageHref(path)]));
+  return `<script>(function(m){var h=location.hash.slice(1);if(Object.prototype.hasOwnProperty.call(m,h))location.replace(m[h])})(${jsonLd(targets)})</script>`;
 }
 
 /** JSON for a <script> element: "<" escaped so the text can never close the element. */
@@ -120,7 +131,8 @@ function faqGraph() {
     '@id': `${url}#fragen`,
     url,
     inLanguage: site.language,
-    isPartOf: { '@id': `${SITE_URL}#website` },
+    // Minimal WebSite node, so the reference resolves on this page too (the full node is on the landing page)
+    isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}#website`, name: site.name, url: SITE_URL },
     mainEntity: faq.items.map((item) => ({
       '@type': 'Question',
       name: item.q,

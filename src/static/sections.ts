@@ -1,4 +1,5 @@
-// Second entry of the topic pages (/ki-manager/, /kosten/, /fragen/, /ueber-uns/, /fuer-firmen/), loaded next to
+// Second entry of the topic pages (/ki-manager/, /kosten/, /fragen/, /ueber-uns/; not /fuer-firmen/, which needs only
+// the guide styles), loaded next to
 // main.ts: the stylesheets of the former landing page sections they show. Kept apart from main.ts so the guides and
 // legal pages do not load them. CSS only: in production the empty module's <script> is dropped by
 // scripts/prerender.mjs, so these pages ship no JavaScript either. page.css first, so section rules win a tie.

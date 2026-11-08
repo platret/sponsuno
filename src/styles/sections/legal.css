@@ -3,6 +3,10 @@
    No motion, no JavaScript. Classes prefixed lg-.
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
+/* The static header scrolls away with the page (not fixed like the landing page header), so anchor jumps (table of
+   contents, /kosten/#sachleistungen) need only a small margin, not the landing page's header offset (site.css). */
+html:has(.lg-header) { scroll-padding-top: 1rem; }
+
 /* ---------- Header (PageHeader.tsx): wordmark, nav, waitlist button; below 961 px a native <details> menu ---------- */
 .lg-header {
   position: relative; z-index: 20;
@@ -12,7 +16,8 @@
   color: var(--navy);
   --focus: var(--gold-dark);
 }
-.lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 1.5rem; }
+/* Gaps match .header-inner (header.css), so the nav and the button sit in the same place on every page */
+.lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
 .lg-brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
 .lg-brand img { width: 118px; height: auto; }
 
@@ -58,7 +63,7 @@
 
 /* Six nav items plus the button: tighter between 961 and 1140 px, the menu below */
 @media (max-width: 1140px) {
-  .lg-header-inner { gap: 1rem; }
+  .lg-header-inner { gap: 1.25rem; }
   .lg-nav a { padding-inline: .55rem; }
 }
 @media (max-width: 960px) {

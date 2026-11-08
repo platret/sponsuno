@@ -157,6 +157,7 @@ export const pages: PageMeta[] = [
   },
   {
     // Served by Cloudflare with status 404 for any unknown URL. Not in the sitemap, noindex, no canonical (headFor).
+    // The description is never output (headFor gives this page only the robots noindex); PageMeta just requires one.
     id: 'notfound',
     path: '404.html',
     title: 'Seite nicht gefunden – Sponsuno',

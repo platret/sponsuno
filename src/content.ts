@@ -230,7 +230,7 @@ export const howItWorks = {
   stepLabel: 'Schritt',
   tracks: {
     seeker: {
-      label: 'Sportler und Vereine',
+      label: 'Sportlerinnen, Sportler und Vereine',
       steps: [
         { title: 'Profil anlegen', text: 'Region, Sportart oder Sparte, was Sie brauchen und was Sie als Gegenleistung bieten. Vorlagen helfen beim Ausfüllen.' },
         { title: 'Passende Firmen sehen', text: 'Sponsuno schlägt Firmen vor, die nach Region, Budget, Branche und Art der Unterstützung zu Ihnen passen.' },
@@ -277,7 +277,7 @@ export const aiManager = {
     ],
   },
   caption: 'Beispielansicht. Der KI-Manager ist in Entwicklung.',
-  demoLink: 'Im Demo ausprobieren',
+  demoLink: 'In der Demo ausprobieren',
 };
 
 export const support = {
@@ -512,6 +512,9 @@ export type InfoPageId = 'fuer-firmen' | 'ki-manager' | 'kosten' | 'fragen' | 'u
 export const infoPage = {
   endTitle: waitlist.title,
   endText: 'Sponsuno ist im Aufbau. Tragen Sie sich auf der Warteliste ein, dann melden wir uns, sobald es losgeht.',
+  // Replaces endText while the waitlist stores nothing (no VITE_WAITLIST_ENDPOINT, the same switch as
+  // waitlist.previewIntro and the FAQ intro); without a contact address the line is left out.
+  previewEndText: 'Sponsuno ist im Aufbau. Schreiben Sie uns eine E-Mail, dann melden wir uns, sobald es losgeht.',
   endButton: cta.waitlist,
   demoLabel: demo.link,
   demoHref: demo.href,
@@ -1414,7 +1417,7 @@ const firmsTalkMail = legal.contact.email;
 
 export const forFirms = {
   title: 'Sponsoring in Ihrer Region: für Firmen und Gewerbe',
-  intro: 'Sponsuno ist auch für Firmen gedacht: für Gewerbe und KMU, die sich vor Ort engagieren möchten, mit Geld, Material oder Dienstleistungen. Die geplante Plattform soll Ihnen Sportlerinnen, Sportler, Sport- und Kulturvereine aus Ihrer Region zeigen, die zu Ihrer Firma passen.',
+  intro: 'Für Gewerbe und KMU, die sich vor Ort engagieren möchten, mit Geld, Material oder Dienstleistungen: Sponsuno soll Ihnen Sportlerinnen, Sportler, Sport- und Kulturvereine aus Ihrer Region zeigen, die zu Ihrer Firma passen.',
   note: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Diese Seite beschreibt, wie es gedacht ist.',
   // Prominent box under the note: the sponsor's side of the demo
   cockpit: {
@@ -1481,6 +1484,8 @@ export const forFirms = {
     id: 'warteliste',
     title: waitlist.title,
     text: 'Tragen Sie sich als Firma auf der Warteliste ein, dann melden wir uns, sobald es losgeht.',
+    // Replaces text while the waitlist stores nothing (same switch as infoPage.previewEndText)
+    previewText: 'Schreiben Sie uns als Firma eine E-Mail, dann melden wir uns, sobald es losgeht.',
     button: cta.waitlist,
     demoLabel: 'Sponsor-Cockpit in der Demo ansehen',
     demoHref: cockpitLink.href,

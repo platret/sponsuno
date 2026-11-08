@@ -9,6 +9,9 @@
 /* The first section's title is the page's H1: a step above the H2 size, below the landing page hero */
 .pg h1 { font-size: clamp(2.375rem, 1.5rem + 2.8vw, 3.75rem); line-height: 1.02; }
 
+/* No fixed header above the content here: the sticky FAQ title (faq.css) keeps only its own top space */
+.pg .faq-head { top: 2rem; }
+
 /* H2 that looks like an H3 (Manrope 600): card titles, founder names and "Stand des Projekts" under the page H1 */
 .pg-h3 {
   font-family: var(--sans); font-size: var(--fs-h3); line-height: 1.3;
@@ -38,18 +41,3 @@
 .pg-end-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 .pg-end-demo:hover .pg-end-demo-label { text-decoration-thickness: 2px; }
 .pg-end-demo-note { font-size: .875rem; font-weight: 400; color: var(--ink); }
-
-/* ---------- /fuer-firmen/ (guide layout from legal.css and guide.css) ---------- */
-/* The demo's sponsor cockpit, prominent under the "planned" note: an ivory box like the guides' "Weiterlesen" */
-.pg-cockpit {
-  margin-top: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
-  padding: .75rem 1.5rem 1.25rem;
-  border: 1px solid var(--rule); border-radius: var(--radius);
-  background: var(--ivory);
-}
-.pg-cockpit-link { min-height: 44px; color: var(--navy); }
-.pg-cockpit-link svg { flex: none; color: var(--gold-dark); }
-.pg-cockpit-text { margin-top: .1rem; font-size: var(--fs-small); line-height: 1.5; color: var(--ink); }
-
-/* Invitation to a talk under the closing buttons, set off by a hairline */
-.lg-section .pg-talk { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }

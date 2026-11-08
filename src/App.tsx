@@ -19,10 +19,17 @@ import { StickyCta } from './components/StickyCta';
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
 
-  // Old links to a section that now has its own page (/#kosten, /#fragen …) go to that page
+  // Old links to a section that now has its own page (/#kosten, /#fragen …) go to that page. In the build an inline
+  // script in the head does this before the first paint (movedScript in entry-server.tsx); this covers dev and a hash
+  // typed or followed on the open page.
   useEffect(() => {
-    const id = window.location.hash.slice(1);
-    if (Object.hasOwn(MOVED_SECTIONS, id)) window.location.replace(pageHref(MOVED_SECTIONS[id]));
+    const redirect = () => {
+      const id = window.location.hash.slice(1);
+      if (Object.hasOwn(MOVED_SECTIONS, id)) window.location.replace(pageHref(MOVED_SECTIONS[id]));
+    };
+    redirect();
+    window.addEventListener('hashchange', redirect);
+    return () => window.removeEventListener('hashchange', redirect);
   }, []);
 
   // Entry points elsewhere (guides, demo) link to /?rolle=<role>#warteliste to preselect the waitlist role

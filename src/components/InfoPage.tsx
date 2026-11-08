@@ -1,10 +1,11 @@
 import '../styles/sections/page.css';
-import { forFirms, infoPage, type InfoPageId, type Role } from '../content';
+import { forFirms, infoPage, legal, type InfoPageId, type Role } from '../content';
 import { pageMeta } from '../pages';
-import { pageHref, waitlistHref } from '../lib/links';
+import { pageHref, waitlistHref, WAITLIST_ENDPOINT } from '../lib/links';
 import { AiManager } from './AiManager';
 import { Faq } from './Faq';
 import { Footer } from './Footer';
+import { LinkArrowLabel } from './LinkArrowLabel';
 import { PageHeader } from './PageHeader';
 import { Pricing } from './Pricing';
 import { Support } from './Support';
@@ -15,8 +16,17 @@ import { rich } from './rich';
 const ROLES: Partial<Record<InfoPageId, Role>> = { 'fuer-firmen': 'sponsor' };
 
 /**
+ * Closing lines that promise a reply after a sign-up hold only while the waitlist stores sign-ups. Without an endpoint
+ * the preview line (offer an e-mail) is shown instead, the same switch as the waitlist and FAQ intros; without a contact
+ * address the line is left out. The button still leads to the landing page waitlist, which explains the e-mail route.
+ */
+const closingLine = (live: string, preview: string): string | null =>
+  WAITLIST_ENDPOINT ? live : legal.contact.email ? preview : null;
+
+/**
  * Topic pages reached from the header (/fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/). Static:
- * prerendered at build time, shipped without JavaScript and without motion (CSS from src/static/sections.ts).
+ * prerendered at build time, shipped without JavaScript and without motion (CSS from src/static/sections.ts; Für Firmen
+ * only needs the guide styles of src/static/main.ts).
  * KI-Manager, Kosten, Fragen and Über uns show the sections that used to be on the landing page; the first
  * section's title is the page's H1. Für Firmen uses the reading column of the guides. Every page ends with a
  * way back to the waitlist on the landing page.
@@ -47,11 +57,12 @@ export function InfoPage({ id }: { id: InfoPageId }) {
 /** Closing block: the waitlist (on the landing page) as the primary button, the demo as a quiet link. */
 function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
+  const text = closingLine(infoPage.endText, infoPage.previewEndText);
   return (
     <section className="section surface-paper pg-end" aria-labelledby="pg-end-title">
       <div className="container">
         <h2 id="pg-end-title">{infoPage.endTitle}</h2>
-        <p className="pg-end-text">{infoPage.endText}</p>
+        {text && <p className="pg-end-text">{text}</p>}
         {more && <p className="pg-end-more">{rich(more)}</p>}
         <div className="pg-end-actions">
           <a className="btn btn-navy" href={waitlistHref(role)}>{infoPage.endButton}</a>
@@ -71,6 +82,7 @@ function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
  */
 function FirmsPage() {
   const { cockpit, steps, support, offer, open, end } = forFirms;
+  const endText = closingLine(end.text, end.previewText);
   const list = (items: readonly { title: string; text: string }[]) =>
     items.map((item) => <li key={item.title}><strong>{item.title}:</strong> {item.text}</li>);
 
@@ -83,9 +95,8 @@ function FirmsPage() {
           <p className="gd-note">{forFirms.note}</p>
 
           <div className="pg-cockpit">
-            <a className="link-arrow pg-cockpit-link" href={pageHref(cockpit.link.href)}>
-              {cockpit.link.label}
-              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+            <a className="link-arrow link-arrow-wrap pg-cockpit-link" href={pageHref(cockpit.link.href)}>
+              <LinkArrowLabel label={cockpit.link.label} />
             </a>
             <p className="pg-cockpit-text">{cockpit.text}</p>
           </div>
@@ -120,7 +131,7 @@ function FirmsPage() {
 
           <section className="lg-section" aria-labelledby={end.id}>
             <h2 id={end.id}>{end.title}</h2>
-            <p>{end.text}</p>
+            {endText && <p>{endText}</p>}
             <div className="gd-cta">
               <a className="btn btn-navy" href={waitlistHref('sponsor')}>{end.button}</a>
               <a className="gd-cta-demo" href={pageHref(end.demoHref)}>
