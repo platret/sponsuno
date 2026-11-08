@@ -66,11 +66,11 @@ function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
 }
 
 /**
- * /fuer-firmen/: first version in the reading column of the guides (legal.css, guide.css), built from the sponsor
- * copy that already exists (content.ts → forFirms).
+ * /fuer-firmen/: the page for companies, in the reading column of the guides (legal.css, guide.css, plus the cockpit
+ * box from page.css). Copy in content.ts → forFirms, built from sponsor copy that already exists on the site.
  */
 function FirmsPage() {
-  const { steps, support, costs, end } = forFirms;
+  const { cockpit, steps, support, offer, open, end } = forFirms;
   const list = (items: readonly { title: string; text: string }[]) =>
     items.map((item) => <li key={item.title}><strong>{item.title}:</strong> {item.text}</li>);
 
@@ -81,6 +81,14 @@ function FirmsPage() {
           <h1 id="lg-title">{forFirms.title}</h1>
           <p className="lg-intro">{forFirms.intro}</p>
           <p className="gd-note">{forFirms.note}</p>
+
+          <div className="pg-cockpit">
+            <a className="link-arrow pg-cockpit-link" href={pageHref(cockpit.link.href)}>
+              {cockpit.link.label}
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+            </a>
+            <p className="pg-cockpit-text">{cockpit.text}</p>
+          </div>
 
           <section className="lg-section" aria-labelledby={steps.id}>
             <h2 id={steps.id}>{steps.title}</h2>
@@ -94,11 +102,20 @@ function FirmsPage() {
             <ul className="lg-list">{list(support.items)}</ul>
           </section>
 
-          <section className="lg-section" aria-labelledby={costs.id}>
-            <h2 id={costs.id}>{costs.title}</h2>
-            <p>{costs.intro}</p>
-            <ul className="lg-list">{list(costs.items)}</ul>
-            <p>{rich(costs.more)}</p>
+          <section className="lg-section" aria-labelledby={offer.id}>
+            <h2 id={offer.id}>{offer.title}</h2>
+            <p>{offer.intro}</p>
+            <ul className="lg-list">{offer.items.map((item) => <li key={item}>{item}</li>)}</ul>
+            <p>{offer.after}</p>
+            <p>{rich(offer.more)}</p>
+          </section>
+
+          <section className="lg-section" aria-labelledby={open.id}>
+            <h2 id={open.id}>{open.title}</h2>
+            <p>{open.decided}</p>
+            <p>{open.intro}</p>
+            <ul className="lg-list">{open.items.map((item) => <li key={item}>{item}</li>)}</ul>
+            <p>{rich(open.more)}</p>
           </section>
 
           <section className="lg-section" aria-labelledby={end.id}>
@@ -111,6 +128,7 @@ function FirmsPage() {
                 <span className="gd-cta-demo-note">{end.demoNote}</span>
               </a>
             </div>
+            {end.talk && <p className="pg-talk">{rich(end.talk)}</p>}
           </section>
         </article>
       </div>

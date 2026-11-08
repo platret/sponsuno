@@ -27,6 +27,11 @@ export const demo = {
   linkNote: 'Klickbarer Prototyp mit fiktiven Daten',
 };
 
+// The sponsor's side of the demo and the page for companies, linked from several places (audience tile, Firmen track
+// in #ablauf, /fuer-firmen/, the waitlist's next step). One definition, so the labels stay the same everywhere.
+export const cockpitLink: FooterLink = { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' };
+export const firmsLink: FooterLink = { href: pageMeta('fuer-firmen').path, label: 'So ist es für Firmen gedacht' };
+
 export type Role = 'athlete' | 'sportverein' | 'kulturverein' | 'sponsor';
 
 export const hero = {
@@ -100,7 +105,7 @@ export const audience = {
       label: 'Firmen aus der Region',
       text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
       alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
-      link: { href: pageMeta('fuer-firmen').path, label: 'So ist es für Firmen gedacht' },
+      link: firmsLink,
     },
   ] satisfies { image: AudienceImage; label: string; text: string; alt: string; link: FooterLink }[],
   noteBefore: 'Symbolbilder: Die abgebildeten Personen haben keinen Bezug zu Sponsuno. Bildnachweise im ',
@@ -243,6 +248,8 @@ export const howItWorks = {
       ],
     },
   },
+  // Quiet links under the Firmen track, above its button: the demo cockpit and the page for companies
+  sponsorLinks: [cockpitLink, firmsLink],
 };
 
 export const aiManager = {
@@ -502,48 +509,6 @@ export const infoPage = {
       '.',
     ],
   } as Partial<Record<InfoPageId, LegalText>>,
-};
-
-// /fuer-firmen/: first version, built only from copy that already exists on the site (audience tile "Firmen aus der
-// Region", howItWorks.tracks.sponsor, support, pricing). Everything planned stays planned; open points stay open.
-export const forFirms = {
-  title: 'Sponsern in Ihrer Region',
-  intro: 'Sponsuno ist auch für Firmen gedacht: für Gewerbe und KMU, die sich vor Ort engagieren möchten, mit Geld, Material oder Dienstleistungen. Die geplante Plattform soll Ihnen Sportlerinnen, Sportler, Sport- und Kulturvereine aus Ihrer Region zeigen, die zu Ihrer Firma passen.',
-  note: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Diese Seite beschreibt, wie es gedacht ist.',
-  steps: {
-    id: 'ablauf',
-    title: 'So ist es für Firmen gedacht',
-    intro: 'Vom Firmenprofil bis zur Bilanz nach der Saison:',
-    items: howItWorks.tracks.sponsor.steps,
-  },
-  support: {
-    id: 'unterstuetzung',
-    title: 'Wie Sie unterstützen können',
-    intro: support.intro,
-    items: support.kinds.map((kind) => ({ title: kind.title, text: kind.text })),
-  },
-  costs: {
-    id: 'kosten',
-    title: 'Was es kosten soll',
-    intro: pricing.intro,
-    items: pricing.rows.map((row) => ({ title: row.label, text: row.state === 'open' ? `${row.value} (${pricing.openLabel})` : row.value })),
-    more: [
-      'Mehr dazu unter ',
-      { href: pageMeta('kosten').path, label: 'Kosten' },
-      '. Antworten auf häufige Fragen finden Sie unter ',
-      { href: pageMeta('fragen').path, label: 'Fragen und Antworten' },
-      '.',
-    ] satisfies LegalText,
-  },
-  end: {
-    id: 'warteliste',
-    title: waitlist.title,
-    text: 'Tragen Sie sich als Firma auf der Warteliste ein, dann melden wir uns, sobald es losgeht. In der Demo sehen Sie, wie das Sponsor-Cockpit gedacht ist.',
-    button: cta.waitlist,
-    demoLabel: 'Sponsor-Cockpit in der Demo ansehen',
-    demoHref: 'demo/#/sponsor',
-    demoNote: demo.linkNote,
-  },
 };
 
 // ---------- Legal pages: Impressum (/impressum/) and Datenschutzerklärung (/datenschutz/) ----------
@@ -1422,5 +1387,97 @@ export const waitlistNext: Record<Role, FooterLink> = {
   athlete: guideStep('sponsoring-dossier'),
   sportverein: guideStep('sponsoren-finden'),
   kulturverein: guideStep('kultursponsoring'),
-  sponsor: { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' },
+  sponsor: cockpitLink,
+};
+
+// ---------- /fuer-firmen/: the page for companies (InfoPage.tsx → FirmsPage, reading column of the guides) ----------
+// Built from copy that already exists on the site: the audience tile "Firmen aus der Region", howItWorks.tracks.sponsor,
+// support, pricing, the offer lists of the guides "Sponsoren finden" and "Kultursponsoring" and the next step in
+// projectStatus (talks with companies, region Winterthur). Everything planned stays planned; open points stay open
+// (AGENTS.md, copy rule 4). Placed after `legal` because the talk invitation uses legal.contact.email.
+const firmsTalkMail = legal.contact.email;
+
+export const forFirms = {
+  title: 'Sponsoring in Ihrer Region: für Firmen und Gewerbe',
+  intro: 'Sponsuno ist auch für Firmen gedacht: für Gewerbe und KMU, die sich vor Ort engagieren möchten, mit Geld, Material oder Dienstleistungen. Die geplante Plattform soll Ihnen Sportlerinnen, Sportler, Sport- und Kulturvereine aus Ihrer Region zeigen, die zu Ihrer Firma passen.',
+  note: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Diese Seite beschreibt, wie es gedacht ist.',
+  // Prominent box under the note: the sponsor's side of the demo
+  cockpit: {
+    link: cockpitLink,
+    text: 'So ist die Seite der Firmen gedacht: Vorschläge aus der Region, Anfragen und laufende Partnerschaften, am Beispiel eines fiktiven Velogeschäfts.',
+  },
+  steps: {
+    id: 'ablauf',
+    title: 'Was Sponsuno für Firmen tun soll',
+    intro: 'So ist es geplant, vom Firmenprofil bis zur Bilanz nach der Saison:',
+    items: howItWorks.tracks.sponsor.steps,
+  },
+  support: {
+    id: 'unterstuetzung',
+    title: 'Wie Sie unterstützen können',
+    intro: support.intro,
+    items: support.kinds.map((kind) => ({ title: kind.title, text: kind.text })),
+  },
+  // Gegenleistungen, from the company's side: the lists in the guides "Sponsoren finden" and "Kultursponsoring"
+  offer: {
+    id: 'gegenleistungen',
+    title: 'Was Vereine, Sportlerinnen und Sportler bieten können',
+    intro: 'Sponsoring ist ein Austausch: Sie unterstützen, und der Verein, die Sportlerin oder der Sportler bietet Ihnen dafür etwas, das für Ihre Firma einen Wert hat. Zum Beispiel:',
+    items: [
+      'Sichtbarkeit vor Ort: Ihr Logo auf Trikot, Startnummer, Velo oder Vereinsbus, auf Banden und Bannern',
+      'Programmheft und Plakate: eine Anzeige oder ein Dank im Match- oder Konzertprogramm',
+      'Präsenz an Anlässen: eine Erwähnung bei Heimspielen, Turnieren, Konzerten oder Aufführungen, ein Stand oder Prospekte vor Ort',
+      'Ein Auftritt für Ihre Firma: ein Referat oder ein Training am Firmenanlass, ein Ständchen am Firmenjubiläum, Musik am Kundenanlass',
+      'Online: Ihr Logo und ein Link auf der Website, Beiträge auf Social Media oder im Newsletter',
+      'Zugang: Tickets oder reservierte Plätze für Ihre Kundinnen, Kunden und Mitarbeitenden',
+    ],
+    after: 'Auf Sponsuno sollen Vereine, Sportlerinnen und Sportler in ihrem Profil zeigen, welche Gegenleistungen sie bieten. So sehen Sie schon vor dem ersten Gespräch, was möglich ist. Was Sie am Ende erhalten, vereinbaren Sie gemeinsam und halten es vor Beginn fest.',
+    more: [
+      'Die Beispiele stammen aus unseren Ratgebern ',
+      { href: pageMeta('sponsoren-finden').path, label: 'Sponsoren finden' },
+      ' und ',
+      { href: pageMeta('kultursponsoring').path, label: 'Kultursponsoring' },
+      '. Dort empfehlen wir auch, nur zu versprechen, was sich zuverlässig liefern lässt.',
+    ] satisfies LegalText,
+  },
+  // Copy rule 4: only "commission instead of subscription" and "marketing services billed separately" are fixed
+  open: {
+    id: 'offen',
+    title: 'Was noch offen ist',
+    decided: 'Fest steht bisher: kein Abo und keine Grundgebühr, sondern eine Provision für die Vermittlung. Fotos, Videos und Inhalte für Sponsoren sollen separat buchbar sein.',
+    intro: 'Noch nicht entschieden ist:',
+    items: [
+      `Wie hoch die Provision ist. ${pricing.note}`,
+      'Wann genau die Provision fällig wird und welche Seite sie trägt.',
+      'Was für Partnerschaften gilt, die Sie heute schon haben, und für Verlängerungen.',
+      'Wie Sachleistungen wie Material oder Dienstleistungen bei der Provision zählen.',
+      'Wie Fotos, Videos und Inhalte abgerechnet werden.',
+      'Wann Sponsuno startet. Einen Starttermin gibt es noch nicht.',
+    ],
+    more: [
+      'Mehr dazu unter ',
+      { href: pageMeta('kosten').path, label: 'Kosten' },
+      '. Antworten auf häufige Fragen finden Sie unter ',
+      { href: pageMeta('fragen').path, label: 'Fragen und Antworten' },
+      '.',
+    ] satisfies LegalText,
+  },
+  end: {
+    id: 'warteliste',
+    title: waitlist.title,
+    text: 'Tragen Sie sich als Firma auf der Warteliste ein, dann melden wir uns, sobald es losgeht.',
+    button: cta.waitlist,
+    demoLabel: 'Sponsor-Cockpit in der Demo ansehen',
+    demoHref: cockpitLink.href,
+    demoNote: demo.linkNote,
+    // Invitation to the next round of talks (projectStatus: "Gespräche mit Firmen … in der Region Winterthur").
+    // Only shown while a contact address exists.
+    talk: firmsTalkMail
+      ? ([
+          'Als Nächstes sprechen wir mit Firmen in der Region Winterthur. Möchten Sie uns erzählen, ob und wie Ihre Firma heute sponsert und was Ihnen dabei fehlt? Schreiben Sie uns an ',
+          { href: `mailto:${firmsTalkMail}?subject=${encodeURIComponent('Gespräch: Sponsuno für Firmen')}`, label: firmsTalkMail },
+          '. Wir melden uns für ein kurzes Gespräch.',
+        ] satisfies LegalText)
+      : null,
+  },
 };

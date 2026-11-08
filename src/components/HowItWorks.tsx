@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { hero, howItWorks, type Role } from '../content';
+import { pageHref } from '../lib/links';
 import '../styles/sections/how.css';
 
 type TrackKey = 'seeker' | 'sponsor';
@@ -112,6 +113,18 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
                     </li>
                   ))}
                 </ol>
+                {t.key === 'sponsor' && (
+                  <ul className="how-more" role="list" data-scroll="rise">
+                    {howItWorks.sponsorLinks.map((link) => (
+                      <li key={link.href}>
+                        <a className="link-arrow how-more-link" href={pageHref(link.href)}>
+                          {link.label}
+                          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <a className={`btn ${t.btn} how-cta`} href="#warteliste" data-scroll="rise" onClick={() => onChooseRole(t.role)}>
                   {t.cta}
                 </a>
