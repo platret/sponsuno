@@ -28,7 +28,7 @@
 
 .ft-standalone .ft-top { border-top: 0; }
 
-.ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2.5rem, 1.5rem + 4vw, 5.5rem); }
+.ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2rem, 1rem + 2.5vw, 3.5rem); }
 .ft-head { margin-bottom: .35rem; font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--gold-light); }
 .ft-link {
   display: inline-flex; align-items: center; min-height: 44px;
@@ -37,6 +37,9 @@
 }
 .ft-link:hover,
 .ft-link[aria-current] { color: var(--ivory); }
+/* Kontakt column: the address may break on very narrow screens; the town is plain text at link size */
+.ft-mail { overflow-wrap: anywhere; }
+.ft-text { display: flex; align-items: center; min-height: 44px; font-size: var(--fs-small); color: var(--steel); }
 
 .ft-wordmark {
   display: block; width: 100%; height: auto;
@@ -55,12 +58,12 @@
   border-top: 1px solid rgba(243, 239, 230, .12);
   font-size: .875rem; line-height: 1.5; color: var(--steel);
 }
-/* Below 1024 px the four link columns leave the claim too narrow (it overflowed at 768 px): stack them */
-@media (max-width: 1023px) {
+/* Below 1200 px the five columns leave the claim too narrow (under 150 px at 1024 px): stack them */
+@media (max-width: 1199px) {
   .ft-top { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 520px) {
-  /* Four link columns as a two-by-two grid, so the second row lines up with the first */
+  /* The five columns as a two-column grid, so the rows line up (Kontakt alone in the last row) */
   .ft-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1.5rem; }
   .ft-bottom { flex-direction: column; gap: .35rem; }
 }

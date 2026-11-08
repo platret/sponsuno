@@ -311,6 +311,10 @@ export const faq = {
   introBefore: 'Ihre Frage fehlt? Tragen Sie sich auf der ',
   introLink: 'Warteliste',
   introAfter: ' ein, wir melden uns.',
+  // Replaces the intro above while the waitlist stores nothing (no VITE_WAITLIST_ENDPOINT, the same switch as
+  // waitlist.previewIntro): the address legal.contact.email is the link. Without a contact address no intro is shown.
+  previewIntroBefore: 'Ihre Frage fehlt? Schreiben Sie uns an ',
+  previewIntroAfter: '.',
   // Links from the landing page into the guides (shown under the intro)
   guidesLabel: 'Ratgeber:',
   guides: guideLinks,
@@ -426,11 +430,19 @@ export const waitlist = {
   previewMailIntro: 'Schreiben Sie uns eine kurze E-Mail, dann melden wir uns, sobald es losgeht.',
   previewMailButton: 'E-Mail schreiben',
   mailSubject: (roleLabel: string) => `Warteliste: ${roleLabel}`,
-  mailBody: (roleLabel: string) => [
+  // Optional lines the sender fills in or deletes in their own e-mail (at most three; no form fields, nothing is
+  // sent by the site). The Datenschutzerklärung ("Warteliste") describes them; keep both in step.
+  mailBody: (role: Role, roleLabel: string) => [
     'Guten Tag',
     '',
     'Bitte informieren Sie mich, sobald Sponsuno startet.',
     `Ich bin: ${roleLabel}`,
+    '',
+    'Freiwillige Angaben:',
+    ...(role === 'sponsor'
+      ? ['Firma und Branche:', 'Region:']
+      : ['Region oder Gemeinde:', 'Sportart oder Sparte:']),
+    'Für ein kurzes Gespräch offen: ja / nein',
     '',
     'Freundliche Grüsse',
   ].join('\r\n'),
@@ -472,6 +484,9 @@ export const footer = {
       ],
     },
   ] satisfies { title: string; links: FooterLink[] }[],
+  // Last column, built in Footer.tsx from legal.contact (defined further down): the e-mail address as a visible
+  // mailto link and the town of the postal address. Not shown while both are missing.
+  contactTitle: 'Kontakt',
   copyright: '© 2026 Team Sponsuno',
   program: 'Ein Projekt im Programm Youngpreneurs Zürich',
 };
@@ -766,7 +781,7 @@ export const legal = {
         title: 'Warteliste',
         blocks: [
           { type: 'p', text: 'Die Warteliste ist noch nicht freigeschaltet. Das Formular speichert und übermittelt nichts: Ihre E-Mail-Adresse und Ihre Auswahl verlassen Ihren Browser nicht.' },
-          { type: 'p', text: 'Stattdessen bietet das Formular einen Link an, mit dem Sie uns eine E-Mail schreiben können. Der Link öffnet Ihr E-Mail-Programm mit vorausgefülltem Betreff und Text (darin Ihre Auswahl, zum Beispiel «Sportverein»). Gesendet wird erst, wenn Sie die E-Mail selbst abschicken; dafür gilt der Abschnitt «Kontakt per E-Mail».' },
+          { type: 'p', text: 'Stattdessen bietet das Formular einen Link an, mit dem Sie uns eine E-Mail schreiben können. Der Link öffnet Ihr E-Mail-Programm mit vorausgefülltem Betreff und Text: darin Ihre Auswahl (zum Beispiel «Sportverein») und höchstens drei freiwillige Zeilen, etwa zu Region und Sportart oder zu Ihrer Firma und ob Sie für ein kurzes Gespräch offen sind. Diese Zeilen sind nur Text in Ihrer eigenen E-Mail: Sie können sie ausfüllen, ändern oder löschen. Gesendet wird erst, wenn Sie die E-Mail selbst abschicken; dafür gilt der Abschnitt «Kontakt per E-Mail».' },
           { type: 'p', text: 'Bevor wir die Warteliste freischalten, ergänzen wir diese Datenschutzerklärung: welche Daten wir dann speichern, bei welchem Anbieter, wie lange und wie Sie sich wieder austragen können.' },
         ],
       },

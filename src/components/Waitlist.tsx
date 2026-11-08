@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { legal, waitlist, waitlistNext, type Role } from '../content';
-import { siteHref } from '../lib/links';
+import { siteHref, WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import '../styles/sections/waitlist.css';
 
 // Set VITE_WAITLIST_ENDPOINT (e.g. a Formspree form URL) to store sign-ups. It receives a JSON POST
 // of { rolle, email }. Without it the form stores nothing (see AGENTS.md); waitlist.previewIntro,
 // previewNote and previewSuccess say so and offer an e-mail to the team instead, so nobody believes they signed up.
-const ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT?.trim() ?? '';
 const CONTACT = legal.contact.email;
 const INTRO = ENDPOINT ? waitlist.intro : CONTACT ? waitlist.previewIntro : null;
 
@@ -15,7 +14,7 @@ const INTRO = ENDPOINT ? waitlist.intro : CONTACT ? waitlist.previewIntro : null
 function mailHref(role: Role): string {
   const label = waitlist.roles.find((r) => r.value === role)?.label ?? '';
   const subject = encodeURIComponent(waitlist.mailSubject(label));
-  const body = encodeURIComponent(waitlist.mailBody(label));
+  const body = encodeURIComponent(waitlist.mailBody(role, label));
   return `mailto:${CONTACT}?subject=${subject}&body=${body}`;
 }
 
