@@ -20,7 +20,7 @@ export function GuidePage({ id }: { id: GuideId }) {
 
   return (
     <>
-      <PageHeader />
+      <PageHeader current={{ path, kind: 'guide' }} role={guide.waitlistRole} />
 
       <main id="inhalt" className="lg">
         <div className="container">

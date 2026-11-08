@@ -169,6 +169,8 @@ sponsuno/
 ├── datenschutz/index.html  Datenschutzerklärung (/datenschutz/), vorgerendert, ohne JavaScript
 ├── sponsoren-finden/ …     Vier Ratgeber (/sponsoren-finden/, /sponsoring-anfrage/, /sponsoring-dossier/,
 │                           /kultursponsoring/), vorgerendert, ohne JavaScript
+├── fuer-firmen/ …          Themenseiten aus dem Header (/fuer-firmen/, /ki-manager/, /kosten/, /fragen/,
+│                           /ueber-uns/), vorgerendert, ohne JavaScript
 ├── src/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert

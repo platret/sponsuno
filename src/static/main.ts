@@ -1,4 +1,5 @@
-// Entry of the static pages: the legal pages (impressum/, datenschutz/) and the guides (sponsoren-finden/ …).
+// Entry of the static pages: the legal pages (impressum/, datenschutz/), the guides (sponsoren-finden/ …) and the
+// topic pages (ki-manager/ …, which also load sections.ts for their section styles).
 // In production the pages are fully prerendered (scripts/prerender.mjs) and need no JavaScript:
 // this module only pulls in the styles, so the browser gets CSS and no React.
 // In dev nothing is prerendered, so the page is rendered in the browser instead (data-page on #root).

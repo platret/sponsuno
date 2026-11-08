@@ -35,7 +35,7 @@ function ProjectStatus() {
   return (
     <div className="team-status">
       <div className="team-status-head" data-reveal="" data-scroll="rise">
-        <h3 id="team-status-title">{projectStatus.title}</h3>
+        <h2 className="pg-h3" id="team-status-title">{projectStatus.title}</h2>
         <p className="team-status-intro">{rich(projectStatus.intro)}</p>
       </div>
       <ol className="team-steps" role="list" aria-labelledby="team-status-title" data-reveal="" data-scroll="rise">
@@ -53,20 +53,21 @@ function ProjectStatus() {
   );
 }
 
-/** Ivory section between FAQ and waitlist: the four founders with their provisional focus. */
+/** Ivory section, the body of /ueber-uns/ (its title is the page's H1, names and "Stand des Projekts" are H2,
+    styled as H3): the four founders with their provisional focus, then the project status. */
 export function Team() {
   return (
     <section className="section surface-ivory team" id="team" aria-labelledby="team-title">
       <div className="container">
         <div className="section-head team-head" data-reveal="" data-scroll="rise">
-          <h2 id="team-title">{team.title}</h2>
+          <h1 id="team-title">{team.title}</h1>
           <p className="section-intro">{team.intro}</p>
         </div>
         <ul className="team-grid" role="list" data-scroll-stagger="">
           {team.members.map((member) => (
             <li className="team-member" data-reveal="" data-scroll="rise" key={member.name}>
               <Portrait member={member} />
-              <h3 className="team-name">{member.name}</h3>
+              <h2 className="pg-h3 team-name">{member.name}</h2>
               <p className="team-focus">{member.focus}</p>
             </li>
           ))}

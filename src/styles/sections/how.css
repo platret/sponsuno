@@ -55,6 +55,12 @@
 
 .how-cta { align-self: flex-start; margin-top: auto; margin-left: calc(var(--how-num) + var(--how-col)); }
 
+/* Firmen track only: two quiet links (demo cockpit, /fuer-firmen/) between the steps and the button. They sit above
+   the button, so margin-top: auto still lines both buttons up at the foot of their columns. */
+.how-more { display: grid; gap: .1rem; margin: -1.5rem 0 1.75rem calc(var(--how-num) + var(--how-col)); }
+.how-more-link { min-height: 44px; font-size: var(--fs-small); color: var(--navy); }
+.how-more-link svg { flex: none; color: var(--gold-dark); }
+
 /* Line draw fallback (html.motion without scroll timelines, e.g. Firefox): three segments with one
    linear timing read as a single stroke (0.15 s delay + 3 x 0.28 s). Without .motion, or once the
    reveal failsafe fires, it is fully drawn. */
@@ -160,5 +166,6 @@
   .how-tracks { --how-row: 2rem; --how-col: 1rem; }
   .how-steps { margin-bottom: 2.25rem; }
   .how-cta { margin-left: 0; align-self: stretch; }
+  .how-more { margin-left: 0; }
   .how-step-body p { font-size: .9375rem; }
 }

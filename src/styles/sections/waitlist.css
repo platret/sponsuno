@@ -10,7 +10,7 @@
 /* ---------- Signature 2: "the page opens" (DESIGN.md -> Motion) ----------
    With scroll timelines, the navy moves from the section onto .wl-surface, a layer behind the content.
    It opens (data-scroll="frame") from an inset card with rounded top corners to full bleed while the
-   section enters, over ivory that continues the team band. Bottom inset and radius are 0, and the frame is
+   section enters, over paper that continues the band above it (So funktioniert es). Bottom inset and radius are 0, and the frame is
    final once the section is fully in view (or after 60vh), so it is full bleed before the navy footer can
    show: no seam. The content is never inside the clip (focus outlines stay intact); the top inset is far
    smaller than the section padding and the side inset narrower than the gutter on phones, and on wide
@@ -21,7 +21,7 @@
 .scroll-fx .wl.surface-navy {
   position: relative;
   isolation: isolate;
-  background: var(--ivory);
+  background: var(--paper);
 }
 .scroll-fx .wl-surface {
   display: block;

@@ -124,6 +124,11 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 .link-arrow:hover { text-decoration: underline; }
 .link-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s ease; }
 .link-arrow:hover svg { transform: translateX(3px); }
+/* For labels that can wrap (LinkArrowLabel.tsx): inline text, so the arrow stays right after the last word instead of
+   being pushed to the far edge of a full-width flex item. 44 px target from the padding, centred on one line. */
+.link-arrow.link-arrow-wrap { display: inline-block; padding-block: .65rem; line-height: 1.5; }
+.link-arrow-end { white-space: nowrap; }
+.link-arrow-wrap svg { display: inline-block; margin-left: .4rem; vertical-align: -.2em; }
 
 /* ---------- Reveal on scroll (see lib/motion.ts) ---------- */
 

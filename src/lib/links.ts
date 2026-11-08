@@ -1,6 +1,7 @@
 // Base-aware links: links between pages are built from import.meta.env.BASE_URL instead of hardcoded paths.
 
 import type { Role } from '../content';
+import { pageMeta, type PageKind } from '../pages';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -21,8 +22,37 @@ export function siteHref(href: string, onLanding: boolean): string {
 /** True for links that leave the site. */
 export const isExternal = (href: string): boolean => /^https?:\/\//i.test(href);
 
+/**
+ * Where the waitlist posts sign-ups. Empty (production until the team sets up storage): the form stores nothing, and the
+ * waitlist and FAQ intros offer an e-mail to legal.contact.email instead. Read at build time, so prerendered pages match.
+ */
+export const WAITLIST_ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT?.trim() ?? '';
+
 /** Query parameter that preselects a role in the landing page waitlist (read in App.tsx): /?rolle=sponsor#warteliste */
 export const ROLE_PARAM = 'rolle';
 
 /** Link to the landing page waitlist from another page, optionally with a preselected role. */
 export const waitlistHref = (role?: Role): string => `${BASE}${role ? `?${ROLE_PARAM}=${role}` : ''}#warteliste`;
+
+/**
+ * Sections that moved from the landing page to their own page (November 2026). App.tsx sends an old link such as
+ * /#kosten there with location.replace, so shared links keep working. Keys are the old section ids.
+ */
+export const MOVED_SECTIONS: Record<string, string> = {
+  'ki-manager': pageMeta('ki-manager').path,
+  kosten: pageMeta('kosten').path,
+  sachleistungen: `${pageMeta('kosten').path}#sachleistungen`,
+  fragen: pageMeta('fragen').path,
+  team: pageMeta('ueber-uns').path,
+};
+
+/**
+ * aria-current for a main navigation item (content.ts → nav): 'page' on the page it links to; 'true' for
+ * "Ratgeber" (the first guide) on the other guides, so the section stays marked.
+ */
+export function navCurrent(href: string, current?: { path: string; kind: PageKind }): 'page' | 'true' | undefined {
+  if (!current) return undefined;
+  if (href === current.path) return 'page';
+  if (current.kind === 'guide' && href === pageMeta('sponsoren-finden').path) return 'true';
+  return undefined;
+}

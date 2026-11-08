@@ -1,7 +1,12 @@
-import { footer } from '../content';
+import { footer, legal } from '../content';
 import { siteHref } from '../lib/links';
 import wordmark from '../assets/wordmark-light.svg';
 import '../styles/sections/footer.css';
+
+// Kontakt column: the e-mail address as visible text (a mailto link) and the town of the postal address
+// ('8406 Winterthur' -> 'Winterthur'). Missing fields are left out; without both the column is not shown.
+const CONTACT_EMAIL = legal.contact.email;
+const CONTACT_TOWN = legal.contact.postalAddress?.find((line) => /^\d{4}\s/.test(line))?.replace(/^\d{4}\s+/, '') ?? null;
 
 type FooterProps = {
   /** false on sub-pages (legal pages and guides): section links then lead back to the landing page */
@@ -39,6 +44,17 @@ export function Footer({ onLanding = true, current }: FooterProps) {
                 </ul>
               </div>
             ))}
+            {(CONTACT_EMAIL || CONTACT_TOWN) && (
+              <div className="ft-col">
+                <p className="ft-head" id="ft-head-contact">{footer.contactTitle}</p>
+                <ul aria-labelledby="ft-head-contact">
+                  {CONTACT_EMAIL && (
+                    <li><a className="ft-link ft-mail" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
+                  )}
+                  {CONTACT_TOWN && <li className="ft-text">{CONTACT_TOWN}</li>}
+                </ul>
+              </div>
+            )}
           </nav>
         </div>
 

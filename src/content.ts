@@ -3,13 +3,16 @@
 
 import { pageMeta } from './pages';
 
-export type SectionId = 'ablauf' | 'ki-manager' | 'kosten' | 'fragen';
-
-export const nav: { id: SectionId; label: string }[] = [
-  { id: 'ablauf', label: 'So funktioniert es' },
-  { id: 'ki-manager', label: 'KI-Manager' },
-  { id: 'kosten', label: 'Kosten' },
-  { id: 'fragen', label: 'Fragen' },
+// Main navigation: one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
+// Page paths relative to the site root (resolved with the base path by pageHref() in lib/links.ts). "Ratgeber" opens
+// the first guide; on the other guides it is marked as the current section. "Fragen" sits in the footer.
+export const nav: { href: string; label: string }[] = [
+  { href: pageMeta('fuer-firmen').path, label: 'Für Firmen' },
+  { href: pageMeta('ki-manager').path, label: 'KI-Manager' },
+  { href: pageMeta('kosten').path, label: 'Kosten' },
+  { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber' },
+  { href: pageMeta('ueber-uns').path, label: 'Über uns' },
+  { href: 'demo/', label: 'Demo' },
 ];
 
 export const cta = {
@@ -20,10 +23,14 @@ export const cta = {
 // Clickable prototype with fictional data (second Vite entry, /demo/)
 export const demo = {
   href: 'demo/',
-  nav: 'Demo',
   link: 'Demo ansehen',
   linkNote: 'Klickbarer Prototyp mit fiktiven Daten',
 };
+
+// The sponsor's side of the demo and the page for companies, linked from several places (audience tile, Firmen track
+// in #ablauf, /fuer-firmen/, the waitlist's next step). One definition, so the labels stay the same everywhere.
+export const cockpitLink: FooterLink = { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' };
+export const firmsLink: FooterLink = { href: pageMeta('fuer-firmen').path, label: 'So ist es für Firmen gedacht' };
 
 export type Role = 'athlete' | 'sportverein' | 'kulturverein' | 'sponsor';
 
@@ -65,6 +72,7 @@ export const proof = {
 
 // Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits):
 // the people shown have nothing to do with Sponsuno. Keep the note whenever the photos change.
+// Each tile links to where its side goes next ("two doors"): seekers to a guide, companies to /fuer-firmen/.
 export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
 
 export const audience = {
@@ -76,26 +84,30 @@ export const audience = {
       label: 'Sportlerinnen und Sportler',
       text: 'Sie trainieren neben Ausbildung oder Beruf und suchen Unterstützung für Material, Startgelder oder Reisen.',
       alt: 'Eine Person läuft auf einem schmalen Bergweg durch grüne Hänge mit blühenden Alpenrosen.',
+      link: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber: Sponsoren finden' },
     },
     {
       image: 'sportverein',
       label: 'Sportvereine',
       text: 'Ehrenamtliche Vorstände, die Partner für Trikots, Trainingslager oder Turniere suchen.',
       alt: 'Ein Ruderboot mit drei Personen von oben auf einem Fluss in der Abendsonne.',
+      link: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber: Sponsoren finden' },
     },
     {
       image: 'kulturverein',
       label: 'Kulturvereine',
       text: 'Musikgesellschaften, Chöre und Theatervereine, die Instrumente, Kostüme oder Aufführungen finanzieren müssen.',
       alt: 'Musikanten in Tracht und Filzhut spielen Posaune, vorne ein Notenhalter.',
+      link: { href: pageMeta('kultursponsoring').path, label: 'Ratgeber: Kultursponsoring' },
     },
     {
       image: 'firma',
       label: 'Firmen aus der Region',
       text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
       alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
+      link: firmsLink,
     },
-  ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
+  ] satisfies { image: AudienceImage; label: string; text: string; alt: string; link: FooterLink }[],
   noteBefore: 'Symbolbilder: Die abgebildeten Personen haben keinen Bezug zu Sponsuno. Bildnachweise im ',
   noteLink: 'Impressum',
   noteLinkHref: 'impressum/',
@@ -123,7 +135,7 @@ export const problem = {
 
 // Scroll story right under the hero (Story.tsx). It replaces the old Problem section: problem.title is the
 // story's H2, problem.intro and the three points are its first steps, word for word. The solution steps reuse
-// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf).
+// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf and /ki-manager/).
 // Everything on the stage is a fictional example: generic names, real regions, no companies, no amounts.
 export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
 
@@ -154,7 +166,7 @@ export const story = {
     title: 'Und danach: der KI-Manager',
     text: 'Nach dem Match soll ein KI-Manager Anfragen vorbereiten und an vereinbarte Gegenleistungen erinnern. Sie prüfen jeden Entwurf selbst.',
     link: 'Mehr zum KI-Manager',
-    href: '#ki-manager',
+    href: pageMeta('ki-manager').path,
   },
   // Text alternative for the decorative graphic (given once, in the hero)
   artAlt: 'Grafik: Anfragen, Dossiers und Absagen laufen auf eine goldene Linie zu. Rechts davon stehen geordnete Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit den vier Kriterien.',
@@ -218,7 +230,7 @@ export const howItWorks = {
   stepLabel: 'Schritt',
   tracks: {
     seeker: {
-      label: 'Sportler und Vereine',
+      label: 'Sportlerinnen, Sportler und Vereine',
       steps: [
         { title: 'Profil anlegen', text: 'Region, Sportart oder Sparte, was Sie brauchen und was Sie als Gegenleistung bieten. Vorlagen helfen beim Ausfüllen.' },
         { title: 'Passende Firmen sehen', text: 'Sponsuno schlägt Firmen vor, die nach Region, Budget, Branche und Art der Unterstützung zu Ihnen passen.' },
@@ -236,6 +248,8 @@ export const howItWorks = {
       ],
     },
   },
+  // Quiet links under the Firmen track, above its button: the demo cockpit and the page for companies
+  sponsorLinks: [cockpitLink, firmsLink],
 };
 
 export const aiManager = {
@@ -263,7 +277,7 @@ export const aiManager = {
     ],
   },
   caption: 'Beispielansicht. Der KI-Manager ist in Entwicklung.',
-  demoLink: 'Im Demo ausprobieren',
+  demoLink: 'In der Demo ausprobieren',
 };
 
 export const support = {
@@ -297,6 +311,10 @@ export const faq = {
   introBefore: 'Ihre Frage fehlt? Tragen Sie sich auf der ',
   introLink: 'Warteliste',
   introAfter: ' ein, wir melden uns.',
+  // Replaces the intro above while the waitlist stores nothing (no VITE_WAITLIST_ENDPOINT, the same switch as
+  // waitlist.previewIntro): the address legal.contact.email is the link. Without a contact address no intro is shown.
+  previewIntroBefore: 'Ihre Frage fehlt? Schreiben Sie uns an ',
+  previewIntroAfter: '.',
   // Links from the landing page into the guides (shown under the intro)
   guidesLabel: 'Ratgeber:',
   guides: guideLinks,
@@ -333,7 +351,7 @@ export const faq = {
   ] satisfies FaqItem[],
 };
 
-// Founders section (id="team"), between FAQ and waitlist. Team decision (2026-11-03): full names allowed here.
+// Founders section (id="team"), on /ueber-uns/. Team decision (2026-11-03): full names allowed here.
 // Nothing else personal (no ages, schools, home addresses, private e-mails, social handles).
 // Without a photo the card shows a monogram. To add a real, consented photo later: put a square JPEG
 // (at least 240 x 240 px, under 40 KB) in src/assets/photos/, import it at the top of this file and set
@@ -412,11 +430,19 @@ export const waitlist = {
   previewMailIntro: 'Schreiben Sie uns eine kurze E-Mail, dann melden wir uns, sobald es losgeht.',
   previewMailButton: 'E-Mail schreiben',
   mailSubject: (roleLabel: string) => `Warteliste: ${roleLabel}`,
-  mailBody: (roleLabel: string) => [
+  // Optional lines the sender fills in or deletes in their own e-mail (at most three; no form fields, nothing is
+  // sent by the site). The Datenschutzerklärung ("Warteliste") describes them; keep both in step.
+  mailBody: (role: Role, roleLabel: string) => [
     'Guten Tag',
     '',
     'Bitte informieren Sie mich, sobald Sponsuno startet.',
     `Ich bin: ${roleLabel}`,
+    '',
+    'Freiwillige Angaben:',
+    ...(role === 'sponsor'
+      ? ['Firma und Branche:', 'Region:']
+      : ['Region oder Gemeinde:', 'Sportart oder Sparte:']),
+    'Für ein kurzes Gespräch offen: ja / nein',
     '',
     'Freundliche Grüsse',
   ].join('\r\n'),
@@ -431,16 +457,17 @@ export const footer = {
       title: 'Plattform',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
-        { href: '#ki-manager', label: 'KI-Manager' },
-        { href: '#kosten', label: 'Kosten' },
+        { href: pageMeta('fuer-firmen').path, label: 'Für Firmen' },
+        { href: pageMeta('ki-manager').path, label: 'KI-Manager' },
+        { href: pageMeta('kosten').path, label: 'Kosten' },
         { href: 'demo/', label: 'Demo' },
       ],
     },
     {
       title: 'Mehr',
       links: [
-        { href: '#fragen', label: 'Fragen' },
-        { href: '#team', label: 'Team' },
+        { href: pageMeta('fragen').path, label: 'Fragen' },
+        { href: pageMeta('ueber-uns').path, label: 'Über uns' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
@@ -457,6 +484,9 @@ export const footer = {
       ],
     },
   ] satisfies { title: string; links: FooterLink[] }[],
+  // Last column, built in Footer.tsx from legal.contact (defined further down): the e-mail address as a visible
+  // mailto link and the town of the postal address. Not shown while both are missing.
+  contactTitle: 'Kontakt',
   copyright: '© 2026 Team Sponsuno',
   program: 'Ein Projekt im Programm Youngpreneurs Zürich',
 };
@@ -470,6 +500,33 @@ export const menu = {
   open: 'Menü öffnen',
   close: 'Menü schliessen',
   label: 'Menü',
+};
+
+// ---------- Topic pages reached from the header: /fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/ ----------
+// Rendered by src/components/InfoPage.tsx, prerendered, shipped without JavaScript. Title and description in src/pages.ts.
+// KI-Manager, Kosten (with "Nicht nur Geld"), Fragen and Über uns show the former landing page sections
+// (aiManager, pricing, support, faq, team, projectStatus); Für Firmen is built from the sponsor copy below.
+export type InfoPageId = 'fuer-firmen' | 'ki-manager' | 'kosten' | 'fragen' | 'ueber-uns';
+
+/** Closing block of every topic page: back to the waitlist on the landing page */
+export const infoPage = {
+  endTitle: waitlist.title,
+  endText: 'Sponsuno ist im Aufbau. Tragen Sie sich auf der Warteliste ein, dann melden wir uns, sobald es losgeht.',
+  // Replaces endText while the waitlist stores nothing (no VITE_WAITLIST_ENDPOINT, the same switch as
+  // waitlist.previewIntro and the FAQ intro); without a contact address the line is left out.
+  previewEndText: 'Sponsuno ist im Aufbau. Schreiben Sie uns eine E-Mail, dann melden wir uns, sobald es losgeht.',
+  endButton: cta.waitlist,
+  demoLabel: demo.link,
+  demoHref: demo.href,
+  demoNote: demo.linkNote,
+  /** Extra line in the closing block, per page */
+  more: {
+    kosten: [
+      'Was andere zu Provision und Kosten fragen, finden Sie unter ',
+      { href: pageMeta('fragen').path, label: 'Fragen und Antworten' },
+      '.',
+    ],
+  } as Partial<Record<InfoPageId, LegalText>>,
 };
 
 // ---------- Legal pages: Impressum (/impressum/) and Datenschutzerklärung (/datenschutz/) ----------
@@ -568,7 +625,6 @@ export const photoCredits: PhotoCredit[] = [
 export const legal = {
   updated: 'Stand: November 2026',
   skipLink: 'Zum Inhalt springen',
-  backHome: 'Zur Startseite',
   homeLabel: 'Sponsuno, zur Startseite',
   tocLabel: 'Auf dieser Seite',
   pending: 'fehlt noch, wird in Kürze ergänzt.',
@@ -728,7 +784,7 @@ export const legal = {
         title: 'Warteliste',
         blocks: [
           { type: 'p', text: 'Die Warteliste ist noch nicht freigeschaltet. Das Formular speichert und übermittelt nichts: Ihre E-Mail-Adresse und Ihre Auswahl verlassen Ihren Browser nicht.' },
-          { type: 'p', text: 'Stattdessen bietet das Formular einen Link an, mit dem Sie uns eine E-Mail schreiben können. Der Link öffnet Ihr E-Mail-Programm mit vorausgefülltem Betreff und Text (darin Ihre Auswahl, zum Beispiel «Sportverein»). Gesendet wird erst, wenn Sie die E-Mail selbst abschicken; dafür gilt der Abschnitt «Kontakt per E-Mail».' },
+          { type: 'p', text: 'Stattdessen bietet das Formular einen Link an, mit dem Sie uns eine E-Mail schreiben können. Der Link öffnet Ihr E-Mail-Programm mit vorausgefülltem Betreff und Text: darin Ihre Auswahl (zum Beispiel «Sportverein») und höchstens drei freiwillige Zeilen, etwa zu Region und Sportart oder zu Ihrer Firma und ob Sie für ein kurzes Gespräch offen sind. Diese Zeilen sind nur Text in Ihrer eigenen E-Mail: Sie können sie ausfüllen, ändern oder löschen. Gesendet wird erst, wenn Sie die E-Mail selbst abschicken; dafür gilt der Abschnitt «Kontakt per E-Mail».' },
           { type: 'p', text: 'Bevor wir die Warteliste freischalten, ergänzen wir diese Datenschutzerklärung: welche Daten wir dann speichern, bei welchem Anbieter, wie lange und wie Sie sich wieder austragen können.' },
         ],
       },
@@ -1349,5 +1405,129 @@ export const waitlistNext: Record<Role, FooterLink> = {
   athlete: guideStep('sponsoring-dossier'),
   sportverein: guideStep('sponsoren-finden'),
   kulturverein: guideStep('kultursponsoring'),
-  sponsor: { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit in der Demo ansehen (fiktive Daten)' },
+  sponsor: cockpitLink,
+};
+
+// ---------- /fuer-firmen/: the page for companies (InfoPage.tsx → FirmsPage, reading column of the guides) ----------
+// Built from copy that already exists on the site: the audience tile "Firmen aus der Region", howItWorks.tracks.sponsor,
+// support, pricing, the offer lists of the guides "Sponsoren finden" and "Kultursponsoring" and the next step in
+// projectStatus (talks with companies, region Winterthur). Everything planned stays planned; open points stay open
+// (AGENTS.md, copy rule 4). Placed after `legal` because the talk invitation uses legal.contact.email.
+const firmsTalkMail = legal.contact.email;
+
+export const forFirms = {
+  title: 'Sponsoring in Ihrer Region: für Firmen und Gewerbe',
+  intro: 'Für Gewerbe und KMU, die sich vor Ort engagieren möchten, mit Geld, Material oder Dienstleistungen: Sponsuno soll Ihnen Sportlerinnen, Sportler, Sport- und Kulturvereine aus Ihrer Region zeigen, die zu Ihrer Firma passen.',
+  note: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Diese Seite beschreibt, wie es gedacht ist.',
+  // Prominent box under the note: the sponsor's side of the demo
+  cockpit: {
+    link: cockpitLink,
+    text: 'So ist die Seite der Firmen gedacht: Vorschläge aus der Region, Anfragen und laufende Partnerschaften, am Beispiel eines fiktiven Velogeschäfts.',
+  },
+  steps: {
+    id: 'ablauf',
+    title: 'Was Sponsuno für Firmen tun soll',
+    intro: 'So ist es geplant, vom Firmenprofil bis zur Bilanz nach der Saison:',
+    items: howItWorks.tracks.sponsor.steps,
+  },
+  support: {
+    id: 'unterstuetzung',
+    title: 'Wie Sie unterstützen können',
+    intro: support.intro,
+    items: support.kinds.map((kind) => ({ title: kind.title, text: kind.text })),
+  },
+  // Gegenleistungen, from the company's side: the lists in the guides "Sponsoren finden" and "Kultursponsoring"
+  offer: {
+    id: 'gegenleistungen',
+    title: 'Was Vereine, Sportlerinnen und Sportler bieten können',
+    intro: 'Sponsoring ist ein Austausch: Sie unterstützen, und der Verein, die Sportlerin oder der Sportler bietet Ihnen dafür etwas, das für Ihre Firma einen Wert hat. Zum Beispiel:',
+    items: [
+      'Sichtbarkeit vor Ort: Ihr Logo auf Trikot, Startnummer, Velo oder Vereinsbus, auf Banden und Bannern',
+      'Programmheft und Plakate: eine Anzeige oder ein Dank im Match- oder Konzertprogramm',
+      'Präsenz an Anlässen: eine Erwähnung bei Heimspielen, Turnieren, Konzerten oder Aufführungen, ein Stand oder Prospekte vor Ort',
+      'Ein Auftritt für Ihre Firma: ein Referat oder ein Training am Firmenanlass, ein Ständchen am Firmenjubiläum, Musik am Kundenanlass',
+      'Online: Ihr Logo und ein Link auf der Website, Beiträge auf Social Media oder im Newsletter',
+      'Zugang: Tickets oder reservierte Plätze für Ihre Kundinnen, Kunden und Mitarbeitenden',
+    ],
+    after: 'Auf Sponsuno sollen Vereine, Sportlerinnen und Sportler in ihrem Profil zeigen, welche Gegenleistungen sie bieten. So sehen Sie schon vor dem ersten Gespräch, was möglich ist. Was Sie am Ende erhalten, vereinbaren Sie gemeinsam und halten es vor Beginn fest.',
+    more: [
+      'Die Beispiele stammen aus unseren Ratgebern ',
+      { href: pageMeta('sponsoren-finden').path, label: 'Sponsoren finden' },
+      ' und ',
+      { href: pageMeta('kultursponsoring').path, label: 'Kultursponsoring' },
+      '. Dort empfehlen wir auch, nur zu versprechen, was sich zuverlässig liefern lässt.',
+    ] satisfies LegalText,
+  },
+  // Copy rule 4: only "commission instead of subscription" and "marketing services billed separately" are fixed
+  open: {
+    id: 'offen',
+    title: 'Was noch offen ist',
+    decided: 'Fest steht bisher: kein Abo und keine Grundgebühr, sondern eine Provision für die Vermittlung. Fotos, Videos und Inhalte für Sponsoren sollen separat buchbar sein.',
+    intro: 'Noch nicht entschieden ist:',
+    items: [
+      `Wie hoch die Provision ist. ${pricing.note}`,
+      'Wann genau die Provision fällig wird und welche Seite sie trägt.',
+      'Was für Partnerschaften gilt, die Sie heute schon haben, und für Verlängerungen.',
+      'Wie Sachleistungen wie Material oder Dienstleistungen bei der Provision zählen.',
+      'Wie Fotos, Videos und Inhalte abgerechnet werden.',
+      'Wann Sponsuno startet. Einen Starttermin gibt es noch nicht.',
+    ],
+    more: [
+      'Mehr dazu unter ',
+      { href: pageMeta('kosten').path, label: 'Kosten' },
+      '. Antworten auf häufige Fragen finden Sie unter ',
+      { href: pageMeta('fragen').path, label: 'Fragen und Antworten' },
+      '.',
+    ] satisfies LegalText,
+  },
+  end: {
+    id: 'warteliste',
+    title: waitlist.title,
+    text: 'Tragen Sie sich als Firma auf der Warteliste ein, dann melden wir uns, sobald es losgeht.',
+    // Replaces text while the waitlist stores nothing (same switch as infoPage.previewEndText)
+    previewText: 'Schreiben Sie uns als Firma eine E-Mail, dann melden wir uns, sobald es losgeht.',
+    button: cta.waitlist,
+    demoLabel: 'Sponsor-Cockpit in der Demo ansehen',
+    demoHref: cockpitLink.href,
+    demoNote: demo.linkNote,
+    // Invitation to the next round of talks (projectStatus: "Gespräche mit Firmen … in der Region Winterthur").
+    // Only shown while a contact address exists.
+    talk: firmsTalkMail
+      ? ([
+          'Als Nächstes sprechen wir mit Firmen in der Region Winterthur. Möchten Sie uns erzählen, ob und wie Ihre Firma heute sponsert und was Ihnen dabei fehlt? Schreiben Sie uns an ',
+          { href: `mailto:${firmsTalkMail}?subject=${encodeURIComponent('Gespräch: Sponsuno für Firmen')}`, label: firmsTalkMail },
+          '. Wir melden uns für ein kurzes Gespräch.',
+        ] satisfies LegalText)
+      : null,
+  },
+};
+
+// ---------- 404 page (dist/404.html, NotFoundPage.tsx): served by Cloudflare for every unknown URL ----------
+// Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
+// page waitlist); they resolve to absolute URLs, because the page is shown under any address.
+const notFoundMail = legal.contact.email;
+
+export const notFound = {
+  title: 'Diese Seite gibt es nicht (mehr)',
+  intro: 'Vielleicht hat sich die Adresse geändert, oder sie enthält einen Tippfehler. Von hier aus geht es weiter:',
+  linksTitle: 'Weiter zu',
+  links: [
+    { href: '', label: 'Startseite', text: 'Worum es bei Sponsuno geht und wie es funktionieren soll.' },
+    {
+      href: pageMeta('sponsoren-finden').path,
+      label: 'Ratgeber',
+      text: 'Praktische Tipps für Sportlerinnen, Sportler, Sport- und Kulturvereine: Sponsoren finden, anfragen und behalten.',
+    },
+    { href: firmsLink.href, label: 'Für Firmen', text: 'Wie Firmen aus der Region über Sponsuno unterstützen sollen.' },
+    { href: demo.href, label: 'Demo', text: demo.linkNote },
+    { href: '#warteliste', label: 'Warteliste', text: 'Sponsuno ist im Aufbau. Melden Sie hier Ihr Interesse an.' },
+  ] satisfies (FooterLink & { text: string })[],
+  /** Only shown while a contact address exists */
+  contact: notFoundMail
+    ? ([
+        'Sie sind über einen Link auf sponsuno.ch hier gelandet? Schreiben Sie uns an ',
+        { href: `mailto:${notFoundMail}`, label: notFoundMail },
+        ', dann korrigieren wir ihn.',
+      ] satisfies LegalText)
+    : null,
 };

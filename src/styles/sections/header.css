@@ -87,6 +87,11 @@ html:not(.js) .site-header {
 .motion .menu-sheet:not([hidden]) { animation: sheet-in .35s var(--ease-out); }
 @keyframes sheet-in { from { opacity: 0; transform: translateY(-8px); } }
 
+/* Six nav items plus the button: tighter between 961 and 1140 px, the menu below */
+@media (max-width: 1140px) {
+  .header-inner { gap: 1.25rem; }
+  .main-nav a { padding-inline: .55rem; }
+}
 @media (max-width: 960px) {
   .main-nav { display: none; }
   .menu-toggle { display: grid; }

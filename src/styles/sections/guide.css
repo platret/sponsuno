@@ -84,3 +84,20 @@
 }
 .gd-related a:hover .gd-related-name { text-decoration-thickness: 2px; }
 .gd-related-desc { display: block; margin-top: .25rem; font-size: var(--fs-small); line-height: 1.5; }
+
+/* ---------- /fuer-firmen/ (InfoPage.tsx → FirmsPage): guide layout plus these two blocks ----------
+   Here, not in page.css, so /fuer-firmen/ needs only the stylesheets of the guides (no src/static/sections.ts).
+   They keep the pg- prefix of the topic pages. */
+/* The demo's sponsor cockpit, prominent under the "planned" note: an ivory box like the guides' "Weiterlesen" */
+.pg-cockpit {
+  margin-top: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+  padding: .75rem 1.5rem 1.25rem;
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  background: var(--ivory);
+}
+.pg-cockpit-link { min-height: 44px; color: var(--navy); }
+.pg-cockpit-link svg { flex: none; color: var(--gold-dark); }
+.pg-cockpit-text { margin-top: .1rem; font-size: var(--fs-small); line-height: 1.5; color: var(--ink); }
+
+/* Invitation to a talk under the closing buttons, set off by a hairline */
+.lg-section .pg-talk { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }

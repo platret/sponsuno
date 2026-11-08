@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Title, description, canonical and share tags come from src/pages.ts at build time (scripts/prerender.mjs) -->
+  <title>Sponsuno</title>
+  <!--seo-->
+  <meta name="theme-color" content="#FBF9F4">
+  <meta name="color-scheme" content="light dark">
+  <meta name="darkreader-lock">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- The three faces of the first screen, requested with the HTML instead of after the CSS (same hashed files as the @font-face rules; scripts/prerender.mjs moves these behind the stylesheets) -->
+  <link rel="preload" href="/node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+  <!-- Prerendered at build time (scripts/prerender.mjs); works without JavaScript -->
+  <div id="root" data-page="fuer-firmen"></div>
+  <script type="module" src="/src/static/main.ts"></script>
+</body>
+</html>
