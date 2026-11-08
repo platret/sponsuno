@@ -138,7 +138,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 
 /* ---------- Scroll-driven motion (DESIGN.md -> Motion, AGENTS.md -> Motion conventions) ----------
    Progressive enhancement on top of the reveal above. html.scroll-fx is set in index.html before first
-   paint only when html.motion is set AND the browser supports animation-timeline: view(); the rules are
+   paint only when html.motion is set AND the browser supports animation-timeline: view() (or, on /ki-manager/
+   only, by an inline head script from headFor under the same conditions, without .motion); the rules are
    also wrapped in @supports and a no-preference media query. Without it (Firefox, reduced motion, no JS)
    elements keep the data-reveal fade or simply show their final state.
 

@@ -2,7 +2,11 @@
    former landing page sections with their own stylesheets; this file only adapts them to a page of their own and adds
    the closing block. No JavaScript module and never html.motion. Only /ki-manager/ gets html.scroll-fx (an inline
    script from headFor, `scrollFx` in pages.ts) for the pinned bento in ai.css; the others show their final layout.
+   The footer stays static on every topic page, /ki-manager/ included (rule below), so they all end the same way.
    Classes prefixed pg-. Loaded before the section stylesheets (src/static/sections.ts), so section rules win a tie. */
+
+/* The footer after a topic page never moves, even where html.scroll-fx is set for the bento (/ki-manager/) */
+.scroll-fx .pg ~ .ft [data-scroll] { animation-name: none; }
 
 /* The first section sits under the slim static header: the top space of the legal pages, not a full section pad */
 .pg > .section:first-child { padding-top: clamp(3rem, 2rem + 4vw, 5.5rem); }

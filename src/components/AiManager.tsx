@@ -10,8 +10,9 @@ const { draft, reminder, deliverables } = aiManager;
  * Its title is the page's H1, the card titles are H2 (styled as H3, .pg-h3). A bento grid shows one illustrative
  * draft (navy device frame) and two small light cards. The page ships no JavaScript module; an inline script in its
  * head sets html.scroll-fx (`scrollFx` in pages.ts, entry-server.tsx), so the scroll motion in ai.css runs: from
- * 961 x 700 px the bento pins while the device zooms in. The draft sheet and the cards stay still there (they sit in
- * the first screen); with reduced motion or without scroll timelines the final layout shows.
+ * 961 px wide and 700-1999 px tall the bento pins while the device zooms in. Everything else stays still (draft sheet,
+ * cards, caption; the device where it does not pin), because it sits in or near the first screen; with reduced
+ * motion or without scroll timelines the final layout shows.
  */
 export function AiManager() {
   return (
