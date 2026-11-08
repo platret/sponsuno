@@ -1,12 +1,13 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { pages } from './src/pages.ts';
+import { htmlFile, pages } from './src/pages.ts';
 
-// One HTML entry per page in src/pages.ts (`${path}index.html`, prerendered by scripts/prerender.mjs),
+// One HTML entry per page in src/pages.ts (`${path}index.html`, or 404.html for the not-found page; prerendered by
+// scripts/prerender.mjs),
 // plus the clickable demo (/demo/, client-only, noindex, not in pages.ts).
 const input: Record<string, string> = Object.fromEntries(
-  pages.map((page) => [page.id === 'home' ? 'main' : page.id, resolve(import.meta.dirname, `${page.path}index.html`)]),
+  pages.map((page) => [page.id === 'home' ? 'main' : page.id, resolve(import.meta.dirname, htmlFile(page))]),
 );
 input.demo = resolve(import.meta.dirname, 'demo/index.html');
 

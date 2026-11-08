@@ -15,6 +15,13 @@
   Cache-Control: public, max-age=3600
   X-Robots-Tag: noindex
 
-# HTTPS only. No includeSubDomains/preload: keeps the Infomaniak mail hostnames out of it.
+# Every response. HTTPS only (HSTS without includeSubDomains/preload: keeps the Infomaniak mail hostnames out of it),
+# no MIME sniffing, only the origin as referrer to other sites, no framing (not even by the site itself), and no camera, microphone,
+# location or Topics API (the site uses none of them). No Content-Security-Policy for now: the inline scripts and the
+# JSON-LD would need hashes first.
 /*
   Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()

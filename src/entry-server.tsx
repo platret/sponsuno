@@ -6,9 +6,9 @@ import { renderToString } from 'react-dom/server';
 import App from './App';
 import { StaticPage, type StaticPageId } from './components/StaticPage';
 import { faq, legal } from './content';
-import { absoluteUrl, pageMeta, pages, site, SITE_URL, type PageId } from './pages';
+import { absoluteUrl, htmlFile, pageMeta, pages, site, SITE_URL, type PageId } from './pages';
 
-export { pages, SITE_URL };
+export { htmlFile, pages, SITE_URL };
 export { templateFiles } from './lib/templates';
 export type { PageId };
 
@@ -29,13 +29,16 @@ export const titleFor = (id: PageId): string => escapeAttr(pageMeta(id).title);
 /**
  * Head tags of a page, injected at the <!--seo--> marker: description, canonical, Open Graph, Twitter card,
  * on the landing page the robots preview hint and the JSON-LD graph (WebSite, Organization), on /fragen/ the
- * FAQPage JSON-LD. Canonical = og:url = absolute apex URL.
+ * FAQPage JSON-LD. Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
+ * unknown URL, so a canonical or og:url would point to the wrong place.
  */
 export function headFor(id: PageId): string {
   const page = pageMeta(id);
   const url = absoluteUrl(page.path);
   const meta = (attr: 'name' | 'property', key: string, content: string) =>
     `<meta ${attr}="${key}" content="${escapeAttr(content)}">`;
+
+  if (page.kind === 'notfound') return meta('name', 'robots', 'noindex');
 
   const tags = [
     meta('name', 'description', page.description),

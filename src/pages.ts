@@ -2,6 +2,8 @@
 // - the Vite inputs (vite.config.ts): each page needs a small HTML entry at `${path}index.html`
 // - the <head> of each page (title, description, canonical, Open Graph, JSON-LD: headFor() in entry-server.tsx)
 // - dist/sitemap.xml (entries with index: true; written by scripts/prerender.mjs)
+// The not-found page (kind 'notfound') is the one exception to `${path}index.html`: its file is dist/404.html, which
+// Cloudflare serves with status 404 for every unknown URL (wrangler.jsonc → assets.not_found_handling).
 // Plain data without asset imports, so vite.config.ts can import it too. The demo (/demo/) is not listed:
 // it is client-only, keeps its static noindex and stays out of the sitemap.
 // Rule (AGENTS.md → SEO): every new page gets an entry here with its own title and description.
@@ -21,8 +23,9 @@ export const site = {
 };
 
 /** home = landing page (hydrated); legal, guide and info = static pages without JavaScript (info: the topic pages
-    reached from the header: Für Firmen, KI-Manager, Kosten, Fragen, Über uns) */
-export type PageKind = 'home' | 'legal' | 'guide' | 'info';
+    reached from the header: Für Firmen, KI-Manager, Kosten, Fragen, Über uns); notfound = the 404 page (static,
+    noindex, no canonical, no share tags) */
+export type PageKind = 'home' | 'legal' | 'guide' | 'info' | 'notfound';
 
 export type PageId =
   | 'home'
@@ -36,11 +39,13 @@ export type PageId =
   | 'sponsoren-finden'
   | 'sponsoring-anfrage'
   | 'sponsoring-dossier'
-  | 'kultursponsoring';
+  | 'kultursponsoring'
+  | 'notfound';
 
 export type PageMeta = {
   id: PageId;
-  /** Path relative to the site root, with a trailing slash ('' = landing page) */
+  /** Path relative to the site root, with a trailing slash ('' = landing page). The not-found page has no URL of its
+      own: its path is its file name, '404.html' (see htmlFile) */
   path: string;
   /** <title>; keep it under about 60 characters so it is not cut off on phones */
   title: string;
@@ -150,7 +155,19 @@ export const pages: PageMeta[] = [
     kind: 'legal',
     index: true,
   },
+  {
+    // Served by Cloudflare with status 404 for any unknown URL. Not in the sitemap, noindex, no canonical (headFor).
+    id: 'notfound',
+    path: '404.html',
+    title: 'Seite nicht gefunden – Sponsuno',
+    description: 'Diese Seite gibt es auf sponsuno.ch nicht (mehr).',
+    kind: 'notfound',
+    index: false,
+  },
 ];
+
+/** HTML file of a page, relative to the project root (Vite entry) and to dist/: `${path}index.html`, or 404.html. */
+export const htmlFile = (page: PageMeta): string => (page.kind === 'notfound' ? page.path : `${page.path}index.html`);
 
 /** Absolute canonical URL of a page path ('' → https://sponsuno.ch/). */
 export const absoluteUrl = (path: string): string => `${SITE_URL}${path}`;

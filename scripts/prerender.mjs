@@ -4,8 +4,8 @@
 // - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
 // - the empty <div id="root"> gets the server render
 // - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
-// Landing page: hydrated by src/main.tsx. Topic pages, guides and legal pages: static, CSS only, no JavaScript
-// (src/static/main.ts, plus src/static/sections.ts on the topic pages).
+// Landing page: hydrated by src/main.tsx. Topic pages, guides, legal pages and the 404 page (dist/404.html): static,
+// CSS only, no JavaScript (src/static/main.ts, plus src/static/sections.ts on the topic pages).
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -13,7 +13,7 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const { render, headFor, titleFor, pages, SITE_URL, missingLegalContact, templateFiles } =
+const { render, headFor, titleFor, pages, htmlFile, SITE_URL, missingLegalContact, templateFiles } =
   await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
 // Matches <div id="root"></div> and <div id="root" data-page="…"></div>
@@ -56,7 +56,7 @@ function fontPreloadsLast(html) {
 }
 
 for (const page of pages) {
-  const file = `${page.path}index.html`;
+  const file = htmlFile(page);
   const filePath = path.join(root, 'dist', file);
   const html = await readFile(filePath, 'utf8');
   if (!rootMarker.test(html)) throw new Error(`Empty <div id="root"> not found in dist/${file}`);

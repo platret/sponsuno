@@ -1496,3 +1496,33 @@ export const forFirms = {
       : null,
   },
 };
+
+// ---------- 404 page (dist/404.html, NotFoundPage.tsx): served by Cloudflare for every unknown URL ----------
+// Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
+// page waitlist); they resolve to absolute URLs, because the page is shown under any address.
+const notFoundMail = legal.contact.email;
+
+export const notFound = {
+  title: 'Diese Seite gibt es nicht (mehr)',
+  intro: 'Vielleicht hat sich die Adresse geändert, oder sie enthält einen Tippfehler. Von hier aus geht es weiter:',
+  linksTitle: 'Weiter zu',
+  links: [
+    { href: '', label: 'Startseite', text: 'Worum es bei Sponsuno geht und wie es funktionieren soll.' },
+    {
+      href: pageMeta('sponsoren-finden').path,
+      label: 'Ratgeber',
+      text: 'Praktische Tipps für Sportlerinnen, Sportler, Sport- und Kulturvereine: Sponsoren finden, anfragen und behalten.',
+    },
+    { href: firmsLink.href, label: 'Für Firmen', text: 'Wie Firmen aus der Region über Sponsuno unterstützen sollen.' },
+    { href: demo.href, label: 'Demo', text: demo.linkNote },
+    { href: '#warteliste', label: 'Warteliste', text: 'Sponsuno ist im Aufbau. Melden Sie hier Ihr Interesse an.' },
+  ] satisfies (FooterLink & { text: string })[],
+  /** Only shown while a contact address exists */
+  contact: notFoundMail
+    ? ([
+        'Sie sind über einen Link auf sponsuno.ch hier gelandet? Schreiben Sie uns an ',
+        { href: `mailto:${notFoundMail}`, label: notFoundMail },
+        ', dann korrigieren wir ihn.',
+      ] satisfies LegalText)
+    : null,
+};
