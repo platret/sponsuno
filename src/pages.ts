@@ -54,6 +54,9 @@ export type PageMeta = {
   /** Title for social previews when it should differ from <title> */
   ogTitle?: string;
   kind: PageKind;
+  /** Topic pages only: scroll motion on (html.scroll-fx set by an inline script in the head, see headFor). Only where
+      nothing in the first screen at load starts half-animated; today /ki-manager/ (the pinned bento) */
+  scrollFx?: true;
   /** false = left out of the sitemap */
   index: boolean;
 };
@@ -81,6 +84,7 @@ export const pages: PageMeta[] = [
     title: 'Der geplante KI-Sponsoringmanager | Sponsuno',
     description: 'Was der geplante KI-Manager von Sponsuno nach einem Match übernehmen soll: Anfragen entwerfen, an Termine erinnern und Gegenleistungen im Blick behalten.',
     kind: 'info',
+    scrollFx: true,
     index: true,
   },
   {

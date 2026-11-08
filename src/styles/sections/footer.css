@@ -1,7 +1,8 @@
 /* Footer: second half of the navy closing block (flat navy, same as .wl). A thin rule, claim and links,
    the logotype at full container width, then the bottom row.
-   On sub-pages (legal pages and guides) it stands alone: .ft-standalone drops the top rule; those pages never
-   get .motion or .scroll-fx, so the footer is static there.
+   On sub-pages (legal pages, guides, topic pages) it stands alone: .ft-standalone drops the top rule; those pages
+   never get .motion, and the one topic page with .scroll-fx (/ki-manager/) stills the footer (page.css), so the
+   footer is static there.
    Motion on the landing page (DESIGN.md -> Motion): the top rises, the wordmark rises and scales .9 -> 1.
    Both sit at the end of the page, so their range ends at entry 100% (final once fully in view), or after
    --scroll-dist when that comes first. */

@@ -30,7 +30,7 @@ export const titleFor = (id: PageId): string => escapeAttr(pageMeta(id).title);
 /**
  * Head tags of a page, injected at the <!--seo--> marker: description, canonical, Open Graph, Twitter card,
  * on the landing page the robots preview hint, the JSON-LD graph (WebSite, Organization) and the redirect of old
- * section links (movedScript), on /fragen/ the FAQPage JSON-LD. Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
+ * section links (movedScript), on /fragen/ the FAQPage JSON-LD, on the topic pages with scrollFx (/ki-manager/) the scroll motion gate (SCROLL_FX_SCRIPT). Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
  * unknown URL, so a canonical or og:url would point to the wrong place.
  */
 export function headFor(id: PageId): string {
@@ -59,8 +59,21 @@ export function headFor(id: PageId): string {
   ];
   if (id === 'home') tags.push(`<script type="application/ld+json">${jsonLd(homeGraph())}</script>`, movedScript());
   if (id === 'fragen') tags.push(`<script type="application/ld+json">${jsonLd(faqGraph())}</script>`);
+  if (page.kind === 'info' && page.scrollFx) tags.push(SCROLL_FX_SCRIPT);
   return tags.join('\n  ');
 }
+
+/**
+ * Scroll motion on a topic page with `scrollFx` in pages.ts (today /ki-manager/: the pinned bento). These pages ship no
+ * JavaScript module, so this inline script in the head sets only html.scroll-fx before the first paint, under the
+ * same conditions as index.html (motion allowed, scroll timelines supported). Never html.motion: its data-reveal start states wait for the IntersectionObserver of the
+ * landing page app, which these pages do not load. Everything that moves is pure CSS (data-scroll primitives in
+ * site.css, the section rules under .scroll-fx); without the class every section shows its final layout.
+ * /kosten/, /fragen/, /ueber-uns/ (and /fuer-firmen/) stay without it: their sections start right under the header, so rows, cards and
+ * markers in the lower part of the first screen would load half-risen at many viewport sizes (DESIGN.md -> Motion).
+ */
+const SCROLL_FX_SCRIPT =
+  "<script>if(matchMedia('(prefers-reduced-motion: no-preference)').matches&&window.CSS&&CSS.supports('animation-timeline','view()'))document.documentElement.classList.add('scroll-fx')</script>";
 
 /**
  * Old links to sections that moved to their own page (/#kosten → /kosten/): an inline script in the landing page's
