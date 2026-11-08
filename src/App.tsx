@@ -1,24 +1,29 @@
 import { useEffect, useState } from 'react';
 import { waitlist, type Role } from './content';
 import { observeReveals, scrollToHash } from './lib/motion';
-import { ROLE_PARAM } from './lib/links';
+import { MOVED_SECTIONS, pageHref, ROLE_PARAM } from './lib/links';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Story } from './components/Story';
 import { ProofLine } from './components/ProofLine';
 import { Audience } from './components/Audience';
 import { HowItWorks } from './components/HowItWorks';
-import { AiManager } from './components/AiManager';
-import { Support } from './components/Support';
-import { Pricing } from './components/Pricing';
-import { Faq } from './components/Faq';
-import { Team } from './components/Team';
 import { Waitlist } from './components/Waitlist';
 import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
 
+/**
+ * The landing page: hero, scroll story, proof line, audience ("two doors"), how it works, waitlist. KI-Manager,
+ * Kosten, Fragen and Team moved to their own static pages (InfoPage.tsx), reached from the header.
+ */
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
+
+  // Old links to a section that now has its own page (/#kosten, /#fragen …) go to that page
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (Object.hasOwn(MOVED_SECTIONS, id)) window.location.replace(pageHref(MOVED_SECTIONS[id]));
+  }, []);
 
   // Entry points elsewhere (guides, demo) link to /?rolle=<role>#warteliste to preselect the waitlist role
   useEffect(() => {
@@ -65,11 +70,6 @@ export default function App() {
         <ProofLine />
         <Audience />
         <HowItWorks onChooseRole={setRole} />
-        <AiManager />
-        <Support />
-        <Pricing />
-        <Faq />
-        <Team />
         <Waitlist role={role} onRoleChange={setRole} />
       </main>
       <Footer />

@@ -15,7 +15,7 @@ export function LegalPage({ page }: { page: LegalPageId }) {
 
   return (
     <>
-      <PageHeader />
+      <PageHeader current={{ path, kind: 'legal' }} />
 
       <main id="inhalt" className="lg">
         <div className="container">

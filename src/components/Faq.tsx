@@ -1,23 +1,24 @@
 import { faq } from '../content';
-import { siteHref } from '../lib/links';
+import { siteHref, waitlistHref } from '../lib/links';
 import '../styles/sections/faq.css';
 
-/** Questions as native <details> rows: no JS, keyboard and screen reader support built in. */
+/** The body of /fragen/ (its title is the page's H1). Questions as native <details> rows: no JS, keyboard and
+    screen reader support built in. The answers also feed the FAQPage JSON-LD of that page (entry-server.tsx). */
 export function Faq() {
   return (
     <section className="section surface-paper" id="fragen" aria-labelledby="fragen-title">
       <div className="container faq-grid">
         <div className="faq-head" data-reveal="" data-scroll="rise">
-          <h2 id="fragen-title">{faq.title}</h2>
+          <h1 id="fragen-title">{faq.title}</h1>
           <p className="section-intro faq-intro">
-            {faq.introBefore}<a href="#warteliste">{faq.introLink}</a>{faq.introAfter}
+            {faq.introBefore}<a href={waitlistHref()}>{faq.introLink}</a>{faq.introAfter}
           </p>
           <nav className="faq-guides" aria-labelledby="faq-guides-label">
             <span id="faq-guides-label">{faq.guidesLabel}</span>{' '}
             {faq.guides.map((guide, i) => (
               <span key={guide.href}>
                 {i > 0 && <span aria-hidden="true"> · </span>}
-                <a href={siteHref(guide.href, true)}>{guide.label}</a>
+                <a href={siteHref(guide.href, false)}>{guide.label}</a>
               </span>
             ))}
           </nav>
@@ -31,7 +32,7 @@ export function Faq() {
               </summary>
               <div className="faq-a">
                 <p>{item.a}</p>
-                {item.link && <p className="faq-more"><a href={siteHref(item.link.href, true)}>{item.link.label}</a></p>}
+                {item.link && <p className="faq-more"><a href={siteHref(item.link.href, false)}>{item.link.label}</a></p>}
               </div>
             </details>
           ))}

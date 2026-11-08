@@ -1,8 +1,10 @@
 import { useEffect, useRef, type MouseEvent } from 'react';
-import { cta, demo, menu, nav } from '../content';
+import { cta, menu, nav } from '../content';
+import { pageHref } from '../lib/links';
 import { scrollToHash } from '../lib/motion';
 
-/** Full-height paper sheet under the header for narrow layouts. Modal: the page behind is inert. */
+/** Landing page only: full-height paper sheet under the header for narrow layouts. Modal: the page behind is inert.
+    Same links as the header (content.ts → nav); the static pages use the no-JS menu in PageHeader. */
 export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -32,8 +34,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
     <div className="menu-sheet" id="menu" ref={ref} role="dialog" aria-modal="true" aria-label={menu.label} hidden={!open}>
       <nav aria-label={menu.label}>
         <ul className="menu-links">
-          {nav.map((item) => <li key={item.id}><a href={`#${item.id}`} onClick={go}>{item.label}</a></li>)}
-          <li><a href={demo.href} onClick={go}>{demo.link}</a></li>
+          {nav.map((item) => <li key={item.href}><a href={pageHref(item.href)} onClick={go}>{item.label}</a></li>)}
         </ul>
         <a className="btn btn-navy menu-cta" href="#warteliste" onClick={go}>{cta.waitlist}</a>
       </nav>

@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import wordmarkLight from '../assets/wordmark-light.svg';
 import wordmarkDark from '../assets/wordmark-dark.svg';
-import { cta, demo, menu, nav, type SectionId } from '../content';
+import { cta, menu, nav } from '../content';
+import { pageHref } from '../lib/links';
 import { MobileMenu } from './MobileMenu';
 import '../styles/sections/header.css';
 
-/** Plain full-width bar: transparent at the top, solid navy while the hero and the story run under it,
-    solid paper once the light page reaches it. */
+/** Landing page header. Plain full-width bar: transparent at the top, solid navy while the hero and the story run
+    under it, solid paper once the light page reaches it. The nav links to the topic pages (content.ts → nav, shared
+    with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLSpanElement>(null);
   const [solid, setSolid] = useState(false);
   const [dark, setDark] = useState(true);
-  const [active, setActive] = useState<SectionId | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // No scroll handler: two IntersectionObservers. The bar turns solid once the sentinel (80 px down the
-  // page) has scrolled out above the viewport; the active nav item is the section crossing a thin band
-  // at 35 % of the viewport height.
+  // No scroll handler: IntersectionObservers only. The bar turns solid once the sentinel (80 px down the
+  // page) has scrolled out above the viewport.
   useEffect(() => {
     if (!('IntersectionObserver' in window)) return;
     const sentinel = sentinelRef.current;
@@ -25,16 +25,6 @@ export function Header() {
       setSolid(!entry.isIntersecting && entry.boundingClientRect.top < 0);
     });
     if (sentinel) solidIo.observe(sentinel);
-
-    const inBand = new Map<Element, boolean>();
-    const sections = nav
-      .map((item) => ({ id: item.id, el: document.getElementById(item.id) }))
-      .filter((s): s is { id: SectionId; el: HTMLElement } => s.el !== null);
-    const activeIo = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => inBand.set(entry.target, entry.isIntersecting));
-      setActive(sections.find((s) => inBand.get(s.el))?.id ?? null);
-    }, { rootMargin: '-35% 0px -64% 0px' });
-    sections.forEach((s) => activeIo.observe(s.el));
 
     // While the navy hero or the navy story runs under the bar, the solid bar stays navy (no paper strip over
     // the pinned stage); it turns paper once the light page reaches it. The band is the bar's own height.
@@ -56,7 +46,7 @@ export function Header() {
     window.addEventListener('resize', onResize);
 
     return () => {
-      solidIo.disconnect(); activeIo.disconnect(); darkIo?.disconnect();
+      solidIo.disconnect(); darkIo?.disconnect();
       window.removeEventListener('resize', onResize);
       window.clearTimeout(resizeTimer);
     };
@@ -92,11 +82,8 @@ export function Header() {
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>
               {nav.map((item) => (
-                <li key={item.id}>
-                  <a href={`#${item.id}`} aria-current={active === item.id ? 'location' : undefined}>{item.label}</a>
-                </li>
+                <li key={item.href}><a href={pageHref(item.href)}>{item.label}</a></li>
               ))}
-              <li><a href={demo.href}>{demo.nav}</a></li>
             </ul>
           </nav>
           <div className="header-actions">

@@ -1,5 +1,5 @@
 /* Audience (Für wen): paper, directly under the proof line (whose hairline separates the two paper bands).
-   Four stock photos (Symbolbilder) with a label and one sentence each. No cards, no overlays.
+   Four stock photos (Symbolbilder) with a label, one sentence and a link ("two doors") each. No cards, no overlays.
    Motion (DESIGN.md -> Motion): head rises, tiles rise with stagger, each photo opens from an inset (4%, 6%/8% on desktop) inside
    its .aud-frame and settles from 1.18 to 1 (data-scroll primitives in site.css); the note fades in.
    Without scroll timelines the tiles keep the data-reveal fade.
@@ -36,6 +36,9 @@
 
 .aud-text { margin-top: 1.1rem; }
 .aud-desc { margin-top: .45rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); }
+/* Where this side goes next (a guide, or the page for companies): navy label, Gold dunkel arrow, 44 px tall */
+.aud-link { min-height: 44px; margin-top: .15rem; font-size: var(--fs-small); color: var(--navy); }
+.aud-link svg { color: var(--gold-dark); }
 
 .aud-note {
   margin-top: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);

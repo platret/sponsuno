@@ -1,21 +1,22 @@
 import icon from '../assets/Sponsuno_Icon.svg';
 import { aiManager, demo } from '../content';
+import { pageHref } from '../lib/links';
 import '../styles/sections/ai.css';
 
 const { draft, reminder, deliverables } = aiManager;
 
 /**
- * Ivory section: what the planned AI manager is meant to do after a match. A bento grid shows one
- * illustrative draft (navy device frame) and two small light cards. Content is static; under html.scroll-fx
- * the device frame zooms in as it scrolls into view (held in place for a moment on large screens) and the
- * cards slide in (ai.css, DESIGN.md -> Motion).
+ * Ivory section, the body of /ki-manager/ (InfoPage): what the planned AI manager is meant to do after a match.
+ * Its title is the page's H1, the card titles are H2 (styled as H3, .pg-h3). A bento grid shows one illustrative
+ * draft (navy device frame) and two small light cards. The page is static (no JS, no html.scroll-fx), so the
+ * scroll motion in ai.css (device zoom, pin, cards sliding in) stays dormant and the final layout shows.
  */
 export function AiManager() {
   return (
     <section className="section surface-ivory" id="ki-manager" aria-labelledby="ki-title">
       <div className="container">
         <div className="section-head" data-reveal="" data-scroll="rise">
-          <h2 id="ki-title">{aiManager.title}</h2>
+          <h1 id="ki-title">{aiManager.title}</h1>
           <p className="section-intro">{aiManager.intro}</p>
         </div>
 
@@ -49,7 +50,7 @@ export function AiManager() {
 
             <div className="ai-side" data-scroll-stagger="">
               <article className="ai-card" data-reveal="" data-scroll="rise">
-                <h3>{reminder.title}</h3>
+                <h2 className="pg-h3">{reminder.title}</h2>
                 <p className="ai-card-label">
                   <svg viewBox="0 0 16 16" aria-hidden="true">
                     <rect x="2.25" y="3.25" width="11.5" height="10.5" rx="2" />
@@ -61,7 +62,7 @@ export function AiManager() {
               </article>
 
               <article className="ai-card" data-reveal="" data-scroll="rise">
-                <h3>{deliverables.title}</h3>
+                <h2 className="pg-h3">{deliverables.title}</h2>
                 <ul className="ai-checklist">
                   {deliverables.items.map((item) => (
                     <li key={item.text} className={item.done ? 'is-done' : undefined}>
@@ -80,7 +81,7 @@ export function AiManager() {
 
           <figcaption className="ai-caption" data-scroll="fade">
             <span id="ai-caption">{aiManager.caption}</span>
-            <a className="link-arrow" href={`${demo.href}#/ki-manager`}>
+            <a className="link-arrow" href={pageHref(`${demo.href}#/ki-manager`)}>
               {aiManager.demoLink}
               <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
             </a>

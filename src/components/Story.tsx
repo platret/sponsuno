@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { problem, story, type StoryState } from '../content';
 import { stageCss } from '../lib/storyLayout';
+import { pageHref } from '../lib/links';
 import { StageArt } from './StoryArt';
 import '../styles/sections/story.css';
 
@@ -148,7 +149,7 @@ export function Story() {
             <h3>{story.after.title}</h3>
             <p>{story.after.text}</p>
             <p className="st-more">
-              <a className="link-arrow" href={story.after.href}>
+              <a className="link-arrow" href={pageHref(story.after.href)}>
                 {story.after.link}
                 <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
               </a>

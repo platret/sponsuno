@@ -20,10 +20,17 @@ export const site = {
   logo: `${SITE_URL}icon-512.png`,
 };
 
-export type PageKind = 'home' | 'legal' | 'guide';
+/** home = landing page (hydrated); legal, guide and info = static pages without JavaScript (info: the topic pages
+    reached from the header: Für Firmen, KI-Manager, Kosten, Fragen, Über uns) */
+export type PageKind = 'home' | 'legal' | 'guide' | 'info';
 
 export type PageId =
   | 'home'
+  | 'fuer-firmen'
+  | 'ki-manager'
+  | 'kosten'
+  | 'fragen'
+  | 'ueber-uns'
   | 'impressum'
   | 'datenschutz'
   | 'sponsoren-finden'
@@ -53,6 +60,46 @@ export const pages: PageMeta[] = [
     title: 'Sponsuno – Sponsoren finden für Sport und Kultur',
     description: 'Geplante Plattform: Sportlerinnen, Sportler, Sport- und Kulturvereine sollen passende Sponsoren aus ihrer Region finden. Start in der Deutschschweiz.',
     kind: 'home',
+    index: true,
+  },
+  {
+    id: 'fuer-firmen',
+    path: 'fuer-firmen/',
+    title: 'Sponsoring für Firmen aus der Region | Sponsuno',
+    description: 'Für Gewerbe und KMU: wie Firmen über Sponsuno Sportlerinnen, Sportler, Sport- und Kulturvereine aus ihrer Region unterstützen sollen. Geplante Plattform.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'ki-manager',
+    path: 'ki-manager/',
+    title: 'Der geplante KI-Sponsoringmanager | Sponsuno',
+    description: 'Was der geplante KI-Manager von Sponsuno nach einem Match übernehmen soll: Anfragen entwerfen, an Termine erinnern und Gegenleistungen im Blick behalten.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'kosten',
+    path: 'kosten/',
+    title: 'Kosten: Provision statt Abo | Sponsuno',
+    description: 'So ist das Kostenmodell von Sponsuno geplant: kein Abo, eine Provision, wenn eine Partnerschaft zustande kommt. Höhe und zahlende Seite sind noch offen.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'fragen',
+    path: 'fragen/',
+    title: 'Fragen und Antworten zu Sponsuno',
+    description: 'Antworten auf häufige Fragen zu Sponsuno: Provision, interessierte Firmen, Aufwand, Gegenleistungen, für wen es gedacht ist und wann es losgehen soll.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'ueber-uns',
+    path: 'ueber-uns/',
+    title: 'Über uns: das Team hinter Sponsuno',
+    description: 'Wer hinter Sponsuno steht: ein Team aus vier Personen, ein Projekt im Programm Youngpreneurs Zürich 2026/27. Dazu der aktuelle Stand des Projekts.',
+    kind: 'info',
     index: true,
   },
   {

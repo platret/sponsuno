@@ -11,7 +11,8 @@ const images: Record<AudienceImage, string> = { athlete, sportverein, kulturvere
 
 /**
  * Paper section under the proof line: who Sponsuno is meant for. Four stock photos (Symbolbilder, labelled
- * below the grid, credited in the Impressum), each with a short label and one sentence. No cards.
+ * below the grid, credited in the Impressum), each with a short label, one sentence and a link to where that
+ * side goes next ("two doors": seekers to a guide, companies to /fuer-firmen/). No cards.
  * Scroll motion (DESIGN.md -> Motion): head and tiles rise with stagger, each photo opens inside its frame.
  */
 export function Audience() {
@@ -40,6 +41,10 @@ export function Audience() {
               <div className="aud-text">
                 <h3 className="aud-label">{item.label}</h3>
                 <p className="aud-desc">{item.text}</p>
+                <a className="link-arrow aud-link" href={pageHref(item.link.href)}>
+                  {item.link.label}
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                </a>
               </div>
             </li>
           ))}

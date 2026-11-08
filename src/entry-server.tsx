@@ -4,7 +4,7 @@
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import App from './App';
-import { StaticPage } from './components/StaticPage';
+import { StaticPage, type StaticPageId } from './components/StaticPage';
 import { faq, legal } from './content';
 import { absoluteUrl, pageMeta, pages, site, SITE_URL, type PageId } from './pages';
 
@@ -15,7 +15,7 @@ export type { PageId };
 export function render(id: PageId = 'home'): string {
   return renderToString(
     <StrictMode>
-      {id === 'home' ? <App /> : <StaticPage id={id} />}
+      {id === 'home' ? <App /> : <StaticPage id={id as StaticPageId} />}
     </StrictMode>,
   );
 }
@@ -28,7 +28,8 @@ export const titleFor = (id: PageId): string => escapeAttr(pageMeta(id).title);
 
 /**
  * Head tags of a page, injected at the <!--seo--> marker: description, canonical, Open Graph, Twitter card,
- * and on the landing page the robots preview hint and the JSON-LD graph. Canonical = og:url = absolute apex URL.
+ * on the landing page the robots preview hint and the JSON-LD graph (WebSite, Organization), on /fragen/ the
+ * FAQPage JSON-LD. Canonical = og:url = absolute apex URL.
  */
 export function headFor(id: PageId): string {
   const page = pageMeta(id);
@@ -53,6 +54,7 @@ export function headFor(id: PageId): string {
     meta('name', 'twitter:card', 'summary_large_image'),
   ];
   if (id === 'home') tags.push(`<script type="application/ld+json">${jsonLd(homeGraph())}</script>`);
+  if (id === 'fragen') tags.push(`<script type="application/ld+json">${jsonLd(faqGraph())}</script>`);
   return tags.join('\n  ');
 }
 
@@ -60,9 +62,9 @@ export function headFor(id: PageId): string {
 const jsonLd = (data: unknown): string => JSON.stringify(data).replace(/</g, '\\u003c');
 
 /**
- * Structured data of the landing page: WebSite, Organization and FAQPage in one graph, built from
- * pages.ts and content.ts so it cannot drift from the visible copy. Never add Review, AggregateRating,
- * Product or Offer: there are no reviews, products or prices (AGENTS.md, copy rule 2).
+ * Structured data of the landing page: WebSite and Organization in one graph, built from pages.ts and
+ * content.ts so it cannot drift from the visible copy. Never add Review, AggregateRating, Product or Offer:
+ * there are no reviews, products or prices (AGENTS.md, copy rule 2).
  */
 function homeGraph() {
   const home = pageMeta('home');
@@ -102,17 +104,25 @@ function homeGraph() {
             }
           : {}),
       },
-      {
-        '@type': 'FAQPage',
-        '@id': `${SITE_URL}#fragen`,
-        inLanguage: site.language,
-        mainEntity: faq.items.map((item) => ({
-          '@type': 'Question',
-          name: item.q,
-          acceptedAnswer: { '@type': 'Answer', text: item.a },
-        })),
-      },
     ],
+  };
+}
+
+/** FAQPage of /fragen/, from faq.items (the questions shown on that page), part of the landing page's WebSite. */
+function faqGraph() {
+  const url = absoluteUrl(pageMeta('fragen').path);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${url}#fragen`,
+    url,
+    inLanguage: site.language,
+    isPartOf: { '@id': `${SITE_URL}#website` },
+    mainEntity: faq.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
   };
 }
 

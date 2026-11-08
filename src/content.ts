@@ -3,13 +3,16 @@
 
 import { pageMeta } from './pages';
 
-export type SectionId = 'ablauf' | 'ki-manager' | 'kosten' | 'fragen';
-
-export const nav: { id: SectionId; label: string }[] = [
-  { id: 'ablauf', label: 'So funktioniert es' },
-  { id: 'ki-manager', label: 'KI-Manager' },
-  { id: 'kosten', label: 'Kosten' },
-  { id: 'fragen', label: 'Fragen' },
+// Main navigation: one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
+// Page paths relative to the site root (resolved with the base path by pageHref() in lib/links.ts). "Ratgeber" opens
+// the first guide; on the other guides it is marked as the current section. "Fragen" sits in the footer.
+export const nav: { href: string; label: string }[] = [
+  { href: pageMeta('fuer-firmen').path, label: 'Für Firmen' },
+  { href: pageMeta('ki-manager').path, label: 'KI-Manager' },
+  { href: pageMeta('kosten').path, label: 'Kosten' },
+  { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber' },
+  { href: pageMeta('ueber-uns').path, label: 'Über uns' },
+  { href: 'demo/', label: 'Demo' },
 ];
 
 export const cta = {
@@ -20,7 +23,6 @@ export const cta = {
 // Clickable prototype with fictional data (second Vite entry, /demo/)
 export const demo = {
   href: 'demo/',
-  nav: 'Demo',
   link: 'Demo ansehen',
   linkNote: 'Klickbarer Prototyp mit fiktiven Daten',
 };
@@ -65,6 +67,7 @@ export const proof = {
 
 // Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits):
 // the people shown have nothing to do with Sponsuno. Keep the note whenever the photos change.
+// Each tile links to where its side goes next ("two doors"): seekers to a guide, companies to /fuer-firmen/.
 export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
 
 export const audience = {
@@ -76,26 +79,30 @@ export const audience = {
       label: 'Sportlerinnen und Sportler',
       text: 'Sie trainieren neben Ausbildung oder Beruf und suchen Unterstützung für Material, Startgelder oder Reisen.',
       alt: 'Eine Person läuft auf einem schmalen Bergweg durch grüne Hänge mit blühenden Alpenrosen.',
+      link: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber: Sponsoren finden' },
     },
     {
       image: 'sportverein',
       label: 'Sportvereine',
       text: 'Ehrenamtliche Vorstände, die Partner für Trikots, Trainingslager oder Turniere suchen.',
       alt: 'Ein Ruderboot mit drei Personen von oben auf einem Fluss in der Abendsonne.',
+      link: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber: Sponsoren finden' },
     },
     {
       image: 'kulturverein',
       label: 'Kulturvereine',
       text: 'Musikgesellschaften, Chöre und Theatervereine, die Instrumente, Kostüme oder Aufführungen finanzieren müssen.',
       alt: 'Musikanten in Tracht und Filzhut spielen Posaune, vorne ein Notenhalter.',
+      link: { href: pageMeta('kultursponsoring').path, label: 'Ratgeber: Kultursponsoring' },
     },
     {
       image: 'firma',
       label: 'Firmen aus der Region',
       text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
       alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
+      link: { href: pageMeta('fuer-firmen').path, label: 'So ist es für Firmen gedacht' },
     },
-  ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
+  ] satisfies { image: AudienceImage; label: string; text: string; alt: string; link: FooterLink }[],
   noteBefore: 'Symbolbilder: Die abgebildeten Personen haben keinen Bezug zu Sponsuno. Bildnachweise im ',
   noteLink: 'Impressum',
   noteLinkHref: 'impressum/',
@@ -123,7 +130,7 @@ export const problem = {
 
 // Scroll story right under the hero (Story.tsx). It replaces the old Problem section: problem.title is the
 // story's H2, problem.intro and the three points are its first steps, word for word. The solution steps reuse
-// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf).
+// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf and /ki-manager/).
 // Everything on the stage is a fictional example: generic names, real regions, no companies, no amounts.
 export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
 
@@ -154,7 +161,7 @@ export const story = {
     title: 'Und danach: der KI-Manager',
     text: 'Nach dem Match soll ein KI-Manager Anfragen vorbereiten und an vereinbarte Gegenleistungen erinnern. Sie prüfen jeden Entwurf selbst.',
     link: 'Mehr zum KI-Manager',
-    href: '#ki-manager',
+    href: pageMeta('ki-manager').path,
   },
   // Text alternative for the decorative graphic (given once, in the hero)
   artAlt: 'Grafik: Anfragen, Dossiers und Absagen laufen auf eine goldene Linie zu. Rechts davon stehen geordnete Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit den vier Kriterien.',
@@ -333,7 +340,7 @@ export const faq = {
   ] satisfies FaqItem[],
 };
 
-// Founders section (id="team"), between FAQ and waitlist. Team decision (2026-11-03): full names allowed here.
+// Founders section (id="team"), on /ueber-uns/. Team decision (2026-11-03): full names allowed here.
 // Nothing else personal (no ages, schools, home addresses, private e-mails, social handles).
 // Without a photo the card shows a monogram. To add a real, consented photo later: put a square JPEG
 // (at least 240 x 240 px, under 40 KB) in src/assets/photos/, import it at the top of this file and set
@@ -431,16 +438,17 @@ export const footer = {
       title: 'Plattform',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
-        { href: '#ki-manager', label: 'KI-Manager' },
-        { href: '#kosten', label: 'Kosten' },
+        { href: pageMeta('fuer-firmen').path, label: 'Für Firmen' },
+        { href: pageMeta('ki-manager').path, label: 'KI-Manager' },
+        { href: pageMeta('kosten').path, label: 'Kosten' },
         { href: 'demo/', label: 'Demo' },
       ],
     },
     {
       title: 'Mehr',
       links: [
-        { href: '#fragen', label: 'Fragen' },
-        { href: '#team', label: 'Team' },
+        { href: pageMeta('fragen').path, label: 'Fragen' },
+        { href: pageMeta('ueber-uns').path, label: 'Über uns' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
@@ -470,6 +478,72 @@ export const menu = {
   open: 'Menü öffnen',
   close: 'Menü schliessen',
   label: 'Menü',
+};
+
+// ---------- Topic pages reached from the header: /fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/ ----------
+// Rendered by src/components/InfoPage.tsx, prerendered, shipped without JavaScript. Title and description in src/pages.ts.
+// KI-Manager, Kosten (with "Nicht nur Geld"), Fragen and Über uns show the former landing page sections
+// (aiManager, pricing, support, faq, team, projectStatus); Für Firmen is built from the sponsor copy below.
+export type InfoPageId = 'fuer-firmen' | 'ki-manager' | 'kosten' | 'fragen' | 'ueber-uns';
+
+/** Closing block of every topic page: back to the waitlist on the landing page */
+export const infoPage = {
+  endTitle: waitlist.title,
+  endText: 'Sponsuno ist im Aufbau. Tragen Sie sich auf der Warteliste ein, dann melden wir uns, sobald es losgeht.',
+  endButton: cta.waitlist,
+  demoLabel: demo.link,
+  demoHref: demo.href,
+  demoNote: demo.linkNote,
+  /** Extra line in the closing block, per page */
+  more: {
+    kosten: [
+      'Was andere zu Provision und Kosten fragen, finden Sie unter ',
+      { href: pageMeta('fragen').path, label: 'Fragen und Antworten' },
+      '.',
+    ],
+  } as Partial<Record<InfoPageId, LegalText>>,
+};
+
+// /fuer-firmen/: first version, built only from copy that already exists on the site (audience tile "Firmen aus der
+// Region", howItWorks.tracks.sponsor, support, pricing). Everything planned stays planned; open points stay open.
+export const forFirms = {
+  title: 'Sponsern in Ihrer Region',
+  intro: 'Sponsuno ist auch für Firmen gedacht: für Gewerbe und KMU, die sich vor Ort engagieren möchten, mit Geld, Material oder Dienstleistungen. Die geplante Plattform soll Ihnen Sportlerinnen, Sportler, Sport- und Kulturvereine aus Ihrer Region zeigen, die zu Ihrer Firma passen.',
+  note: 'Sponsuno ist eine geplante Plattform und noch nicht in Betrieb. Diese Seite beschreibt, wie es gedacht ist.',
+  steps: {
+    id: 'ablauf',
+    title: 'So ist es für Firmen gedacht',
+    intro: 'Vom Firmenprofil bis zur Bilanz nach der Saison:',
+    items: howItWorks.tracks.sponsor.steps,
+  },
+  support: {
+    id: 'unterstuetzung',
+    title: 'Wie Sie unterstützen können',
+    intro: support.intro,
+    items: support.kinds.map((kind) => ({ title: kind.title, text: kind.text })),
+  },
+  costs: {
+    id: 'kosten',
+    title: 'Was es kosten soll',
+    intro: pricing.intro,
+    items: pricing.rows.map((row) => ({ title: row.label, text: row.state === 'open' ? `${row.value} (${pricing.openLabel})` : row.value })),
+    more: [
+      'Mehr dazu unter ',
+      { href: pageMeta('kosten').path, label: 'Kosten' },
+      '. Antworten auf häufige Fragen finden Sie unter ',
+      { href: pageMeta('fragen').path, label: 'Fragen und Antworten' },
+      '.',
+    ] satisfies LegalText,
+  },
+  end: {
+    id: 'warteliste',
+    title: waitlist.title,
+    text: 'Tragen Sie sich als Firma auf der Warteliste ein, dann melden wir uns, sobald es losgeht. In der Demo sehen Sie, wie das Sponsor-Cockpit gedacht ist.',
+    button: cta.waitlist,
+    demoLabel: 'Sponsor-Cockpit in der Demo ansehen',
+    demoHref: 'demo/#/sponsor',
+    demoNote: demo.linkNote,
+  },
 };
 
 // ---------- Legal pages: Impressum (/impressum/) and Datenschutzerklärung (/datenschutz/) ----------
@@ -568,7 +642,6 @@ export const photoCredits: PhotoCredit[] = [
 export const legal = {
   updated: 'Stand: November 2026',
   skipLink: 'Zum Inhalt springen',
-  backHome: 'Zur Startseite',
   homeLabel: 'Sponsuno, zur Startseite',
   tocLabel: 'Auf dieser Seite',
   pending: 'fehlt noch, wird in Kürze ergänzt.',

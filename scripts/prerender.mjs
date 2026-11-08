@@ -4,7 +4,8 @@
 // - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
 // - the empty <div id="root"> gets the server render
 // - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
-// Landing page: hydrated by src/main.tsx. Legal pages and guides: static, CSS only, no JavaScript (src/static/main.ts).
+// Landing page: hydrated by src/main.tsx. Topic pages, guides and legal pages: static, CSS only, no JavaScript
+// (src/static/main.ts, plus src/static/sections.ts on the topic pages).
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
