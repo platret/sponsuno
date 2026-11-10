@@ -1,8 +1,7 @@
 import { Component, StrictMode, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-// Self-hosted fonts (no request to Google): only the CD weights, subset by scripts/subset-fonts.mjs
-import '../styles/fonts.css';
-import DemoApp from './DemoApp';
+import DemoApp, { preloadView } from './DemoApp';
+import { parseHash } from './router';
 import { clearStoredDemo, DemoProvider } from './store';
 import { ToastProvider } from './ui';
 import './demo.css';
@@ -41,7 +40,7 @@ class DemoErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
 const root = document.getElementById('root');
 if (!root) throw new Error('#root missing in demo/index.html');
 
-createRoot(root).render(
+const render = () => createRoot(root).render(
   <StrictMode>
     <DemoErrorBoundary>
       <DemoProvider>
@@ -52,3 +51,7 @@ createRoot(root).render(
     </DemoErrorBoundary>
   </StrictMode>,
 );
+
+// First the chunk of the view the URL opens (the route DemoApp renders first), then one render with shell and view.
+// If the chunk fails to load, render anyway: the view then suspends and retries, or the error boundary takes over.
+preloadView(parseHash(window.location.hash).name).then(render, render);

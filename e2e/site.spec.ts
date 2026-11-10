@@ -50,6 +50,22 @@ test('every header nav link leads to a page with an H1', async ({ page }) => {
   }
 });
 
+test('demo: a deep link opens its view, and every nav item loads its view (one chunk per view)', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto('/demo/#/sponsor');
+  await expect(page.locator('#demo-main h1')).toBeVisible();
+  await expect(page.locator('.demo-sidebar .demo-nav a[aria-current="page"]')).toHaveAttribute('href', '#/sponsor');
+  await page.goto('/demo/#/uebersicht');
+  const links = page.locator('.demo-sidebar .demo-nav a');
+  for (const href of await links.evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))) {
+    await page.locator(`.demo-sidebar .demo-nav a[href="${href}"]`).click();
+    await expect(page.locator(`.demo-sidebar .demo-nav a[href="${href}"]`)).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('#demo-main h1')).toBeVisible();
+    await expect(page.locator('.demo-view-pending')).toHaveCount(0);
+  }
+  expect(errors).toEqual([]);
+});
+
 test('pages download only their preloaded font files (the core subsets)', async ({ page }) => {
   // src/styles/fonts.css: each face has a core file (preloaded) and an extra file for characters the site's own text
   // does not use; scripts/check-dist.mjs checks the text, this checks what the browser actually fetches.

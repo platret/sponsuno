@@ -77,6 +77,11 @@ for (const page of pages) {
   console.log(`Prerendered dist/${file}`);
 }
 
+// The demo is not prerendered (it renders in the browser), but its font preloads go behind the stylesheet and the
+// scripts too: the app paints nothing before its JavaScript has run.
+const demoFile = path.join(root, 'dist', 'demo', 'index.html');
+await writeFile(demoFile, fontPreloadsLast(await readFile(demoFile, 'utf8')));
+
 // Sitemap: every page with index: true, absolute apex URLs with a trailing slash. No lastmod (nobody would keep it accurate).
 const urls = pages.filter((page) => page.index).map((page) => `  <url><loc>${SITE_URL}${page.path}</loc></url>`);
 await writeFile(

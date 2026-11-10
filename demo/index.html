@@ -5,6 +5,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Build only: vite.config.ts puts a script here that preloads the first view's chunk (JS and CSS) -->
+  <!--view-preload-->
   <title>Sponsuno Vorschau</title>
   <meta name="description" content="Produktvorschau von Sponsuno mit Beispieldaten.">
   <!-- Prototype with example data: keep it out of search results -->
@@ -29,6 +31,13 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- The three faces of the first screen, requested with the HTML instead of after the app has rendered (same hashed
+       files as the @font-face rules in demo.css; scripts/prerender.mjs moves these behind the stylesheet and scripts).
+       fetchpriority="low", unlike the prerendered pages: the demo paints nothing before its JavaScript has run, so the
+       fonts must not take bandwidth from it (measured: LCP 1.81 s with low, 2.12 s with the default high priority). -->
+  <link rel="preload" href="/src/assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin fetchpriority="low">
+  <link rel="preload" href="/src/assets/fonts/manrope-600.woff2" as="font" type="font/woff2" crossorigin fetchpriority="low">
+  <link rel="preload" href="/src/assets/fonts/cormorant-garamond-600.woff2" as="font" type="font/woff2" crossorigin fetchpriority="low">
   <script>
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
   </script>

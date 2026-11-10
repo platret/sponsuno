@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
 import logoDark from '../assets/Sponsuno_Logo_dunkel.svg';
 import type { Role as WaitlistRole } from '../content';
 import { href, navigate, useRoute, type RouteName } from './router';
@@ -6,12 +6,46 @@ import { useDemo } from './store';
 import { Avatar, Icon, useToast, type IconName } from './ui';
 import { profileKindLabel } from './format';
 import type { Role } from './types';
-import Overview from './views/Overview';
-import Matches from './views/Matches';
-import Partnerships from './views/Partnerships';
-import Assistant from './views/Assistant';
-import Profile from './views/Profile';
-import SponsorCockpit from './views/SponsorCockpit';
+import { VIEW_FILES } from './viewFiles';
+
+type ViewModule = { default: ComponentType };
+
+/**
+ * One chunk (JS and CSS) per view, so the first screen loads only its own view. `preload` fetches the chunk ahead;
+ * once it is in, the view renders without suspending: React.lazy takes a thenable, and this one calls back at once
+ * (a resolved Promise still suspends for a tick and would show the fallback for a frame).
+ */
+function lazyView(load: () => Promise<ViewModule>) {
+  let loaded: ViewModule | undefined;
+  const preload = () => load().then((m) => (loaded = m));
+  const View = lazy(() => (loaded ? { then: (done: (m: ViewModule) => void) => done(loaded!) } : preload()) as Promise<ViewModule>);
+  return { View, preload };
+}
+
+// A template literal import: Vite makes one chunk per file in views/ and picks the right one at runtime.
+const VIEWS = Object.fromEntries(
+  Object.entries(VIEW_FILES satisfies Record<RouteName, string>).map(([route, file]) => [route, lazyView(() => import(`./views/${file}.tsx`))]),
+) as Record<RouteName, ReturnType<typeof lazyView>>;
+
+/**
+ * Loads a view's chunk ahead of rendering. main.tsx waits for the view the URL opens before the first render (its
+ * chunk is already on the way, preloaded by demo/index.html), so the shell and the view paint together, as they did
+ * when the views were in the main bundle; otherwise React would show the fallback and hold the view back a little.
+ */
+export const preloadView = (route: RouteName) => VIEWS[route].preload();
+
+/** Once the first view is on screen, fetch the others while the browser is idle, so switching views never waits. */
+function preloadOtherViews() {
+  const run = () => { for (const v of Object.values(VIEWS)) v.preload().catch(() => {}); };
+  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2000 });
+  else setTimeout(run, 200);
+}
+
+/** Rendered by the first view once it has mounted (inside Suspense, so only after its chunk is in). */
+function AfterFirstView() {
+  useEffect(preloadOtherViews, []);
+  return null;
+}
 
 /** short: label in the mobile tab bar, where five tabs share one row. */
 interface NavItem { route: RouteName; label: string; short?: string; icon: IconName }
@@ -118,16 +152,7 @@ export default function DemoApp() {
   const nav = NAV[state.role];
   const isActive = (item: NavItem) => item.route === route.name;
 
-  const view = (() => {
-    switch (route.name) {
-      case 'uebersicht': return <Overview />;
-      case 'partner': return <Matches />;
-      case 'partnerschaften': return <Partnerships />;
-      case 'ki-manager': return <Assistant />;
-      case 'profil': return <Profile />;
-      case 'sponsor': return <SponsorCockpit />;
-    }
-  })();
+  const { View } = VIEWS[route.name];
 
   return (
     <div className="demo">
@@ -187,8 +212,13 @@ export default function DemoApp() {
         </div>
 
         <main className="demo-main" id="demo-main" ref={mainRef} tabIndex={-1}>
-          {view}
-          <WaitlistCta role={state.role} className="demo-waitlist-end" tone="navy" />
+          {/* While the first view's chunk loads: an empty block of screen height, no spinner. The closing row waits with
+              the view, so it does not show up top and then jump down. */}
+          <Suspense fallback={<div className="demo-view-pending" />}>
+            <View />
+            <WaitlistCta role={state.role} className="demo-waitlist-end" tone="navy" />
+            <AfterFirstView />
+          </Suspense>
         </main>
       </div>
 

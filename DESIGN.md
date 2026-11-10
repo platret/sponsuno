@@ -188,7 +188,8 @@ The demo (`/demo/`) uses the same tokens (`src/styles/tokens.css`) in an app lay
 - Status badges: Anfrage and Im Gespräch gold, Vereinbart navy, Aktiv green (`#E3EDE4` / `#2E5A36`, demo only), Abgeschlossen and Abgesagt muted.
 - Avatars: sponsors use the gold monogram, athletes and clubs the navy one. The AI-generated persona photo appears only where it is labelled "KI-generiertes Symbolbild".
 - Selected tabs are navy with ivory text; form fields have a navy focus border plus the standard focus outline.
-- Kit classes are prefixed `ui-`; each view prefixes its own classes (`ov-`, `mt-`, `ps-`, `as-`, `pf-`, `sp-`).
+- Kit classes are prefixed `ui-`; each view prefixes its own classes (`ov-`, `mt-`, `ps-`, `as-`, `pf-`, `sp-`). Each view's stylesheet loads with the view, after `demo.css`: to change a kit element inside a view, use a selector with one class more than the kit rule (AGENTS.md → The demo).
+- Loading: the shell and the first view paint together; if a view is not loaded yet when someone switches to it, its area stays empty for that moment (no spinner, no skeleton).
 - Without JavaScript: one navy line on the ivory body, centred in a 40rem column (`demo-noscript`), with an underlined link (gold underline) to the landing page.
 
 ## Imagery

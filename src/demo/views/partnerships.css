@@ -327,7 +327,7 @@
 .ps-link-hint { margin-top: -.15rem; max-width: 46ch; }
 
 /* Next step (dark footer card) */
-.ps-next { display: grid; gap: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); }
+.ps-next { display: grid; gap: 1.5rem; }
 .ps-next h2 { font-size: 1.625rem; font-weight: 600; }
 .ps-next h2:focus:not(:focus-visible) { outline: none; }
 .ps-next-text { margin-top: .5rem; max-width: 58ch; color: var(--steel); font-size: 1rem; }

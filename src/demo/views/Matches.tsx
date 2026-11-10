@@ -393,7 +393,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
 
   return (
     <div className="mt-view">
-      <header className="ui-page-header mt-detail-head">
+      <header className="ui-page-header">
         <a className="ui-back" href={href('partner')}><Icon name="arrowLeft" size={16} />Alle Vorschläge</a>
         <div className="mt-detail-id">
           <Avatar name={sponsor.name} tone="gold" size={76} />
@@ -403,7 +403,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
             <div className="mt-detail-badges">
               <ScoreBadge score={match.score} />
               {hidden && <Badge tone="muted"><Icon name="eyeOff" size={12} />Ausgeblendet</Badge>}
-              {saved && <Badge tone="gold"><Icon name="star" size={12} className="mt-star-filled" />Gemerkt</Badge>}
+              {saved && <Badge tone="gold"><Icon name="star" size={12} />Gemerkt</Badge>}
             </div>
           </div>
         </div>

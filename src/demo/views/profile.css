@@ -112,7 +112,7 @@
 .pf-icon-btn:hover { background: rgba(11, 24, 48, .06); color: var(--navy); }
 
 .pf-add-row { display: flex; flex-wrap: wrap; gap: .5rem; }
-.pf-add-row input { flex: 1 1 14rem; width: auto; min-width: 0; }
+.pf-add-row input { flex: 1 1 14rem; min-width: 0; }
 .pf-add-row .ui-btn { flex: 0 0 auto; }
 
 .pf-suggest { display: flex; flex-wrap: wrap; gap: .4rem; }
