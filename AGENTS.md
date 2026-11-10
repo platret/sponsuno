@@ -33,7 +33,7 @@ npm run preview    # serve dist/ at http://localhost:4173/
 npm run typecheck
 ```
 
-`npm run build` must pass before every commit. There is no test suite yet; verify in a browser (see "Before you finish").
+`npm run build` must pass before every commit. CI also runs `npm run typecheck`, `npm run check:dist` and `npm run test:e2e` on every PR (see "CI"); still verify visual changes in a browser (see "Before you finish").
 
 ## Architecture
 
@@ -102,7 +102,7 @@ scripts/prerender.mjs   For every page in pages.ts: replaces <title> and <!--seo
                         guide templates as Word files (dist/vorlagen/*.docx). Fails if a marker is missing.
 scripts/og/og-image.html  Source of public/og-image.png (rendered once with headless Chrome, see "SEO").
 scripts/icons.mjs       Regenerates the PNG/ICO icons in public/ from src/assets/Sponsuno_Icon.svg (see "SEO").
-.github/workflows/      deploy.yml: Cloudflare production deploy on main, preview per pull request.
+.github/workflows/      deploy.yml: `check` job (typecheck, build, check:dist, Playwright), then Cloudflare deploy on main or a preview per pull request.
 wrangler.jsonc          Cloudflare Worker config: assets from dist/ with `not_found_handling: "404-page"` (unknown URLs get
                         dist/404.html with status 404), custom domains sponsuno.ch and www.sponsuno.ch.
 docs/                   Images for the README only.
