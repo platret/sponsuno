@@ -14,7 +14,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Tests every pull request (forks included, no secrets needed) and every push to main. Deploy waits for it.
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      # Built without VITE_WAITLIST_ENDPOINT on purpose: the tests must never sign up to the real waitlist
+      - name: Build
+        run: npm run build
+      - name: Check dist (head tags, sitemap, links, anchors, JSON-LD, no JS on static pages)
+        run: npm run check:dist
+      - name: Read Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+      - name: Install Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Chromium system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Browser smoke tests
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
   deploy:
+    needs: check
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +74,8 @@ jobs:
       - run: npm run build
         env:
           VITE_WAITLIST_ENDPOINT: ${{ vars.VITE_WAITLIST_ENDPOINT }}
+      # The same checks on the exact files that get deployed (this build may include the waitlist endpoint)
+      - run: npm run check:dist
       - if: github.event_name == 'push'
         uses: cloudflare/wrangler-action@v4
         with:

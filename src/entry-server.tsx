@@ -107,7 +107,6 @@ function homeGraph() {
         '@type': 'WebSite',
         '@id': `${SITE_URL}#website`,
         name: site.name,
-        alternateName: 'sponsuno.ch',
         url: SITE_URL,
         inLanguage: site.language,
         publisher: { '@id': orgId },
