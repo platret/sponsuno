@@ -111,6 +111,10 @@ scripts/prerender.mjs   For every page in pages.ts: replaces <title> and <!--seo
                         guide templates as Word files (dist/vorlagen/*.docx). Fails if a marker is missing.
 scripts/og/og-image.html  Source of public/og-image.png (rendered once with headless Chrome, see "SEO").
 scripts/icons.mjs       Regenerates the PNG/ICO icons in public/ from src/assets/Sponsuno_Icon.svg (see "SEO").
+scripts/emails.mjs      `npm run emails`: builds the waitlist e-mails for Brevo (emails/src → emails/dist, committed; not part of
+                        the site build). `-- --assets` regenerates public/email/ (wordmark PNG, fonts), `-- --previews`
+                        renders emails/previews/*.png. Team guide (German): emails/README.md.
+public/email/           Hosted assets of the e-mails (https://sponsuno.ch/email/…): fixed URLs in sent mail, never rename.
 .github/workflows/      deploy.yml: `check` job (typecheck, build, check:dist, Playwright), then Cloudflare deploy on main or a preview per pull request.
 wrangler.jsonc          Cloudflare Worker config: assets from dist/ with `not_found_handling: "404-page"` (unknown URLs get
                         dist/404.html with status 404), custom domains sponsuno.ch and www.sponsuno.ch.

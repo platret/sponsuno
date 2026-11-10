@@ -6,6 +6,8 @@ _source/
 node_modules/
 dist/
 dist-ssr/
+# …except the built e-mails, which the team pastes into Brevo (npm run emails)
+!emails/dist/
 .wrangler/
 
 # Finder/iCloud duplicate copies
