@@ -1,7 +1,7 @@
 /* Team: ivory, between FAQ (paper) and the navy waitlist. Four founders in a row, each with a round
    portrait: a monogram (Cormorant initials, ivory on navy, gold hairline ring) until a real photo exists.
    A photo uses the same circle and ring. No cards.
-   Motion (DESIGN.md -> Motion): head rises; founders rise with stagger, their hairlines draw from the left,
+   Motion (DESIGN.md -> Motion, dormant on /ueber-uns/): founders rise with stagger, their hairlines draw from the left,
    portraits zoom in (.86 -> 1); the project status head and steps rise. Firefox keeps the data-reveal fade;
    reduced motion is static. */
 
@@ -11,7 +11,7 @@
   gap: clamp(1.5rem, 1rem + 2vw, 3rem);
 }
 
-.team-member { padding-top: 2rem; border-top: 1px solid var(--rule); }
+.team-member { padding-top: 2rem; border-top: 1px solid var(--line); }
 
 .team-portrait {
   display: block;
@@ -20,7 +20,7 @@
   /* Gold hairline ring with an ivory gap, drawn outside the circle (no layout shift). The 5px inset
      aligns the ring's outer edge with the hairline, name and focus text of the column. */
   margin-left: 5px;
-  box-shadow: 0 0 0 4px var(--ivory), 0 0 0 5px var(--gold);
+  box-shadow: 0 0 0 4px var(--bg-alt), 0 0 0 5px var(--gold);
 }
 .team-mono {
   display: grid; place-items: center;
@@ -36,7 +36,7 @@
 .team-portrait { --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%; }
 
 .team-name { margin-top: 1.6rem; }
-.team-focus { margin-top: .35rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); max-width: 18rem; }
+.team-focus { margin-top: .35rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); max-width: 18rem; }
 
 /* Quiet stagger for the reveal (only applies while motion is on) */
 .motion .team-member[data-reveal]:nth-child(2) { transition-delay: .06s; }
@@ -56,7 +56,7 @@
   position: absolute;
   top: -1px; left: 0; right: 0;
   height: 1px;
-  background: var(--rule);
+  background: var(--line);
   transform-origin: 0 50%;
   animation: sfx-draw-x linear both;
   animation-duration: auto;
@@ -75,10 +75,10 @@
   gap: clamp(1.5rem, 1rem + 2vw, 3rem);
   margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
   padding-top: 2rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
 }
-.team-status-intro { margin-top: .6rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); }
-.team-status-intro a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
+.team-status-intro { margin-top: .6rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
+.team-status-intro a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }
 
 .team-steps { grid-column: 2 / -1; max-width: 38rem; display: grid; gap: 1.5rem; }
 .team-step { position: relative; padding-left: 1.75rem; }
@@ -88,7 +88,7 @@
   content: "";
   position: absolute;
   left: 4px; top: 1rem; bottom: calc(1px - 1.875rem);
-  border-left: 1px solid var(--rule);
+  border-left: 1px solid var(--line);
 }
 .team-step:not(.is-done)::before { border-left-style: dashed; }
 .team-step:last-child::before { display: none; }
@@ -99,15 +99,15 @@
   left: 0; top: .375rem;
   width: 9px; height: 9px;
   border-radius: 50%;
-  border: 1px solid var(--gold-dark);
-  background: var(--ivory);
+  border: 1px solid var(--accent-text);
+  background: var(--bg-alt);
 }
-.team-step.is-done::after { background: var(--gold-dark); }
+.team-step.is-done::after { background: var(--accent-text); }
 
 .team-step-meta { display: flex; flex-wrap: wrap; gap: .25rem .75rem; font-size: var(--fs-small); line-height: 1.4; }
-.team-step-when { font-weight: 600; color: var(--gold-dark); font-variant-numeric: lining-nums; }
-.team-step-state { color: var(--ink); }
-.team-step-text { margin-top: .3rem; color: var(--ink); line-height: 1.55; }
+.team-step-when { font-weight: 600; color: var(--accent-text); font-variant-numeric: lining-nums; }
+.team-step-state { color: var(--text); }
+.team-step-text { margin-top: .3rem; color: var(--text); line-height: 1.55; }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {

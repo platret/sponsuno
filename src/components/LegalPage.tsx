@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { legal, photoCredits, type LegalBlock, type LegalPageId } from '../content';
 import { Footer } from './Footer';
-import { PageHeader } from './PageHeader';
+import { PageBand, PageHeader } from './PageHeader';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
 
@@ -18,12 +18,12 @@ export function LegalPage({ page }: { page: LegalPageId }) {
       <PageHeader current={{ path, kind: 'legal' }} />
 
       <main id="inhalt" className="lg">
+        <PageBand titleId="lg-title" title={content.title} narrow>
+          <p className="lg-intro">{rich(content.intro)}</p>
+          <p className="lg-updated">{legal.updated}</p>
+        </PageBand>
         <div className="container">
           <article className="lg-col" aria-labelledby="lg-title">
-            <h1 id="lg-title">{content.title}</h1>
-            <p className="lg-intro">{rich(content.intro)}</p>
-            <p className="lg-updated">{legal.updated}</p>
-
             <nav className="lg-toc" aria-labelledby="lg-toc-title">
               <p className="lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
               <ol>

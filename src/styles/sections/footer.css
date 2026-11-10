@@ -27,6 +27,8 @@
 
 .ft-sub { max-width: 28ch; font-size: 1rem; line-height: 1.6; color: var(--steel); }
 
+/* Standalone: no top rule inside; in the dark theme a hairline at the full width sets the navy footer off the navy page */
+.ft-standalone { border-top: 1px solid var(--edge); }
 .ft-standalone .ft-top { border-top: 0; }
 
 .ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2rem, 1rem + 2.5vw, 3.5rem); }
@@ -59,6 +61,8 @@
   border-top: 1px solid rgba(243, 239, 230, .12);
   font-size: .875rem; line-height: 1.5; color: var(--steel);
 }
+.ft-bottom a { color: inherit; text-underline-offset: 3px; transition: color .2s ease; }
+.ft-bottom a:hover { color: var(--ivory); }
 /* Below 1200 px the five columns leave the claim too narrow (under 150 px at 1024 px): stack them */
 @media (max-width: 1199px) {
   .ft-top { grid-template-columns: minmax(0, 1fr); }

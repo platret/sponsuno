@@ -11,9 +11,7 @@ import { match } from '../content';
 export function MatchCard() {
   return (
     <figure className="match">
-      <figcaption className="match-label">
-        {match.label}<span> · </span><span className="match-label-note">{match.imageNote}</span>
-      </figcaption>
+      <figcaption className="match-label">{match.label}</figcaption>
 
       <div className="match-party match-athlete">
         <img className="match-photo" src={photo} alt="" width={52} height={52} decoding="async" loading="lazy" />

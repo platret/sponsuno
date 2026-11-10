@@ -105,7 +105,7 @@ function NotFound() {
       <Card>
         <EmptyState
           title="Diese Partnerschaft gibt es in dieser Ansicht nicht"
-          text="Vielleicht gehört sie zur anderen Ansicht, oder die Demo wurde zurückgesetzt."
+          text="Vielleicht gehört sie zur anderen Ansicht, oder die Vorschau wurde zurückgesetzt."
           action={<Button href={href('partnerschaften')} variant="navy" icon="arrowLeft">Alle Partnerschaften</Button>}
         />
       </Card>
@@ -681,7 +681,7 @@ function Notes({ p }: { p: Partnership }) {
       <form className="ps-notes" onSubmit={save}>
         <Field label="Notiz zur Partnerschaft" htmlFor={id}>
           <textarea id={id} value={value} rows={5} aria-describedby={`${id}-hint`} onChange={(e) => setValue(e.target.value)} />
-          <p id={`${id}-hint`} className="ui-field-hint">In der Demo sehen beide Seiten dieselbe Notiz. Sie bleibt nur in diesem Browser.</p>
+          <p id={`${id}-hint`} className="ui-field-hint">Beide Seiten sehen dieselbe Notiz.</p>
         </Field>
         <div className="ps-notes-actions">
           {/* aria-disabled instead of disabled: the focused button stays focusable after saving */}
@@ -702,7 +702,7 @@ function Drafts({ p, cp }: { p: Partnership; cp: Counterpart }) {
   const drafts = state.drafts.filter((d) => d.sponsorId === p.sponsorId);
   return (
     <Card title="Nachrichten im KI-Manager">
-      <p className="ps-card-intro">Entwürfe für {cp.name}. Der KI-Manager ist in der Demo simuliert; Sie prüfen jeden Text selbst.</p>
+      <p className="ps-card-intro">Entwürfe für {cp.name}. Sie prüfen jeden Text selbst, bevor er rausgeht.</p>
       {drafts.length > 0 ? (
         <ul className="ps-drafts">
           {drafts.map((d) => (
@@ -774,8 +774,8 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
 
   if (declined) {
     text = role === 'seeker'
-      ? `${cp.name} hat Ihre Anfrage abgesagt. In der Demo wurde keine Nachricht versendet. Unter «Passende Partner» finden Sie weitere mögliche Sponsoren.`
-      : `Sie haben die Anfrage von ${cp.name} abgesagt. In der Demo wurde keine Nachricht versendet.`;
+      ? `${cp.name} hat Ihre Anfrage abgesagt. Unter «Passende Partner» finden Sie weitere mögliche Sponsoren.`
+      : `Sie haben die Anfrage von ${cp.name} abgesagt.`;
     if (role === 'sponsor') {
       secondary = { label: 'Absage zurücknehmen', to: 'anfrage', toast: 'Absage zurückgenommen. Die Anfrage ist wieder offen.', variant: 'outline' };
     }
@@ -785,13 +785,13 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
         if (unsentRequest) {
           text = `Ihre Anfrage an ${cp.name} ist vorbereitet. Den Text prüfen und senden (simuliert) Sie im KI-Manager; danach ist der Sponsor am Zug.`;
         } else {
-          text = `Ihre Anfrage liegt bei ${cp.name}. Den nächsten Schritt macht der Sponsor. In der Demo wurde nichts versendet.`;
+          text = `Ihre Anfrage liegt bei ${cp.name}. Den nächsten Schritt macht der Sponsor.`;
           if (!cockpitSponsor) {
             text += ' Die Antwort des Sponsors können Sie hier simulieren.';
             actions = [{ label: 'Antwort des Sponsors simulieren', to: 'gespraech', toast: `Simuliert: ${cp.name} schlägt ein Gespräch vor.`, variant: 'gold' }];
           }
         }
-        if (cockpitSponsor) text += ' In der Demo können Sie die Anfrage selbst aus Sicht des Sponsors beantworten.';
+        if (cockpitSponsor) text += ' Im Sponsor-Cockpit beantworten Sie die Anfrage selbst aus Sicht des Sponsors.';
         break;
       case 'gespraech':
         text = 'Wenn Sie sich über Unterstützung und Gegenleistungen einig sind, halten Sie die Vereinbarung hier fest.';
@@ -816,14 +816,14 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
     switch (p.status) {
       case 'anfrage':
         text = `${cp.name} möchte mit Ihnen zusammenarbeiten. Schlagen Sie ein Gespräch vor oder sagen Sie freundlich ab.`;
-        actions = [{ label: 'Gespräch vorschlagen', to: 'gespraech', toast: 'Gespräch vorgeschlagen. In der Demo wird nichts versendet.', variant: 'gold' }];
-        decline = { label: 'Absagen', to: 'abgesagt', toast: 'Anfrage abgesagt. In der Demo wird keine Nachricht versendet.', variant: 'outline' };
+        actions = [{ label: 'Gespräch vorschlagen', to: 'gespraech', toast: 'Gespräch vorgeschlagen.', variant: 'gold' }];
+        decline = { label: 'Absagen', to: 'abgesagt', toast: 'Anfrage abgesagt.', variant: 'outline' };
         break;
       case 'gespraech':
         if (otherSeeker) {
-          text = `Sie sind im Gespräch mit ${cp.name}. Sobald beide Seiten einig sind, halten Sie die Vereinbarung hier fest; in der Demo übernehmen Sie diesen Schritt für beide Seiten. Oder sagen Sie freundlich ab.`;
-          actions = [{ label: 'Als vereinbart markieren', to: 'vereinbart', toast: 'Als vereinbart markiert. In der Demo wird nichts versendet.', variant: 'gold' }];
-          decline = { label: 'Absagen', to: 'abgesagt', toast: 'Anfrage abgesagt. In der Demo wird keine Nachricht versendet.', variant: 'outline' };
+          text = `Sie sind im Gespräch mit ${cp.name}. Sobald beide Seiten einig sind, halten Sie die Vereinbarung hier fest; in der Vorschau übernehmen Sie diesen Schritt für beide Seiten. Oder sagen Sie freundlich ab.`;
+          actions = [{ label: 'Als vereinbart markieren', to: 'vereinbart', toast: 'Als vereinbart markiert.', variant: 'gold' }];
+          decline = { label: 'Absagen', to: 'abgesagt', toast: 'Anfrage abgesagt.', variant: 'outline' };
         } else {
           text = `Sie sind im Gespräch. Sobald beide Seiten einig sind, hält ${cp.name} die Vereinbarung fest.`;
         }

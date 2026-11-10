@@ -265,7 +265,7 @@ function MatchList({ tab, onTab, filters, onFilters, filtersOpen, onFiltersOpen 
         <div>
           <h2 id="mt-note-title">So entstehen die Vorschläge</h2>
           <p>
-            In der Demo vergleicht eine einfache Regel Ihr Profil mit jedem Sponsor nach Region, Unterstützungsart, Branche und Budget.
+            Sponsuno vergleicht Ihr Profil mit jedem Sponsor nach Region, Unterstützungsart, Branche und Budget.
             Ein Kriterium, das nur teilweise passt, zählt für die Reihenfolge halb.
           </p>
         </div>
@@ -355,7 +355,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
         <PageHeader title="Sponsor nicht gefunden" back={{ href: href('partner'), label: 'Alle Vorschläge' }} />
         <Card>
           <EmptyState
-            title="Diesen Sponsor gibt es in der Demo nicht"
+            title="Diesen Sponsor gibt es nicht"
             text="Der Link ist vielleicht veraltet. In der Liste finden Sie alle Vorschläge."
             action={<Button variant="navy" href={href('partner')}>Zu den Vorschlägen</Button>}
           />
@@ -449,7 +449,6 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
               <>
                 <p className="mt-next-text">
                   Im KI-Manager entsteht aus Ihrem Profil ein Entwurf für eine Anfrage, den Sie prüfen und anpassen.
-                  In der Demo ist das eine Vorlage, und nichts wird versendet.
                 </p>
                 <Button variant="gold" icon="sparkles" onClick={prepareRequest}>Anfrage vorbereiten</Button>
               </>

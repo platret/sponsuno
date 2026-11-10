@@ -1,7 +1,8 @@
 // Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml and the Word
 // versions of the guide templates (dist/vorlagen/*.docx), then removes the temporary SSR build.
 // Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
-// - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor)
+// - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor); the theme script
+//   must already be in the head (vite.config.ts puts it in place of <!--theme-->)
 // - the empty <div id="root"> gets the server render
 // - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
 // Landing page: hydrated by src/main.tsx. Topic pages, guides, legal pages and the 404 page (dist/404.html): static,
@@ -13,7 +14,7 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const { render, headFor, titleFor, pages, htmlFile, SITE_URL, missingLegalContact, templateFiles } =
+const { render, headFor, titleFor, pages, htmlFile, SITE_URL, missingLegalContact, templateFiles, THEME_SCRIPT } =
   await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
 // Matches <div id="root"></div> and <div id="root" data-page="…"></div>
@@ -62,6 +63,8 @@ for (const page of pages) {
   if (!rootMarker.test(html)) throw new Error(`Empty <div id="root"> not found in dist/${file}`);
   if (!titleMarker.test(html)) throw new Error(`<title> not found in dist/${file}`);
   if (!html.includes(seoMarker)) throw new Error(`${seoMarker} marker not found in the <head> of dist/${file}`);
+  // The theme script (src/lib/theme.ts, put in by vite.config.ts) must run before the first paint on every page
+  if (!html.includes(THEME_SCRIPT)) throw new Error(`Theme script missing in the <head> of dist/${file} (<!--theme--> marker)`);
   if (/<meta name="description"|<link rel="canonical"|<meta property="og:|<meta name="twitter:|application\/ld\+json/.test(html)) {
     throw new Error(`dist/${file} has its own description, canonical, Open Graph/Twitter tags or JSON-LD: remove them, they come from headFor() and src/pages.ts`);
   }

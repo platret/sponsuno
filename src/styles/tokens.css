@@ -29,7 +29,6 @@
   --radius: 16px;
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
-  --focus: var(--gold-dark);
 
   /* Motion (DESIGN.md -> Motion). Time-based motion uses --ease-out; scroll-linked motion is linear and
      measured in scroll distance: an element starts when its top edge enters the viewport and is final
@@ -51,13 +50,72 @@
   --scroll-recede-scale: 1;
   --scroll-recede-opacity: .4;
 
-  /* "light dark" tells Safari's Adaptive Dark Mode and dark-mode extensions (Noir, Dark Reader) that the page
-     handles dark mode itself, so they leave the CD colours alone. The page keeps one look: body pins the
-     UA defaults (form controls, scrollbars) to light, and every surface sets its own colours. */
-  color-scheme: light dark;
+  /* Theme tokens (DESIGN.md -> Colour, Theme). Light is the default; :root[data-theme="dark"] (set before the first
+     paint by the inline head script, THEME_SCRIPT in src/lib/theme.ts) and, without JavaScript, the visitor's system
+     setting switch to dark. Section CSS uses these for everything that follows the theme (page surfaces, text, lines,
+     the primary button on the page surface); surfaces that are navy by design (hero, story, KI device, waitlist,
+     footer, the page head band of the static pages) keep the raw CD tokens above in both themes. */
+  --bg: var(--paper);                  /* page surface (paper sections, reading column, scrolled header) */
+  --bg-alt: var(--ivory);              /* alternate band, boxes on the page surface (table of contents) */
+  --surface: var(--paper);             /* cards on either band */
+  --heading: var(--navy);              /* H1-H3, strong labels, link text */
+  --text: var(--ink);                  /* body and secondary text */
+  --line: var(--rule);                 /* hairlines, card borders */
+  --accent-text: var(--gold-dark);     /* gold text and icons on the page surface */
+  --btn-bg: var(--navy);               /* primary button on the page surface (.btn-navy) */
+  --btn-fg: var(--ivory);
+  --btn-bg-hover: var(--navy-2);
+  --edge: transparent;                 /* where a navy-by-design block meets the page surface (visible in dark only) */
+  --wordmark-ink: block;               /* landing header once solid: navy wordmark (light) or ivory wordmark (dark) */
+  --wordmark-ivory: none;
+  --focus: var(--gold-dark);
+
+  /* The color-scheme meta of every page says "light dark": Safari's Adaptive Dark Mode and dark-mode extensions (Noir,
+     Dark Reader; plus the darkreader-lock meta) then leave the CD colours alone, because the page handles dark mode
+     itself. The per-theme value here pins the UA defaults (form controls, scrollbars) to the theme shown. */
+  color-scheme: light;
 }
 
-body { color-scheme: light; }
+/* Dark: the navy brand world on every page. The same block twice: once for the visitor's explicit choice (or the
+   system setting read by the head script), once for the system setting without JavaScript. Keep them identical. */
+:root[data-theme="dark"] {
+  --bg: var(--navy);
+  --bg-alt: #10203D;
+  --surface: #15284A;
+  --heading: var(--ivory);
+  --text: var(--steel);
+  --line: var(--card-dark-line);
+  --accent-text: var(--gold-light);
+  --btn-bg: var(--gold-light);
+  --btn-fg: var(--navy);
+  --btn-bg-hover: var(--gold);
+  --edge: var(--card-dark-line);
+  --wordmark-ink: none;
+  --wordmark-ivory: block;
+  --focus: var(--gold-light);
+  --shadow-card: 0 1px 2px rgba(3, 8, 20, .3), 0 12px 32px -18px rgba(3, 8, 20, .7);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: var(--navy);
+    --bg-alt: #10203D;
+    --surface: #15284A;
+    --heading: var(--ivory);
+    --text: var(--steel);
+    --line: var(--card-dark-line);
+    --accent-text: var(--gold-light);
+    --btn-bg: var(--gold-light);
+    --btn-fg: var(--navy);
+    --btn-bg-hover: var(--gold);
+    --edge: var(--card-dark-line);
+    --wordmark-ink: none;
+    --wordmark-ivory: block;
+    --focus: var(--gold-light);
+    --shadow-card: 0 1px 2px rgba(3, 8, 20, .3), 0 12px 32px -18px rgba(3, 8, 20, .7);
+    color-scheme: dark;
+  }
+}
 
 @media (max-width: 600px) {
   :root {

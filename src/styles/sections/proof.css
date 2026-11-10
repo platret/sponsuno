@@ -6,13 +6,14 @@
 
 .proof {
   padding-block: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
-  border-bottom: 1px solid var(--rule);
+  border-top: 1px solid var(--edge); /* dark theme: the seam under the navy story */
+  border-bottom: 1px solid var(--line);
   text-align: center;
 }
 
 .proof-items {
   display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
-  font-size: .9375rem; line-height: 1.5; color: var(--ink);
+  font-size: .9375rem; line-height: 1.5; color: var(--text);
 }
 .proof-items li { display: flex; align-items: flex-start; }
 
@@ -22,7 +23,7 @@
   content: ""; flex: none;
   width: 4px; height: 4px;
   margin-top: calc((1.5em - 4px) / 2);
-  border-radius: 50%; background: var(--gold-dark);
+  border-radius: 50%; background: var(--accent-text);
 }
 .proof-items li:first-child::before { display: none; }
 .proof-items li + li::before { margin-inline: 1.15rem; }
@@ -31,7 +32,7 @@
   display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
   gap: .25rem 1.1rem;
   margin-top: 1.1rem;
-  font-size: .875rem; line-height: 1.5; color: var(--ink);
+  font-size: .875rem; line-height: 1.5; color: var(--text);
 }
 /* Plain words separated by space only: works at every wrap point, no dangling separators */
 .proof-list { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.1rem; min-width: 0; }
@@ -47,7 +48,7 @@
   .proof-items li { display: block; }
   .proof-items li::before,
   .proof-items li + li::before { display: none; }
-  .proof-items li + li { padding-left: 2rem; border-left: 1px solid var(--rule); }
+  .proof-items li + li { padding-left: 2rem; border-left: 1px solid var(--line); }
   .proof-disciplines { flex-wrap: nowrap; justify-content: flex-start; margin-top: 1.5rem; }
   .proof-label { flex: none; }
   .proof-list { justify-content: flex-start; }

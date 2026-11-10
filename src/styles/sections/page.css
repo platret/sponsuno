@@ -8,14 +8,12 @@
 /* The footer after a topic page never moves, even where html.scroll-fx is set for the bento (/ki-manager/) */
 .scroll-fx .pg ~ .ft [data-scroll] { animation-name: none; }
 
-/* The first section sits under the slim static header: the top space of the legal pages, not a full section pad */
-.pg > .section:first-child { padding-top: clamp(3rem, 2rem + 4vw, 5.5rem); }
+/* The first section sits under the page head band (PageBand, legal.css): the top space of the legal pages, not a
+   full section pad */
+.pg > .lg-band + .section { padding-top: clamp(3rem, 2rem + 4vw, 5.5rem); }
 
-/* The first section's title is the page's H1: a step above the H2 size, below the landing page hero */
+/* The page's H1 in the band (the first section's title): a step above the H2 size, below the landing page hero */
 .pg h1 { font-size: clamp(2.375rem, 1.5rem + 2.8vw, 3.75rem); line-height: 1.02; }
-
-/* No fixed header above the content here: the sticky FAQ title (faq.css) keeps only its own top space */
-.pg .faq-head { top: 2rem; }
 
 /* H2 that looks like an H3 (Manrope 600): card titles, founder names and "Stand des Projekts" under the page H1 */
 .pg-h3 {
@@ -28,21 +26,20 @@
 /* After another paper section: a hairline at the container width instead of a second band */
 .surface-paper + .pg-end { padding-top: 0; }
 .surface-paper + .pg-end > .container::before {
-  content: ""; display: block; height: 1px; margin-bottom: clamp(3rem, 2rem + 3vw, 4.5rem); background: var(--rule);
+  content: ""; display: block; height: 1px; margin-bottom: clamp(3rem, 2rem + 3vw, 4.5rem); background: var(--line);
 }
 .pg-end h2 { max-width: 40rem; }
 .pg-end-text { margin-top: 1rem; max-width: 38rem; font-size: var(--fs-lead); line-height: 1.55; }
 .pg-end-more { margin-top: .75rem; max-width: 38rem; }
 .pg-end-more a {
-  color: var(--navy); font-weight: 600;
+  color: var(--heading); font-weight: 600;
   text-decoration-color: var(--gold); text-underline-offset: 3px;
 }
 .pg-end-more a:hover { text-decoration-thickness: 2px; }
 .pg-end-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 1.75rem; }
 .pg-end-demo {
   display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
-  font-weight: 600; color: var(--navy); text-decoration: none;
+  font-weight: 600; color: var(--heading); text-decoration: none;
 }
 .pg-end-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 .pg-end-demo:hover .pg-end-demo-label { text-decoration-thickness: 2px; }
-.pg-end-demo-note { font-size: .875rem; font-weight: 400; color: var(--ink); }

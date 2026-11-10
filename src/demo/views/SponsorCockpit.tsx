@@ -185,13 +185,12 @@ function OverviewTab({ own, requests }: { own: Partnership[]; requests: Partners
         </Card>
 
         <section className="sp-note" aria-labelledby="sp-note-title">
-          <h2 id="sp-note-title">Was Sponsuno für Sponsoren leisten soll</h2>
+          <h2 id="sp-note-title">Was Sponsuno für Sponsoren leistet</h2>
           <ul className="sp-dots">
-            <li><strong>Passende Partner aus der Region.</strong> Vorschläge sollen nach Region, Unterstützungsart, Branche und Budget geordnet sein.</li>
-            <li><strong>Gegenleistungen vorab festgehalten.</strong> Was Sie erhalten, soll vor dem Start der Partnerschaft schriftlich vereinbart sein.</li>
-            <li><strong>Überblick an einem Ort.</strong> Anfragen, laufende Partnerschaften und Budget sollen gemeinsam sichtbar sein.</li>
+            <li><strong>Passende Partner aus der Region.</strong> Vorschläge sind nach Region, Unterstützungsart, Branche und Budget geordnet.</li>
+            <li><strong>Gegenleistungen vorab festgehalten.</strong> Was Sie erhalten, ist vor dem Start der Partnerschaft schriftlich vereinbart.</li>
+            <li><strong>Überblick an einem Ort.</strong> Anfragen, laufende Partnerschaften und Budget sind gemeinsam sichtbar.</li>
           </ul>
-          <p className="sp-quiet">Die Plattform ist geplant. Diese Ansicht zeigt, wie sie funktionieren soll.</p>
         </section>
       </div>
     </div>
@@ -343,7 +342,7 @@ function BudgetCard({ own }: { own: Partnership[] }) {
       {later > 0 && <p className="sp-budget-rest">Für {nextYear} bereits vereinbart: {formatChf(later)}.</p>}
 
       <p className="sp-budget-note">
-        Fiktive Zahlen der Demo. Gezählt werden aktive und vereinbarte Partnerschaften. Als Richtwert dient der obere
+        Beispielzahlen. Gezählt werden aktive und vereinbarte Partnerschaften. Als Richtwert dient der obere
         Budgetrahmen aus Ihrem Profil (dort pro Partnerschaft angegeben).
       </p>
     </Card>
@@ -528,7 +527,7 @@ function SuggestionCard({ match, seeker, partnership }: { match: MatchResult; se
             variant="gold"
             size="md"
             icon="mail"
-            onClick={() => toast('In der Demo wird keine Nachricht gesendet.')}
+            onClick={() => toast('Kontakt aufgenommen (simuliert).')}
           >
             Kontakt aufnehmen (simuliert)<span className="visually-hidden"> mit {seeker.name}</span>
           </Button>
@@ -589,7 +588,7 @@ function ProfileTab() {
 
         <p className="sp-profile-note">
           <Icon name="edit" size={18} />
-          Das Bearbeiten des Unternehmensprofils ist geplant. In dieser Demo ist es nur zur Ansicht.
+          Das Unternehmensprofil ist hier nur zur Ansicht.
         </p>
       </Card>
 
@@ -613,7 +612,7 @@ function ProfileTab() {
             <dd>{formatRange(sponsor.budget)}</dd>
           </div>
         </dl>
-        <p className="sp-quiet">In der Demo werden die Vorschläge nach diesen vier Kriterien geordnet.</p>
+        <p className="sp-quiet">Sponsuno ordnet die Vorschläge nach diesen vier Kriterien.</p>
         <Button variant="navy" size="md" href={href('sponsor', 'vorschlaege')} icon="arrowRight">Vorschläge ansehen</Button>
       </section>
     </div>

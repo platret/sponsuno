@@ -1,5 +1,6 @@
-/* Header: transparent at the top, solid navy over the hero and the story, solid paper bar over the light page.
-   Without JS it is always solid navy (nothing runs under it). Mobile: paper sheet menu. */
+/* Header: transparent at the top, solid navy over the hero and the story, solid page-surface bar once the page
+   surface reaches it (paper in the light theme, navy in the dark one). Without JS it is always solid navy (nothing
+   runs under it). Mobile: sheet menu on the page surface. */
 
 .site-header {
   position: fixed; inset: 0 0 auto; z-index: 50;
@@ -15,19 +16,20 @@ html:not(.js) .site-header {
   border-bottom-color: var(--card-dark-line);
 }
 .site-header.is-solid {
-  background: var(--paper);
-  border-bottom-color: var(--rule);
-  color: var(--navy);
-  --focus: var(--gold-dark);
+  background: var(--bg);
+  border-bottom-color: var(--line);
+  color: var(--heading);
+  --focus: var(--accent-text);
 }
 
 .header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
 
 .brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
 .brand img { width: 118px; height: auto; }
-.brand-on-light,
-.is-solid .brand-on-dark { display: none; }
-.is-solid .brand-on-light { display: block; }
+.brand-on-light { display: none; }
+/* Solid bar: the navy wordmark on paper (light theme), the ivory one on navy (dark theme) */
+.is-solid .brand-on-dark { display: var(--wordmark-ivory); }
+.is-solid .brand-on-light { display: var(--wordmark-ink); }
 
 .main-nav ul { display: flex; gap: .25rem; }
 .main-nav a {
@@ -38,16 +40,16 @@ html:not(.js) .site-header {
 }
 .main-nav a:hover,
 .main-nav a[aria-current] { color: var(--ivory); }
-.is-solid .main-nav a { color: var(--ink); }
+.is-solid .main-nav a { color: var(--text); }
 .is-solid .main-nav a:hover,
-.is-solid .main-nav a[aria-current] { color: var(--navy); }
+.is-solid .main-nav a[aria-current] { color: var(--heading); }
 .main-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 
 .header-actions { display: flex; align-items: center; gap: .5rem; }
 .header-cta { background: var(--gold-light); color: var(--navy); }
 .header-cta:hover { background: var(--gold); }
-.is-solid .header-cta { background: var(--navy); color: var(--ivory); }
-.is-solid .header-cta:hover { background: var(--navy-2); }
+.is-solid .header-cta { background: var(--btn-bg); color: var(--btn-fg); }
+.is-solid .header-cta:hover { background: var(--btn-bg-hover); }
 .header-cta-short { display: none; }
 
 .menu-toggle {
@@ -74,14 +76,14 @@ html:not(.js) .site-header {
   position: fixed; inset: calc(var(--header-h) + env(safe-area-inset-top, 0px)) 0 0; z-index: 49;
   overflow-y: auto; overscroll-behavior: contain;
   padding: 1rem var(--gutter) calc(2rem + env(safe-area-inset-bottom, 0px));
-  background: var(--paper);
-  --focus: var(--gold-dark);
+  background: var(--bg);
+  --focus: var(--accent-text);
 }
 .menu-sheet[hidden] { display: none; }
-.menu-links li { border-bottom: 1px solid var(--rule); }
+.menu-links li { border-bottom: 1px solid var(--line); }
 .menu-links a {
   display: block; padding: .9rem 0;
-  font: 600 clamp(1.75rem, 7vw, 2.25rem)/1.15 var(--serif); color: var(--navy); text-decoration: none;
+  font: 600 clamp(1.75rem, 7vw, 2.25rem)/1.15 var(--serif); color: var(--heading); text-decoration: none;
 }
 .menu-cta { width: 100%; margin-top: 1.75rem; }
 .motion .menu-sheet:not([hidden]) { animation: sheet-in .35s var(--ease-out); }
@@ -96,6 +98,7 @@ html:not(.js) .site-header {
   .main-nav { display: none; }
   .menu-toggle { display: grid; }
   .header-inner { gap: 1rem; }
+  .header-actions { gap: .25rem; }
 }
 @media (max-width: 420px) {
   .header-cta-long { display: none; }

@@ -11,6 +11,7 @@ import { absoluteUrl, htmlFile, pageMeta, pages, site, SITE_URL, type PageId } f
 
 export { htmlFile, pages, SITE_URL };
 export { templateFiles } from './lib/templates';
+export { THEME_SCRIPT } from './lib/theme';
 export type { PageId };
 
 export function render(id: PageId = 'home'): string {

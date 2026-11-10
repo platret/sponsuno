@@ -10,8 +10,8 @@ import '../styles/sections/audience.css';
 const images: Record<AudienceImage, string> = { athlete, sportverein, kulturverein, firma };
 
 /**
- * Paper section under the proof line: who Sponsuno is meant for. Four stock photos (Symbolbilder, labelled
- * below the grid, credited in the Impressum), each with a short label, one sentence and a link to where that
+ * Paper section under the proof line: who Sponsuno is meant for. Four stock photos (Symbolbilder, named as such in
+ * the landing page footer and the Impressum, credited there), each with a short label, one sentence and a link to where that
  * side goes next ("two doors": seekers to a guide, companies to /fuer-firmen/). No cards.
  * Scroll motion (DESIGN.md -> Motion): head and tiles rise with stagger, each photo opens inside its frame.
  */
@@ -49,9 +49,6 @@ export function Audience() {
             </li>
           ))}
         </ul>
-        <p className="aud-note" data-reveal="" data-scroll="fade">
-          {audience.noteBefore}<a href={pageHref(audience.noteLinkHref)}>{audience.noteLink}</a>{audience.noteAfter}
-        </p>
       </div>
     </section>
   );

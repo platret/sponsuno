@@ -3,14 +3,14 @@ import { pageMeta } from '../pages';
 import { pageHref, siteHref, waitlistHref } from '../lib/links';
 import { DOCX_TYPE, templateFile } from '../lib/templates';
 import { Footer } from './Footer';
-import { PageHeader } from './PageHeader';
+import { PageBand, PageHeader } from './PageHeader';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
 
 /**
- * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: slim header,
- * one 42rem column, table of contents, standalone footer) plus a few guide blocks (guide.css, prefix gd-).
+ * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: navy header and page
+ * head band, one 42rem column, table of contents, standalone footer) plus a few guide blocks (guide.css, prefix gd-).
  * Static: prerendered at build time, shipped without JavaScript. Copy in content.ts → guides,
  * title and description in src/pages.ts.
  */
@@ -23,13 +23,12 @@ export function GuidePage({ id }: { id: GuideId }) {
       <PageHeader current={{ path, kind: 'guide' }} role={guide.waitlistRole} />
 
       <main id="inhalt" className="lg">
+        <PageBand titleId="lg-title" title={guide.title} narrow>
+          <p className="lg-intro">{rich(guide.intro)}</p>
+          <p className="lg-updated">{guidePage.byline} · {guidePage.updated}</p>
+        </PageBand>
         <div className="container">
           <article className="lg-col" aria-labelledby="lg-title">
-            <h1 id="lg-title">{guide.title}</h1>
-            <p className="lg-intro">{rich(guide.intro)}</p>
-            <p className="lg-updated">{guidePage.byline} · {guidePage.updated}</p>
-            <p className="gd-note">{guidePage.plannedNote}</p>
-
             <nav className="lg-toc" aria-labelledby="lg-toc-title">
               <p className="lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
               <ol>
@@ -103,7 +102,6 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
           <a className="btn btn-navy" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
-            <span className="gd-cta-demo-note">{guidePage.ctaDemoNote}</span>
           </a>
         </div>
       );
