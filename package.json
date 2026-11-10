@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "check:dist": "node scripts/check-dist.mjs",
     "test:e2e": "playwright test",
-    "fonts": "node scripts/subset-fonts.mjs"
+    "fonts": "node scripts/subset-fonts.mjs",
+    "photos": "node scripts/photos.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -25,6 +26,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "6.1.2",
+    "sharp": "0.35.5",
     "subset-font": "2.9.0",
     "typescript": "~5.9.3",
     "vite": "8.3.5"

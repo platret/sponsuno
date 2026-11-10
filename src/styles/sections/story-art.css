@@ -152,6 +152,9 @@ svg.half path { fill: var(--gold-light); stroke: none; }
 .match-party { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.1rem; border-radius: 14px; }
 .match-athlete { background: var(--paper); }
 .match-sponsor { background: var(--navy); border: 1px solid var(--card-dark-line); }
+/* The <picture> around the avatar (AVIF, JPEG fallback) is the flex item; not display: contents, which would make its
+   <source> an empty flex item and add a gap */
+.match-picture { display: block; flex: none; }
 .match-photo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: none; }
 .match-mark {
   width: 52px; height: 52px; border-radius: 50%; flex: none;

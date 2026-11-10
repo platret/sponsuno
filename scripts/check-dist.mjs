@@ -13,6 +13,8 @@
 // - 404.html, which is served under any URL, uses a relative URL
 // - the text of a page or a script uses a character outside the core font subset (scripts/font-glyphs.mjs): it would
 //   load an extra font file the page does not preload, or render in a system font
+// - dist/_headers misses the immutable rule of a file in dist/assets/, gives a splat rule a long cache (it would cover
+//   the 404 page too), names a file that does not exist, makes an unhashed file immutable, or has over 100 rules
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -303,6 +305,39 @@ for (const [file, { tags, ids }] of pages) {
   }
 }
 
+// --- Cache rules (dist/_headers) ---
+// Cloudflare applies a _headers rule by request path, whatever the status. So a long cache only on exact paths of files
+// that exist: every file in dist/assets/ has its own immutable rule (written by scripts/prerender.mjs), no splat rule
+// sets Cache-Control (it would also cover the 404 page served for a missing file under it), every exact-path rule
+// names a file in dist/, and the file stays within Cloudflare's 100 rules.
+
+const headersFile = path.join(dist, '_headers');
+if (!(await exists(headersFile))) {
+  problems.push('dist/_headers: missing');
+} else {
+  const rules = [];
+  for (const line of (await readFile(headersFile, 'utf8')).split('\n')) {
+    if (line.startsWith('/')) rules.push({ path: line.trim(), headers: [] });
+    else if (/^\s+\S/.test(line) && !line.trim().startsWith('#') && rules.length) rules.at(-1).headers.push(line.trim());
+  }
+  if (rules.length > 100) problems.push(`dist/_headers: ${rules.length} rules, Cloudflare allows 100`);
+  const IMMUTABLE = 'Cache-Control: public, max-age=31536000, immutable';
+  for (const { path: rulePath, headers } of rules) {
+    const cache = headers.find((h) => /^cache-control:/i.test(h));
+    if (!cache) continue;
+    if (rulePath.includes('*') || rulePath.includes('/:')) {
+      if (/immutable|max-age=(\d{6,}|[2-9]\d{4,})/i.test(cache)) problems.push(`dist/_headers: ${rulePath} gives a long cache to every URL under it, the 404 page included: list the files instead`);
+      continue;
+    }
+    if (!(await exists(path.join(dist, decodeURIComponent(rulePath.slice(1)))))) problems.push(`dist/_headers: ${rulePath} has a Cache-Control rule, but dist${rulePath} does not exist`);
+    if (cache.includes('immutable') && !rulePath.startsWith('/assets/')) problems.push(`dist/_headers: ${rulePath} is not a hashed file, it must not be immutable`);
+  }
+  for (const entry of await readdir(path.join(dist, 'assets'))) {
+    const rule = rules.find((r) => r.path === `/assets/${entry}`);
+    if (!rule?.headers.includes(IMMUTABLE)) problems.push(`dist/_headers: no "${IMMUTABLE}" rule for /assets/${entry} (scripts/prerender.mjs writes them)`);
+  }
+}
+
 // --- Report ---
 
 if (problems.length) {
@@ -311,4 +346,4 @@ if (problems.length) {
   console.error('');
   process.exit(1);
 }
-console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS, all text in the core font subset)`);
+console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS, all text in the core font subset, cache rules)`);

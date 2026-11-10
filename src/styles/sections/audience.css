@@ -17,7 +17,8 @@
 }
 
 /* Wrapper for the photo primitive (overflow clip, radius, clip-path). Same box as the img, so no layout shift;
-   the img keeps its own radius for the fallback. */
+   the img keeps its own radius for the fallback. Inside it the <picture> (AVIF srcset, JPEG fallback) is what
+   scales: a block, because an inline box cannot take `scale`. */
 .aud-frame {
   display: block; border-radius: var(--radius);
   /* Photos start with their tile's stagger but all settle within a few vh of each other: with the full
@@ -25,6 +26,8 @@
      Inherited by the img, so frame clip and image scale stay in step. */
   --scroll-range-end: cover calc(var(--scroll-dist-long) + var(--scroll-i, 0) * var(--scroll-stagger) / 3);
 }
+
+.aud-picture { display: block; }
 
 .aud-photo {
   width: 100%; height: auto;
@@ -83,5 +86,5 @@
 @media (min-height: 1340px) {
   .scroll-fx .aud-item,
   .scroll-fx .aud-frame,
-  .scroll-fx .aud-photo { animation: none; }
+  .scroll-fx .aud-picture { animation: none; }
 }

@@ -1,5 +1,6 @@
-// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml and the Word
-// versions of the guide templates (dist/vorlagen/*.docx), then removes the temporary SSR build.
+// Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml, the Word
+// versions of the guide templates (dist/vorlagen/*.docx) and the cache rules of dist/assets/ into dist/_headers, then
+// removes the temporary SSR build.
 // Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
 // - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor); the theme script
 //   must already be in the head (vite.config.ts puts it in place of <!--theme-->)
@@ -7,7 +8,7 @@
 // - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
 // Landing page: hydrated by src/main.tsx. Topic pages, guides, legal pages and the 404 page (dist/404.html): static,
 // CSS only, no JavaScript (src/static/main.ts, plus src/static/sections.ts on the topic pages).
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
@@ -101,6 +102,24 @@ for (const { path: file, bytes } of templates) {
   await writeFile(path.join(root, 'dist', file), bytes);
   console.log(`Wrote dist/${file} (${bytes.length} bytes)`);
 }
+
+// Cache rules for the hashed build output (public/_headers, "#assets-cache-rules"): one exact-path rule per file in
+// dist/assets/, so only files that exist are immutable. A splat (/assets/*) would also mark the 404 page served for a
+// missing /assets/ URL immutable for a year (Cloudflare matches _headers rules by request path, not by status).
+const headersFile = path.join(root, 'dist', '_headers');
+const ASSETS_MARKER = '#assets-cache-rules';
+const MAX_HEADER_RULES = 100; // Cloudflare Workers static assets: at most 100 rules per _headers file
+const headers = await readFile(headersFile, 'utf8');
+if (!headers.includes(ASSETS_MARKER)) throw new Error(`${ASSETS_MARKER} marker not found in public/_headers`);
+const assetFiles = (await readdir(path.join(root, 'dist', 'assets'))).sort();
+const assetRules = assetFiles.map((file) => `/assets/${file}\n  Cache-Control: public, max-age=31536000, immutable`).join('\n');
+const headersOut = headers.replace(ASSETS_MARKER, () => assetRules);
+const ruleCount = headersOut.split('\n').filter((line) => line.startsWith('/')).length;
+if (ruleCount > MAX_HEADER_RULES) {
+  throw new Error(`dist/_headers has ${ruleCount} rules, Cloudflare allows ${MAX_HEADER_RULES}: fewer files in dist/assets/ or fewer rules in public/_headers`);
+}
+await writeFile(headersFile, headersOut);
+console.log(`Wrote dist/_headers (${assetFiles.length} immutable asset rules, ${ruleCount} rules in all)`);
 
 // The controller's contact data is required by DSG Art. 19 and DSGVO Art. 13 as soon as the pages are public.
 const missing = missingLegalContact();

@@ -68,6 +68,9 @@ export default defineConfig({
     // CSS-only entry of the static pages (src/static/main.ts) compiles to an empty module, whose <script> tag
     // scripts/prerender.mjs then drops, so legal pages and guides ship no JavaScript.
     modulePreload: { polyfill: false },
+    // AVIF photos stay files even under the 4 KB inline limit (the match card avatar is 3.2 KB): as a data: URI it
+    // would sit in main.js and in every story snapshot of the prerendered HTML instead of loading lazily once.
+    assetsInlineLimit: (file) => (file.endsWith('.avif') ? false : undefined),
     rolldownOptions: {
       input,
       output: {

@@ -1,4 +1,5 @@
 import photo from '../assets/photos/mtb-athlete-104.jpg';
+import photoAvif from '../assets/photos/mtb-athlete-104.avif';
 import type { CSSProperties } from 'react';
 import { match } from '../content';
 
@@ -14,7 +15,11 @@ export function MatchCard() {
       <figcaption className="match-label">{match.label}</figcaption>
 
       <div className="match-party match-athlete">
-        <img className="match-photo" src={photo} alt="" width={52} height={52} decoding="async" loading="lazy" />
+        {/* AVIF with the JPEG as fallback (scripts/photos.mjs) */}
+        <picture className="match-picture">
+          <source type="image/avif" srcSet={photoAvif} />
+          <img className="match-photo" src={photo} alt="" width={52} height={52} decoding="async" loading="lazy" />
+        </picture>
         <div className="match-party-text">
           <p className="match-role">{match.athlete.role}</p>
           <p className="match-name">{match.athlete.name}</p>

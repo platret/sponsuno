@@ -1,8 +1,33 @@
 # Response headers for Cloudflare Workers static assets (copied to dist/_headers, not served as a file).
 
-# Hashed build output: cache for a year
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
+# Hashed build output: cache for a year, one rule per file. scripts/prerender.mjs writes them in place of the marker
+# below (the build fails without it). No /assets/* splat: rules match the request path whatever the status, so a
+# splat would also give the 404 page that Cloudflare serves for a missing /assets/ file (an old hash after a deploy or
+# a rollback) "immutable" for a year, in browsers and at the edge. A URL without its own rule keeps Cloudflare's
+# default (public, max-age=0, must-revalidate). Cloudflare allows at most 100 rules in this file (the build checks).
+#assets-cache-rules
+
+# Unhashed files that crawlers, browsers and share previews fetch under fixed URLs (public/, sitemap.xml written by
+# prerender). Exact paths, no splats (see above). Icons and the share image: one day fresh, then served from cache for up
+# to a week while the browser revalidates (the ETag makes that a 304). Not immutable: a new icon keeps its URL.
+/favicon.svg
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/favicon.ico
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/icon-192.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/icon-512.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/og-image.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Read by crawlers: an hour, so a change reaches them the same day
+/robots.txt
+  Cache-Control: public, max-age=3600
+/sitemap.xml
+  Cache-Control: public, max-age=3600
 
 # Clickable demo with fictional data: keep it out of search results (backup for its meta robots noindex).
 # Not blocked in robots.txt on purpose: crawlers must fetch it to see the noindex.
@@ -14,6 +39,9 @@
 /vorlagen/*
   Cache-Control: public, max-age=3600
   X-Robots-Tag: noindex
+
+# HTML pages and the 404 page get no rule here: Cloudflare's default (public, max-age=0, must-revalidate), so a deploy
+# shows at once. The /* rule below sets no Cache-Control either (two rules with the same header are joined by a comma).
 
 # Every response. HTTPS only (HSTS without includeSubDomains/preload: keeps the Infomaniak mail hostnames out of it),
 # no MIME sniffing, only the origin as referrer to other sites, no framing (not even by the site itself), and no camera, microphone,
