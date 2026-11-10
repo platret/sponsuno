@@ -31,7 +31,8 @@ jobs:
       # Built without VITE_WAITLIST_ENDPOINT on purpose: the tests must never sign up to the real waitlist
       - name: Build
         run: npm run build
-      - name: Check dist (head tags, sitemap, links, anchors, JSON-LD, no JS on static pages)
+      # Also prints the size table and fails when a page goes over its size budget (scripts/dist-size.mjs)
+      - name: Check dist (head tags, sitemap, links, anchors, JSON-LD, no JS on static pages, size budget)
         run: npm run check:dist
       - name: Read Playwright version
         id: playwright
@@ -48,7 +49,7 @@ jobs:
       - name: Install Chromium system dependencies
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
-      - name: Browser smoke tests
+      - name: Browser tests (smoke tests and axe accessibility checks)
         run: npm run test:e2e
       - name: Upload Playwright report
         if: failure()

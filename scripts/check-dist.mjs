@@ -9,16 +9,20 @@
 // - a JSON-LD block is not valid JSON
 // - a page other than the landing page and the demo loads a script file (the static pages ship no JavaScript by
 //   design: scripts/prerender.mjs drops their empty module; inline scripts in the head are fine)
-// - a script the landing page loads contains text of the legal pages, the guides, /fuer-firmen/ or the 404 page
+// - a script the landing page loads (module script, modulepreloads and their static imports) contains text of the legal
+//   pages, the guides, /fuer-firmen/ or the 404 page
 // - 404.html, which is served under any URL, uses a relative URL
 // - the text of a page or a script uses a character outside the core font subset (scripts/font-glyphs.mjs): it would
 //   load an extra font file the page does not preload, or render in a system font
 // - dist/_headers misses the immutable rule of a file in dist/assets/, gives a splat rule a long cache (it would cover
 //   the 404 page too), names a file that does not exist, makes an unhashed file immutable, or has over 100 rules
+// - the landing page's initial JS or CSS, the demo's initial JS or a static page's CSS exceeds its size budget
+//   (scripts/dist-size.mjs; a size table is printed on every run)
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { CORE_POINTS, EXTRA_POINTS, FALLBACK_OK } from './font-glyphs.mjs';
+import { checkSizes, initialScripts } from './dist-size.mjs';
 
 const SITE_URL = 'https://sponsuno.ch/';
 const SITE_ORIGIN = new URL(SITE_URL).origin;
@@ -171,17 +175,15 @@ const FOREIGN_TEXT = [
   ['datenschutz/index.html', 'Rechtsgrundlage'],
   ['impressum/index.html', 'SIL Open Font'],
   ['sponsoren-finden/index.html', 'Sponsoring ist ein Austausch'],
+  ['sponsoring-anfrage/index.html', 'Klären Sie vor dem ersten Satz drei Dinge'],
+  ['sponsoring-dossier/index.html', 'Wozu ein Dossier, und wann eine kurze Mail reicht'],
+  ['kultursponsoring/index.html', 'Instrumente, Kostüme und Technik als Sachleistung'],
   ['fuer-firmen/index.html', 'Was Vereine, Sportlerinnen und Sportler bieten'],
   ['404.html', 'Diese Seite gibt es nicht'],
 ];
 const home = pages.get('index.html');
 if (home) {
-  const homeScripts = [
-    ...home.scripts.map(({ attrs }) => attrs.src),
-    ...home.tags
-      .filter(({ name, attrs }) => name === 'link' && attrs.rel?.toLowerCase().split(/\s+/).includes('modulepreload'))
-      .map(({ attrs }) => attrs.href),
-  ].filter((src) => src?.startsWith('/assets/'));
+  const homeScripts = await initialScripts(dist, home.tags, home.scripts);
   const sources = await Promise.all(homeScripts.map(async (src) => [src, await readFile(path.join(dist, src), 'utf8').catch(() => '')]));
   for (const [file, marker] of FOREIGN_TEXT) {
     const page = await readFile(path.join(dist, file), 'utf8').catch(() => '');
@@ -338,6 +340,12 @@ if (!(await exists(headersFile))) {
   }
 }
 
+// --- Size budget (scripts/dist-size.mjs) ---
+
+const sizes = await checkSizes(dist, pages);
+problems.push(...sizes.problems);
+console.log(`${sizes.rows.join('\n')}\n`);
+
 // --- Report ---
 
 if (problems.length) {
@@ -346,4 +354,4 @@ if (problems.length) {
   console.error('');
   process.exit(1);
 }
-console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS, all text in the core font subset, cache rules)`);
+console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS, all text in the core font subset, cache rules, size budget)`);

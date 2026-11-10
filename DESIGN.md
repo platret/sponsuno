@@ -50,6 +50,7 @@ Alpha variants follow the tokens with `color-mix()` (outline button border, tab 
 
 Rules:
 - Gold text on light only in `--gold-dark`. `#B08D57` as text on light fails contrast (2.7:1).
+- Small text at least 4.5:1 in both themes, checked by axe in CI (`e2e/a11y.spec.ts`). Text inside the hero start frame and the story stage (both `aria-hidden` pictures) may fade below that as part of the picture (the belt fade, the dimmed "heute" pairs), but its colours must pass at full opacity.
 - Button labels on gold are `--navy`.
 - Flat fills. The only gradient is the subtle 135° navy gradient of navy surfaces.
 - Documented extras outside the CD: `#F2C5B5` (form error text on navy), the dark theme's `#10203D` and `#15284A` (navy steps between `--navy` and `--card-dark-a`). The demo adds its own few, listed under "Demo app".
