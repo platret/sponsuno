@@ -24,7 +24,7 @@ export const isExternal = (href: string): boolean => /^https?:\/\//i.test(href);
 
 /**
  * Where the waitlist posts sign-ups. Empty (production until the team sets up storage): the form stores nothing, and the
- * waitlist and FAQ intros offer an e-mail to legal.contact.email instead. Read at build time, so prerendered pages match.
+ * waitlist and FAQ intros offer an e-mail to contact.email (content.ts) instead. Read at build time, so prerendered pages match.
  */
 export const WAITLIST_ENDPOINT = import.meta.env.VITE_WAITLIST_ENDPOINT?.trim() ?? '';
 

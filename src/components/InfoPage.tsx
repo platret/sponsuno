@@ -1,5 +1,5 @@
 import '../styles/sections/page.css';
-import { aiManager, faq, forFirms, infoPage, legal, pricing, team, type InfoPageId, type Role } from '../content';
+import { aiManager, contact, faq, forFirms, infoPage, pricing, team, type InfoPageId, type Role } from '../content';
 import { pageMeta } from '../pages';
 import { pageHref, waitlistHref, WAITLIST_ENDPOINT } from '../lib/links';
 import { AiManager } from './AiManager';
@@ -21,7 +21,7 @@ const ROLES: Partial<Record<InfoPageId, Role>> = { 'fuer-firmen': 'sponsor' };
  * address the line is left out. The button still leads to the landing page waitlist, which explains the e-mail route.
  */
 const closingLine = (live: string, preview: string): string | null =>
-  WAITLIST_ENDPOINT ? live : legal.contact.email ? preview : null;
+  WAITLIST_ENDPOINT ? live : contact.email ? preview : null;
 
 /**
  * Topic pages reached from the header (/fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/). Static:

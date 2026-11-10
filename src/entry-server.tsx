@@ -5,7 +5,7 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import App from './App';
 import { StaticPage, type StaticPageId } from './components/StaticPage';
-import { faq, legal } from './content';
+import { contact, faq } from './content';
 import { MOVED_SECTIONS, pageHref } from './lib/links';
 import { absoluteUrl, htmlFile, pageMeta, pages, site, SITE_URL, type PageId } from './pages';
 
@@ -98,7 +98,7 @@ const jsonLd = (data: unknown): string => JSON.stringify(data).replace(/</g, '\\
 function homeGraph() {
   const home = pageMeta('home');
   const orgId = `${SITE_URL}#organization`;
-  const [street, cityLine] = legal.contact.postalAddress ?? [];
+  const [street, cityLine] = contact.postalAddress ?? [];
   const city = cityLine?.match(/^(\d{4})\s+(.+)$/);
 
   return {
@@ -119,7 +119,7 @@ function homeGraph() {
         url: SITE_URL,
         logo: site.logo,
         description: home.description,
-        ...(legal.contact.email ? { email: legal.contact.email } : {}),
+        ...(contact.email ? { email: contact.email } : {}),
         ...(street && city
           ? {
               address: {
@@ -155,7 +155,7 @@ function faqGraph() {
   };
 }
 
-/** Names of the legal.contact fields that are still null (shown as pending on the legal pages). */
+/** Names of the contact fields (content.ts) that are still null (shown as pending on the legal pages). */
 export function missingLegalContact(): string[] {
-  return Object.entries(legal.contact).filter(([, value]) => value === null).map(([key]) => `legal.contact.${key}`);
+  return Object.entries(contact).filter(([, value]) => value === null).map(([key]) => `contact.${key}`);
 }

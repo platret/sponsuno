@@ -39,7 +39,7 @@
   transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 }
 .ps-stage:hover { border-color: var(--navy); }
-.ps-stage-count { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; line-height: 1; color: var(--navy); font-variant-numeric: lining-nums; }
+.ps-stage-count { font-family: var(--serif); font-weight: 600; font-size: 1.25rem; line-height: 1; color: var(--navy); font-variant-numeric: lining-nums; }
 .ps-stage-label { color: var(--navy); }
 .ps-stage[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); }
 .ps-stage[aria-pressed="true"] .ps-stage-label { color: var(--ivory); }
@@ -113,7 +113,7 @@
 .ps-row.is-declined { background: var(--paper); }
 .ps-row.is-declined .ps-row-link { color: var(--ink); }
 .ps-row-link {
-  font-family: var(--serif); font-weight: 700; font-size: 1.3rem; line-height: 1.2;
+  font-family: var(--serif); font-weight: 600; font-size: 1.3rem; line-height: 1.2;
   color: var(--navy); text-decoration: none;
 }
 /* Whole row is clickable; the accessible name stays the counterpart's name. */
@@ -125,7 +125,7 @@
 .ps-cell { min-width: 0; display: grid; align-content: start; gap: .3rem; }
 .ps-cell-label { font-size: .75rem; font-weight: 600; color: var(--ink); opacity: .85; }
 .ps-cell:last-of-type { grid-column: 1 / -1; }
-.ps-value { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; line-height: 1.15; color: var(--navy); font-variant-numeric: lining-nums; }
+.ps-value { font-family: var(--serif); font-weight: 600; font-size: 1.2rem; line-height: 1.15; color: var(--navy); font-variant-numeric: lining-nums; }
 .ps-value.is-open { font-family: var(--sans); font-size: .9375rem; font-weight: 600; color: var(--ink); }
 .ps-next-item { font-size: .9375rem; font-weight: 600; color: var(--navy); line-height: 1.35; }
 .ps-row .ui-progress { margin-top: .35rem; }
@@ -178,7 +178,7 @@
 .ps-facts dd { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .6rem; }
 .ps-facts dd .ps-dots { width: 100%; }
 .ps-fact-text { font-size: .9375rem; color: var(--navy); }
-.ps-fact-value { font-family: var(--serif); font-weight: 700; font-size: 1.6rem; line-height: 1.1; color: var(--navy); font-variant-numeric: lining-nums; }
+.ps-fact-value { font-family: var(--serif); font-weight: 600; font-size: 1.6rem; line-height: 1.1; color: var(--navy); font-variant-numeric: lining-nums; }
 
 @container (min-width: 560px) {
   .ps-facts > div { grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem; align-items: baseline; }
@@ -295,7 +295,7 @@
 }
 
 /* Review */
-.ps-review-date { font-family: var(--serif); font-weight: 700; font-size: 1.6rem; line-height: 1.1; color: var(--navy); }
+.ps-review-date { font-family: var(--serif); font-weight: 600; font-size: 1.6rem; line-height: 1.1; color: var(--navy); }
 .ps-review-rel { margin: .2rem 0 .85rem; }
 .ps-questions li { color: var(--ink); }
 .ps-summary { padding-top: .9rem; border-top: 1px solid var(--rule); display: grid; gap: .5rem; }
@@ -327,7 +327,7 @@
 .ps-link-hint { margin-top: -.15rem; max-width: 46ch; }
 
 /* Next step (dark footer card) */
-.ps-next { display: grid; gap: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); }
+.ps-next { display: grid; gap: 1.5rem; }
 .ps-next h2 { font-size: 1.625rem; font-weight: 600; }
 .ps-next h2:focus:not(:focus-visible) { outline: none; }
 .ps-next-text { margin-top: .5rem; max-width: 58ch; color: var(--steel); font-size: 1rem; }

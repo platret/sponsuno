@@ -1,4 +1,7 @@
 /* Sponsuno demo: shell and UI kit. Tokens come from tokens.css (CD Manual v1.0). View styles live next to each view. */
+/* Self-hosted fonts (no request to Google): only the CD weights, subset by scripts/subset-fonts.mjs. Imported here,
+   not from main.tsx, so the @font-face rules ship inside this stylesheet instead of a second render-blocking one. */
+@import '../styles/fonts.css';
 @import '../styles/tokens.css';
 
 /* Demo-only status colour for overdue items and destructive actions (documented in DESIGN.md) */
@@ -28,10 +31,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 h1, h2, h3 { font-family: var(--serif); color: var(--navy); line-height: 1.12; text-wrap: balance; }
 h1 { font-weight: 600; font-size: clamp(2rem, 3.4vw, 2.75rem); letter-spacing: -0.01em; }
-h2 { font-weight: 700; font-size: 1.375rem; }
-h3 { font-weight: 700; font-size: 1.15rem; }
+h2 { font-weight: 600; font-size: 1.375rem; }
+h3 { font-weight: 600; font-size: 1.15rem; }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+/* The views' stylesheets load after this one (one chunk per view, DemoApp.tsx), so a one-class view rule such as
+   .pf-icon-btn { border-radius: 50% } would now beat the line above. This keeps the focus ring as it was when they
+   came first: one class more than such a rule, and none on the shell's own elements (ui-*, form fields), whose rules
+   further down in this file still win. */
+:where(.demo-main) :focus-visible:not([class*="ui-"], input, select, textarea) { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 
 /* demo/index.html without JavaScript: one line in place of the app */
 .demo-noscript { max-width: 40rem; margin: 0 auto; padding: 3rem clamp(1rem, 4vw, 2.5rem); color: var(--navy); }
@@ -162,6 +170,8 @@ h3 { font-weight: 700; font-size: 1.15rem; }
   outline: none;
 }
 .demo-main > * { max-width: 1180px; margin-inline: auto; }
+/* Stands in for a view while its chunk loads (DemoApp.tsx), only on the first load: keeps the main area at screen height */
+.demo-view-pending { min-height: 100vh; }
 
 .demo-tabbar { display: none; }
 
@@ -254,7 +264,7 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 
 .ui-empty { padding: 2rem 1rem; text-align: center; display: grid; justify-items: center; gap: .5rem; }
-.ui-empty-title { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--navy); }
+.ui-empty-title { font-family: var(--serif); font-weight: 600; font-size: 1.25rem; color: var(--navy); }
 
 .ui-badge {
   display: inline-flex; align-items: center; gap: .3rem;
@@ -272,7 +282,7 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width .5s var(--ease-out); }
 .ui-card-dark .ui-progress { background: rgba(185, 191, 203, .16); }
 
-.ui-avatar { flex: none; border-radius: 50%; object-fit: cover; display: inline-grid; place-items: center; font-family: var(--serif); font-weight: 700; line-height: 1; }
+.ui-avatar { flex: none; border-radius: 50%; object-fit: cover; display: inline-grid; place-items: center; font-family: var(--serif); font-weight: 600; line-height: 1; }
 .ui-avatar-navy { background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: var(--gold-light); }
 .ui-avatar-gold { background: radial-gradient(circle at 35% 30%, var(--gold-pale), var(--gold) 60%, var(--gold-dark)); color: var(--navy); }
 .ui-avatar-ivory { background: var(--ivory); color: var(--navy); border: 1px solid var(--rule); }

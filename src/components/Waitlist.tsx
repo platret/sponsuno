@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { legal, waitlist, waitlistNext, type Role } from '../content';
+import { contact, waitlist, waitlistNext, type Role } from '../content';
 import { siteHref, WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import '../styles/sections/waitlist.css';
@@ -9,7 +9,7 @@ import '../styles/sections/waitlist.css';
 // form stores nothing (see AGENTS.md); waitlist.previewIntro, previewNote and previewSuccess say so and offer an e-mail
 // to the team instead, so nobody believes they signed up. The same e-mail route takes over when the Worker answers
 // 503 not_configured (endpoint set, Brevo setup not finished).
-const CONTACT = legal.contact.email;
+const CONTACT = contact.email;
 
 /** mailto: link to the team with subject and body prefilled for the chosen role. */
 function mailHref(role: Role): string {

@@ -258,7 +258,7 @@
   display: inline-block; padding: .05rem .5rem; border-radius: 999px;
   border: 1px solid rgba(196, 163, 107, .5); color: var(--gold-light); font-weight: 600;
 }
-.ov-ai-subject { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; line-height: 1.25; color: var(--ivory); }
+.ov-ai-subject { font-family: var(--serif); font-weight: 600; font-size: 1.2rem; line-height: 1.25; color: var(--ivory); }
 .ov-ai-btn { width: 100%; }
 .ov-ai-all {
   display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: .25rem;
