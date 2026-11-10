@@ -4,10 +4,12 @@ import wordmarkDark from '../assets/wordmark-dark.svg';
 import { cta, menu, nav } from '../content';
 import { pageHref } from '../lib/links';
 import { MobileMenu } from './MobileMenu';
+import { ThemeToggle } from './ThemeToggle';
 import '../styles/sections/header.css';
 
 /** Landing page header. Plain full-width bar: transparent at the top, solid navy while the hero and the story run
-    under it, solid paper once the light page reaches it. The nav links to the topic pages (content.ts → nav, shared
+    under it, solid on the page surface once it reaches it (paper, or navy in the dark theme). The theme switch has no
+    React state: the inline head script runs it (ThemeToggle.tsx). The nav links to the topic pages (content.ts → nav, shared
     with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -76,7 +78,7 @@ export function Header() {
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
             <img className="brand-on-dark" src={wordmarkLight} alt="" width={118} height={30} />
-            {/* Hidden until the bar turns paper: low priority, so React does not preload it with the first screen */}
+            {/* Hidden until the bar turns paper (light theme only): low priority, so React does not preload it with the first screen */}
             <img className="brand-on-light" src={wordmarkDark} alt="" width={118} height={30} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
@@ -87,6 +89,7 @@ export function Header() {
             </ul>
           </nav>
           <div className="header-actions">
+            <ThemeToggle />
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>
               <span className="header-cta-short">{cta.waitlistShort}</span>

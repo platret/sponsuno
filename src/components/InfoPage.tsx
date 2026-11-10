@@ -1,12 +1,12 @@
 import '../styles/sections/page.css';
-import { forFirms, infoPage, legal, type InfoPageId, type Role } from '../content';
+import { aiManager, faq, forFirms, infoPage, legal, pricing, team, type InfoPageId, type Role } from '../content';
 import { pageMeta } from '../pages';
 import { pageHref, waitlistHref, WAITLIST_ENDPOINT } from '../lib/links';
 import { AiManager } from './AiManager';
-import { Faq } from './Faq';
+import { Faq, FaqIntro } from './Faq';
 import { Footer } from './Footer';
 import { LinkArrowLabel } from './LinkArrowLabel';
-import { PageHeader } from './PageHeader';
+import { PageBand, PageHeader } from './PageHeader';
 import { Pricing } from './Pricing';
 import { Support } from './Support';
 import { Team } from './Team';
@@ -28,8 +28,9 @@ const closingLine = (live: string, preview: string): string | null =>
  * prerendered at build time, shipped without a JavaScript module (CSS from src/static/sections.ts; Für Firmen only
  * needs the guide styles of src/static/main.ts). No motion, except /ki-manager/: its pinned bento runs on CSS scroll
  * timelines once an inline head script sets html.scroll-fx (`scrollFx` in pages.ts).
- * KI-Manager, Kosten, Fragen and Über uns show the sections that used to be on the landing page; the first
- * section's title is the page's H1. Für Firmen uses the reading column of the guides. Every page ends with a
+ * Every page opens with the navy page head band (PageBand: the H1 and its intro), as the guides and legal pages do.
+ * KI-Manager, Kosten, Fragen and Über uns then show the sections that used to be on the landing page (the band holds
+ * the first section's title and intro). Für Firmen uses the reading column of the guides. Every page ends with a
  * way back to the waitlist on the landing page.
  */
 export function InfoPage({ id }: { id: InfoPageId }) {
@@ -43,6 +44,7 @@ export function InfoPage({ id }: { id: InfoPageId }) {
         <FirmsPage />
       ) : (
         <main id="inhalt" className="pg">
+          <TopicBand id={id} />
           {id === 'ki-manager' && <AiManager />}
           {id === 'kosten' && <><Pricing /><Support /></>}
           {id === 'fragen' && <Faq />}
@@ -53,6 +55,22 @@ export function InfoPage({ id }: { id: InfoPageId }) {
       <Footer onLanding={false} current={path} />
     </>
   );
+}
+
+/** Page head band of the topic pages: the first section's title (the H1; its id stays the section's label) and intro */
+function TopicBand({ id }: { id: InfoPageId }) {
+  switch (id) {
+    case 'ki-manager':
+      return <PageBand titleId="ki-title" title={aiManager.title}><p className="section-intro">{aiManager.intro}</p></PageBand>;
+    case 'kosten':
+      return <PageBand titleId="price-title" title={pricing.title}><p className="section-intro">{pricing.intro}</p></PageBand>;
+    case 'fragen':
+      return <PageBand titleId="fragen-title" title={faq.title}><FaqIntro /></PageBand>;
+    case 'ueber-uns':
+      return <PageBand titleId="team-title" title={team.title}><p className="section-intro">{team.intro}</p></PageBand>;
+    default:
+      return null;
+  }
 }
 
 /** Closing block: the waitlist (on the landing page) as the primary button, the demo as a quiet link. */
@@ -88,12 +106,12 @@ function FirmsPage() {
 
   return (
     <main id="inhalt" className="lg">
+      <PageBand titleId="lg-title" title={forFirms.title} narrow>
+        <p className="lg-intro">{forFirms.intro}</p>
+        <p className="gd-note">{forFirms.note}</p>
+      </PageBand>
       <div className="container">
         <article className="lg-col" aria-labelledby="lg-title">
-          <h1 id="lg-title">{forFirms.title}</h1>
-          <p className="lg-intro">{forFirms.intro}</p>
-          <p className="gd-note">{forFirms.note}</p>
-
           <div className="pg-cockpit">
             <a className="link-arrow link-arrow-wrap pg-cockpit-link" href={pageHref(cockpit.link.href)}>
               <LinkArrowLabel label={cockpit.link.label} />

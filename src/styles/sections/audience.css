@@ -31,14 +31,14 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius);
-  background: var(--ivory);
+  background: var(--bg-alt);
 }
 
 .aud-text { margin-top: 1.1rem; }
-.aud-desc { margin-top: .45rem; font-size: var(--fs-small); line-height: 1.55; color: var(--ink); }
+.aud-desc { margin-top: .45rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
 /* Where this side goes next (a guide, or the page for companies): navy label, Gold dunkel arrow, 44 px tall */
-.aud-link { min-height: 44px; margin-top: .15rem; font-size: var(--fs-small); color: var(--navy); }
-.aud-link svg { color: var(--gold-dark); }
+.aud-link { min-height: 44px; margin-top: .15rem; font-size: var(--fs-small); color: var(--heading); }
+.aud-link svg { color: var(--accent-text); }
 
 
 /* Quiet stagger for the reveal (only applies while motion is on) */
@@ -67,7 +67,7 @@
 
 @media (max-width: 600px) {
   .aud-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
-  .aud-item { padding-block: 1.75rem; border-top: 1px solid var(--rule); }
+  .aud-item { padding-block: 1.75rem; border-top: 1px solid var(--line); }
   .aud-item:first-child { padding-top: 0; border-top: 0; }
   .aud-text { margin-top: .9rem; }
   .aud-desc { margin-top: .3rem; }

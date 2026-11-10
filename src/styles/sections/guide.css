@@ -1,36 +1,36 @@
 /* Guide pages (Ratgeber): the legal-page layout (legal.css) plus the blocks only guides use. Classes prefixed gd-.
-   No motion. Light surfaces only, so gold text is Gold dunkel (DESIGN.md → Colour). */
+   No motion. On the page surface of the theme, so gold text is --accent-text (Gold dunkel / Gold hell, DESIGN.md → Colour). */
 
-/* "Sponsuno is planned" note under the byline: a gold hairline on the left, small ink text */
+/* Launch note (/fuer-firmen/, in the page head band): a gold hairline on the left, small text */
 .gd-note {
   margin-top: 1.25rem;
   padding: .15rem 0 .15rem 1rem;
   border-left: 2px solid var(--gold);
-  font-size: var(--fs-small); line-height: 1.55; color: var(--ink);
+  font-size: var(--fs-small); line-height: 1.55; color: var(--text);
 }
 
 /* Numbered steps: numerals in Gold dunkel, same rhythm as .lg-list */
 .gd-steps { margin-top: .9rem; padding-left: 1.5rem; list-style: decimal; }
 .gd-steps li { padding-left: .25rem; }
 .gd-steps li + li { margin-top: .5rem; }
-.gd-steps li::marker { color: var(--gold-dark); font-weight: 600; }
+.gd-steps li::marker { color: var(--accent-text); font-weight: 600; }
 
 /* Letter template: bordered, selectable plain text that keeps its line breaks. No copy button. */
 .gd-template {
   margin: 1.25rem 0 0;
-  border: 1px solid var(--rule); border-radius: var(--radius);
-  background: var(--ivory);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-alt);
   overflow: hidden;
 }
 .gd-template figcaption {
   padding: .75rem 1.25rem;
-  border-bottom: 1px solid var(--rule);
-  font-size: var(--fs-small); font-weight: 600; color: var(--navy);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-small); font-weight: 600; color: var(--heading);
 }
 .gd-template pre {
   margin: 0;
   padding: 1.1rem 1.25rem 1.25rem;
-  font: 400 .9375rem/1.6 var(--sans); color: var(--ink);
+  font: 400 .9375rem/1.6 var(--sans); color: var(--text);
   white-space: pre-wrap; overflow-wrap: anywhere;
   user-select: text;
 }
@@ -39,26 +39,26 @@
    .5rem padding leaves room for the 3px focus ring at offset 3px, which the figure's overflow: hidden would clip. */
 .gd-template-download {
   padding: .5rem 1.25rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
 }
 .lg-section .gd-template-download { margin-top: 0; }
 .lg-section .gd-template-download a {
   display: inline-flex; align-items: center; gap: .5rem; min-height: 44px;
   text-decoration: none;
 }
-.gd-template-download svg { flex: none; color: var(--gold-dark); }
+.gd-template-download svg { flex: none; color: var(--accent-text); }
 /* Label and size wrap inside their own box, so on phones the size lines up under the label, not under the icon */
 .gd-template-download-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .5rem; }
 .gd-template-download-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 .gd-template-download a:hover .gd-template-download-label { text-decoration-thickness: 2px; }
-.gd-template-download-info { font-size: .875rem; font-weight: 400; color: var(--ink); }
+.gd-template-download-info { font-size: .875rem; font-weight: 400; color: var(--text); }
 
 /* Closing links: waitlist as the primary button, the demo as a quiet link with its note */
 .gd-cta {
   display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem;
   margin-top: 1.5rem;
 }
-.lg-section .gd-cta .btn { color: var(--ivory); text-decoration: none; }
+.lg-section .gd-cta .btn { color: var(--btn-fg); text-decoration: none; }
 .lg-section .gd-cta .gd-cta-demo {
   display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
   text-decoration: none;
@@ -70,15 +70,15 @@
 .gd-related {
   margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
   padding: 1.25rem 1.5rem 1.5rem;
-  border: 1px solid var(--rule); border-radius: var(--radius);
-  background: var(--ivory);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-alt);
 }
-.gd-related-title { font-size: var(--fs-small); font-weight: 600; color: var(--navy); }
+.gd-related-title { font-size: var(--fs-small); font-weight: 600; color: var(--heading); }
 .gd-related ul { margin-top: .5rem; }
-.gd-related li + li { border-top: 1px solid var(--rule); }
-.gd-related a { display: block; padding-block: .85rem; text-decoration: none; color: var(--ink); }
+.gd-related li + li { border-top: 1px solid var(--line); }
+.gd-related a { display: block; padding-block: .85rem; text-decoration: none; color: var(--text); }
 .gd-related-name {
-  display: block; font-weight: 600; color: var(--navy);
+  display: block; font-weight: 600; color: var(--heading);
   text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px;
 }
 .gd-related a:hover .gd-related-name { text-decoration-thickness: 2px; }
@@ -87,16 +87,19 @@
 /* ---------- /fuer-firmen/ (InfoPage.tsx → FirmsPage): guide layout plus these two blocks ----------
    Here, not in page.css, so /fuer-firmen/ needs only the stylesheets of the guides (no src/static/sections.ts).
    They keep the pg- prefix of the topic pages. */
-/* The demo's sponsor cockpit, prominent under the "planned" note: an ivory box like the guides' "Weiterlesen" */
+/* The demo's sponsor cockpit, first under the page head band: a box like the guides' "Weiterlesen" */
 .pg-cockpit {
   margin-top: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
   padding: .75rem 1.5rem 1.25rem;
-  border: 1px solid var(--rule); border-radius: var(--radius);
-  background: var(--ivory);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-alt);
 }
-.pg-cockpit-link { min-height: 44px; color: var(--navy); }
-.pg-cockpit-link svg { flex: none; color: var(--gold-dark); }
-.pg-cockpit-text { margin-top: .1rem; font-size: var(--fs-small); line-height: 1.5; color: var(--ink); }
+.pg-cockpit-link { min-height: 44px; color: var(--heading); }
+.pg-cockpit-link svg { flex: none; color: var(--accent-text); }
+.pg-cockpit-text { margin-top: .1rem; font-size: var(--fs-small); line-height: 1.5; color: var(--text); }
 
 /* Invitation to a talk under the closing buttons, set off by a hairline */
-.lg-section .pg-talk { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.lg-section .pg-talk { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+
+/* The launch note inside the navy page head band (/fuer-firmen/) */
+.lg-band .gd-note { color: var(--steel); border-left-color: var(--gold-light); }

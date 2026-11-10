@@ -2,7 +2,7 @@ import { notFound } from '../content';
 import { pageMeta } from '../pages';
 import { siteHref } from '../lib/links';
 import { Footer } from './Footer';
-import { PageHeader } from './PageHeader';
+import { PageBand, PageHeader } from './PageHeader';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
@@ -20,11 +20,11 @@ export function NotFoundPage() {
       <PageHeader current={{ path, kind }} />
 
       <main id="inhalt" className="lg">
+        <PageBand titleId="lg-title" title={notFound.title} narrow>
+          <p className="lg-intro">{notFound.intro}</p>
+        </PageBand>
         <div className="container">
           <article className="lg-col" aria-labelledby="lg-title">
-            <h1 id="lg-title">{notFound.title}</h1>
-            <p className="lg-intro">{notFound.intro}</p>
-
             <nav className="gd-related" aria-labelledby="nf-links-title">
               <p className="gd-related-title" id="nf-links-title">{notFound.linksTitle}</p>
               <ul>

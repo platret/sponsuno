@@ -1,4 +1,4 @@
-/* KI-Manager: ivory section, bento grid. One navy device frame with a draft (left, ~7/12) and two
+/* KI-Manager: ivory section (--bg-alt), bento grid. One navy device frame with a draft (left, ~7/12) and two
    small light cards (right, ~5/12). No typing, no animated borders; the scroll motion is at the end. */
 
 .ai-bento {
@@ -89,25 +89,25 @@
   flex: 1;
   padding: clamp(1.25rem, 1.05rem + .6vw, 1.6rem);
   border-radius: var(--radius);
-  background: var(--paper);
-  border: 1px solid var(--rule);
+  background: var(--surface);
+  border: 1px solid var(--line);
   box-shadow: var(--shadow-card);
 }
 
 .ai-card-label {
   display: flex; align-items: center; gap: .45rem;
   margin-top: 1rem;
-  font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--gold-dark);
+  font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--accent-text);
 }
 .ai-card-label svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.ai-card-text { margin-top: .4rem; font-size: 1rem; line-height: 1.6; color: var(--ink); }
+.ai-card-text { margin-top: .4rem; font-size: 1rem; line-height: 1.6; color: var(--text); }
 
 .ai-checklist { margin-top: .75rem; }
 .ai-checklist li {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center; gap: .8rem;
   padding-block: .7rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
 }
 .ai-checklist li:first-child { border-top: 0; padding-top: .35rem; }
 .ai-checklist li:last-child { padding-bottom: 0; }
@@ -115,14 +115,14 @@
 .ai-check {
   width: 20px; height: 20px; border-radius: 50%; flex: none;
   display: grid; place-items: center;
-  border: 1.5px solid rgba(59, 69, 96, .7);
+  border: 1.5px solid color-mix(in srgb, var(--text) 70%, transparent);
 }
-.is-done .ai-check { background: var(--gold-dark); border-color: var(--gold-dark); }
-.ai-check svg { width: 14px; height: 14px; fill: none; stroke: var(--paper); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.is-done .ai-check { background: var(--accent-text); border-color: var(--accent-text); }
+.ai-check svg { width: 14px; height: 14px; fill: none; stroke: var(--surface); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-.ai-check-text { font-size: 1rem; line-height: 1.4; color: var(--navy); }
+.ai-check-text { font-size: 1rem; line-height: 1.4; color: var(--heading); }
 .ai-check-note {
-  font-size: .875rem; line-height: 1.4; color: var(--ink);
+  font-size: .875rem; line-height: 1.4; color: var(--text);
   font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right;
 }
 
@@ -132,9 +132,9 @@
   display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
   gap: .5rem 1.5rem;
   margin-top: 1.5rem;
-  font-size: .875rem; line-height: 1.5; color: var(--ink);
+  font-size: .875rem; line-height: 1.5; color: var(--text);
 }
-.ai-caption .link-arrow { min-height: 44px; font-size: 1rem; color: var(--gold-dark); align-items: center; }
+.ai-caption .link-arrow { min-height: 44px; font-size: 1rem; color: var(--accent-text); align-items: center; }
 
 /* Gentle stagger for the two small cards in the reveal fallback (no scroll timelines, e.g. Firefox);
    under .scroll-fx the transition is switched off and data-scroll-stagger on .ai-side staggers instead */

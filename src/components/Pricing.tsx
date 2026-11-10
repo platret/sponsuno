@@ -1,16 +1,13 @@
 import { pricing } from '../content';
 import '../styles/sections/pricing.css';
 
-/** Ivory section, the head of /kosten/ (its title is the page's H1): the cost model as one overview card.
-    Decided points get a check, open ones a ring (plus pricing.openLabel as a tag when it is set). */
+/** Ivory section, the first of /kosten/ (its title and intro are the page head band: InfoPage → PageBand): the cost
+    model as one overview card. Decided points get a check, open ones a ring (plus pricing.openLabel as a tag when it
+    is set). */
 export function Pricing() {
   return (
     <section className="section surface-ivory price" id="kosten" aria-labelledby="price-title">
-      <div className="container price-grid">
-        <div className="price-head" data-reveal="" data-scroll="rise">
-          <h1 id="price-title">{pricing.title}</h1>
-          <p className="section-intro">{pricing.intro}</p>
-        </div>
+      <div className="container">
         <div className="price-main" data-reveal="" data-scroll="zoom-in">
           <dl className="price-card">
             {pricing.rows.map((row) => (

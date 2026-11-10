@@ -21,7 +21,7 @@
 .scroll-fx .wl.surface-navy {
   position: relative;
   isolation: isolate;
-  background: var(--paper);
+  background: var(--bg);
 }
 .scroll-fx .wl-surface {
   display: block;

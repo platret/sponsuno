@@ -27,6 +27,8 @@
 
 .ft-sub { max-width: 28ch; font-size: 1rem; line-height: 1.6; color: var(--steel); }
 
+/* Standalone: no top rule inside; in the dark theme a hairline at the full width sets the navy footer off the navy page */
+.ft-standalone { border-top: 1px solid var(--edge); }
 .ft-standalone .ft-top { border-top: 0; }
 
 .ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2rem, 1rem + 2.5vw, 3.5rem); }

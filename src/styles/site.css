@@ -30,8 +30,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--sans);
   font-size: var(--fs-body);
   line-height: 1.6;
@@ -51,14 +51,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 h1, h2 {
   font-family: var(--serif);
   font-weight: 600;
-  color: var(--navy);
+  color: var(--heading);
   letter-spacing: -0.015em;
   text-wrap: balance;
   font-variant-numeric: lining-nums;
 }
 h1 { font-size: var(--fs-h1); line-height: 0.98; }
 h2 { font-size: var(--fs-h2); line-height: 1.04; }
-h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-height: 1.3; color: var(--navy); }
+h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-height: 1.3; color: var(--heading); }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
 
@@ -79,8 +79,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 /* ---------- Surfaces ---------- */
 
 .section { padding-block: var(--section-pad); }
-.surface-paper { background: var(--paper); }
-.surface-ivory { background: var(--ivory); }
+.surface-paper { background: var(--bg); }
+.surface-ivory { background: var(--bg-alt); }
 .surface-navy {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy) 45%, var(--navy-2) 100%);
   color: var(--steel);
@@ -91,7 +91,7 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 .section-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem); }
 .section-intro { margin-top: 1.1rem; font-size: var(--fs-lead); line-height: 1.55; max-width: 40rem; }
 .surface-navy .section-intro { color: var(--steel); }
-.section-intro a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
+.section-intro a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }
 
 /* ---------- Buttons and links ---------- */
 
@@ -109,12 +109,27 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 /* Secondary on navy */
 .btn-ghost { border-color: rgba(243, 239, 230, .4); color: var(--ivory); background: transparent; }
 .btn-ghost:hover { border-color: var(--ivory); background: rgba(243, 239, 230, .06); }
-/* Primary on light */
-.btn-navy { background: var(--navy); color: var(--ivory); }
-.btn-navy:hover { background: var(--navy-2); }
-/* Secondary on light */
-.btn-outline { border-color: rgba(11, 24, 48, .25); color: var(--navy); background: transparent; }
-.btn-outline:hover { border-color: var(--navy); }
+/* Primary on the page surface: navy with an ivory label (light theme), gold light with a navy label (dark theme) */
+.btn-navy { background: var(--btn-bg); color: var(--btn-fg); }
+.btn-navy:hover { background: var(--btn-bg-hover); }
+/* Secondary on the page surface */
+.btn-outline { border-color: color-mix(in srgb, var(--heading) 25%, transparent); color: var(--heading); background: transparent; }
+.btn-outline:hover { border-color: var(--heading); }
+
+/* Theme switch (ThemeToggle.tsx) in every header: hidden until the head script (THEME_SCRIPT) has set data-theme,
+   because without JavaScript it could not work (the page then follows the system setting). The moon shows in the
+   light theme, the sun in the dark one; the label stays "Dunkles Design" and aria-pressed carries the state. */
+.theme-toggle {
+  display: none; place-items: center; flex: none;
+  width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: var(--radius-sm); background: transparent; color: inherit; cursor: pointer;
+  transition: background-color .2s ease;
+}
+html[data-theme] .theme-toggle { display: grid; }
+.theme-toggle:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.theme-icon-sun, [data-theme="dark"] .theme-icon-moon { display: none; }
+[data-theme="dark"] .theme-icon-sun { display: block; }
 
 .link-arrow {
   display: inline-flex; align-items: center; gap: .4rem;

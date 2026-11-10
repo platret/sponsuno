@@ -1,20 +1,13 @@
-/* Pricing (Kosten): ivory. Title and intro left, one overview card right with hairline-divided rows
-   (label left, value column right; on phones the value sits under the label).
+/* Pricing (Kosten): ivory (--bg-alt), under the page head band (title and intro). One overview card with
+   hairline-divided rows (label left, value column right; below 1100 px the value sits under the label).
    Decided values carry a small check, open ones an outlined "offen" tag. */
 
-.price-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: clamp(2.5rem, 1rem + 4vw, 5rem);
-  align-items: start;
-}
-
-.price-head { max-width: 30rem; }
+.price-main { max-width: 52rem; }
 
 .price-card {
   margin: 0;
-  background: var(--paper);
-  border: 1px solid var(--rule);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
 }
 
@@ -25,15 +18,15 @@
   align-items: start;
   padding: 1.35rem 1.75rem;
 }
-.price-row + .price-row { border-top: 1px solid var(--rule); }
+.price-row + .price-row { border-top: 1px solid var(--line); }
 
-.price-label { font-weight: 600; color: var(--navy); line-height: 1.45; }
+.price-label { font-weight: 600; color: var(--heading); line-height: 1.45; }
 
 /* Value column reads as one aligned column: marker first, text with a hanging indent */
 .price-value {
   margin: 0;
   display: flex; align-items: flex-start; gap: .6rem;
-  color: var(--ink); line-height: 1.45;
+  color: var(--text); line-height: 1.45;
 }
 .price-value-text { min-width: 0; }
 
@@ -47,7 +40,7 @@
 .price-marker {
   display: block;
   width: 16px; height: 16px;
-  fill: none; stroke: var(--gold-dark);
+  fill: none; stroke: var(--accent-text);
   stroke-linecap: round; stroke-linejoin: round;
 }
 .price-check { stroke-width: 2; }
@@ -59,17 +52,17 @@
   margin-left: .4rem;
   padding: 0 .5rem;
   vertical-align: .1em;
-  border: 1px solid rgba(59, 69, 96, .35); border-radius: 6px;
-  font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--text) 35%, transparent); border-radius: 6px;
+  font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--text);
   white-space: nowrap;
 }
 
 .price-note {
   margin-top: 1.25rem;
-  font-size: .9375rem; line-height: 1.55; color: var(--ink);
+  font-size: .9375rem; line-height: 1.55; color: var(--text);
 }
 
-/* Scroll-driven motion (DESIGN.md -> Motion). Head rises, the card zooms in gently, the note fades
+/* Scroll-driven motion (DESIGN.md -> Motion; dormant: /kosten/ has no html.scroll-fx). The card zooms in gently, the note fades
    (attributes in Pricing.tsx). The rows themselves do not move. Each check wipes in from the left (clip-path,
    so it draws like a stroke); an open circle would read as a broken "C" mid-wipe, so it scales and fades in
    from its centre instead (composited). Both are final once the marker's top sits at ~75% of the viewport:
@@ -99,11 +92,9 @@
   to   { opacity: 1; scale: 1; }
 }
 
-/* Below 1100px the card takes the full width and each row stacks label over value,
+/* Below 1100px each row stacks label over value,
    so the narrow two-column row never appears */
 @media (max-width: 1100px) {
-  .price-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  .price-head { max-width: 40rem; }
   .price-main { max-width: 44rem; }
   .price-row { grid-template-columns: minmax(0, 1fr); }
 }

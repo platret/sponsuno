@@ -1,32 +1,34 @@
-/* Static pages (topic pages, guides, legal pages): slim paper header with the site nav. Legal pages and guides
-   (and /fuer-firmen/) then use one readable column (~42rem) on paper, then the standalone navy footer.
-   No motion, no JavaScript. Classes prefixed lg-.
+/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on navy in
+   both themes: the slim header with the site nav, then the page head band (PageBand: H1, intro). Below it the page
+   follows the theme (DESIGN.md -> Theme). Legal pages and guides (and /fuer-firmen/) use one readable column (~42rem)
+   on the page surface, then the standalone navy footer. No motion; one inline head script (theme). Classes prefixed lg-.
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
 /* The static header scrolls away with the page (not fixed like the landing page header), so anchor jumps (table of
    contents, /kosten/#sachleistungen) need only a small margin, not the landing page's header offset (site.css). */
 html:has(.lg-header) { scroll-padding-top: 1rem; }
 
-/* ---------- Header (PageHeader.tsx): wordmark, nav, waitlist button; below 961 px a native <details> menu ---------- */
+/* ---------- Header (PageHeader.tsx): wordmark, nav, theme switch, waitlist button; below 961 px a native <details> menu.
+   Navy in both themes; it runs into the page head band without a seam. ---------- */
 .lg-header {
   position: relative; z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
-  background: var(--paper);
-  border-bottom: 1px solid var(--rule);
-  color: var(--navy);
-  --focus: var(--gold-dark);
+  background: var(--navy);
+  color: var(--ivory);
+  --focus: var(--gold-light);
 }
 /* Gaps match .header-inner (header.css), so the nav and the button sit in the same place on every page */
 .lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
+.lg-actions { display: flex; align-items: center; gap: .5rem; }
 .lg-brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
 .lg-brand img { width: 118px; height: auto; }
 
 .lg-nav ul { display: flex; gap: .25rem; }
 .lg-nav a {
   display: block; padding: .5rem .8rem; border-radius: 8px;
-  font-size: var(--fs-small); color: var(--ink); text-decoration: none;
+  font-size: var(--fs-small); color: rgba(243, 239, 230, .78); text-decoration: none;
 }
-.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--navy); }
+.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--ivory); }
 .lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 .lg-cta-short { display: none; }
 
@@ -46,18 +48,20 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
 .lg-menu[open] .lg-menu-bars { background: transparent; }
 .lg-menu[open] .lg-menu-bars::before { transform: translateY(6px) rotate(45deg); }
 .lg-menu[open] .lg-menu-bars::after { transform: translateY(-6px) rotate(-45deg); }
-/* The open menu drops down under the bar, full width, over the page */
+/* The open menu drops down under the bar, full width, over the page, on the page surface of the theme */
 .lg-menu-sheet {
   position: absolute; top: 100%; left: 0; right: 0;
   padding: .5rem var(--gutter) 1.5rem;
-  background: var(--paper);
-  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--line);
   box-shadow: var(--shadow-card);
+  --focus: var(--accent-text);
 }
-.lg-menu-sheet li { border-bottom: 1px solid var(--rule); }
+.lg-menu-sheet li { border-bottom: 1px solid var(--line); }
 .lg-menu-sheet a {
   display: block; padding: .8rem 0;
-  font: 600 clamp(1.625rem, 6vw, 2.125rem)/1.15 var(--serif); color: var(--navy); text-decoration: none;
+  font: 600 clamp(1.625rem, 6vw, 2.125rem)/1.15 var(--serif); color: var(--heading); text-decoration: none;
 }
 .lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
@@ -70,68 +74,93 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
   .lg-nav { display: none; }
   .lg-menu { display: block; }
   .lg-header-inner { gap: .5rem; }
+  .lg-actions { gap: .25rem; }
 }
 @media (max-width: 420px) {
   .lg-cta-long { display: none; }
   .lg-cta-short { display: inline; }
 }
 
+/* ---------- Page head band (PageBand in PageHeader.tsx): H1 and intro on navy, right under the header ----------
+   Navy in both themes, like the landing page hero, so every page opens the same way. Flat navy (no gradient), so it
+   meets the header without a seam; in the dark theme a hairline (--edge) sets it off the navy page below. */
+.lg-band {
+  background: var(--navy);
+  color: var(--steel);
+  border-bottom: 1px solid var(--edge);
+  padding-block: clamp(2rem, 1.25rem + 3vw, 4rem) clamp(3rem, 2rem + 4vw, 5.5rem);
+  --focus: var(--gold-light);
+}
+.lg-band-inner { max-width: 46rem; }
+.lg-band h1 { color: var(--ivory); }
+.lg-band .lg-intro, .lg-band .section-intro { color: var(--steel); }
+.lg-band .lg-updated { color: var(--steel); }
+/* Links on navy: ivory with a Gold hell underline (as in the waitlist) */
+.lg-band a:not(.btn) {
+  color: var(--ivory); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--gold-light); text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.lg-band a:not(.btn):hover { text-decoration-thickness: 2px; }
+
 /* ---------- Reading column ---------- */
 .lg {
-  background: var(--paper);
-  padding-block: clamp(3rem, 2rem + 4vw, 5.5rem) var(--section-pad);
+  background: var(--bg);
+  padding-bottom: var(--section-pad);
 }
+.lg-band + .container { padding-top: clamp(2.5rem, 2rem + 2vw, 3.5rem); }
 .lg-col { max-width: 42rem; margin-inline: auto; }
+.lg-col > :first-child { margin-top: 0; }
 
 .lg h1 { font-size: clamp(2.5rem, 1.6rem + 3vw, 4rem); line-height: 1; hyphens: manual; }
 .lg-intro { margin-top: 1.25rem; font-size: var(--fs-lead); line-height: 1.55; }
-.lg-updated { margin-top: 1rem; font-size: var(--fs-small); color: var(--ink); }
+.lg-updated { margin-top: 1rem; font-size: var(--fs-small); color: var(--text); }
 
 .lg-toc {
   margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
   padding: 1.25rem 1.5rem;
-  border: 1px solid var(--rule); border-radius: var(--radius);
-  background: var(--ivory);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-alt);
 }
-.lg-toc-title { font-size: var(--fs-small); font-weight: 600; color: var(--navy); }
+.lg-toc-title { font-size: var(--fs-small); font-weight: 600; color: var(--heading); }
 .lg-toc ol { margin-top: .5rem; list-style: decimal; padding-left: 1.4rem; columns: 2 15rem; column-gap: 2rem; }
 .lg-toc li { break-inside: avoid; padding-block: .05rem; font-size: var(--fs-small); }
-.lg-toc li::marker { color: var(--gold-dark); }
+.lg-toc li::marker { color: var(--accent-text); }
 /* Taller hit area without changing the rhythm; block (not inline-block) so the number stays on the first line when a title wraps */
-.lg-toc a { display: block; padding-block: .35rem; color: var(--ink); text-decoration: none; }
-.lg-toc a:hover { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+.lg-toc a { display: block; padding-block: .35rem; color: var(--text); text-decoration: none; }
+.lg-toc a:hover { color: var(--heading); text-decoration: underline; text-underline-offset: 3px; }
 
-.lg-section { margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem); padding-top: clamp(2rem, 1.75rem + 1vw, 2.5rem); border-top: 1px solid var(--rule); }
+.lg-section { margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem); padding-top: clamp(2rem, 1.75rem + 1vw, 2.5rem); border-top: 1px solid var(--line); }
 .lg h2 { font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem); line-height: 1.1; }
 .lg h3 { margin-top: 1.75rem; font-size: 1.0625rem; }
 .lg-section p, .lg-list, .lg-persons, .lg-contact { margin-top: .9rem; }
-.lg-section strong { font-weight: 600; color: var(--navy); }
+.lg-section strong { font-weight: 600; color: var(--heading); }
 .lg h2 + p, .lg h2 + ul, .lg h2 + dl { margin-top: 1.1rem; }
 .lg h3 + p, .lg h3 + ul { margin-top: .5rem; }
 
 .lg-intro a, .lg-section a, .nf-contact a {
-  color: var(--navy); font-weight: 600;
+  color: var(--heading); font-weight: 600;
   text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-intro a:hover, .lg-section a:hover, .nf-contact a:hover { text-decoration-thickness: 2px; }
 
 /* 404 page (NotFoundPage.tsx): one small line under the links, offering the contact address */
-.nf-contact { margin-top: 1.5rem; font-size: var(--fs-small); line-height: 1.5; color: var(--ink); }
+.nf-contact { margin-top: 1.5rem; font-size: var(--fs-small); line-height: 1.5; color: var(--text); }
 
 .lg-list { list-style: disc; padding-left: 1.25rem; }
 .lg-list li + li { margin-top: .35rem; }
 .lg-list li::marker { color: var(--gold); }
 
 /* Two by two (auto-fill left "Dozie Ilunga" alone on a second row); one column on phones */
-.lg-persons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem 1.5rem; font-weight: 600; color: var(--navy); }
+.lg-persons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem 1.5rem; font-weight: 600; color: var(--heading); }
 
 .lg-contact { display: grid; gap: .6rem; }
 .lg-contact div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; }
-.lg-contact dt { font-weight: 600; color: var(--navy); }
+.lg-contact dt { font-weight: 600; color: var(--heading); }
 .lg-contact dd { margin: 0; }
-/* Missing contact data is marked, not hidden: gold-dark text with a short gold rule in front */
-.lg-pending { color: var(--gold-dark); font-weight: 600; }
+/* Missing contact data is marked, not hidden: gold text (Gold dunkel / Gold hell by theme) with a short gold rule in front */
+.lg-pending { color: var(--accent-text); font-weight: 600; }
 .lg-pending::before { content: ""; display: inline-block; width: .9rem; height: 2px; margin-right: .5rem; vertical-align: middle; background: var(--gold); }
 
 @media (max-width: 520px) {

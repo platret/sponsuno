@@ -505,6 +505,11 @@ export const menu = {
   label: 'Menü',
 };
 
+/** Light/dark switch in every header (ThemeToggle.tsx): one fixed label, aria-pressed says whether it is on */
+export const theme = {
+  toggle: 'Dunkles Design',
+};
+
 // ---------- Topic pages reached from the header: /fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/ ----------
 // Rendered by src/components/InfoPage.tsx, prerendered, shipped without JavaScript. Title and description in src/pages.ts.
 // KI-Manager, Kosten (with "Nicht nur Geld"), Fragen and Über uns show the former landing page sections
