@@ -7,6 +7,11 @@
 // - extra: the rest of fontsource's "latin" subset, which the site shipped before (all of Latin-1, General
 //   Punctuation, € ™ − …). Loaded by the browser only when a character from it appears, e.g. typed into a demo form.
 // New text with a character outside CORE fails `npm run check:dist`: add it here, then run `npm run fonts`.
+// Known cost of the split: no kerning between a core and an extra glyph (they come from different files), so a name
+// typed into the demo such as "Ángel" or "Muñoz" can sit up to about 1 px off. Shipped text is never affected. Moving
+// the other French, Italian, Spanish and Portuguese accents (ÁÂÊËÍÎÏÑÒÓÔÙÚÛáãìíñòóõúœ) into CORE would cost 2.6 KB
+// on every page (Cormorant 600 +1.0 KB, Manrope 400 +0.8 KB, Manrope 600 +0.7 KB; all Latin-1 letters +5.6 KB),
+// measured 2026-11-10, so they stay in extra.
 
 /** fontsource's "latin" unicode-range (unicode.json in the @fontsource packages, v5): the union of core and extra. */
 export const LATIN_RANGE =
