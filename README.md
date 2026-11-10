@@ -12,7 +12,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/React-19-F3EFE6?style=flat-square&labelColor=1D2F52" alt="React 19">
   <img src="https://img.shields.io/badge/TypeScript-strict-F3EFE6?style=flat-square&labelColor=1D2F52" alt="TypeScript strict">
-  <img src="https://img.shields.io/badge/Vite-6-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Vite 6">
+  <img src="https://img.shields.io/badge/Vite-8-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Vite 8">
   <img src="https://img.shields.io/badge/WebGL-eigener%20Shader-F3EFE6?style=flat-square&labelColor=1D2F52" alt="WebGL-Shader">
   <img src="https://img.shields.io/badge/Three.js-r187-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Three.js r187">
   <img src="https://img.shields.io/badge/GSAP-3.15-F3EFE6?style=flat-square&labelColor=1D2F52" alt="GSAP 3.15">
@@ -150,7 +150,7 @@ Texte in Hochdeutsch mit Schweizer Schreibweise, sachlich und ohne Werbefloskeln
 
 ## Lokal starten
 
-Node 20.19 oder neuer.
+Node 20.19 oder neuer in der 20er-Reihe, sonst 22.12 oder neuer (wie Vite 8).
 
 ```bash
 git clone https://github.com/platret/sponsuno.git

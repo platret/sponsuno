@@ -9,6 +9,7 @@
 // - a JSON-LD block is not valid JSON
 // - a page other than the landing page and the demo loads a script file (the static pages ship no JavaScript by
 //   design: scripts/prerender.mjs drops their empty module; inline scripts in the head are fine)
+// - a script the landing page loads contains text of the legal pages, the guides, /fuer-firmen/ or the 404 page
 // - 404.html, which is served under any URL, uses a relative URL
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -155,6 +156,36 @@ for (const [file, { tags, title, scripts }] of pages) {
   }
 }
 
+// --- Landing page JavaScript carries no text of other pages ---
+// The landing page bundle imports content.ts; a dynamic lookup (guides[id]) or a read of `legal` makes the bundler keep
+// whole objects, which ships guide or legal text to every visitor (fixed 2026-11-10: guideTitles, contact). Each
+// marker must stay on its page (else pick a new one) and must not appear in a script the landing page loads.
+
+const FOREIGN_TEXT = [
+  ['datenschutz/index.html', 'Rechtsgrundlage'],
+  ['impressum/index.html', 'SIL Open Font'],
+  ['sponsoren-finden/index.html', 'Sponsoring ist ein Austausch'],
+  ['fuer-firmen/index.html', 'Was Vereine, Sportlerinnen und Sportler bieten'],
+  ['404.html', 'Diese Seite gibt es nicht'],
+];
+const home = pages.get('index.html');
+if (home) {
+  const homeScripts = [
+    ...home.scripts.map(({ attrs }) => attrs.src),
+    ...home.tags
+      .filter(({ name, attrs }) => name === 'link' && attrs.rel?.toLowerCase().split(/\s+/).includes('modulepreload'))
+      .map(({ attrs }) => attrs.href),
+  ].filter((src) => src?.startsWith('/assets/'));
+  const sources = await Promise.all(homeScripts.map(async (src) => [src, await readFile(path.join(dist, src), 'utf8').catch(() => '')]));
+  for (const [file, marker] of FOREIGN_TEXT) {
+    const page = await readFile(path.join(dist, file), 'utf8').catch(() => '');
+    if (!page.includes(marker)) fail(file, `no longer contains "${marker}": pick another marker in FOREIGN_TEXT (scripts/check-dist.mjs)`);
+    for (const [src, code] of sources) {
+      if (code.includes(marker)) fail('index.html', `loads ${src}, which contains "${marker}" (text of dist/${file}; see FOREIGN_TEXT in scripts/check-dist.mjs)`);
+    }
+  }
+}
+
 // --- Sitemap ---
 
 const sitemapFile = path.join(dist, 'sitemap.xml');
@@ -254,4 +285,4 @@ if (problems.length) {
   console.error('');
   process.exit(1);
 }
-console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages)`);
+console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS)`);

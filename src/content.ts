@@ -314,7 +314,7 @@ export const faq = {
   introLink: 'Warteliste',
   introAfter: ' ein, wir melden uns.',
   // Replaces the intro above while the waitlist stores nothing (no VITE_WAITLIST_ENDPOINT, the same switch as
-  // waitlist.previewIntro): the address legal.contact.email is the link. Without a contact address no intro is shown.
+  // waitlist.previewIntro): the address contact.email is the link. Without a contact address no intro is shown.
   previewIntroBefore: 'Ihre Frage fehlt? Schreiben Sie uns an ',
   previewIntroAfter: '.',
   // Links from the landing page into the guides (shown under the intro)
@@ -425,7 +425,7 @@ export const waitlist = {
   failed: 'Die Anmeldung hat nicht geklappt. Bitte versuchen Sie es in ein paar Minuten nochmals.',
   success: 'Danke. Sie stehen auf der Warteliste. Wir melden uns, sobald Sponsuno startet.',
   // Shown while no VITE_WAITLIST_ENDPOINT is configured: nothing is stored, so visitors are offered an
-  // e-mail to legal.contact.email instead (subject and body prefilled with the chosen role).
+  // e-mail to contact.email instead (subject and body prefilled with the chosen role).
   previewNote: 'Die Anmeldung läuft vorerst per E-Mail, das Formular speichert nichts.',
   previewMailLead: 'Schreiben Sie uns an',
   previewSuccess: 'Fast geschafft: Die Anmeldung läuft vorerst per E-Mail. Ihre Adresse haben wir nicht gespeichert.',
@@ -486,7 +486,7 @@ export const footer = {
       ],
     },
   ] satisfies { title: string; links: FooterLink[] }[],
-  // Last column, built in Footer.tsx from legal.contact (defined further down): the e-mail address as a visible
+  // Last column, built in Footer.tsx from contact (defined further down): the e-mail address as a visible
   // mailto link and the town of the postal address. Not shown while both are missing.
   contactTitle: 'Kontakt',
   copyright: '© 2026 Team Sponsuno',
@@ -559,7 +559,7 @@ export type LegalBlock =
   | { type: 'h3'; text: string }
   /** The four responsible persons */
   | { type: 'persons' }
-  /** Postal address and e-mail from legal.contact (null fields show the pending note) */
+  /** Postal address and e-mail from contact (null fields show the pending note) */
   | { type: 'contact' }
   /** Image credits: photoCredits plus the AI-generated images */
   | { type: 'credits' };
@@ -630,6 +630,16 @@ export const photoCredits: PhotoCredit[] = [
   },
 ];
 
+/**
+ * Contact data: shown on the legal pages (legal.contact) and used by the footer, the waitlist's e-mail route, the FAQ
+ * intro, the closing lines of the topic pages, /fuer-firmen/ and the 404 page. Unknown until the team decides: never
+ * fill in a guess. Its own export (not only legal.contact), so the landing page bundle does not pull in the legal texts.
+ */
+export const contact = {
+  postalAddress: ['Klosterstrasse 34', '8406 Winterthur', 'Schweiz'] as string[] | null,
+  email: 'hello@sponsuno.ch' as string | null,
+};
+
 export const legal = {
   updated: 'Stand: November 2026',
   skipLink: 'Zum Inhalt springen',
@@ -639,11 +649,7 @@ export const legal = {
   project: 'Sponsuno',
   projectNote: 'Projekt in Entwicklung',
   persons: ['Aurel Eugster', 'Alex Platret', 'Maurice Strässle', 'Dozie Ilunga'],
-  /** Unknown until the team decides. Never fill in a guess. */
-  contact: {
-    postalAddress: ['Klosterstrasse 34', '8406 Winterthur', 'Schweiz'] as string[] | null,
-    email: 'hello@sponsuno.ch' as string | null,
-  },
+  contact,
   contactLabels: { postalAddress: 'Postadresse', email: 'E-Mail' },
   credits: {
     teamWork: 'Texte, Gestaltung, Logo und Corporate Design: Team Sponsuno.',
@@ -873,6 +879,17 @@ export type LegalPageId = 'impressum' | 'datenschutz';
 
 export type GuideId = 'sponsoren-finden' | 'sponsoring-anfrage' | 'sponsoring-dossier' | 'kultursponsoring';
 
+/**
+ * H1 of each guide (guides[id].title). On their own, so the waitlist's next step (waitlistNext) can name a guide
+ * without pulling all guide text into the landing page bundle.
+ */
+export const guideTitles: Record<GuideId, string> = {
+  'sponsoren-finden': 'Sponsoren finden in der Region',
+  'sponsoring-anfrage': 'Sponsoring-Anfrage schreiben',
+  'sponsoring-dossier': 'Sponsoring-Dossier erstellen',
+  kultursponsoring: 'Sponsoren für Kulturvereine finden',
+};
+
 export type GuideBlock =
   | { type: 'p'; text: LegalText }
   | { type: 'list'; items: LegalText[] }
@@ -927,7 +944,7 @@ const link = (id: GuideId, label: string): LegalLink => ({ label, href: pageMeta
 
 export const guides: Record<GuideId, GuideContent> = {
   'sponsoren-finden': {
-    title: 'Sponsoren finden in der Region',
+    title: guideTitles['sponsoren-finden'],
     intro: 'Ob Einzelsportlerin, Turnverein oder Musikgesellschaft: Passende Sponsoren findet man oft eher im eigenen Umfeld und in der Region als über Serienmails. Dieser Ratgeber zeigt Schritt für Schritt, wie Sie Firmen finden, ansprechen und als Partner behalten.',
     sections: [
       {
@@ -1048,7 +1065,7 @@ export const guides: Record<GuideId, GuideContent> = {
   },
 
   'sponsoring-anfrage': {
-    title: 'Sponsoring-Anfrage schreiben',
+    title: guideTitles['sponsoring-anfrage'],
     intro: 'Eine gute Sponsoring-Anfrage ist kurz, persönlich und zeigt der Firma, was sie davon hat. Hier finden Sie den Aufbau, einen Musterbrief zum Anpassen und die häufigsten Fehler, für Sportlerinnen, Sportler, Sport- und Kulturvereine.',
     sections: [
       {
@@ -1169,7 +1186,7 @@ export const guides: Record<GuideId, GuideContent> = {
   },
 
   'sponsoring-dossier': {
-    title: 'Sponsoring-Dossier erstellen',
+    title: guideTitles['sponsoring-dossier'],
     intro: 'Ein Sponsoring-Dossier stellt Sie oder Ihren Verein einer Firma vor und zeigt, was eine Partnerschaft bringt. Hier lesen Sie, wann Sie eines brauchen, was hineingehört und wie Sie Sponsoringpakete zusammenstellen, für Sportlerinnen, Sportler, Sport- und Kulturvereine.',
     sections: [
       {
@@ -1313,7 +1330,7 @@ export const guides: Record<GuideId, GuideContent> = {
   },
 
   kultursponsoring: {
-    title: 'Sponsoren für Kulturvereine finden',
+    title: guideTitles.kultursponsoring,
     intro: 'Musikgesellschaften, Chöre, Theatervereine und Bands suchen genauso Unterstützung wie Sportvereine: für Instrumente, Kostüme, Proberäume oder Aufführungen. Dieser Ratgeber zeigt, was Kulturvereine Firmen bieten können, wo sie neben Sponsoren Unterstützung finden und wie sie anfragen.',
     sections: [
       {
@@ -1417,8 +1434,9 @@ export const guides: Record<GuideId, GuideContent> = {
   },
 };
 
-// Next step shown after a waitlist sign-up (Waitlist.tsx), one per role. Guide labels follow the guide titles.
-const guideStep = (id: GuideId): FooterLink => ({ href: pageMeta(id).path, label: `Ratgeber «${guides[id].title}»` });
+// Next step shown after a waitlist sign-up (Waitlist.tsx), one per role. Guide labels follow the guide titles
+// (guideTitles, never guides[id]: a dynamic lookup would ship every guide's text in the landing page bundle).
+const guideStep = (id: GuideId): FooterLink => ({ href: pageMeta(id).path, label: `Ratgeber «${guideTitles[id]}»` });
 export const waitlistNext: Record<Role, FooterLink> = {
   athlete: guideStep('sponsoring-dossier'),
   sportverein: guideStep('sponsoren-finden'),
@@ -1430,8 +1448,8 @@ export const waitlistNext: Record<Role, FooterLink> = {
 // Built from copy that already exists on the site: the audience tile "Firmen aus der Region", howItWorks.tracks.sponsor,
 // support, pricing, the offer lists of the guides "Sponsoren finden" and "Kultursponsoring" and the next step in
 // projectStatus (talks with companies, region Winterthur). Product voice with one launch signal (the note); open points
-// stay open and are announced before the launch (AGENTS.md, copy rule 4). Placed after `legal` because the talk invitation uses legal.contact.email.
-const firmsTalkMail = legal.contact.email;
+// stay open and are announced before the launch (AGENTS.md, copy rule 4). The talk invitation uses contact.email.
+const firmsTalkMail = contact.email;
 
 export const forFirms = {
   title: 'Sponsoring in Ihrer Region: für Firmen und Gewerbe',
@@ -1521,7 +1539,7 @@ export const forFirms = {
 // ---------- 404 page (dist/404.html, NotFoundPage.tsx): served by Cloudflare for every unknown URL ----------
 // Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
 // page waitlist); they resolve to absolute URLs, because the page is shown under any address.
-const notFoundMail = legal.contact.email;
+const notFoundMail = contact.email;
 
 export const notFound = {
   title: 'Diese Seite gibt es nicht (mehr)',

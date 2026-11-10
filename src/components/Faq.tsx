@@ -1,4 +1,4 @@
-import { faq, legal } from '../content';
+import { contact, faq } from '../content';
 import { siteHref, waitlistHref, WAITLIST_ENDPOINT } from '../lib/links';
 import '../styles/sections/faq.css';
 
@@ -7,7 +7,7 @@ import '../styles/sections/faq.css';
     also feed the FAQPage JSON-LD of that page (entry-server.tsx). */
 // While the waitlist stores nothing, "tell us on the waitlist" would be a promise we cannot keep: offer the e-mail instead
 // (same switch as the waitlist intro). Without a contact address no intro is shown.
-const CONTACT = legal.contact.email;
+const CONTACT = contact.email;
 
 /** Intro and guide links of /fragen/, under the H1 in the page head band (InfoPage → PageBand) */
 export function FaqIntro() {

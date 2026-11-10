@@ -1,12 +1,12 @@
-import { footer, legal } from '../content';
+import { contact, footer } from '../content';
 import { siteHref } from '../lib/links';
 import wordmark from '../assets/wordmark-light.svg';
 import '../styles/sections/footer.css';
 
 // Kontakt column: the e-mail address as visible text (a mailto link) and the town of the postal address
 // ('8406 Winterthur' -> 'Winterthur'). Missing fields are left out; without both the column is not shown.
-const CONTACT_EMAIL = legal.contact.email;
-const CONTACT_TOWN = legal.contact.postalAddress?.find((line) => /^\d{4}\s/.test(line))?.replace(/^\d{4}\s+/, '') ?? null;
+const CONTACT_EMAIL = contact.email;
+const CONTACT_TOWN = contact.postalAddress?.find((line) => /^\d{4}\s/.test(line))?.replace(/^\d{4}\s+/, '') ?? null;
 
 type FooterProps = {
   /** false on sub-pages (legal pages and guides): section links then lead back to the landing page */

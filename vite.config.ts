@@ -34,12 +34,13 @@ export default defineConfig({
     // CSS-only entry of the static pages (src/static/main.ts) compiles to an empty module, whose <script> tag
     // scripts/prerender.mjs then drops, so legal pages and guides ship no JavaScript.
     modulePreload: { polyfill: false },
-    rollupOptions: {
+    rolldownOptions: {
       input,
       output: {
-        // React is shared by the landing page and the demo (the static pages ship none): give its chunk a clear name instead of one borrowed from an asset
-        manualChunks(id) {
-          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react';
+        // React is shared by the landing page and the demo (the static pages ship none): one chunk with a clear name
+        // instead of one borrowed from an asset (Rolldown's codeSplitting groups replace Rollup's manualChunks).
+        codeSplitting: {
+          groups: [{ name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ }],
         },
       },
     },

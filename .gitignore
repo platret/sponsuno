@@ -17,3 +17,6 @@ qa/
 # Playwright output (npm run test:e2e)
 playwright-report/
 test-results/
+
+# TypeScript build info (incremental tsc -b; kept in node_modules/.tmp by the tsconfigs)
+*.tsbuildinfo

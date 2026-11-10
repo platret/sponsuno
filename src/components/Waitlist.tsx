@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { legal, waitlist, waitlistNext, type Role } from '../content';
+import { contact, waitlist, waitlistNext, type Role } from '../content';
 import { siteHref, WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import '../styles/sections/waitlist.css';
@@ -7,7 +7,7 @@ import '../styles/sections/waitlist.css';
 // Set VITE_WAITLIST_ENDPOINT (e.g. a Formspree form URL) to store sign-ups. It receives a JSON POST
 // of { rolle, email }. Without it the form stores nothing (see AGENTS.md); waitlist.previewIntro,
 // previewNote and previewSuccess say so and offer an e-mail to the team instead, so nobody believes they signed up.
-const CONTACT = legal.contact.email;
+const CONTACT = contact.email;
 const INTRO = ENDPOINT ? waitlist.intro : CONTACT ? waitlist.previewIntro : null;
 
 /** mailto: link to the team with subject and body prefilled for the chosen role. */
