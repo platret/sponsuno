@@ -28,8 +28,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 h1, h2, h3 { font-family: var(--serif); color: var(--navy); line-height: 1.12; text-wrap: balance; }
 h1 { font-weight: 600; font-size: clamp(2rem, 3.4vw, 2.75rem); letter-spacing: -0.01em; }
-h2 { font-weight: 700; font-size: 1.375rem; }
-h3 { font-weight: 700; font-size: 1.15rem; }
+h2 { font-weight: 600; font-size: 1.375rem; }
+h3 { font-weight: 600; font-size: 1.15rem; }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 
@@ -254,7 +254,7 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-card-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 
 .ui-empty { padding: 2rem 1rem; text-align: center; display: grid; justify-items: center; gap: .5rem; }
-.ui-empty-title { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; color: var(--navy); }
+.ui-empty-title { font-family: var(--serif); font-weight: 600; font-size: 1.25rem; color: var(--navy); }
 
 .ui-badge {
   display: inline-flex; align-items: center; gap: .3rem;
@@ -272,7 +272,7 @@ h3 { font-weight: 700; font-size: 1.15rem; }
 .ui-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width .5s var(--ease-out); }
 .ui-card-dark .ui-progress { background: rgba(185, 191, 203, .16); }
 
-.ui-avatar { flex: none; border-radius: 50%; object-fit: cover; display: inline-grid; place-items: center; font-family: var(--serif); font-weight: 700; line-height: 1; }
+.ui-avatar { flex: none; border-radius: 50%; object-fit: cover; display: inline-grid; place-items: center; font-family: var(--serif); font-weight: 600; line-height: 1; }
 .ui-avatar-navy { background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: var(--gold-light); }
 .ui-avatar-gold { background: radial-gradient(circle at 35% 30%, var(--gold-pale), var(--gold) 60%, var(--gold-dark)); color: var(--navy); }
 .ui-avatar-ivory { background: var(--ivory); color: var(--navy); border: 1px solid var(--rule); }

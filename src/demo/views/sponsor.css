@@ -165,7 +165,7 @@
 .sp-facts div { display: grid; gap: .15rem; align-content: start; }
 .sp-facts dt { font-size: .8125rem; color: var(--ink); line-height: 1.35; }
 .sp-facts dd {
-  margin: 0; font-family: var(--serif); font-weight: 700; font-size: 1.375rem; line-height: 1.1;
+  margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.375rem; line-height: 1.1;
   color: var(--navy); font-variant-numeric: lining-nums;
 }
 

@@ -50,6 +50,29 @@ test('every header nav link leads to a page with an H1', async ({ page }) => {
   }
 });
 
+test('pages download only their preloaded font files (the core subsets)', async ({ page }) => {
+  // src/styles/fonts.css: each face has a core file (preloaded) and an extra file for characters the site's own text
+  // does not use; scripts/check-dist.mjs checks the text, this checks what the browser actually fetches.
+  for (const path of ['/', '/impressum/', '/demo/']) {
+    await test.step(path, async () => {
+      const fonts: string[] = [];
+      const onRequest = (request: { resourceType(): string; url(): string }) => {
+        if (request.resourceType() === 'font') fonts.push(new URL(request.url()).pathname);
+      };
+      page.on('request', onRequest);
+      await page.goto(path);
+      await page.waitForLoadState('networkidle');
+      await page.evaluate(() => document.fonts.ready);
+      page.off('request', onRequest);
+      const preloads = await page.locator('link[rel="preload"][as="font"]').evaluateAll((els) =>
+        els.map((el) => new URL((el as HTMLLinkElement).href).pathname));
+      expect(fonts.every((f) => !f.includes('-extra-'))).toBe(true);
+      if (preloads.length) expect([...new Set(fonts)].sort()).toEqual([...preloads].sort());
+      expect(new Set(fonts).size).toBe(3);
+    });
+  }
+});
+
 test('waitlist form rejects an invalid e-mail and accepts a valid one', async ({ page }) => {
   await blockExternalRequests(page);
   await page.goto('/#warteliste');

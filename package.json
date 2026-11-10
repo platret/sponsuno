@@ -10,20 +10,22 @@
     "typecheck": "tsc -b --noEmit",
     "preview": "vite preview",
     "check:dist": "node scripts/check-dist.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "fonts": "node scripts/subset-fonts.mjs"
   },
   "dependencies": {
-    "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/manrope": "^5.3.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
     "@playwright/test": "^1.64.1",
     "@types/node": "^22.20.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "6.1.2",
+    "subset-font": "2.9.0",
     "typescript": "~5.9.3",
     "vite": "8.3.5"
   },

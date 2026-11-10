@@ -37,7 +37,7 @@
 .pf-complete { display: grid; gap: .85rem; }
 .pf-complete-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; }
 .pf-complete-count { font-size: .875rem; color: var(--ink); }
-.pf-complete-count strong { font-family: var(--serif); font-weight: 700; font-size: 1.375rem; color: var(--navy); margin-right: .15rem; }
+.pf-complete-count strong { font-family: var(--serif); font-weight: 600; font-size: 1.375rem; color: var(--navy); margin-right: .15rem; }
 .pf-complete-done { display: flex; align-items: flex-start; gap: .5rem; font-size: .9375rem; }
 .pf-complete-done .ui-icon { margin-top: .2rem; stroke: var(--gold-dark); }
 .pf-missing { display: grid; gap: .35rem; }
@@ -193,7 +193,7 @@
 .pf-pv-facts > div { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: .75rem; align-items: baseline; }
 .pf-pv-facts dt { font-size: .8125rem; color: var(--steel); }
 .pf-pv-facts dd { margin: 0; color: var(--ivory); font-size: .9375rem; }
-.pf-pv-facts dd.pf-pv-budget { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; color: var(--gold-light); }
+.pf-pv-facts dd.pf-pv-budget { font-family: var(--serif); font-weight: 600; font-size: 1.2rem; color: var(--gold-light); }
 .pf-pv-badges { display: flex; flex-wrap: wrap; gap: .35rem; }
 .pf-preview .ui-badge-gold { background: rgba(196, 163, 107, .16); color: var(--gold-pale); border: 1px solid rgba(196, 163, 107, .4); }
 @container pf (max-width: 380px) {
@@ -212,7 +212,7 @@
   padding: .55rem .75rem; border-radius: 12px;
   background: rgba(11, 24, 48, .35); border: 1px solid var(--card-dark-line);
 }
-.pf-pv-reach dd { margin: 0; font-family: var(--serif); font-weight: 700; font-size: 1.3rem; line-height: 1.1; color: var(--ivory); overflow-wrap: anywhere; }
+.pf-pv-reach dd { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.3rem; line-height: 1.1; color: var(--ivory); overflow-wrap: anywhere; }
 .pf-pv-reach dt { font-size: .8125rem; color: var(--steel); line-height: 1.35; }
 
 .pf-pv-empty { color: var(--steel); font-style: italic; font-size: .875rem; }
