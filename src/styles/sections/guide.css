@@ -65,7 +65,6 @@
 }
 .gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 .gd-cta-demo:hover .gd-cta-demo-label { text-decoration-thickness: 2px; }
-.gd-cta-demo-note { font-size: .875rem; font-weight: 400; color: var(--ink); }
 
 /* "Weiterlesen": the other guides, each with its description */
 .gd-related {

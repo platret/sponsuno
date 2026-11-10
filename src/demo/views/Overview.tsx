@@ -422,7 +422,7 @@ function AssistantCard({ pending, sponsorName }: {
       )}
       <p className="ov-ai-note">
         <Icon name="check" size={14} />
-        <span>Entwürfe gehen erst raus, wenn Sie sie geprüft haben. In der Demo sind es vorbereitete Beispieltexte, und es wird nichts versendet.</span>
+        <span>Entwürfe gehen erst raus, wenn Sie sie geprüft haben. In der Vorschau sind es vorbereitete Beispieltexte, und es wird nichts versendet.</span>
       </p>
     </Card>
   );

@@ -45,4 +45,3 @@
 }
 .pg-end-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 .pg-end-demo:hover .pg-end-demo-label { text-decoration-thickness: 2px; }
-.pg-end-demo-note { font-size: .875rem; font-weight: 400; color: var(--ink); }

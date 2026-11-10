@@ -1,7 +1,7 @@
 /* Audience (Für wen): paper, directly under the proof line (whose hairline separates the two paper bands).
    Four stock photos (Symbolbilder) with a label, one sentence and a link ("two doors") each. No cards, no overlays.
    Motion (DESIGN.md -> Motion): head rises, tiles rise with stagger, each photo opens from an inset (4%, 6%/8% on desktop) inside
-   its .aud-frame and settles from 1.18 to 1 (data-scroll primitives in site.css); the note fades in.
+   its .aud-frame and settles from 1.18 to 1 (data-scroll primitives in site.css).
    Without scroll timelines the tiles keep the data-reveal fade.
    Layouts: >=1024 four columns; 601-1023 two columns; <=600 one column, each photo full width above its
    text (a small thumbnail made the subjects unreadable). The four files share one colour grade
@@ -40,13 +40,6 @@
 .aud-link { min-height: 44px; margin-top: .15rem; font-size: var(--fs-small); color: var(--navy); }
 .aud-link svg { color: var(--gold-dark); }
 
-.aud-note {
-  margin-top: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
-  font-size: .8125rem; line-height: 1.5; color: var(--ink);
-}
-.aud-note a { color: var(--gold-dark); font-weight: 600; text-underline-offset: 3px; }
 
 /* Quiet stagger for the reveal (only applies while motion is on) */
 .motion .aud-item[data-reveal]:nth-child(2) { transition-delay: .06s; }
@@ -78,13 +71,12 @@
   .aud-item:first-child { padding-top: 0; border-top: 0; }
   .aud-text { margin-top: .9rem; }
   .aud-desc { margin-top: .3rem; }
-  .aud-note { margin-top: .5rem; }
 }
 
 /* Very tall viewports (portrait tablets such as a 1024 x 1366 iPad Pro, portrait monitors): the hero is
    capped at 940px, so parts of this section can be in view at scroll 0. Nothing visible at load may start
    hidden, so whatever can be above the fold there stays static (final state). Thresholds are the smallest
-   measured offsets at any width (head ~1145px, tiles ~1340px, note ~1710px from the top of the page). */
+   measured offsets at any width (head ~1145px, tiles ~1340px from the top of the page). */
 @media (min-height: 1140px) {
   .scroll-fx .aud-head { animation: none; }
 }
@@ -92,7 +84,4 @@
   .scroll-fx .aud-item,
   .scroll-fx .aud-frame,
   .scroll-fx .aud-photo { animation: none; }
-}
-@media (min-height: 1700px) {
-  .scroll-fx .aud-note { animation: none; }
 }

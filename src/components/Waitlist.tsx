@@ -159,7 +159,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
               <p className="wl-error" id="wl-error" role="alert" hidden={!invalid}>{error}</p>
               <p className="wl-hint" id="wl-hint">
                 {ENDPOINT ? waitlist.hint : waitlist.previewNote}
-                {!ENDPOINT && CONTACT && <> {waitlist.previewMailLead} <a href={mailHref(role)}>{CONTACT}</a></>}
+                {!ENDPOINT && CONTACT && <> {waitlist.previewMailLead} <a href={mailHref(role)}>{CONTACT}</a>.</>}
               </p>
             </form>
           ) : (

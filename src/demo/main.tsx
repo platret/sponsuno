@@ -28,12 +28,12 @@ class DemoErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
     if (!this.state.failed) return this.props.children;
     return (
       <div className="demo">
-        <div className="demo-banner" role="note"><p><strong>Demo mit fiktiven Daten.</strong></p></div>
+        <div className="demo-banner" role="note"><p><strong>Vorschau mit Beispieldaten.</strong></p></div>
         <main className="demo-main">
           <div className="ui-empty" role="alert">
             <p className="ui-empty-title">Diese Ansicht konnte nicht geladen werden</p>
-            <p>Vermutlich passen die in diesem Browser gespeicherten Demo-Daten nicht zu dieser Version. Setzen Sie die Demo zurück, um mit den fiktiven Startdaten neu zu beginnen.</p>
-            <button type="button" className="ui-btn ui-btn-navy ui-btn-md" onClick={this.reset}>Demo zurücksetzen</button>
+            <p>Vermutlich passen die in diesem Browser gespeicherten Daten nicht zu dieser Version. Setzen Sie die Vorschau zurück, um mit den Beispieldaten neu zu beginnen.</p>
+            <button type="button" className="ui-btn ui-btn-navy ui-btn-md" onClick={this.reset}>Vorschau zurücksetzen</button>
           </div>
         </main>
       </div>

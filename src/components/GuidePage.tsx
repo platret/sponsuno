@@ -28,7 +28,6 @@ export function GuidePage({ id }: { id: GuideId }) {
             <h1 id="lg-title">{guide.title}</h1>
             <p className="lg-intro">{rich(guide.intro)}</p>
             <p className="lg-updated">{guidePage.byline} · {guidePage.updated}</p>
-            <p className="gd-note">{guidePage.plannedNote}</p>
 
             <nav className="lg-toc" aria-labelledby="lg-toc-title">
               <p className="lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
@@ -103,7 +102,6 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
           <a className="btn btn-navy" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
-            <span className="gd-cta-demo-note">{guidePage.ctaDemoNote}</span>
           </a>
         </div>
       );

@@ -205,10 +205,6 @@ svg.half path { fill: var(--gold-light); stroke: none; }
 }
 .ki-app { display: flex; align-items: center; gap: .45rem; font-size: .75rem; font-weight: 600; color: var(--ink); }
 .ki-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
-.ki-tag {
-  margin-left: auto; padding: .05rem .5rem; border-radius: 999px;
-  border: 1px solid rgba(110, 82, 40, .45); color: var(--gold-dark); font-size: .75rem;
-}
 .ki-title { margin-top: .6rem; font-size: .9375rem; font-weight: 600; line-height: 1.35; color: var(--navy); }
 .ki-status {
   display: inline-block; margin-top: .7rem; padding: .2rem .6rem; border-radius: 999px;

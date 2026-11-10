@@ -40,7 +40,6 @@ export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
               {demo.link}
               <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
             </a>
-            <span className="hero-demo-note">{demo.linkNote}</span>
           </p>
         </div>
       </div>

@@ -46,7 +46,6 @@
 .hero-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
 .hero-demo { display: flex; flex-direction: column; align-items: flex-start; text-align: left; line-height: 1.3; }
 .hero-demo .link-arrow { min-height: 28px; color: var(--gold-light); }
-.hero-demo-note { margin-top: .15rem; font-size: .8125rem; color: var(--steel); }
 
 /* ---------- Start frame (full bleed) ---------- */
 

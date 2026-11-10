@@ -20,7 +20,7 @@ const STATUS_TONE = { entwurf: 'muted', geprueft: 'gold', versendet: 'success' }
 const EMPTY_TAB: Record<DraftStatus, string> = {
   entwurf: 'Keine offenen Entwürfe. Beginnen Sie einen neuen oder schauen Sie bei den geprüften nach.',
   geprueft: 'Noch nichts geprüft. Lesen Sie einen Entwurf und markieren Sie ihn danach als geprüft.',
-  versendet: 'Noch nichts versendet. In der Demo bleibt ohnehin alles in diesem Browser.',
+  versendet: 'Noch nichts versendet. In der Vorschau bleibt ohnehin alles in diesem Browser.',
 };
 
 const TYPES: { value: DraftType; icon: IconName; text: string }[] = [
@@ -283,7 +283,7 @@ export default function Assistant() {
       <div className="as-pane-card">
         <EmptyState
           title="Entwurf nicht gefunden"
-          text="Vielleicht wurde er gelöscht oder die Demo zurückgesetzt."
+          text="Vielleicht wurde er gelöscht oder die Vorschau zurückgesetzt."
           action={<Button variant="ghost" href={href('ki-manager')} icon="arrowLeft">Zu allen Entwürfen</Button>}
         />
       </div>
@@ -299,7 +299,7 @@ export default function Assistant() {
       <PageHeader
         title="KI-Manager"
         back={param ? { href: href('ki-manager'), label: 'Alle Entwürfe' } : undefined}
-        lead="Der KI-Manager soll Anfragen, Updates und Dankesnachrichten für Sie vorbereiten. Sie lesen, passen an und entscheiden, was rausgeht."
+        lead="Der KI-Manager bereitet Anfragen, Updates und Dankesnachrichten für Sie vor. Sie lesen, passen an und entscheiden, was rausgeht."
       />
 
       <Principle />
@@ -324,7 +324,7 @@ function Principle() {
       <span className="as-principle-mark" aria-hidden="true"><Icon name="check" size={22} /></span>
       <div className="as-principle-copy">
         <h2 id={id}>Entwürfe gehen erst raus, wenn Sie sie geprüft haben.</h2>
-        <p>Der KI-Manager soll vorbereiten, Sie behalten das letzte Wort. In der Demo schreibt eine Vorlage die Texte, versendet wird nichts.</p>
+        <p>Der KI-Manager bereitet vor, Sie behalten das letzte Wort. In der Vorschau schreibt eine Vorlage die Texte, versendet wird nichts.</p>
       </div>
       <ol className="as-flow" aria-label="Ablauf eines Entwurfs">
         <li><span className="as-flow-dot" aria-hidden="true" />Entwurf</li>
@@ -442,7 +442,7 @@ function NextSteps({ onNew }: { onNew: (p?: { type: DraftType; sponsorId?: strin
       out.push({
         key: 'send', icon: 'mail', href: href('ki-manager', toSend.id),
         title: 'Geprüften Entwurf senden',
-        text: `${draftTypeLabel[toSend.type]} an ${name(toSend.sponsorId)}. Der Versand ist in der Demo simuliert.`,
+        text: `${draftTypeLabel[toSend.type]} an ${name(toSend.sponsorId)}. Der Versand ist in der Vorschau simuliert.`,
       });
     }
     const mine = state.partnerships.filter((p) => p.seekerId === seeker.id);
@@ -485,7 +485,7 @@ function NextSteps({ onNew }: { onNew: (p?: { type: DraftType; sponsorId?: strin
       <span className="as-next-mark" aria-hidden="true"><Icon name="sparkles" size={24} /></span>
       <h2 id={headingId}>Was möchten Sie vorbereiten?</h2>
       <p className="as-next-lead">
-        Öffnen Sie einen Entwurf aus der Liste oder beginnen Sie mit einem dieser Schritte. In der Demo schlägt eine Vorlage einen Text vor, Sie prüfen ihn, und erst dann wird er (simuliert) versendet.
+        Öffnen Sie einen Entwurf aus der Liste oder beginnen Sie mit einem dieser Schritte. In der Vorschau schlägt eine Vorlage einen Text vor, Sie prüfen ihn, und erst dann wird er (simuliert) versendet.
       </p>
       <ul className="as-steps">
         {steps.map((s) => {
@@ -649,7 +649,7 @@ function DraftEditor({ draft }: { draft: Draft }) {
     }
     focusAfter.current = 'sent';
     dispatch({ type: 'setDraftStatus', draftId: draft.id, status: 'versendet' });
-    toast('Versendet. In der Demo wird nichts verschickt.');
+    toast('Versendet. In der Vorschau wird nichts verschickt.');
   };
 
   const remove = () => {
@@ -708,7 +708,7 @@ function DraftEditor({ draft }: { draft: Draft }) {
           </div>
           <p ref={sentNoteRef} tabIndex={-1} className="as-note as-focus-anchor">
             <Icon name="check" size={16} />
-            Am {formatDate(draft.updatedAt)} als versendet markiert. In der Demo wurde nichts verschickt; versendete Entwürfe lassen sich nicht mehr bearbeiten.
+            Am {formatDate(draft.updatedAt)} als versendet markiert. In der Vorschau wurde nichts verschickt; versendete Entwürfe lassen sich nicht mehr bearbeiten.
           </p>
           <div className="as-actions">
             <Button variant="ghost" icon="edit" onClick={copyAsDraft}>Als neuen Entwurf übernehmen</Button>
@@ -856,7 +856,7 @@ function NewDraft({ preset }: { preset: Preset }) {
       <div className="as-pane-card">
         <EmptyState
           title="Noch kein Sponsor für einen Entwurf"
-          text="Setzen Sie zuerst Sponsoren auf Ihre Merkliste. Danach kann die Demo eine Anfrage aus einer Vorlage vorbereiten."
+          text="Setzen Sie zuerst Sponsoren auf Ihre Merkliste. Danach kann die Vorschau eine Anfrage aus einer Vorlage vorbereiten."
           action={<Button variant="gold" href={href('partner')} icon="match">Passende Partner ansehen</Button>}
         />
       </div>
@@ -916,7 +916,7 @@ function NewDraft({ preset }: { preset: Preset }) {
 
       <p className="as-sim">
         <Icon name="sparkles" size={16} />
-        <span><strong>Simulierter Vorschlag:</strong> In der Demo schreibt eine Vorlage den Text, keine echte KI.</span>
+        <span><strong>Simulierter Vorschlag:</strong> In der Vorschau schreibt eine Vorlage den Text, keine echte KI.</span>
       </p>
 
       <form ref={formRef} className="as-form" onSubmit={onSubmit}>

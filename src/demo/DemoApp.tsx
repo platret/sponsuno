@@ -39,7 +39,7 @@ const WAITLIST_ROLE: Record<Role, WaitlistRole> = { seeker: 'athlete', sponsor: 
 function WaitlistCta({ role, className, tone }: { role: Role; className: string; tone: 'gold' | 'navy' }) {
   return (
     <div className={className}>
-      <p>Sponsuno ist im Aufbau. Möchten Sie beim Start dabei sein?</p>
+      <p>Sponsuno startet bald. Möchten Sie von Anfang an dabei sein?</p>
       <a className={`ui-btn ui-btn-md ui-btn-${tone}`} href={`../?rolle=${WAITLIST_ROLE[role]}#warteliste`}>Auf die Warteliste</a>
     </div>
   );
@@ -95,7 +95,7 @@ export default function DemoApp() {
 
   // New view: title, scroll to top, move focus to the main region for keyboard and screen reader users
   useEffect(() => {
-    document.title = `${TITLES[route.name]} · Sponsuno Demo`;
+    document.title = `${TITLES[route.name]} · Sponsuno Vorschau`;
     if (firstRender.current) { firstRender.current = false; return; }
     window.scrollTo({ top: 0 });
     mainRef.current?.focus({ preventScroll: true });
@@ -112,7 +112,7 @@ export default function DemoApp() {
     dispatch({ type: 'reset' });
     setConfirmReset(false);
     navigate('uebersicht');
-    toast('Demo zurückgesetzt');
+    toast('Vorschau zurückgesetzt');
   };
 
   const nav = NAV[state.role];
@@ -135,22 +135,22 @@ export default function DemoApp() {
 
       <div className="demo-body">
         <div className="demo-banner" role="note">
-          <p><strong>Demo mit fiktiven Daten.</strong><span className="demo-banner-more"> So soll Sponsuno funktionieren. Ihre Änderungen bleiben nur in diesem Browser, nichts wird gesendet.</span></p>
+          <p><strong>Vorschau mit Beispieldaten.</strong><span className="demo-banner-more"> Ihre Änderungen bleiben in diesem Browser, nichts wird gesendet.</span></p>
           <div className="demo-banner-actions">
             <button type="button" className="demo-banner-btn" onClick={reset} onBlur={() => setConfirmReset(false)}>
               <Icon name="reset" size={16} />
               {confirmReset
                 ? <span>Wirklich zurücksetzen?</span>
-                : <><span className="demo-banner-more">Demo zurücksetzen</span><span className="demo-banner-short">Zurücksetzen</span></>}
+                : <><span className="demo-banner-more">Vorschau zurücksetzen</span><span className="demo-banner-short">Zurücksetzen</span></>}
             </button>
             <a className="demo-banner-btn" href="../"><Icon name="arrowLeft" size={16} /><span>Startseite</span></a>
           </div>
         </div>
 
-        <aside className="demo-sidebar" aria-label="Demo-Navigation">
-          <a className="demo-brand" href={href(HOME[state.role])} aria-label="Sponsuno Demo, Startansicht">
+        <aside className="demo-sidebar" aria-label="Navigation der Vorschau">
+          <a className="demo-brand" href={href(HOME[state.role])} aria-label="Sponsuno Vorschau, Startansicht">
             <img src={logoDark} alt="Sponsuno" width={132} height={31} />
-            <span className="demo-brand-tag">Demo</span>
+            <span className="demo-brand-tag">Vorschau</span>
           </a>
 
           <RoleSwitch role={state.role} onChange={switchRole} />

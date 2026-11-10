@@ -1,10 +1,8 @@
 import { pricing } from '../content';
 import '../styles/sections/pricing.css';
 
-// Interim until content.ts gets pricing.openLabel (proposed in the redesign hand-off); then use pricing.openLabel.
-
-/** Ivory section, the head of /kosten/ (its title is the page's H1): the planned cost model as one overview card.
-    Decided points get a check, open ones a tag. */
+/** Ivory section, the head of /kosten/ (its title is the page's H1): the cost model as one overview card.
+    Decided points get a check, open ones a ring (plus pricing.openLabel as a tag when it is set). */
 export function Pricing() {
   return (
     <section className="section surface-ivory price" id="kosten" aria-labelledby="price-title">
@@ -35,7 +33,7 @@ export function Pricing() {
                   )}
                   <span className="price-value-text">
                     {row.value}
-                    {row.state === 'open' && (
+                    {row.state === 'open' && pricing.openLabel && (
                       <>
                         {' '}
                         <span className="price-tag">{pricing.openLabel}</span>

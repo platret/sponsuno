@@ -134,7 +134,7 @@ function KiDraft() {
   const { draft } = aiManager;
   return (
     <div className="ki-draft">
-      <p className="ki-app"><span className="ki-dot" />{draft.app}<span className="ki-tag">{story.labels.planned}</span></p>
+      <p className="ki-app"><span className="ki-dot" />{draft.app}</p>
       <p className="ki-title">{draft.label}</p>
       <p className="ki-status">{draft.status}</p>
     </div>
@@ -188,7 +188,7 @@ export function StageArt({ state, live = false, stageRef }: { state: StoryState;
       <div key={item.key} className={`it it-${kind} it-${item.key}`} style={i !== undefined ? ({ '--i': i } as Vars) : undefined}>{body}</div>,
     );
   }
-  // The match card carries its own label ("Beispiel mit fiktiven Angaben · Symbolbild"): no stage caption there
+  // The match card carries its own label ("Beispieldaten"): no stage caption there
   const caption = state === 'danach' ? 'planned' : state === 'match' ? null : ['linie', 'sortiert'].includes(state) ? 'solution' : 'heute';
   return (
     <div ref={stageRef} className={`st-art${live ? ' st-live' : ''}`} data-step={state}>

@@ -69,7 +69,6 @@ function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
           <a className="btn btn-navy" href={waitlistHref(role)}>{infoPage.endButton}</a>
           <a className="pg-end-demo" href={pageHref(infoPage.demoHref)}>
             <span className="pg-end-demo-label">{infoPage.demoLabel}</span>
-            <span className="pg-end-demo-note">{infoPage.demoNote}</span>
           </a>
         </div>
       </div>
@@ -137,7 +136,6 @@ function FirmsPage() {
               <a className="btn btn-navy" href={waitlistHref('sponsor')}>{end.button}</a>
               <a className="gd-cta-demo" href={pageHref(end.demoHref)}>
                 <span className="gd-cta-demo-label">{end.demoLabel}</span>
-                <span className="gd-cta-demo-note">{end.demoNote}</span>
               </a>
             </div>
             {end.talk && <p className="pg-talk">{rich(end.talk)}</p>}
