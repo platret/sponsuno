@@ -420,10 +420,14 @@ export const waitlist = {
   emailLabel: 'E-Mail-Adresse',
   placeholder: 'name@beispiel.ch',
   submit: 'Auf die Warteliste',
-  hint: 'Wir verwenden Ihre Adresse nur für Nachrichten zum Start von Sponsuno.',
+  hint: 'Sie erhalten eine E-Mail, mit der Sie die Anmeldung bestätigen. Wir verwenden Ihre Adresse nur für Nachrichten zum Start von Sponsuno.',
   invalid: 'Bitte geben Sie eine gültige E-Mail-Adresse ein, zum Beispiel name@beispiel.ch.',
   failed: 'Die Anmeldung hat nicht geklappt. Bitte versuchen Sie es in ein paar Minuten nochmals.',
-  success: 'Danke. Sie stehen auf der Warteliste. Wir melden uns, sobald Sponsuno startet.',
+  // Double opt-in (Brevo, worker/waitlist.ts): the address counts only after the click in the confirmation e-mail
+  // (emails/src/doi-bestaetigung.html), which leads to /warteliste/bestaetigt/ (waitlistConfirmed below)
+  success: 'Fast geschafft: Bitte bestätigen Sie Ihre Anmeldung in der E-Mail, die wir Ihnen gerade geschickt haben.',
+  // Label of the hidden honeypot field (aria-hidden, never seen by people): bots that fill it are dropped by the Worker
+  honeypotLabel: 'Website',
   // Shown while no VITE_WAITLIST_ENDPOINT is configured: nothing is stored, so visitors are offered an
   // e-mail to legal.contact.email instead (subject and body prefilled with the chosen role).
   previewNote: 'Die Anmeldung läuft vorerst per E-Mail, das Formular speichert nichts.',
@@ -1518,7 +1522,7 @@ export const forFirms = {
   },
 };
 
-// ---------- 404 page (dist/404.html, NotFoundPage.tsx): served by Cloudflare for every unknown URL ----------
+// ---------- 404 page (dist/404.html, NoticePage.tsx): served by Cloudflare for every unknown URL ----------
 // Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
 // page waitlist); they resolve to absolute URLs, because the page is shown under any address.
 const notFoundMail = legal.contact.email;
@@ -1544,6 +1548,41 @@ export const notFound = {
         'Sie sind über einen Link auf sponsuno.ch hier gelandet? Schreiben Sie uns an ',
         { href: `mailto:${notFoundMail}`, label: notFoundMail },
         ', dann korrigieren wir ihn.',
+      ] satisfies LegalText)
+    : null,
+};
+
+// ---------- /warteliste/bestaetigt/ (ConfirmedPage via NoticePage.tsx): where Brevo sends people after the click on the
+// confirmation link of the double opt-in e-mail (REDIRECT_URL in worker/waitlist.ts). Static, noindex, not in the
+// sitemap. In step with the welcome e-mail (emails/src/willkommen.html): same launch signal, same next steps.
+const confirmedMail = legal.contact.email;
+
+export const waitlistConfirmed = {
+  title: 'Danke, Ihre Anmeldung ist bestätigt',
+  intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Sobald es in Ihrer Region losgeht, schreiben wir Ihnen.',
+  linksTitle: 'Bis dahin',
+  links: [
+    {
+      href: pageMeta('sponsoren-finden').path,
+      label: 'Ratgeber: Sponsoren finden',
+      text: 'Wie Sie Firmen aus Ihrer Region auswählen, ansprechen und als Partner behalten.',
+    },
+    {
+      href: pageMeta('kultursponsoring').path,
+      label: 'Ratgeber: Kultursponsoring',
+      text: 'Sponsoren für Chor, Musikverein oder Theater: welche Firmen in Frage kommen und wie Sie anfragen.',
+    },
+    { href: demo.href, label: 'Produktvorschau', text: 'Klicken Sie sich mit Beispieldaten durch Sponsuno, aus Sicht einer Sportlerin oder eines Sponsors.' },
+    { href: firmsLink.href, label: 'Für Firmen', text: 'Wie Firmen mit Sponsuno Sportlerinnen, Sportler und Vereine finden, die passen.' },
+  ] satisfies (FooterLink & { text: string })[],
+  /** Only shown while a contact address exists */
+  contact: confirmedMail
+    ? ([
+        'Abmelden können Sie sich jederzeit über den Link in unseren E-Mails oder mit einer kurzen Nachricht an ',
+        { href: `mailto:${confirmedMail}`, label: confirmedMail },
+        '. Mehr dazu in der ',
+        { href: pageMeta('datenschutz').path, label: 'Datenschutzerklärung' },
+        '.',
       ] satisfies LegalText)
     : null,
 };

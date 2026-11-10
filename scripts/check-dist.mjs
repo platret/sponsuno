@@ -1,9 +1,9 @@
 // Checks the built site in dist/ (run after `npm run build`): `npm run check:dist`. Plain Node, no dependencies.
 // Fails with a list of problems when
 // - an indexable page lacks exactly one <h1>, a <title>, a meta description or a canonical matching its path on
-//   https://sponsuno.ch/ (404.html and the client-only demo are exempt), or carries noindex
-// - 404.html or the demo lacks <meta name="robots" content="noindex">
-// - a URL in dist/sitemap.xml has no page in dist/, or an indexable page is missing from the sitemap
+//   https://sponsuno.ch/ (404.html, the client-only demo and the waitlist confirmation are exempt), or carries noindex
+// - one of those noindex pages lacks <meta name="robots" content="noindex">, or is missing
+// - a URL in dist/sitemap.xml has no page in dist/ or is a noindex page, or an indexable page is missing from the sitemap
 // - an internal href/src (links, assets, srcset, og:image) does not resolve to a file in dist/, or an #anchor does
 //   not exist in the target page (pages rendered only in the browser, like the demo's hash routes, are skipped)
 // - a JSON-LD block is not valid JSON
@@ -21,8 +21,8 @@ const dist = path.join(root, 'dist');
 
 /** Pages that may load JavaScript files (relative to dist/). */
 const SCRIPT_PAGES = new Set(['index.html', 'demo/index.html']);
-/** Pages exempt from the SEO head checks; they must carry noindex instead. */
-const NOINDEX_PAGES = new Set(['404.html', 'demo/index.html']);
+/** Pages exempt from the SEO head checks; they must carry noindex instead (pages.ts: index: false, plus the demo). */
+const NOINDEX_PAGES = new Set(['404.html', 'demo/index.html', 'warteliste/bestaetigt/index.html']);
 
 const problems = [];
 const fail = (file, message) => problems.push(`dist/${file}: ${message}`);
@@ -111,6 +111,8 @@ for (const file of files) {
   pages.set(file, { ...parsed, ids, clientRendered: clientRendered(html) });
 }
 
+for (const file of NOINDEX_PAGES) if (!pages.has(file)) fail(file, 'missing (listed in NOINDEX_PAGES of scripts/check-dist.mjs)');
+
 const meta = (tags, key, value) => tags.find((t) => t.name === 'meta' && t.attrs[key]?.toLowerCase() === value)?.attrs.content;
 const noindex = (tags) => /\bnoindex\b/i.test(meta(tags, 'name', 'robots') ?? '');
 
@@ -171,6 +173,7 @@ if (!(await exists(sitemapFile))) {
     const { pathname } = new URL(loc);
     const file = decodeURIComponent(pathname.slice(1)) + (pathname.endsWith('/') ? 'index.html' : '');
     if (!pages.has(file)) problems.push(`dist/sitemap.xml: ${loc} has no page (dist/${file} missing)`);
+    else if (NOINDEX_PAGES.has(file)) problems.push(`dist/sitemap.xml: ${loc} is a noindex page`);
   }
   for (const url of canonicalPages) if (!locs.includes(url)) problems.push(`dist/sitemap.xml: indexable page ${url} is missing`);
 }

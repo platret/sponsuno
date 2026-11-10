@@ -25,7 +25,7 @@ Die Adressen unter `/email/` nie umbenennen oder löschen: Bereits verschickte E
 4. **Show advanced settings → Tag:** `optin` eintragen. Damit führt Brevo die Vorlage als DOI-Vorlage. Der API-Aufruf der Website verlangt eine DOI-Vorlage.
 5. Als Editor **«Code your own»** wählen (je nach Ansicht auch «Paste your code» oder HTML-Editor), nicht den Drag-and-drop-Editor. Den ganzen Inhalt von `dist/doi-bestaetigung.html` einfügen und speichern. Nichts darin von Hand ändern (siehe «Änderungen» unten).
 6. **Bestätigungslink:** ist schon drin. Button und Ersatzlink zeigen auf `{{ doubleoptin }}`, den Platzhalter, den Brevo beim Versand durch den persönlichen Bestätigungslink ersetzt. Im HTML-Editor gibt es deshalb kein «Link → Type: Double opt-in link» zum Anklicken; das ist nur die Variante im Drag-and-drop-Editor für denselben Platzhalter.
-7. **Wohin der Link danach führt**, legt nicht die Vorlage fest, sondern der Aufruf der Website (`redirectionUrl`, die Bestätigungsseite auf sponsuno.ch). Das baut Claude in der Worker-Route; in der Vorlage ist nichts einzustellen.
+7. **Wohin der Link danach führt**, legt nicht die Vorlage fest, sondern der Aufruf der Website: `redirectionUrl` ist https://sponsuno.ch/warteliste/bestaetigt/ (Worker-Route `worker/waitlist.ts`, Seite «Danke, Ihre Anmeldung ist bestätigt»). In der Vorlage ist nichts einzustellen.
 8. Falls Brevo ein Feld für eine **Textversion** anbietet: Inhalt von `dist/doi-bestaetigung.txt` einfügen. Sonst erzeugt Brevo die Textversion selbst.
 9. Vorlage aktiv schalten und die **Vorlagen-ID** notieren (Zahl in der Übersicht), für Schritt 11 der Checkliste.
 
@@ -69,6 +69,15 @@ Zuerst in Brevo **Send a test** (an eigene Adressen), danach einmal den ganzen A
 - [ ] Bilder blockiert (Outlook, manche Firmenkonten): Statt des Logos steht «Sponsuno» in heller Schrift auf Navy.
 
 Gefundene Darstellungsfehler mit Screenshot und Name des Programms an Claude schicken.
+
+## Anbindung an die Website (Worker-Route)
+
+Die Website schickt Anmeldungen an `POST /api/warteliste` (Cloudflare Worker, `worker/waitlist.ts`), der Brevo mit Double Opt-in aufruft. Die Route ist eingebaut, aber **schlafend**: Ohne API-Schlüssel und IDs antwortet sie «not_configured», und das Formular bleibt beim E-Mail-Weg. Freischalten in dieser Reihenfolge:
+
+1. Team: Secret `BREVO_API_KEY` im Worker `sponsuno` setzen (Checkliste, Schritt 8). Für Tests auf PR-Vorschauen zusätzlich `npx wrangler preview base-config secret put BREVO_API_KEY` (gilt für Vorschauen, die danach entstehen).
+2. Claude: Listen-ID und Vorlagen-ID der DOI-Vorlage in `wrangler.jsonc` eintragen (`vars` und `previews.vars`: `BREVO_LIST_ID`, `BREVO_DOI_TEMPLATE_ID`), dazu die Datenschutzerklärung aus `datenschutz-entwurf.md` fertigstellen.
+3. Team: In GitHub die Repository-Variable `VITE_WAITLIST_ENDPOINT` auf `/api/warteliste` setzen (Settings → Secrets and variables → Actions → Variables). Erst damit schickt das Formular Anmeldungen ab; der nächste Deploy schaltet es um.
+4. Test nach Checkliste, Schritt 12.
 
 ## Änderungen (für Claude oder wer am Repo arbeitet)
 

@@ -15,6 +15,11 @@
   Cache-Control: public, max-age=3600
   X-Robots-Tag: noindex
 
+# Waitlist confirmation page (Brevo redirects here after the double opt-in click): out of search results, backup for
+# its meta robots noindex
+/warteliste/*
+  X-Robots-Tag: noindex
+
 # Images and fonts of the waitlist e-mails (emails/, npm run emails). Fixed URLs referenced from sent e-mails, so
 # they never move; the fonts need CORS because mail clients load them from another origin.
 /email/*

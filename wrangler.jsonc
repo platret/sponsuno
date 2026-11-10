@@ -1,13 +1,45 @@
 {
   "name": "sponsuno",
   "compatibility_date": "2026-10-20",
-  // Unknown URLs get dist/404.html (prerendered from src/pages.ts, id "notfound") with status 404
-  "assets": { "directory": "./dist", "not_found_handling": "404-page" },
+  // Worker script for /api/* only (worker/index.ts: POST /api/warteliste → Brevo double opt-in, see
+  // team/warteliste-setup.md). Every other request is served from the static assets without running the script.
+  "main": "worker/index.ts",
+  "assets": {
+    "directory": "./dist",
+    // Unknown URLs get dist/404.html (prerendered from src/pages.ts, id "notfound") with status 404
+    "not_found_handling": "404-page",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
   "routes": [
     { "pattern": "sponsuno.ch", "custom_domain": true },
     { "pattern": "www.sponsuno.ch", "custom_domain": true }
   ],
+  // Brevo IDs from the team (setup doc, step 11). Empty = the waitlist route answers 503 not_configured. The API key is
+  // never here: it is the secret BREVO_API_KEY, set by the team (npx wrangler secret put BREVO_API_KEY).
+  "vars": {
+    "BREVO_LIST_ID": "",
+    "BREVO_DOI_TEMPLATE_ID": ""
+  },
+  // Per Cloudflare location and approximate (Cloudflare docs, Rate Limiting). Same numbers as IP_LIMIT and EMAIL_LIMIT
+  // in worker/waitlist.ts, which uses an in-memory fallback where a binding is missing (previews, tests).
+  "ratelimits": [
+    { "name": "WAITLIST_IP_LIMIT", "namespace_id": "4801", "simple": { "limit": 10, "period": 60 } },
+    { "name": "WAITLIST_EMAIL_LIMIT", "namespace_id": "4802", "simple": { "limit": 3, "period": 60 } }
+  ],
   "preview_urls": true,
-  "previews": {},
+  // PR previews (wrangler preview --name pr-<n>) inherit neither vars nor bindings: keep both in step with the values
+  // above. Secrets for previews: npx wrangler preview base-config secret put BREVO_API_KEY (applies to previews created
+  // afterwards; Cloudflare docs, Worker Previews).
+  "previews": {
+    "vars": {
+      "BREVO_LIST_ID": "",
+      "BREVO_DOI_TEMPLATE_ID": ""
+    },
+    "ratelimits": [
+      { "name": "WAITLIST_IP_LIMIT", "namespace_id": "4801", "simple": { "limit": 10, "period": 60 } },
+      { "name": "WAITLIST_EMAIL_LIMIT", "namespace_id": "4802", "simple": { "limit": 3, "period": 60 } }
+    ]
+  },
   "observability": { "enabled": false }
 }
