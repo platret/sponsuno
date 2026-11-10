@@ -30,7 +30,7 @@ Auf der Startseite können Sie sich auf die Warteliste von Sponsuno eintragen. W
 
 **Wozu**
 
-Wir schreiben Ihnen, sobald Sponsuno in Ihrer Region startet. Ihre Auswahl hilft uns, Ihnen die passende Nachricht zu schicken. Für anderes verwenden wir Ihre Adresse nicht, und wir geben sie nicht weiter, ausser an die unten genannten Dienstleister, die sie in unserem Auftrag bearbeiten.
+Wir schreiben Ihnen zum Start von Sponsuno. Ihre Auswahl hilft uns, Ihnen die passende Nachricht zu schicken. Für anderes verwenden wir Ihre Adresse nicht, und wir geben sie nicht weiter, ausser an die unten genannten Dienstleister, die sie in unserem Auftrag bearbeiten.
 
 **Wie die Anmeldung abläuft**
 
@@ -39,7 +39,7 @@ Wir schreiben Ihnen, sobald Sponsuno in Ihrer Region startet. Ihre Auswahl hilft
 3. Erst wenn Sie den Link anklicken, nimmt Brevo Ihre Adresse in die Warteliste auf. Ohne Klick kommen Sie nicht auf die Liste. [aus Schritt 9: was mit nicht bestätigten Anmeldungen geschieht und wann sie gelöscht werden]
 4. Nach der Bestätigung schicken wir Ihnen eine kurze Willkommens-E-Mail.
 
-Zum Schutz vor Missbrauch zählt unsere Website, wie oft von derselben IP-Adresse und für dieselbe E-Mail-Adresse Anmeldungen eingehen. Die E-Mail-Adresse wird dafür nur in unkenntlicher Form (als Prüfsumme) verwendet. Diese Zähler liegen bei Cloudflare und verfallen nach etwa einer Minute; wir sehen sie nicht und werten sie nicht aus.
+Zum Schutz vor Missbrauch zählt unsere Website, wie oft von derselben IP-Adresse und für dieselbe E-Mail-Adresse Anmeldungen eingehen, und begrenzt die Zahl der Bestätigungs-E-Mails pro Tag. Die E-Mail-Adresse wird dafür nur in unkenntlicher Form (als Prüfsumme) verwendet. Diese Zähler liegen bei Cloudflare: die Zähler pro Minute verfallen nach etwa einer Minute, die Tageszähler (mit der Prüfsumme der E-Mail-Adresse) werden am folgenden Tag gelöscht. Wir sehen sie nicht und werten sie nicht aus.
 
 **E-Mail-Dienstleister Brevo**
 
@@ -47,7 +47,7 @@ Die Warteliste und der Versand der E-Mails laufen über Brevo, einen Dienst der 
 
 **Wie lange**
 
-[Aus Schritt 9: konkreter Zeitpunkt, zum Beispiel «bis zur Mitteilung über den Start in Ihrer Region, danach löschen wir Ihre Adresse» oder eine feste Frist. Nicht «bis auf Weiteres».] Endet das Projekt Sponsuno, löschen wir die Warteliste [Frist aus Schritt 9]. Die Nachweise Ihrer Einwilligung bewahren wir [Frist aus Schritt 9] auf.
+[Aus Schritt 9: konkreter Zeitpunkt, zum Beispiel «bis zur Mitteilung über den Start von Sponsuno, danach löschen wir Ihre Adresse» oder eine feste Frist. Nicht «bis auf Weiteres».] Endet das Projekt Sponsuno, löschen wir die Warteliste [Frist aus Schritt 9]. Die Nachweise Ihrer Einwilligung bewahren wir [Frist aus Schritt 9] auf.
 
 **Abmelden**
 

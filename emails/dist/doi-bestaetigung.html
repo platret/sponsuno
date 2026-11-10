@@ -14,6 +14,9 @@
 <style>
   .serif { font-family: Georgia, 'Times New Roman', serif !important; }
   .sans, .sans a, .sans span, .sans strong { font-family: Arial, Helvetica, sans-serif !important; }
+  /* Word engine: no padding on <a>, so the link cards get it on their cells (inline.css → .lcard-a, .lc-arrow-a) */
+  .lcard-in { padding: 18px 12px 18px 22px !important; }
+  .lc-arrow { padding: 0 22px 0 8px !important; }
 </style>
 <![endif]-->
 <!-- Four separate style blocks on purpose: Gmail drops a whole block when it meets a rule it does not accept, so
@@ -44,7 +47,9 @@
   /* Phones */
   @media only screen and (max-width: 480px) {
     .wrap { padding: 12px 8px 28px !important; }
-    .header { padding: 22px 24px !important; }
+    /* Flat navy on phones: at this width the 135° gradient lightens behind the logo, where the PNG's navy plate
+       (scripts/emails.mjs → WORDMARK.plate) would show its edge. Padding: see .header in inline.css. */
+    .header { padding: 16px 24px 16px 14px !important; background-image: none !important; }
     .card { padding: 34px 24px 30px !important; }
     .footer { padding: 24px 24px 0 !important; }
     .h1 { font-size: 32px !important; line-height: 36px !important; }
@@ -76,10 +81,10 @@
 <tr><td class="wrap" align="center" style="padding:40px 16px 48px">
 <!--[if mso]><table role="presentation" align="center" width="600" border="0" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
 <table role="presentation" class="container" width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto">
-<tr><td class="header" bgcolor="#0B1830" style="background-color:#0B1830;background-image:linear-gradient(135deg, #0B1830 0%, #0B1830 50%, #1D2F52 100%);border-radius:14px 14px 0 0;padding:26px 40px">
+<tr><td class="header" bgcolor="#0B1830" style="background-color:#0B1830;background-image:linear-gradient(135deg, #0B1830 0%, #0B1830 50%, #1D2F52 100%);border-radius:14px 14px 0 0;padding:20px 48px 20px 38px">
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
-<td valign="middle"><a href="https://sponsuno.ch/" target="_blank" class="logo-a" style="display:block;text-decoration:none"><img class="logo serif" src="https://sponsuno.ch/email/wordmark-light@2x.png" width="150" height="38" alt="Sponsuno" style="font-family:'Sponsuno Serif', 'Cormorant Garamond', Cormorant, Georgia, 'Times New Roman', serif;display:block;height:auto;border:0;color:#F3EFE6;font-size:26px;line-height:38px"></a></td>
+<td valign="middle"><a href="https://sponsuno.ch/" target="_blank" class="logo-a" style="display:block;text-decoration:none"><img class="logo serif" src="https://sponsuno.ch/email/wordmark-light-2x.png" width="170" height="50" alt="Sponsuno" style="font-family:'Sponsuno Serif', 'Cormorant Garamond', Cormorant, Georgia, 'Times New Roman', serif;display:block;height:auto;border:0;color:#F3EFE6;font-size:26px;line-height:50px"></a></td>
 <td class="header-label sans" align="right" valign="middle" style="font-family:'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;font-weight:600;color:#B9BFCB;white-space:nowrap">Warteliste</td>
 </tr>
 </table>
@@ -100,7 +105,7 @@
 <p class="small sans" style="font-family:'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;margin:0 0 10px;font-size:14px;line-height:22px;color:#545D72;margin-bottom:0">Der Button funktioniert nicht? <a class="link" href="{{ doubleoptin }}" target="_blank" style="color:#6E5228;text-decoration:underline;text-underline-offset:2px">Anmeldung über diesen Link bestätigen</a>.</p>
 </td></tr>
 <tr><td class="footer sans" style="font-family:'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;padding:28px 48px 0;text-align:left">
-<p class="footer-text sans" style="font-family:'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;margin:0 0 8px;font-size:13px;line-height:20px;color:#545D72">Sponsuno · Klosterstrasse 34, 8406 Winterthur, Schweiz</p>
+<p class="footer-text sans" style="font-family:'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;margin:0 0 8px;font-size:13px;line-height:20px;color:#545D72">Sponsuno · Klosterstrasse 34, 8406&nbsp;Winterthur, Schweiz</p>
 <p class="footer-text sans" style="font-family:'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;margin:0 0 8px;font-size:13px;line-height:20px;color:#545D72"><a class="footer-link" href="mailto:hello@sponsuno.ch" style="color:#545D72;text-decoration:underline">hello@sponsuno.ch</a> · <a class="footer-link" href="https://sponsuno.ch/" target="_blank" style="color:#545D72;text-decoration:underline">sponsuno.ch</a> · <a class="footer-link" href="https://sponsuno.ch/datenschutz/" target="_blank" style="color:#545D72;text-decoration:underline">Datenschutz</a></p>
 </td></tr>
 </table>

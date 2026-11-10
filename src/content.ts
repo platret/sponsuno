@@ -1559,7 +1559,7 @@ const confirmedMail = legal.contact.email;
 
 export const waitlistConfirmed = {
   title: 'Danke, Ihre Anmeldung ist bestätigt',
-  intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Sobald es in Ihrer Region losgeht, schreiben wir Ihnen.',
+  intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start.',
   linksTitle: 'Bis dahin',
   links: [
     {

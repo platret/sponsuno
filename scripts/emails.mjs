@@ -25,8 +25,20 @@ const args = new Set(process.argv.slice(2));
 
 /** Where the hosted images and fonts live (public/email/ is deployed with the site). */
 const ASSET_BASE = 'https://sponsuno.ch/email/';
-/** The one logo asset of the e-mails. To swap the logo: change `source` (or the SVG), run `npm run emails -- --assets`. */
-const WORDMARK = { source: 'src/assets/wordmark-light.svg', file: 'wordmark-light@2x.png', width: 150, halo: '#0B1830' };
+/** The one logo asset of the e-mails. To swap the logo: change `source` (or the SVG), run `npm run emails -- --assets`.
+    File names under /email/ use [a-z0-9.-] only: Cloudflare's static assets answer a path with "@" (or other
+    characters it encodes) with a 307 to the encoded path, an extra hop that not every mail client or image proxy follows. */
+// `plate`: a rounded navy plate inside the PNG behind the letters (CSS px). On the navy header it is invisible; in
+// clients that invert the e-mail but not its images (Gmail apps, Outlook mobile in dark mode) the header turns light and
+// the logo stays a navy badge with ivory letters. The header padding in inline.css and layout.html subtracts padX and
+// padY, so the letters keep their place (left edge in line with the headline).
+const WORDMARK = {
+  source: 'src/assets/wordmark-light.svg',
+  file: 'wordmark-light-2x.png',
+  width: 150,
+  halo: '#0B1830',
+  plate: { color: '#0B1830', padX: 10, padY: 6, radius: 8 },
+};
 /** Web fonts for clients that load them (Apple Mail, iOS Mail); everything else uses the fallback stacks. */
 const FONTS = [
   ['@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2', 'cormorant-garamond-600.woff2'],
@@ -34,6 +46,9 @@ const FONTS = [
   ['@fontsource/manrope/files/manrope-latin-600-normal.woff2', 'manrope-600.woff2'],
 ];
 const GMAIL_CLIP = 102 * 1024;
+for (const file of [WORDMARK.file, ...FONTS.map(([, to]) => `fonts/${to}`)]) {
+  if (!/^[a-z0-9.\/-]+$/.test(file)) throw new Error(`Asset name "${file}": use [a-z0-9.-] only (see WORDMARK)`);
+}
 
 // Postal address from the Impressum data (src/content.ts → legal.contact), so the footer never drifts from it.
 const content = await readFile(path.join(root, 'src/content.ts'), 'utf8');
@@ -47,13 +62,18 @@ if (!emailMatch || address.length === 0) throw new Error('legal.contact is incom
 const svg = await readFile(path.join(root, WORDMARK.source), 'utf8');
 const [, , vbW, vbH] = svg.match(/viewBox="([^"]+)"/)[1].trim().split(/[\s,]+/).map(Number);
 const wordmarkHeight = Math.round((WORDMARK.width * vbH) / vbW);
+const { plate } = WORDMARK;
+/** Size of the PNG (CSS px): the wordmark plus its plate. */
+const logoWidth = WORDMARK.width + 2 * plate.padX;
+const logoHeight = wordmarkHeight + 2 * plate.padY;
 
 const tokens = {
   ASSET_BASE,
   WORDMARK_SRC: ASSET_BASE + WORDMARK.file,
-  WORDMARK_WIDTH: String(WORDMARK.width),
-  WORDMARK_HEIGHT: String(wordmarkHeight),
-  ADDRESS_LINE: address.join(', '),
+  WORDMARK_WIDTH: String(logoWidth),
+  WORDMARK_HEIGHT: String(logoHeight),
+  // Postal code and town stay on one line (&nbsp;), also on narrow phones
+  ADDRESS_LINE: address.map((part) => part.replace(/^(\d{4,5}) /, '$1&nbsp;')).join(', '),
   ADDRESS_TEXT: address.join('\n'),
   CONTACT_EMAIL: emailMatch[1],
 };
@@ -152,10 +172,13 @@ function check(name, html, text) {
   if (/<table(?![^>]*role="presentation")/.test(html)) problems.push('a <table> without role="presentation"');
   if (/<img(?![^>]*\salt=")/.test(html)) problems.push('an <img> without alt');
   if (/ß/.test(html + text)) problems.push('"ß" (Swiss spelling uses "ss")');
-  if (/\{\{\s*(contact|params)\./.test(html)) problems.push('personalisation placeholder');
+  // {{ params.DOIurl }} is the confirmation link of Brevo's API reference (create-doi-contact), the documented
+  // alternative to {{ doubleoptin }}; every other contact or params placeholder is personalisation.
+  if (/\{\{\s*(contact\.|params\.(?!DOIurl\s*\}\}))/.test(html + text)) problems.push('personalisation placeholder');
   if (name === 'doi-bestaetigung') {
-    if (!html.includes('href="{{ doubleoptin }}"')) problems.push('no {{ doubleoptin }} link');
-    if (!text.includes('{{ doubleoptin }}')) problems.push('plain text has no {{ doubleoptin }} link');
+    const doi = /\{\{\s*(doubleoptin|params\.DOIurl)\s*\}\}/;
+    if (!/href="\{\{\s*(doubleoptin|params\.DOIurl)\s*\}\}"/.test(html)) problems.push('no {{ doubleoptin }} link');
+    if (!doi.test(text)) problems.push('plain text has no {{ doubleoptin }} link');
   } else if (!html.includes('href="{{ unsubscribe }}"') || !text.includes('{{ unsubscribe }}')) {
     problems.push('no {{ unsubscribe }} link');
   }
@@ -208,11 +231,12 @@ async function assets() {
   // ivory letters readable if a client lightens the header in dark mode. Stroke width in viewBox units.
   const halo = svg.replace(/<g fill="/g, `<g stroke="${WORDMARK.halo}" stroke-width="${(vbW / WORDMARK.width) * 1.6}" stroke-linejoin="round" paint-order="stroke" fill="`);
   const browser = await (await chromium()).launch();
-  const page = await browser.newPage({ viewport: { width: WORDMARK.width, height: wordmarkHeight }, deviceScaleFactor: 2 });
-  await page.setContent(`<body style="margin:0;background:transparent">${halo.replace('<svg ', `<svg width="${WORDMARK.width}" height="${wordmarkHeight}" style="display:block" `)}</body>`);
+  const page = await browser.newPage({ viewport: { width: logoWidth, height: logoHeight }, deviceScaleFactor: 2 });
+  const plateStyle = `background:${plate.color};border-radius:${plate.radius}px;padding:${plate.padY}px ${plate.padX}px`;
+  await page.setContent(`<body style="margin:0;background:transparent"><div style="${plateStyle}">${halo.replace('<svg ', `<svg width="${WORDMARK.width}" height="${wordmarkHeight}" style="display:block" `)}</div></body>`);
   await page.screenshot({ path: path.join(dir, WORDMARK.file), omitBackground: true });
   await browser.close();
-  console.log(`public/email/${WORDMARK.file} (${WORDMARK.width * 2} × ${wordmarkHeight * 2}) and ${FONTS.length} fonts`);
+  console.log(`public/email/${WORDMARK.file} (${logoWidth * 2} × ${logoHeight * 2}) and ${FONTS.length} fonts`);
 }
 
 /** emails/previews/<name>-<width>-<scheme>.png, with the hosted assets swapped for the local copies. */

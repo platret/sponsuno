@@ -11,10 +11,12 @@
 .wrap { padding: 40px 16px 48px; }
 .container { max-width: 600px; margin: 0 auto; }
 
-/* Header: navy band with the brand's 135° gradient (background-image survives most dark-mode inversions) */
-.header { background-color: #0B1830; background-image: linear-gradient(135deg, #0B1830 0%, #0B1830 50%, #1D2F52 100%); border-radius: 14px 14px 0 0; padding: 26px 40px; }
+/* Header: navy band with the brand's 135° gradient (background-image survives most dark-mode inversions). Top, bottom
+   and left padding are 6 / 6 / 10 px less than the design value (26 / 26 / 48): the logo PNG carries that as its plate
+   (WORDMARK.plate in scripts/emails.mjs), so the letters line up with the headline. */
+.header { background-color: #0B1830; background-image: linear-gradient(135deg, #0B1830 0%, #0B1830 50%, #1D2F52 100%); border-radius: 14px 14px 0 0; padding: 20px 48px 20px 38px; }
 .logo-a { display: block; text-decoration: none; }
-.logo { display: block; height: auto; border: 0; color: #F3EFE6; font-size: 26px; line-height: 38px; }
+.logo { display: block; height: auto; border: 0; color: #F3EFE6; font-size: 26px; line-height: 50px; }
 .header-label { font-size: 13px; line-height: 20px; font-weight: 600; color: #B9BFCB; white-space: nowrap; }
 .goldline { height: 2px; font-size: 2px; line-height: 2px; background-color: #B08D57; mso-line-height-rule: exactly; }
 
@@ -37,6 +39,8 @@
 .lcards { margin: 20px 0 8px; }
 .lcard-gap { height: 12px; font-size: 12px; line-height: 12px; }
 .lcard { background-color: #FBF9F4; border: 1px solid #E6DFCF; border-radius: 12px; }
+/* Spacing sits on the <a> (whole card clickable). Classic Outlook for Windows ignores padding on <a>: the mso style
+   block in layout.html moves it onto the cells .lcard-in and .lc-arrow there. */
 .lcard-a { display: block; padding: 18px 12px 18px 22px; text-decoration: none; }
 .lc-k { display: block; margin: 0 0 4px; font-size: 13px; line-height: 18px; font-weight: 600; color: #6E5228; }
 .lc-t { display: block; margin: 0 0 4px; font-size: 16px; line-height: 22px; font-weight: 600; color: #0B1830; }

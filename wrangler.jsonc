@@ -27,9 +27,17 @@
     { "name": "WAITLIST_IP_LIMIT", "namespace_id": "4801", "simple": { "limit": 10, "period": 60 } },
     { "name": "WAITLIST_EMAIL_LIMIT", "namespace_id": "4802", "simple": { "limit": 3, "period": 60 } }
   ],
+  // Durable Object WaitlistGuard (worker/guard.ts): daily cap for the whole site and a daily limit per address, across all
+  // locations. SQLite-backed (the class kind the Workers Free plan offers). The migration tag never changes; a later
+  // change to the class (rename, delete) needs a new migration entry, never an edit of this one.
+  "durable_objects": {
+    "bindings": [{ "name": "WAITLIST_GUARD", "class_name": "WaitlistGuard" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["WaitlistGuard"] }],
+  // Version URLs: Cloudflare generates none for a Worker with a Durable Object; PR previews (wrangler preview) are unaffected.
   "preview_urls": true,
   // PR previews (wrangler preview --name pr-<n>) inherit neither vars nor bindings: keep both in step with the values
-  // above. Secrets for previews: npx wrangler preview base-config secret put BREVO_API_KEY (applies to previews created
+  // above. Each preview gets its own, empty WaitlistGuard namespace (Cloudflare docs, Worker Previews → Resources). Secrets for previews: npx wrangler preview base-config secret put BREVO_API_KEY (applies to previews created
   // afterwards; Cloudflare docs, Worker Previews).
   "previews": {
     "vars": {
@@ -39,7 +47,10 @@
     "ratelimits": [
       { "name": "WAITLIST_IP_LIMIT", "namespace_id": "4801", "simple": { "limit": 10, "period": 60 } },
       { "name": "WAITLIST_EMAIL_LIMIT", "namespace_id": "4802", "simple": { "limit": 3, "period": 60 } }
-    ]
+    ],
+    "durable_objects": {
+      "bindings": [{ "name": "WAITLIST_GUARD", "class_name": "WaitlistGuard" }]
+    }
   },
   "observability": { "enabled": false }
 }

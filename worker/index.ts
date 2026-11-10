@@ -3,6 +3,9 @@
 // no added latency). AGENTS.md → Architecture, team/warteliste-setup.md.
 import { handleWaitlist, json, type WaitlistEnv } from './waitlist.ts';
 
+// Durable Object class of the binding WAITLIST_GUARD (wrangler.jsonc): must be exported from the main module
+export { WaitlistGuard } from './guard.ts';
+
 interface Env extends WaitlistEnv {
   /** Static assets binding (wrangler.jsonc → assets.binding) */
   ASSETS: { fetch(request: Request): Promise<Response> };
