@@ -8,7 +8,10 @@
 // - handles every theme switch on the page with one delegated click listener on [data-theme-toggle] (ThemeToggle.tsx),
 //   so it works on the static pages, which ship no JavaScript module, and on the landing page without React state;
 // - keeps aria-pressed of the switches in step, and re-reads the choice when a page comes back from the back/forward
-//   cache or another tab changes it.
+//   cache or another tab changes it;
+// - switches without transitions: while it changes the theme on an open page it sets html.theme-switching (site.css
+//   turns every transition off), forces a style flush and removes the class in the next frame, so the header and the
+//   buttons change together with the page surface instead of fading over it.
 // Without JavaScript there is no data-theme: tokens.css then follows prefers-color-scheme and the switch stays hidden.
 // localStorage can throw (blocked storage, some private modes): the choice then lasts for the page only.
 
@@ -20,9 +23,10 @@ export const THEME_SCRIPT =
   '<script>(function(d,k){var r=d.documentElement,m=matchMedia("(prefers-color-scheme: dark)");' +
   'function s(){try{var v=localStorage.getItem(k)}catch(e){}return v=="dark"||v=="light"?v:null}' +
   'function a(v){r.setAttribute("data-theme",v);for(var b=d.querySelectorAll("[data-theme-toggle]"),i=0;i<b.length;i++)b[i].setAttribute("aria-pressed",v=="dark")}' +
-  'function f(){a(s()||(m.matches?"dark":"light"))}' +
-  'f();m.addEventListener&&m.addEventListener("change",function(){s()||f()});' +
-  'addEventListener("pageshow",f);addEventListener("storage",function(e){e.key==k&&f()});d.addEventListener("DOMContentLoaded",f);' +
+  'function n(v){r.classList.add("theme-switching");a(v);r.offsetWidth;requestAnimationFrame(function(){r.classList.remove("theme-switching")})}' +
+  'function g(){return s()||(m.matches?"dark":"light")}function f(){a(g())}function h(){g()!=r.getAttribute("data-theme")&&n(g())}' +
+  'f();m.addEventListener&&m.addEventListener("change",function(){s()||h()});' +
+  'addEventListener("pageshow",h);addEventListener("storage",function(e){e.key==k&&h()});d.addEventListener("DOMContentLoaded",f);' +
   'd.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-theme-toggle]");' +
-  'if(b){var v=r.getAttribute("data-theme")=="dark"?"light":"dark";a(v);try{localStorage.setItem(k,v)}catch(x){}}})' +
+  'if(b){var v=r.getAttribute("data-theme")=="dark"?"light":"dark";n(v);try{localStorage.setItem(k,v)}catch(x){}}})' +
   `})(document,"${THEME_STORAGE_KEY}")</script>`;

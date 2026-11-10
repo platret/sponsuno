@@ -6,6 +6,7 @@
 
 .proof {
   padding-block: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+  border-top: 1px solid var(--edge); /* dark theme: the seam under the navy story */
   border-bottom: 1px solid var(--line);
   text-align: center;
 }

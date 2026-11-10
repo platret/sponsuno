@@ -247,7 +247,7 @@ export default function Profile() {
     const text = raw.trim().replace(/\s+/g, ' ');
     if (!text) { setOfferNote('Bitte geben Sie eine Gegenleistung ein.'); return; }
     if (draft.offers.some((o) => o.toLowerCase() === text.toLowerCase())) { setOfferNote(`«${text}» steht schon in der Liste.`); return; }
-    if (draft.offers.length >= OFFERS_MAX) { setOfferNote(`Die Vorschau erlaubt höchstens ${OFFERS_MAX} Gegenleistungen.`); return; }
+    if (draft.offers.length >= OFFERS_MAX) { setOfferNote(`Sie können höchstens ${OFFERS_MAX} Gegenleistungen angeben.`); return; }
     set('offers', [...draft.offers, text]);
     setOfferNote('');
     if (fromInput) {
@@ -332,7 +332,7 @@ export default function Profile() {
     <div className="pf">
       <PageHeader
         title="Ihr Profil"
-        lead="Diese Angaben sehen Sponsoren, wenn sie Ihr Profil öffnen. Die Vorschau speichert nur in diesem Browser."
+        lead="Diese Angaben sehen Sponsoren, wenn sie Ihr Profil öffnen."
         actions={
           <Button variant="ghost" icon="arrowRight" className="pf-jump pf-down" onClick={() => focusById(ids.preview)}>
             Vorschau ansehen
@@ -605,12 +605,12 @@ export default function Profile() {
           <Preview draft={draft} showPhoto={seeker.id === 'lea' && draft.kind === 'athlete'} headingId={ids.preview} />
           {dirty ? (
             <p className="pf-recalc">
-              Speichern Sie zuerst, damit die Vorschau die passenden Partner mit Ihren Änderungen neu berechnet.
+              Speichern Sie zuerst, damit Sponsuno die passenden Partner mit Ihren Änderungen neu berechnet.
               Beim Verlassen der Seite gehen ungespeicherte Änderungen verloren.
             </p>
           ) : (
             <p className="pf-recalc">
-              Nach dem Speichern berechnet die Vorschau die passenden Partner neu.{' '}
+              Nach dem Speichern berechnet Sponsuno die passenden Partner neu.{' '}
               {goodMatches > 0 && <>Mit dem gespeicherten Profil {goodMatches === 1 ? 'passt derzeit ein Sponsor' : `passen derzeit ${goodMatches} Sponsoren`} in drei oder vier Kriterien. </>}
               <a href={href('partner')}>Passende Partner ansehen<Icon name="arrowRight" size={14} /></a>
             </p>

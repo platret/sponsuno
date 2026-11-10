@@ -253,7 +253,7 @@ export const howItWorks = {
 
 export const aiManager = {
   title: 'Ein KI-Manager für alles, was neben Training und Vereinsarbeit liegen bleibt.',
-  intro: 'Nach dem Match fängt die Arbeit erst an. Der KI-Sponsoringmanager nimmt Ihnen Schreibarbeit ab und behält den Überblick. Entwürfe gehen erst raus, wenn Sie sie geprüft haben.',
+  intro: 'Nach der Vermittlung fängt die Arbeit erst an. Der KI-Sponsoringmanager nimmt Ihnen Schreibarbeit ab und behält den Überblick. Entwürfe gehen erst raus, wenn Sie sie geprüft haben.',
   draft: {
     app: 'Ihr KI-Sponsoringmanager',
     label: 'Entwurf: Anfrage an ein Sportgeschäft',
@@ -327,7 +327,7 @@ export const faq = {
     },
     {
       q: 'Sind die Firmen wirklich interessiert?',
-      a: 'Sponsoren melden sich selbst an und geben an, was sie suchen und was sie bieten. Die Vorschläge beruhen auf diesen Angaben, nicht auf gekauften Adresslisten.',
+      a: 'Auf Sponsuno finden Sie nur Firmen, die sich selbst anmelden und angeben, was sie suchen und was sie bieten. Die Vorschläge beruhen auf diesen Angaben, nicht auf gekauften Adresslisten.',
     },
     {
       q: 'Muss ich trotzdem alles selbst machen?',
@@ -729,7 +729,7 @@ export const legal = {
               'Diese Website setzt keine Cookies und verwendet keine Analyse- oder Trackingdienste.',
               'Es sind keine Inhalte Dritter eingebettet. Schriften und Bilder kommen vom selben Server wie die Website.',
               'Beim Aufruf bearbeitet unser Hoster Cloudflare technische Zugriffsdaten, darunter Ihre IP-Adresse.',
-              'Die Produktvorschau speichert Ihre Änderungen nur in Ihrem Browser. Nichts davon verlässt Ihr Gerät.',
+              'Ihre Wahl zwischen hellem und dunklem Design und Ihre Änderungen in der Produktvorschau speichert nur Ihr Browser. Nichts davon verlässt Ihr Gerät.',
               'Die Warteliste ist noch nicht freigeschaltet. Das Formular übermittelt nichts.',
               'Wenn Sie uns eine E-Mail schreiben, liegt sie bei unserem E-Mail-Anbieter Infomaniak in der Schweiz.',
             ],
@@ -780,6 +780,14 @@ export const legal = {
         title: 'Keine Cookies, kein Tracking, keine Einbettungen',
         blocks: [
           { type: 'p', text: 'Diese Website setzt keine Cookies und verwendet weder Analyse- noch Tracking- oder Werbedienste. Funktionen von Cloudflare, die Cookies setzen (etwa Bot Fight Mode oder Challenges), haben wir nicht aktiviert. Es sind keine Inhalte Dritter eingebettet, etwa Videos, Karten oder Social-Media-Schaltflächen. Schriften und Bilder werden vom selben Server ausgeliefert wie die Website; beim Laden werden keine Daten an Google oder andere Anbieter übermittelt.' },
+        ],
+      },
+      {
+        id: 'darstellung',
+        title: 'Helles und dunkles Design',
+        blocks: [
+          { type: 'p', text: 'Mit dem Schalter in der Kopfzeile wählen Sie zwischen hellem und dunklem Design. Treffen Sie eine Wahl, speichert Ihr Browser sie im lokalen Speicher (localStorage, Schlüssel «sponsuno-theme», Wert «light» oder «dark»), damit sie auf allen Seiten und beim nächsten Besuch gilt. Dieser Eintrag bleibt auf Ihrem Gerät, wird weder an uns noch an Dritte übermittelt und dient nicht dazu, Sie wiederzuerkennen oder Ihr Verhalten zu verfolgen. Ohne Ihre Wahl richtet sich die Darstellung nach der Einstellung Ihres Geräts, und es wird nichts gespeichert.' },
+          { type: 'p', text: 'Löschen können Sie den Eintrag jederzeit, indem Sie in Ihrem Browser die Websitedaten dieser Seite löschen. Die Website folgt danach wieder der Einstellung Ihres Geräts.' },
         ],
       },
       {

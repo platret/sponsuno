@@ -527,7 +527,7 @@ function SuggestionCard({ match, seeker, partnership }: { match: MatchResult; se
             variant="gold"
             size="md"
             icon="mail"
-            onClick={() => toast('In der Vorschau wird keine Nachricht gesendet.')}
+            onClick={() => toast('Kontakt aufgenommen (simuliert).')}
           >
             Kontakt aufnehmen (simuliert)<span className="visually-hidden"> mit {seeker.name}</span>
           </Button>
@@ -588,7 +588,7 @@ function ProfileTab() {
 
         <p className="sp-profile-note">
           <Icon name="edit" size={18} />
-          In der Vorschau ist das Unternehmensprofil nur zur Ansicht.
+          Das Unternehmensprofil ist hier nur zur Ansicht.
         </p>
       </Card>
 
@@ -612,7 +612,7 @@ function ProfileTab() {
             <dd>{formatRange(sponsor.budget)}</dd>
           </div>
         </dl>
-        <p className="sp-quiet">In der Vorschau werden die Vorschläge nach diesen vier Kriterien geordnet.</p>
+        <p className="sp-quiet">Sponsuno ordnet die Vorschläge nach diesen vier Kriterien.</p>
         <Button variant="navy" size="md" href={href('sponsor', 'vorschlaege')} icon="arrowRight">Vorschläge ansehen</Button>
       </section>
     </div>

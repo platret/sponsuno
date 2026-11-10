@@ -252,6 +252,10 @@ html[data-theme] .theme-toggle { display: grid; }
   }
 }
 
+/* Theme switch (THEME_SCRIPT in lib/theme.ts): for the one frame of a switch nothing transitions, so the header and
+   the buttons change together with the page surface (DESIGN.md -> Theme). */
+.theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }

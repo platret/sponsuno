@@ -5,6 +5,8 @@
   /* Local until a shared token exists (proposed: --error-on-navy in tokens.css). */
 }
 .wl.surface-navy { background: var(--navy); }
+/* Dark theme: a hairline marks where the navy block meets the navy page (--edge is transparent in the light theme) */
+.wl { border-top: 1px solid var(--edge); }
 .wl.section { padding-bottom: clamp(4rem, 3rem + 4vw, 6.5rem); }
 
 /* ---------- Signature 2: "the page opens" (DESIGN.md -> Motion) ----------
