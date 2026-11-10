@@ -24,8 +24,9 @@ export const site = {
 
 /** home = landing page (hydrated); legal, guide and info = static pages without JavaScript (info: the topic pages
     reached from the header: Für Firmen, KI-Manager, Kosten, Fragen, Über uns); notfound = the 404 page (static,
-    noindex, no canonical, no share tags) */
-export type PageKind = 'home' | 'legal' | 'guide' | 'info' | 'notfound';
+    noindex, no canonical, no share tags); notice = a short static page outside search (noindex, not in the sitemap, no
+    canonical or share tags), today /warteliste/bestaetigt/ */
+export type PageKind = 'home' | 'legal' | 'guide' | 'info' | 'notfound' | 'notice';
 
 export type PageId =
   | 'home'
@@ -40,6 +41,7 @@ export type PageId =
   | 'sponsoring-anfrage'
   | 'sponsoring-dossier'
   | 'kultursponsoring'
+  | 'warteliste-bestaetigt'
   | 'notfound';
 
 export type PageMeta = {
@@ -158,6 +160,17 @@ export const pages: PageMeta[] = [
     description: 'Datenschutzerklärung von Sponsuno: welche Daten beim Besuch der Website bearbeitet werden, Hosting bei Cloudflare, keine Cookies, kein Tracking, Ihre Rechte.',
     kind: 'legal',
     index: true,
+  },
+  {
+    // Where Brevo sends people after the click on the confirmation link of the waitlist e-mail (REDIRECT_URL in
+    // worker/waitlist.ts). Not in the sitemap, noindex (headFor, plus X-Robots-Tag in public/_headers). The description
+    // is never output, as on the 404 page.
+    id: 'warteliste-bestaetigt',
+    path: 'warteliste/bestaetigt/',
+    title: 'Anmeldung bestätigt – Sponsuno',
+    description: 'Ihre Anmeldung zur Warteliste von Sponsuno ist bestätigt.',
+    kind: 'notice',
+    index: false,
   },
   {
     // Served by Cloudflare with status 404 for any unknown URL. Not in the sitemap, noindex, no canonical (headFor).

@@ -1,0 +1,18 @@
+<!--
+subject: Bitte bestätigen Sie Ihre Anmeldung
+preheader: Ein Klick auf den Button, dann stehen Sie auf der Warteliste von Sponsuno.
+
+Double-opt-in e-mail (Brevo DOI template, tag "optin"). Rules: no advertising, no personalisation (contact
+attributes are empty before the confirmation), the link is Brevo's {{ doubleoptin }} placeholder.
+-->
+<!-- @body -->
+<h1 class="h1 serif">Bitte bestätigen Sie Ihre Anmeldung</h1>
+<p class="p sans">Mit dieser E-Mail-Adresse hat sich jemand auf sponsuno.ch für die Warteliste eingetragen. Wenn Sie das waren, bestätigen Sie die Anmeldung mit einem Klick.</p>
+<p class="p sans">Damit erlauben Sie uns, Ihnen an diese Adresse Nachrichten zum Start von Sponsuno zu senden. Wir verwenden Ihre Adresse nur dafür, und Sie können sich jederzeit abmelden. Details in der <a class="link" href="https://sponsuno.ch/datenschutz/" target="_blank">Datenschutzerklärung</a>.</p>
+<!-- @button href="{{ doubleoptin }}" label="Anmeldung bestätigen" width="252" -->
+<div class="rule">&nbsp;</div>
+<p class="small sans">Falls Sie sich nicht angemeldet haben, ignorieren Sie diese E-Mail. Ohne Bestätigung kommen Sie nicht auf die Warteliste.</p>
+<p class="small sans" style="margin-bottom:0">Der Button funktioniert nicht? <a class="link" href="{{ doubleoptin }}" target="_blank">Anmeldung über diesen Link bestätigen</a>.</p>
+<!-- @footer -->
+<p class="footer-text sans">Sponsuno · %%ADDRESS_LINE%%</p>
+<p class="footer-text sans"><a class="footer-link" href="mailto:%%CONTACT_EMAIL%%">%%CONTACT_EMAIL%%</a> · <a class="footer-link" href="https://sponsuno.ch/" target="_blank">sponsuno.ch</a> · <a class="footer-link" href="https://sponsuno.ch/datenschutz/" target="_blank">Datenschutz</a></p>

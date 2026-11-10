@@ -1,0 +1,22 @@
+{
+  // Unit tests of the Worker (`npm test`: node --test, Node 22.18+ strips the types). Node's own types here, because
+  // they clash with the WebWorker lib of worker/tsconfig.json; the handler is checked under both.
+  "compilerOptions": {
+    "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.worker-test.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["*.test.ts"]
+}

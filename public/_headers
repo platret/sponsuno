@@ -15,6 +15,18 @@
   Cache-Control: public, max-age=3600
   X-Robots-Tag: noindex
 
+# Waitlist confirmation page (Brevo redirects here after the double opt-in click): out of search results, backup for
+# its meta robots noindex
+/warteliste/*
+  X-Robots-Tag: noindex
+
+# Images and fonts of the waitlist e-mails (emails/, npm run emails). Fixed URLs referenced from sent e-mails, so
+# they never move; the fonts need CORS because mail clients load them from another origin.
+/email/*
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *
+  X-Robots-Tag: noindex
+
 # Every response. HTTPS only (HSTS without includeSubDomains/preload: keeps the Infomaniak mail hostnames out of it),
 # no MIME sniffing, only the origin as referrer to other sites, no framing (not even by the site itself), and no camera, microphone,
 # location or Topics API (the site uses none of them). No Content-Security-Policy for now: the inline scripts and the

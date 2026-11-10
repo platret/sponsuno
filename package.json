@@ -10,7 +10,9 @@
     "typecheck": "tsc -b --noEmit",
     "preview": "vite preview",
     "check:dist": "node scripts/check-dist.mjs",
-    "test:e2e": "playwright test"
+    "test": "node --test 'worker/*.test.ts'",
+    "test:e2e": "playwright test",
+    "emails": "node scripts/emails.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
@@ -28,6 +30,6 @@
     "vite": "^6.4.5"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22.18"
   }
 }

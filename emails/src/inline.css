@@ -1,0 +1,55 @@
+/* Light styles, written into style="" by scripts/emails.mjs (class selectors only; order here = order inlined).
+   Colours from DESIGN.md: navy #0B1830, navy-2 #1D2F52, ink #3B4560, steel #B9BFCB, gold #B08D57,
+   gold-light #C4A36B, gold-dark #6E5228 (gold text on light), paper #FBF9F4, ivory #F3EFE6.
+   Fallback stacks first-class: most clients load no web fonts (Georgia for the serif, Arial/Helvetica for the sans). */
+
+.body-bg { background-color: #FBF9F4; margin: 0; padding: 0; }
+.sans { font-family: 'Sponsuno Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+.serif { font-family: 'Sponsuno Serif', 'Cormorant Garamond', Cormorant, Georgia, 'Times New Roman', serif; }
+.preheader { display: none; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; color: #FBF9F4; }
+
+.wrap { padding: 40px 16px 48px; }
+.container { max-width: 600px; margin: 0 auto; }
+
+/* Header: navy band with the brand's 135° gradient (background-image survives most dark-mode inversions). Top, bottom
+   and left padding are 6 / 6 / 10 px less than the design value (26 / 26 / 48): the logo PNG carries that as its plate
+   (WORDMARK.plate in scripts/emails.mjs), so the letters line up with the headline. */
+.header { background-color: #0B1830; background-image: linear-gradient(135deg, #0B1830 0%, #0B1830 50%, #1D2F52 100%); border-radius: 14px 14px 0 0; padding: 20px 48px 20px 38px; }
+.logo-a { display: block; text-decoration: none; }
+.logo { display: block; height: auto; border: 0; color: #F3EFE6; font-size: 26px; line-height: 50px; }
+.header-label { font-size: 13px; line-height: 20px; font-weight: 600; color: #B9BFCB; white-space: nowrap; }
+.goldline { height: 2px; font-size: 2px; line-height: 2px; background-color: #B08D57; mso-line-height-rule: exactly; }
+
+/* Card */
+.card { background-color: #FFFFFF; border: 1px solid #E6DFCF; border-top: 0; border-radius: 0 0 14px 14px; padding: 48px 48px 40px; text-align: left; }
+.h1 { margin: 0 0 20px; font-size: 38px; line-height: 42px; font-weight: normal; letter-spacing: -0.005em; color: #0B1830; mso-line-height-rule: exactly; }
+.h2 { margin: 32px 0 8px; font-size: 16px; line-height: 24px; font-weight: 600; color: #0B1830; }
+.p { margin: 0 0 18px; font-size: 16px; line-height: 26px; color: #3B4560; }
+.small { margin: 0 0 10px; font-size: 14px; line-height: 22px; color: #545D72; }
+.strong { font-weight: 600; color: #0B1830; }
+.link { color: #6E5228; text-decoration: underline; text-underline-offset: 2px; }
+.rule { margin: 32px 0 24px; border: 0; border-top: 1px solid #E6DFCF; height: 0; line-height: 0; font-size: 0; }
+
+/* Button: gold with a navy label (7.4:1), as on the site's navy surfaces */
+.btn-table { margin: 28px 0 28px; }
+.btn-td { border-radius: 10px; }
+.btn { display: inline-block; padding: 16px 32px; border: 1px solid #9A7440; border-radius: 10px; background-color: #C4A36B; color: #0B1830; font-size: 16px; line-height: 20px; font-weight: 600; text-align: center; text-decoration: none; mso-padding-alt: 0; }
+
+/* Link cards (welcome e-mail) */
+.lcards { margin: 20px 0 8px; }
+.lcard-gap { height: 12px; font-size: 12px; line-height: 12px; }
+.lcard { background-color: #FBF9F4; border: 1px solid #E6DFCF; border-radius: 12px; }
+/* Spacing sits on the <a> (whole card clickable). Classic Outlook for Windows ignores padding on <a>: the mso style
+   block in layout.html moves it onto the cells .lcard-in and .lc-arrow there. */
+.lcard-a { display: block; padding: 18px 12px 18px 22px; text-decoration: none; }
+.lc-k { display: block; margin: 0 0 4px; font-size: 13px; line-height: 18px; font-weight: 600; color: #6E5228; }
+.lc-t { display: block; margin: 0 0 4px; font-size: 16px; line-height: 22px; font-weight: 600; color: #0B1830; }
+.lc-d { display: block; font-size: 14px; line-height: 21px; color: #3B4560; }
+.lc-arrow-a { display: block; padding: 0 22px 0 8px; font-size: 20px; line-height: 20px; color: #9A7440; text-decoration: none; }
+
+.signoff { margin: 32px 0 18px; }
+
+/* Footer, on the page surface under the card */
+.footer { padding: 28px 48px 0; text-align: left; }
+.footer-text { margin: 0 0 8px; font-size: 13px; line-height: 20px; color: #545D72; }
+.footer-link { color: #545D72; text-decoration: underline; }

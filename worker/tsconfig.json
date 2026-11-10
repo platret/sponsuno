@@ -1,0 +1,24 @@
+{
+  // The Worker (worker/index.ts, worker/waitlist.ts): standard web APIs only (fetch, Request, Response, crypto.subtle),
+  // so the WebWorker lib covers them without @cloudflare/workers-types; the two bindings it uses (ASSETS, rate limits)
+  // have small interfaces of their own, as has the Durable Object (guard.ts). Erasable syntax only, because `npm test` runs it in Node with type stripping.
+  "compilerOptions": {
+    "tsBuildInfoFile": "../node_modules/.tmp/tsconfig.worker.tsbuildinfo",
+    "target": "ES2022",
+    "lib": ["ES2022", "WebWorker"],
+    "types": [],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["index.ts", "waitlist.ts", "guard.ts"]
+}

@@ -40,7 +40,8 @@ export function headFor(id: PageId): string {
   const meta = (attr: 'name' | 'property', key: string, content: string) =>
     `<meta ${attr}="${key}" content="${escapeAttr(content)}">`;
 
-  if (page.kind === 'notfound') return meta('name', 'robots', 'noindex');
+  // The 404 page and notices (/warteliste/bestaetigt/) stay out of search: noindex only, no canonical or share tags
+  if (page.kind === 'notfound' || page.kind === 'notice') return meta('name', 'robots', 'noindex');
 
   const tags = [
     meta('name', 'description', page.description),

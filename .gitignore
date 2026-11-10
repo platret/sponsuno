@@ -6,7 +6,15 @@ _source/
 node_modules/
 dist/
 dist-ssr/
+# …except the built e-mails, which the team pastes into Brevo (npm run emails)
+!emails/dist/
 .wrangler/
+# Local secrets for wrangler dev (BREVO_API_KEY lives only as a Worker secret, never in the repo)
+.dev.vars*
+.env*
+!.env.example
+# Second build of the e2e tests with the waitlist endpoint (playwright.config.ts)
+dist-e2e/
 
 # Finder/iCloud duplicate copies
 * 2.*
