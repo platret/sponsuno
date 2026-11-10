@@ -13,3 +13,7 @@ dist-ssr/
 
 # Local QA screenshots and reports
 qa/
+
+# Playwright output (npm run test:e2e)
+playwright-report/
+test-results/

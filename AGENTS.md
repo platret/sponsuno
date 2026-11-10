@@ -33,7 +33,7 @@ npm run preview    # serve dist/ at http://localhost:4173/
 npm run typecheck
 ```
 
-`npm run build` must pass before every commit. There is no test suite yet; verify in a browser (see "Before you finish").
+`npm run build` must pass before every commit. CI also runs `npm run typecheck`, `npm run check:dist` and `npm run test:e2e` on every PR (see "CI"); still verify visual changes in a browser (see "Before you finish").
 
 ## Architecture
 
@@ -102,7 +102,7 @@ scripts/prerender.mjs   For every page in pages.ts: replaces <title> and <!--seo
                         guide templates as Word files (dist/vorlagen/*.docx). Fails if a marker is missing.
 scripts/og/og-image.html  Source of public/og-image.png (rendered once with headless Chrome, see "SEO").
 scripts/icons.mjs       Regenerates the PNG/ICO icons in public/ from src/assets/Sponsuno_Icon.svg (see "SEO").
-.github/workflows/      deploy.yml: Cloudflare production deploy on main, preview per pull request.
+.github/workflows/      deploy.yml: `check` job (typecheck, build, check:dist, Playwright), then Cloudflare deploy on main or a preview per pull request.
 wrangler.jsonc          Cloudflare Worker config: assets from dist/ with `not_found_handling: "404-page"` (unknown URLs get
                         dist/404.html with status 404), custom domains sponsuno.ch and www.sponsuno.ch.
 docs/                   Images for the README only.
@@ -240,6 +240,23 @@ Last measured 2026-11-07 (`vite preview`, Lighthouse 12.8 mobile, simulated thro
 - Keep Bot Fight Mode and other cookie-setting Cloudflare features off: the Datenschutzerklärung says no cookies are set.
 - Workers observability is off (`observability.enabled: false`): the Datenschutzerklärung says no per-request logging is set up.
 - To store real sign-ups, set the repository variable `VITE_WAITLIST_ENDPOINT` (Settings → Secrets and variables → Actions → Variables).
+
+## CI
+
+Every pull request (forks included) and every push to `main` runs the `check` job in `.github/workflows/deploy.yml`; the `deploy` job (production or PR preview) waits for it, so a failing check deploys nothing.
+
+1. `npm run typecheck` (`tsc -b`: app, `vite.config.ts`, and the Playwright files via `tsconfig.e2e.json`; a plain `tsc -p .` checks nothing, the root tsconfig only holds references)
+2. `npm run build`, without `VITE_WAITLIST_ENDPOINT` so the tests never sign up to the real waitlist (the deploy job builds again with it and runs `check:dist` on that build too)
+3. `npm run check:dist` (`scripts/check-dist.mjs`, no dependencies): every indexable page has one `<h1>`, a title, a meta description and a canonical matching its path; 404 and demo carry noindex; the sitemap and the pages agree; every internal `href`/`src` resolves to a file in `dist/` (with a trailing slash for pages) and every `#anchor` exists in its target; JSON-LD parses; only `/` and `/demo/` load a script file (inline scripts are fine); `404.html` uses no relative URLs
+4. `npm run test:e2e` (Playwright, Chromium only, `e2e/site.spec.ts`, `vite preview` on port 4199): homepage without console errors, header nav, waitlist validation and confirmation (external requests are stubbed), `?rolle=sponsor`, the `/#kosten` redirect, no horizontal overflow at 390 × 844, reduced motion. Keep the tests few and independent of copy; no screenshot diffs or animation timing.
+
+Run locally before pushing (once: `npx playwright install chromium`):
+
+```bash
+npm run typecheck && npm run build && npm run check:dist && npm run test:e2e
+```
+
+On a failure in CI, the Playwright report and traces are attached to the run as the artifact `playwright-report`.
 
 ## Before you finish
 
