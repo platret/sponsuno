@@ -40,6 +40,30 @@
   Cache-Control: public, max-age=3600
   X-Robots-Tag: noindex
 
+# Waitlist confirmation page (Brevo redirects here after the double opt-in click): out of search results, backup for
+# its meta robots noindex
+/warteliste/*
+  X-Robots-Tag: noindex
+
+# Images and fonts of the waitlist e-mails (emails/, npm run emails). Fixed URLs referenced from sent e-mails, so
+# they never move; the fonts need CORS because mail clients load them from another origin. One cache rule per file, so a
+# missing file's 404 is not cached.
+/email/*
+  Access-Control-Allow-Origin: *
+  X-Robots-Tag: noindex
+
+/email/wordmark-light-2x.png
+  Cache-Control: public, max-age=86400
+
+/email/fonts/cormorant-garamond-600.woff2
+  Cache-Control: public, max-age=86400
+
+/email/fonts/manrope-400.woff2
+  Cache-Control: public, max-age=86400
+
+/email/fonts/manrope-600.woff2
+  Cache-Control: public, max-age=86400
+
 # HTML pages and the 404 page get no rule here: Cloudflare's default (public, max-age=0, must-revalidate), so a deploy
 # shows at once. The /* rule below sets no Cache-Control either (two rules with the same header are joined by a comma).
 

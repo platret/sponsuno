@@ -26,14 +26,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Typecheck
+      - name: Typecheck (site, Worker, tests)
         run: npm run typecheck
+      - name: Worker unit tests (waitlist route, Brevo mocked)
+        run: npm test
       # Built without VITE_WAITLIST_ENDPOINT on purpose: the tests must never sign up to the real waitlist
       - name: Build
         run: npm run build
       # Also prints the size table and fails when a page goes over its size budget (scripts/dist-size.mjs)
       - name: Check dist (head tags, sitemap, links, anchors, JSON-LD, no JS on static pages, size budget)
         run: npm run check:dist
+      # Bundles worker/index.ts and validates wrangler.jsonc (bindings, assets) without credentials; same version as the deploy
+      - name: Wrangler dry run
+        run: npx --yes wrangler@4.151.3 deploy --dry-run --outdir "$RUNNER_TEMP/wrangler-dry-run"
       - name: Read Playwright version
         id: playwright
         run: echo "version=$(node -p "require('./node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"

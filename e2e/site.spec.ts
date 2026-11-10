@@ -132,6 +132,16 @@ test('?rolle=sponsor preselects the sponsor role and is removed from the address
   await expect(page).not.toHaveURL(/rolle=/);
 });
 
+test('the waitlist confirmation page (Brevo redirect target) shows its H1 and stays out of search', async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto('/warteliste/bestaetigt/');
+  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
 test('an old section link (/#kosten) redirects to its topic page', async ({ page }) => {
   await page.goto('/#kosten');
   await expect(page).toHaveURL(/\/kosten\/$/);

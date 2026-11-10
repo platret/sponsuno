@@ -1,0 +1,15 @@
+Bitte bestätigen Sie Ihre Anmeldung
+
+Mit dieser E-Mail-Adresse hat sich jemand auf sponsuno.ch für die Warteliste eingetragen. Wenn Sie das waren, bestätigen Sie die Anmeldung mit einem Klick.
+
+Damit erlauben Sie uns, Ihnen an diese Adresse Nachrichten zum Start von Sponsuno zu senden. Wir verwenden Ihre Adresse nur dafür, und Sie können sich jederzeit abmelden. Details in der Datenschutzerklärung: https://sponsuno.ch/datenschutz/
+
+Anmeldung bestätigen:
+{{ doubleoptin }}
+
+Falls Sie sich nicht angemeldet haben, ignorieren Sie diese E-Mail. Ohne Bestätigung kommen Sie nicht auf die Warteliste.
+
+--
+Sponsuno
+%%ADDRESS_TEXT%%
+%%CONTACT_EMAIL%% · https://sponsuno.ch/
