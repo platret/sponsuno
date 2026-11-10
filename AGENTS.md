@@ -240,6 +240,23 @@ Last measured 2026-11-07 (`vite preview`, Lighthouse 12.8 mobile, simulated thro
 - Workers observability is off (`observability.enabled: false`): the Datenschutzerklärung says no per-request logging is set up.
 - To store real sign-ups, set the repository variable `VITE_WAITLIST_ENDPOINT` (Settings → Secrets and variables → Actions → Variables).
 
+## CI
+
+Every pull request (forks included) and every push to `main` runs the `check` job in `.github/workflows/deploy.yml`; the `deploy` job (production or PR preview) waits for it, so a failing check deploys nothing.
+
+1. `npm run typecheck` (`tsc -b`: app, `vite.config.ts`, and the Playwright files via `tsconfig.e2e.json`; a plain `tsc -p .` checks nothing, the root tsconfig only holds references)
+2. `npm run build`, without `VITE_WAITLIST_ENDPOINT` so the tests never sign up to the real waitlist (the deploy job builds again with it and runs `check:dist` on that build too)
+3. `npm run check:dist` (`scripts/check-dist.mjs`, no dependencies): every indexable page has one `<h1>`, a title, a meta description and a canonical matching its path; 404 and demo carry noindex; the sitemap and the pages agree; every internal `href`/`src` resolves to a file in `dist/` (with a trailing slash for pages) and every `#anchor` exists in its target; JSON-LD parses; only `/` and `/demo/` load a script file (inline scripts are fine); `404.html` uses no relative URLs
+4. `npm run test:e2e` (Playwright, Chromium only, `e2e/site.spec.ts`, `vite preview` on port 4199): homepage without console errors, header nav, waitlist validation and confirmation (external requests are stubbed), `?rolle=sponsor`, the `/#kosten` redirect, no horizontal overflow at 390 × 844, reduced motion. Keep the tests few and independent of copy; no screenshot diffs or animation timing.
+
+Run locally before pushing (once: `npx playwright install chromium`):
+
+```bash
+npm run typecheck && npm run build && npm run check:dist && npm run test:e2e
+```
+
+On a failure in CI, the Playwright report and traces are attached to the run as the artifact `playwright-report`.
+
 ## Before you finish
 
 1. `npm run build` passes (includes typecheck and prerender).
