@@ -1,0 +1,376 @@
+{
+  "name": "Sponsuno, Logo A · Schnitt, Palette Tartan v2",
+  "source": {
+    "geometry": "brand-concepts/round3-s/c-schnitt (v4, sdraw4.py / build4.py)",
+    "colour": "brand-concepts/round4-farben/5-tartan (recolor_v2.py)",
+    "generator": "brand/_quellen/build.py"
+  },
+  "colours": [
+    {
+      "name": "Navy",
+      "hex": "#0B1830",
+      "rgb": [
+        11,
+        24,
+        48
+      ],
+      "use": "Seite 1 auf Hell (obere S-Hälfte, \"ponsuno\"), dunkler Grund",
+      "cmyk_coated_approx": {
+        "c": 100,
+        "m": 80,
+        "y": 35,
+        "k": 60,
+        "approx": true,
+        "note": "Schätzwert für gestrichenes Papier (ISO Coated v2 / FOGRA39), nicht per ICC-Profil gerechnet. Vor dem Druck mit Proof prüfen."
+      },
+      "pantone_approx": {
+        "value": "ca. PMS 289 C",
+        "approx": true,
+        "note": "approximativ, mit gedrucktem Pantone-Muster prüfen (approximate, verify with a printed swatch)."
+      },
+      "contrast": {
+        "Papier": {
+          "ratio": 16.81,
+          "wcag": "AAA Text"
+        },
+        "Ivory": {
+          "ratio": 15.41,
+          "wcag": "AAA Text"
+        },
+        "Weiss": {
+          "ratio": 17.68,
+          "wcag": "AAA Text"
+        }
+      }
+    },
+    {
+      "name": "Tartan",
+      "hex": "#BE4B2C",
+      "rgb": [
+        190,
+        75,
+        44
+      ],
+      "use": "Seite 2 auf hellen Gründen (untere S-Hälfte)",
+      "cmyk_coated_approx": {
+        "c": 10,
+        "m": 80,
+        "y": 90,
+        "k": 10,
+        "approx": true,
+        "note": "Schätzwert für gestrichenes Papier (ISO Coated v2 / FOGRA39), nicht per ICC-Profil gerechnet. Vor dem Druck mit Proof prüfen."
+      },
+      "pantone_approx": {
+        "value": "ca. PMS 7599 C (Bereich 7599 C bis 7618 C)",
+        "approx": true,
+        "note": "approximativ, mit gedrucktem Pantone-Muster prüfen (approximate, verify with a printed swatch)."
+      },
+      "contrast": {
+        "Papier": {
+          "ratio": 4.72,
+          "wcag": "AA Text"
+        },
+        "Ivory": {
+          "ratio": 4.32,
+          "wcag": "AA Grosstext und Grafik (>= 3:1)"
+        },
+        "Navy": {
+          "ratio": 3.56,
+          "wcag": "AA Grosstext und Grafik (>= 3:1)"
+        },
+        "Weiss": {
+          "ratio": 4.96,
+          "wcag": "AA Text"
+        }
+      }
+    },
+    {
+      "name": "Tartan hell",
+      "hex": "#EC6942",
+      "rgb": [
+        236,
+        105,
+        66
+      ],
+      "use": "Seite 2 auf Navy; nie auf hellen Gründen",
+      "cmyk_coated_approx": {
+        "c": 0,
+        "m": 70,
+        "y": 75,
+        "k": 0,
+        "approx": true,
+        "note": "Schätzwert für gestrichenes Papier (ISO Coated v2 / FOGRA39), nicht per ICC-Profil gerechnet. Vor dem Druck mit Proof prüfen."
+      },
+      "pantone_approx": {
+        "value": "ca. PMS 7579 C (leuchtender) oder 7618 C (gedämpfter); am Muster entscheiden",
+        "approx": true,
+        "note": "approximativ, mit gedrucktem Pantone-Muster prüfen (approximate, verify with a printed swatch)."
+      },
+      "contrast": {
+        "Papier": {
+          "ratio": 2.99,
+          "wcag": "ungenügend (< 3:1)"
+        },
+        "Ivory": {
+          "ratio": 2.75,
+          "wcag": "ungenügend (< 3:1)"
+        },
+        "Navy": {
+          "ratio": 5.61,
+          "wcag": "AA Text"
+        },
+        "Weiss": {
+          "ratio": 3.15,
+          "wcag": "AA Grosstext und Grafik (>= 3:1)"
+        }
+      }
+    },
+    {
+      "name": "Ivory",
+      "hex": "#F3EFE6",
+      "rgb": [
+        243,
+        239,
+        230
+      ],
+      "use": "Seite 1 auf Navy, helles Band",
+      "cmyk_coated_approx": {
+        "c": 3,
+        "m": 4,
+        "y": 9,
+        "k": 0,
+        "approx": true,
+        "note": "Schätzwert für gestrichenes Papier (ISO Coated v2 / FOGRA39), nicht per ICC-Profil gerechnet. Vor dem Druck mit Proof prüfen."
+      },
+      "pantone_approx": {
+        "value": "Papierweiss (nicht drucken); als Volltonfarbe auf Textil ein warmes Off-White wie PMS 9224 C (unsicher)",
+        "approx": true,
+        "note": "approximativ, mit gedrucktem Pantone-Muster prüfen (approximate, verify with a printed swatch)."
+      },
+      "contrast": {
+        "Papier": {
+          "ratio": 1.09,
+          "wcag": "ungenügend (< 3:1)"
+        },
+        "Navy": {
+          "ratio": 15.41,
+          "wcag": "AAA Text"
+        },
+        "Weiss": {
+          "ratio": 1.15,
+          "wcag": "ungenügend (< 3:1)"
+        }
+      }
+    },
+    {
+      "name": "Papier",
+      "hex": "#FBF9F4",
+      "rgb": [
+        251,
+        249,
+        244
+      ],
+      "use": "heller Grund",
+      "cmyk_coated_approx": {
+        "c": 1,
+        "m": 1,
+        "y": 4,
+        "k": 0,
+        "approx": true,
+        "note": "Schätzwert für gestrichenes Papier (ISO Coated v2 / FOGRA39), nicht per ICC-Profil gerechnet. Vor dem Druck mit Proof prüfen."
+      },
+      "pantone_approx": {
+        "value": "Papierweiss (nicht drucken)",
+        "approx": true,
+        "note": "approximativ, mit gedrucktem Pantone-Muster prüfen (approximate, verify with a printed swatch)."
+      },
+      "contrast": {
+        "Ivory": {
+          "ratio": 1.09,
+          "wcag": "ungenügend (< 3:1)"
+        },
+        "Navy": {
+          "ratio": 16.81,
+          "wcag": "AAA Text"
+        },
+        "Weiss": {
+          "ratio": 1.05,
+          "wcag": "ungenügend (< 3:1)"
+        }
+      }
+    },
+    {
+      "name": "Text-Akzent",
+      "hex": "#A8401F",
+      "rgb": [
+        168,
+        64,
+        31
+      ],
+      "use": "Tartan für Text auf hellen Gründen (Links, Hervorhebungen)",
+      "cmyk_coated_approx": {
+        "c": 15,
+        "m": 82,
+        "y": 100,
+        "k": 25,
+        "approx": true,
+        "note": "Schätzwert für gestrichenes Papier (ISO Coated v2 / FOGRA39), nicht per ICC-Profil gerechnet. Vor dem Druck mit Proof prüfen."
+      },
+      "pantone_approx": {
+        "value": "ca. PMS 7599 C (für Text meist nicht nötig: im Druck Tartan verwenden)",
+        "approx": true,
+        "note": "approximativ, mit gedrucktem Pantone-Muster prüfen (approximate, verify with a printed swatch)."
+      },
+      "contrast": {
+        "Papier": {
+          "ratio": 5.84,
+          "wcag": "AA Text"
+        },
+        "Ivory": {
+          "ratio": 5.35,
+          "wcag": "AA Text"
+        },
+        "Navy": {
+          "ratio": 2.88,
+          "wcag": "ungenügend (< 3:1)"
+        },
+        "Weiss": {
+          "ratio": 6.14,
+          "wcag": "AA Text"
+        }
+      }
+    }
+  ],
+  "logo_halves_contrast": {
+    "hell_navy_vs_tartan": 3.56,
+    "dunkel_ivory_vs_tartan_hell": 2.75,
+    "note": "Die Hälften trennen sich über Farbe und die 45°-Lücke; die Lücke nie verkleinern (trägt die Trennung bei Farbsehschwäche)."
+  },
+  "rules": {
+    "never": [
+      "Tartan hell auf hellen Gründen (2,99:1 auf Papier)",
+      "Tartan (#BE4B2C) als Fläche hinter Navy-Schrift (3,56:1)",
+      "Farbsymbol/-wortmarke auf Navy (dafür die dunkel-Versionen)",
+      "Lücke im S verkleinern, Hälften verschieben, Wortmarke neu setzen",
+      "Symbol vor die Wortmarke stellen (\"S Sponsuno\" stottert; es gibt bewusst kein Lockup)"
+    ],
+    "twotone_wordmark": {
+      "light_ground": "Papier, Weiss, Ivory: wortmarke-farbe ab ca. 60 px S-Höhe (≈ 390 px Tintenbreite); darunter wortmarke-navy.",
+      "navy_ground": "Navy: wortmarke-dunkel ab ca. 60 px S-Höhe; darunter wortmarke-hell (einfarbig Ivory). Website-Header auf Navy: wortmarke-hell.",
+      "print": "Die 60 px gelten für Bildschirme. Für den Druck gibt es keinen getesteten Wert; bei kleinen Drucksachen (Visitenkarte, Briefkopf) beide Fassungen im Probedruck vergleichen. Grosse Flächen (Bande, Schild, Trikot) sind zweifarbig.",
+      "status": "Regel aus Runde 3 (Gold), für Tartan nicht neu getestet, auf Navy nie getestet. wortmarke-hell ist die einfarbige Entsprechung von wortmarke-navy für Navy."
+    },
+    "grounds": "Erlaubte Gründe: Papier, Weiss, Ivory (Farbversion oder einfarbig Navy/Schwarz/Tartan-Symbol) und Navy (dunkel, hell, weiss). Fotos nur mit einer Navy-Fläche hinter dem Logo, nie direkt. Auf roten, orangen oder bunten Gründen ein Feld in Papier, Weiss oder Navy dahinter.",
+    "white": "wortmarke-weiss / symbol-weiss (#FFFFFF) nur für einfarbige Produktion (Siebdruck, Stick, Folie, Prägung) auf dunklem Textil oder Navy; am Bildschirm und im Druck auf Navy die Ivory-Fassungen."
+  },
+  "wordmark": {
+    "viewBox": "0 0 1345 304",
+    "aspect_ratio_viewBox": 4.424,
+    "ink_box_units": [
+      24.0,
+      27.89,
+      1321.0,
+      288.08
+    ],
+    "ink_width_units": 1297.0,
+    "ink_height_units": 260.19,
+    "aspect_ratio_ink": 4.985,
+    "s_height_units": 200.22,
+    "baseline_units": 224.0,
+    "x_height_units": 144.18,
+    "padding_units": "24 links/rechts im viewBox; oben 27,9, unten 15,9 bis zur Unterlänge des p",
+    "letters": "S eigene Zeichnung (Strich 37/40, Lücke 13 bei 45°); \"ponsuno\" Manrope 700 Outlines, 267 Einheiten/em, Laufweite +5/1000 em"
+  },
+  "clear_space": {
+    "wordmark": {
+      "unit": "X = x-Höhe der Wortmarke (Höhe des n)",
+      "units": 144.18,
+      "pct_of_wordmark_ink_height": 55.4,
+      "pct_of_S_height": 72.0,
+      "rule": "Rund um die Tintenkante der Wortmarke (inkl. Unterlänge des p) mindestens X frei. Gilt auch für die Claim-Version. Die viewBox-Ränder (24 Einheiten) sind kleiner als X und zählen nicht als Schutzraum."
+    },
+    "symbol": {
+      "unit": "Y = ein Viertel der S-Höhe (≈ untere Strichstärke 40 plus Lücke 13)",
+      "units": 50.06,
+      "pct_of_symbol_height": 25.0,
+      "rule": "Rund um das Symbol mindestens Y frei. Auf der Kachel ist der Schutzraum eingebaut (Kachel = Schutzraum)."
+    }
+  },
+  "minimum_sizes": {
+    "wordmark_screen": {
+      "min_width_px": 96,
+      "at_min_S_height_px": 14.8,
+      "note": "Bildbreite der Tinte. Unter ca. 18 px Bildhöhe wird die Lücke im S zur Kerbe; das S liest sich noch."
+    },
+    "wordmark_print": {
+      "min_width_mm": 25,
+      "at_min_S_height_mm": 3.86
+    },
+    "wordmark_claim_screen": {
+      "min_width_px": 240,
+      "note": "Claim dann ca. 12 px Schriftgrösse (Versalhöhe ca. 9 px); darunter Wortmarke ohne Claim. Punkt und i-Punkt werden darunter zu klein."
+    },
+    "wordmark_claim_print": {
+      "min_width_mm": 50,
+      "note": "Claim dann ca. 7 pt."
+    },
+    "symbol_master_screen": {
+      "min_px": 32,
+      "note": "symbol-farbe / -dunkel / -kachel ab 32 px Kantenlänge."
+    },
+    "symbol_small_cut": {
+      "range_px": "16 bis 31",
+      "files": [
+        "symbol-klein.svg",
+        "symbol-kachel-klein.svg"
+      ],
+      "note": "Unter 32 px immer den Kleinschnitt (Strich 43, Lücke 27). Unter 16 px kein Logo. px = CSS-Pixel; favicon.svg wird darum auch auf Retina-Bildschirmen im Kleinschnitt gezeigt. favicon.ico: 16 px Kleinschnitt, 32 und 48 px Master auf der Kachel.",
+      "test": "11.11.2026: symbol-kachel neben symbol-kachel-klein und symbol-farbe neben symbol-klein bei 16, 24, 32 und 48 px (Chrome, 1x; Kachel auf Weiss und Navy, Symbol auf Weiss), vergrössert verglichen. 16 px: Kleinschnitt klar besser lesbar. 24 px: beide lesbar, der Kleinschnitt füllt die Kachel besser. 32 und 48 px: Master sauberer, der Kleinschnitt wirkt zu schwer. Darum bleibt die Grenze bei 32 px."
+    },
+    "symbol_print": {
+      "min_mm": 8,
+      "note": "Symbol unter 8 mm: Kleinschnitt; unter 5 mm nicht verwenden. Stick: ab ca. 15 mm, Kleinschnitt (symbol-klein, zweifarbig; eine einfarbige Kleinschnitt-Datei fehlt noch), mit Garnmuster prüfen. Massgebend ist die Kantenlänge der Symboldatei (S dann ca. 78 %)."
+    }
+  },
+  "symbol": {
+    "viewBox": "0 0 256 256",
+    "ink_box_units": [
+      52.0,
+      27.89,
+      204.0,
+      228.11
+    ],
+    "height_units": 200.22,
+    "width_units": 152.0,
+    "small_cut_ink_box_units": [
+      55.52,
+      30.55,
+      204.32,
+      225.45
+    ],
+    "tile": {
+      "radius_units": 52,
+      "radius_pct": 20.3,
+      "app_icon_S_height_pct": 62.3,
+      "small_cut_S_height_pct": 76.1
+    }
+  },
+  "claim": {
+    "viewBox": "0 0 1345 456",
+    "font": "Manrope 600",
+    "size_units": 68.94,
+    "tracking_per_mille": 10,
+    "cap_height_units": 49.64,
+    "cap_height_pct_of_S": 24.8,
+    "baseline": 409.81,
+    "gap_descender_to_claim_caps_units": 72.09,
+    "alignment": "linksbündig am p-Stamm, rechts bündig mit dem letzten o (gleiche Breite wie \"ponsuno\")",
+    "width_units": 1119.0,
+    "wordmark_ink_width_units": 1297.0
+  },
+  "typography": {
+    "wordmark": "Manrope 700 (Outlines, OFL), eigenes S",
+    "claim": "Manrope 600 (Outlines, OFL)",
+    "website": "Cormorant Garamond 600 (Titel), Manrope 400/600 (Text)"
+  }
+}

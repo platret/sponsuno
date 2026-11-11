@@ -1,0 +1,28 @@
+{
+  "name": "Sponsuno",
+  "short_name": "Sponsuno",
+  "description": "Sponsoren finden für Sport und Kultur in der Deutschschweiz.",
+  "lang": "de-CH",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#0B1830",
+  "background_color": "#0B1830",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
