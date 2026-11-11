@@ -167,6 +167,10 @@ wrangler.jsonc          Cloudflare Worker config: `main` worker/index.ts; assets
                         a `previews` block that repeats vars, rate limits and the Durable Object binding (PR previews inherit
                         none of them; each preview gets its own empty guard). Never a key or secret in this file.
 docs/                   Images for the README only.
+brand/                  Logo kit (Schnitt S, Tartan palette, November 2026): SVG masters, PNG/PDF exports, icons, social images,
+                        the brand guide (brand/README.md, German), brand texts (markentexte.md) and the logo presentation; scripts in
+                        brand/_quellen/. Not part of the build or the site. The site still uses the old logo and gold until the team
+                        approves the switch (see "Open before launch").
 ```
 
 ### Conventions that the code relies on
@@ -368,7 +372,7 @@ On a failure in CI, the Playwright report and traces are attached to the run as 
 - [x] Contact data in `contact` (`content.ts`) (Klosterstrasse 34, 8406 Winterthur; hello@sponsuno.ch)
 - [ ] Commission model: rate, trigger, paying side
 - [ ] Name decision. Desk trademark check done 2026-11-03 (not legal advice): no SPONSUNO mark, company or domain anywhere checked (CH, EU, DE, AT, WIPO). Risk low to medium in CH (Sponsoo is active via sponsoo.ch but has no Swiss mark), high for an EU filing or DACH expansion: SPONSOO (EUTM 013271473) and SPONSU / SPONSUU / SPONZU (DBG, EUTM 019156718 / 019156613 / 019156702) cover sponsorship search in class 35. Next: attorney or IGE clearance opinion, then domains and a Swiss filing (IGE, CHF 350 online for 3 classes), or a rename away from SPONS-. Until decided, the page must not present the name as secured
-- [ ] Logo refinement with the CD owner (see DESIGN.md → Logo)
+- [ ] Logo: new kit in `brand/` (Schnitt S, Tartan). Open: team approval, trademark check of the mark, Pantone check with a printed swatch, then the switch on the site (header wordmarks, icons, share image, e-mail wordmark, gold → tartan accents)
 - [x] Founders section (`#team`, November 2026, now on `/ueber-uns/`) with monograms, and stock photos (Symbolbilder) for the match card and the audience section
 - [ ] Real, consented photos of the founders (the team section is ready for them, see "Team section" above) and, later, own photos of athletes, clubs and a local business to replace the stock Symbolbilder
 - [x] Domain sponsuno.ch on Cloudflare (November 2026). sponsuno.com was free on 2026-11-03 but is not registered

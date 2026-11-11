@@ -1,0 +1,31 @@
+{
+  "brand": "Sponsuno",
+  "tagline": "Sponsoring, das zusammenpasst.",
+  "brief": "Sponsuno bringt Sportlerinnen, Sportler und Vereine aus Sport und Kultur mit Firmen aus ihrer Region zusammen.",
+  "industry": "services",
+  "mockups": ["app-icon", "website", "business-card", "social", "signage", "favicon-tab"],
+  "nav": ["Für Firmen", "KI-Manager", "Kosten"],
+  "brand_color": "#0B1830",
+  "tile_color": "#0B1830",
+  "greyscale": false,
+  "final": true,
+  "deck_title": "Logo A · Schnitt, Palette Tartan",
+  "label": "Im Einsatz",
+  "date": "2026-11-11",
+  "concepts": [
+    {
+      "name": "A · Schnitt",
+      "symbol": "../../logo/svg/symbol-farbe.svg",
+      "lockup": "../../logo/svg/wortmarke-navy.svg",
+      "avatar": "../../logo/svg/symbol-farbe.svg",
+      "symbol_on_tile": "../../logo/svg/symbol-dunkel.svg",
+      "symbol_on_dark": "../../logo/svg/symbol-dunkel.svg",
+      "lockup_on_dark": "../../logo/svg/wortmarke-dunkel.svg",
+      "idea": "Ein S, einmal geschnitten: zwei Teile, die zusammenpassen.",
+      "rationale": [
+        "Die Wortmarke allein ist das Logo",
+        "Das Symbol nur dort, wo die Wortmarke nicht passt"
+      ]
+    }
+  ]
+}
