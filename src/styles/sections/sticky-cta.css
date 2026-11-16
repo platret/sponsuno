@@ -1,4 +1,5 @@
-/* Sticky waitlist bar: phones only, after the hero has scrolled out. */
+/* Sticky waitlist bar: phones only, after the hero has scrolled out. A flat page-surface bar with a hairline on top
+   (no shadow) and the primary pill. */
 .sticky-cta { display: none; }
 
 @media (max-width: 760px) {
@@ -8,7 +9,6 @@
     padding: .65rem var(--gutter) calc(.65rem + env(safe-area-inset-bottom, 0px));
     background: var(--bg);
     border-top: 1px solid var(--line);
-    box-shadow: 0 -8px 24px -16px rgba(11, 24, 48, .35);
     font-size: .875rem; color: var(--text);
     transform: translateY(110%);
     visibility: hidden;

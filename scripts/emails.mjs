@@ -28,22 +28,22 @@ const ASSET_BASE = 'https://sponsuno.ch/email/';
 /** The one logo asset of the e-mails. To swap the logo: change `source` (or the SVG), run `npm run emails -- --assets`.
     File names under /email/ use [a-z0-9.-] only: Cloudflare's static assets answer a path with "@" (or other
     characters it encodes) with a 307 to the encoded path, an extra hop that not every mail client or image proxy follows. */
-// `plate`: a rounded navy plate inside the PNG behind the letters (CSS px). On the navy header it is invisible; in
+// `plate`: a rounded graphit plate inside the PNG behind the letters (CSS px). On the graphit header it is invisible; in
 // clients that invert the e-mail but not its images (Gmail apps, Outlook mobile in dark mode) the header turns light and
-// the logo stays a navy badge with ivory letters. The header padding in inline.css and layout.html subtracts padX and
+// the logo stays a graphit badge with kalk letters. The header padding in inline.css and layout.html subtracts padX and
 // padY, so the letters keep their place (left edge in line with the headline).
 const WORDMARK = {
   source: 'src/assets/wordmark-light.svg',
   file: 'wordmark-light-2x.png',
   width: 150,
-  halo: '#0B1830',
-  plate: { color: '#0B1830', padX: 10, padY: 6, radius: 8 },
+  halo: '#1D2125',
+  plate: { color: '#1D2125', padX: 10, padY: 6, radius: 8 },
 };
 /** Web fonts for clients that load them (Apple Mail, iOS Mail); everything else uses the fallback stacks. */
 const FONTS = [
-  ['@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2', 'cormorant-garamond-600.woff2'],
-  ['@fontsource/manrope/files/manrope-latin-400-normal.woff2', 'manrope-400.woff2'],
-  ['@fontsource/manrope/files/manrope-latin-600-normal.woff2', 'manrope-600.woff2'],
+  ['@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-400-normal.woff2', 'schibsted-grotesk-400.woff2'],
+  ['@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-600-normal.woff2', 'schibsted-grotesk-600.woff2'],
+  ['@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-700-normal.woff2', 'schibsted-grotesk-700.woff2'],
 ];
 const GMAIL_CLIP = 102 * 1024;
 for (const file of [WORDMARK.file, ...FONTS.map(([, to]) => `fonts/${to}`)]) {
@@ -55,7 +55,7 @@ const content = await readFile(path.join(root, 'src/content.ts'), 'utf8');
 const addressMatch = content.match(/postalAddress:\s*\[([^\]]*)\]/);
 if (!addressMatch) throw new Error('legal.contact.postalAddress not found in src/content.ts');
 const address = [...addressMatch[1].matchAll(/'([^']*)'/g)].map((m) => m[1]);
-const emailMatch = content.match(/contact:\s*\{[^}]*email:\s*'([^']+)'/);
+const emailMatch = content.match(/contact\s*[:=]\s*\{[^}]*email:\s*'([^']+)'/);
 if (!emailMatch || address.length === 0) throw new Error('legal.contact is incomplete in src/content.ts');
 
 // The wordmark's height follows the SVG's viewBox, so a new logo keeps its proportions.
@@ -134,7 +134,7 @@ function button({ href, label, width = '260' }) {
   const w = Number(width);
   return `<table role="presentation" class="btn-table" border="0" cellpadding="0" cellspacing="0">
 <tr><td class="btn-td" align="center">
-<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:54px;v-text-anchor:middle;width:${w}px;" arcsize="19%" strokecolor="#9A7440" strokeweight="1px" fillcolor="#C4A36B"><w:anchorlock/><center style="color:#0B1830;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;">${label}</center></v:roundrect><![endif]-->
+<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:54px;v-text-anchor:middle;width:${w}px;" arcsize="50%" strokecolor="#1D2125" strokeweight="1px" fillcolor="#1D2125"><w:anchorlock/><center style="color:#F5F3EE;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;">${label}</center></v:roundrect><![endif]-->
 <!--[if !mso]><!--><a class="btn sans" href="${href}" target="_blank">${label}</a><!--<![endif]-->
 </td></tr>
 </table>`;
@@ -222,14 +222,14 @@ async function chromium() {
   }
 }
 
-/** public/email/: wordmark PNG at 2× (transparent, with a navy halo for clients that invert the header) and fonts. */
+/** public/email/: wordmark PNG at 2× (transparent, with a graphit halo for clients that invert the header) and fonts. */
 async function assets() {
   const dir = path.join(root, 'public/email');
   await mkdir(path.join(dir, 'fonts'), { recursive: true });
   for (const [from, to] of FONTS) await copyFile(path.join(root, 'node_modules', from), path.join(dir, 'fonts', to));
-  // A stroke under each fill (paint-order) draws a thin navy outline: invisible on the navy header, but it keeps the
-  // ivory letters readable if a client lightens the header in dark mode. Stroke width in viewBox units.
-  const halo = svg.replace(/<g fill="/g, `<g stroke="${WORDMARK.halo}" stroke-width="${(vbW / WORDMARK.width) * 1.6}" stroke-linejoin="round" paint-order="stroke" fill="`);
+  // A stroke under each fill (paint-order) draws a thin graphit outline: invisible on the graphit header, but it keeps
+  // the kalk letters readable if a client lightens the header in dark mode. Stroke width in viewBox units.
+  const halo = svg.replace(/<(g|path) fill="/g, (_, tag) => `<${tag} stroke="${WORDMARK.halo}" stroke-width="${(vbW / WORDMARK.width) * 1.6}" stroke-linejoin="round" paint-order="stroke" fill="`);
   const browser = await (await chromium()).launch();
   const page = await browser.newPage({ viewport: { width: logoWidth, height: logoHeight }, deviceScaleFactor: 2 });
   const plateStyle = `background:${plate.color};border-radius:${plate.radius}px;padding:${plate.padY}px ${plate.padX}px`;
@@ -252,7 +252,7 @@ async function renderPreviews(names) {
     { width: 320, scheme: 'light' },
     // Rough stand-in for clients that invert colours themselves (Gmail apps, Outlook): everything inverted except images.
     { width: 600, scheme: 'light', variant: 'inverted' },
-    // Gmail, Outlook and most webmail load no web fonts: the Georgia / Arial fallbacks.
+    // Gmail, Outlook and most webmail load no web fonts: the Helvetica / Arial fallback.
     { width: 600, scheme: 'light', variant: 'no-webfonts' },
   ];
   for (const name of names) {

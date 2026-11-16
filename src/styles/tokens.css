@@ -1,32 +1,41 @@
-/* Sponsuno design tokens. Source: CD Manual v1.0 (Nov 2026). Shared by the landing page and the demo. See DESIGN.md. */
+/* Sponsuno design tokens. Source: the Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk").
+   Shared by the landing page and the demo. See DESIGN.md. */
 
-/* Metric-matched fallbacks: until the self-hosted fonts arrive, text is set in Arial / Times scaled to the same
-   width and line box, so the swap (font-display: swap) moves nothing (CLS). Measured in Chrome, November 2026. */
-@font-face { font-family: "Manrope Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 400; size-adjust: 103.7%; ascent-override: 102.8%; descent-override: 28.9%; line-gap-override: 0%; }
-@font-face { font-family: "Manrope Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 600 700; size-adjust: 99.5%; ascent-override: 107.1%; descent-override: 30.2%; line-gap-override: 0%; }
-@font-face { font-family: "Cormorant Fallback"; src: local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"); font-weight: 600 700; size-adjust: 91.8%; ascent-override: 100.7%; descent-override: 31.3%; line-gap-override: 0%; }
+/* Metric-matched fallbacks: until the self-hosted Schibsted Grotesk arrives, text is set in Arial scaled to the same
+   width and line box, so the swap (font-display: swap) moves nothing (CLS). Computed from the font tables
+   (advance widths of the hero copy against Arial), November 2026. */
+@font-face { font-family: "Schibsted Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 400; size-adjust: 103.7%; ascent-override: 94.1%; descent-override: 24.9%; line-gap-override: 0%; }
+@font-face { font-family: "Schibsted Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 600; size-adjust: 99.5%; ascent-override: 98.2%; descent-override: 25.9%; line-gap-override: 0%; }
+@font-face { font-family: "Schibsted Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 700; size-adjust: 101.5%; ascent-override: 96.2%; descent-override: 25.4%; line-gap-override: 0%; }
 
 :root {
-  --navy: #0B1830;
-  --navy-2: #1D2F52;
-  --ivory: #F3EFE6;
-  --paper: #FBF9F4;
-  --rule: #D9D2C1;
-  --gold: #B08D57;
-  --gold-light: #C4A36B;
-  --gold-dark: #6E5228;
-  --gold-pale: #D5BF93;
-  --error-on-navy: #F2C5B5;
-  --steel: #B9BFCB;
-  --ink: #3B4560;
-  --card-dark-a: #1A2D50;
-  --card-dark-b: #132442;
-  --card-dark-line: #33476F;
+  --graphit: #1D2125;        /* graphit-900: main colour, dark surfaces, text on light */
+  --graphit-2: #2E343A;      /* graphit-700: gradient end, cards on graphit */
+  --kalk: #F5F3EE;           /* kalk-50: page ground, light text on graphit */
+  --kalk-2: #E6E1D6;         /* kalk-200: alternate band, gradient end */
+  --paper: #F5F3EE;          /* the page ground (kalk-50); kept as its own name for surfaces */
+  --rule: #D9D4C8;           /* border on light */
+  --brass: #C9A15B;          /* messing-500: accent on graphit, accent fills with graphit text; never text on kalk */
+  --brass-light: #DCC08A;    /* messing-300: gradient end, lighter accent on graphit */
+  --brass-dark: #74592A;     /* messing-700: brass as text on kalk */
+  --error-on-dark: #F2C5B5;
+  --steel: #B7B9BC;          /* grau-300: body text on graphit */
+  --ink: #5A6068;            /* grau-600: body text on kalk */
+  --card-dark-b: #262B30;
+  --card-dark-line: #3A4148; /* border on dark */
+  --grad-dark: linear-gradient(135deg, #1D2125, #2E343A);   /* verlauf-dunkel */
+  --grad-light: linear-gradient(135deg, #F5F3EE, #E6E1D6);  /* verlauf-hell */
+  --grad-brass: linear-gradient(135deg, #B8904D, #DCC08A);  /* verlauf-messing: at most one area per page */
 
-  --serif: "Cormorant Garamond", "Cormorant Fallback", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: "Manrope", "Manrope Fallback", "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --display: "Schibsted Grotesk", "Schibsted Fallback", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --sans: "Schibsted Grotesk", "Schibsted Fallback", "Helvetica Neue", Arial, system-ui, -apple-system, sans-serif;
+  --display-tracking: -0.025em;
+  --label-tracking: 0.15em;
 
-  --radius: 16px;
+  --radius: 16px;       /* radius-md: cards */
+  --radius-sm: 8px;     /* small parts, inputs inside cards */
+  --radius-pill: 999px; /* buttons, chips */
+  --card-pad: clamp(1.5rem, .5rem + 2.5vw, 2.5rem); /* space-10 (40 px) inside cards from 1200 px, 24 px on phones */
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
 
@@ -53,22 +62,22 @@
   /* Theme tokens (DESIGN.md -> Colour, Theme). Light is the default; :root[data-theme="dark"] (set before the first
      paint by the inline head script, THEME_SCRIPT in src/lib/theme.ts) and, without JavaScript, the visitor's system
      setting switch to dark. Section CSS uses these for everything that follows the theme (page surfaces, text, lines,
-     the primary button on the page surface); surfaces that are navy by design (hero, story, KI device, waitlist,
+     the primary button on the page surface); surfaces that are graphit by design (hero, story, KI device, waitlist,
      footer, the page head band of the static pages) keep the raw CD tokens above in both themes. */
   --bg: var(--paper);                  /* page surface (paper sections, reading column, scrolled header) */
-  --bg-alt: var(--ivory);              /* alternate band, boxes on the page surface (table of contents) */
-  --surface: var(--paper);             /* cards on either band */
-  --heading: var(--navy);              /* H1-H3, strong labels, link text */
+  --bg-alt: var(--kalk-2);            /* alternate band, boxes on the page surface (table of contents) */
+  --surface: var(--paper);             /* cards on either band (with a 1 px --line border) */
+  --heading: var(--graphit);              /* H1-H3, strong labels, link text */
   --text: var(--ink);                  /* body and secondary text */
   --line: var(--rule);                 /* hairlines, card borders */
-  --accent-text: var(--gold-dark);     /* gold text and icons on the page surface */
-  --btn-bg: var(--navy);               /* primary button on the page surface (.btn-navy) */
-  --btn-fg: var(--ivory);
-  --btn-bg-hover: var(--navy-2);
-  --edge: transparent;                 /* where a navy-by-design block meets the page surface (visible in dark only) */
-  --wordmark-ink: block;               /* landing header once solid: navy wordmark (light) or ivory wordmark (dark) */
-  --wordmark-ivory: none;
-  --focus: var(--gold-dark);
+  --accent-text: var(--brass-dark);     /* brass text and icons on the page surface */
+  --btn-bg: var(--graphit);               /* primary button on the page surface (.btn-graphit) */
+  --btn-fg: var(--kalk);
+  --btn-bg-hover: var(--graphit-2);
+  --edge: transparent;                 /* where a graphit-by-design block meets the page surface (visible in dark only) */
+  --wordmark-ink: block;               /* landing header once solid: graphit wordmark (light) or kalk wordmark (dark) */
+  --wordmark-light: none;
+  --focus: var(--brass-dark);
 
   /* The color-scheme meta of every page says "light dark": Safari's Adaptive Dark Mode and dark-mode extensions (Noir,
      Dark Reader; plus the darkreader-lock meta) then leave the CD colours alone, because the page handles dark mode
@@ -76,43 +85,41 @@
   color-scheme: light;
 }
 
-/* Dark: the navy brand world on every page. The same block twice: once for the visitor's explicit choice (or the
+/* Dark: the graphit brand world on every page. The same block twice: once for the visitor's explicit choice (or the
    system setting read by the head script), once for the system setting without JavaScript. Keep them identical. */
 :root[data-theme="dark"] {
-  --bg: var(--navy);
-  --bg-alt: #10203D;
-  --surface: #15284A;
-  --heading: var(--ivory);
+  --bg: var(--graphit);
+  --bg-alt: #262B30;
+  --surface: #2E343A;
+  --heading: var(--kalk);
   --text: var(--steel);
   --line: var(--card-dark-line);
-  --accent-text: var(--gold-light);
-  --btn-bg: var(--gold-light);
-  --btn-fg: var(--navy);
-  --btn-bg-hover: var(--gold);
+  --accent-text: var(--brass);
+  --btn-bg: var(--brass);
+  --btn-fg: var(--graphit);
+  --btn-bg-hover: var(--brass-light);
   --edge: var(--card-dark-line);
   --wordmark-ink: none;
-  --wordmark-ivory: block;
-  --focus: var(--gold-light);
-  --shadow-card: 0 1px 2px rgba(3, 8, 20, .3), 0 12px 32px -18px rgba(3, 8, 20, .7);
+  --wordmark-light: block;
+  --focus: var(--brass);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: var(--navy);
-    --bg-alt: #10203D;
-    --surface: #15284A;
-    --heading: var(--ivory);
+    --bg: var(--graphit);
+    --bg-alt: #262B30;
+    --surface: #2E343A;
+    --heading: var(--kalk);
     --text: var(--steel);
     --line: var(--card-dark-line);
-    --accent-text: var(--gold-light);
-    --btn-bg: var(--gold-light);
-    --btn-fg: var(--navy);
-    --btn-bg-hover: var(--gold);
+    --accent-text: var(--brass);
+    --btn-bg: var(--brass);
+    --btn-fg: var(--graphit);
+    --btn-bg-hover: var(--brass-light);
     --edge: var(--card-dark-line);
     --wordmark-ink: none;
-    --wordmark-ivory: block;
-    --focus: var(--gold-light);
-    --shadow-card: 0 1px 2px rgba(3, 8, 20, .3), 0 12px 32px -18px rgba(3, 8, 20, .7);
+    --wordmark-light: block;
+    --focus: var(--brass);
     color-scheme: dark;
   }
 }

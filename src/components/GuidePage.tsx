@@ -4,12 +4,13 @@ import { pageHref, siteHref, waitlistHref } from '../lib/links';
 import { DOCX_TYPE, templateFile } from '../lib/templates';
 import { Footer } from './Footer';
 import { PageBand, PageHeader } from './PageHeader';
+import { Arrow } from './NoticePage';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
 
 /**
- * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: navy header and page
+ * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: graphit header and page
  * head band, one 42rem column, table of contents, standalone footer) plus a few guide blocks (guide.css, prefix gd-).
  * Static: prerendered at build time, shipped without JavaScript. Copy in content.ts → guides,
  * title and description in src/pages.ts.
@@ -23,16 +24,15 @@ export function GuidePage({ id }: { id: GuideId }) {
       <PageHeader current={{ path, kind: 'guide' }} role={guide.waitlistRole} />
 
       <main id="inhalt" className="lg">
-        <PageBand titleId="lg-title" title={guide.title} narrow>
+        <PageBand titleId="lg-title" title={guide.title} narrow eyebrow={`${guidePage.byline} · ${guidePage.updated}`}>
           <p className="lg-intro">{rich(guide.intro)}</p>
-          <p className="lg-updated">{guidePage.byline} · {guidePage.updated}</p>
         </PageBand>
         <div className="container">
-          <article className="lg-col" aria-labelledby="lg-title">
+          <article className="lg-col lg-doc" aria-labelledby="lg-title">
             <nav className="lg-toc" aria-labelledby="lg-toc-title">
-              <p className="lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
+              <p className="label lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
               <ol>
-                {guide.sections.map((s) => <li key={s.id}><a href={`#${s.id}`}>{s.title}</a></li>)}
+                {guide.sections.map((s) => <li key={s.id}><a href={`#${s.id}`}><span>{s.title}</span></a></li>)}
               </ol>
             </nav>
 
@@ -44,13 +44,14 @@ export function GuidePage({ id }: { id: GuideId }) {
             ))}
 
             <nav className="gd-related" aria-labelledby="gd-related-title">
-              <p className="gd-related-title" id="gd-related-title">{guidePage.relatedTitle}</p>
+              <p className="label gd-related-title" id="gd-related-title">{guidePage.relatedTitle}</p>
               <ul>
                 {guide.related.map((other) => (
                   <li key={other}>
                     <a href={pageHref(pageMeta(other).path)}>
                       <span className="gd-related-name">{guides[other].title}</span>
                       <span className="gd-related-desc">{pageMeta(other).description}</span>
+                      <Arrow />
                     </a>
                   </li>
                 ))}
@@ -80,7 +81,7 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
       const file = templateFile(id, block);
       return (
         <figure className="gd-template">
-          <figcaption>{block.label}</figcaption>
+          <figcaption className="label">{block.label}</figcaption>
           <pre>{block.text}</pre>
           <p className="gd-template-download">
             <a href={pageHref(file.path)} download type={DOCX_TYPE}>
@@ -99,7 +100,7 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
     case 'cta':
       return (
         <div className="gd-cta">
-          <a className="btn btn-navy" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
+          <a className="btn btn-graphit" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
           </a>

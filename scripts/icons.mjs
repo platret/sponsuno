@@ -2,7 +2,7 @@
 // run it by hand after the icon changes and commit the outputs (macOS: needs Google Chrome and sips).
 //   node scripts/icons.mjs
 // Outputs: icon-512.png and icon-192.png (rounded square, transparent corners; icon-512 is also the
-// Organization logo in the JSON-LD), apple-touch-icon.png (180, full navy square: iOS rounds the corners
+// Organization logo in the JSON-LD), apple-touch-icon.png (180, full graphit square: iOS rounds the corners
 // itself) and favicon.ico (16, 32 and 48 px PNGs). public/favicon.svg stays as it is.
 import { execFileSync } from 'node:child_process';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -16,9 +16,9 @@ const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const svg = pathToFileURL(path.join(root, 'src/assets/Sponsuno_Icon.svg')).href;
 const tmp = await mkdtemp(path.join(tmpdir(), 'sponsuno-icons-'));
 
-// Renders the icon at 512 px. full = navy gradient behind it, so the rounded corners disappear.
+// Renders the icon at 512 px. full = graphit gradient behind it, so the rounded corners disappear.
 async function render(out, full) {
-  const bg = full ? 'linear-gradient(135deg, #0B1830, #1D2F52)' : 'transparent';
+  const bg = full ? 'linear-gradient(135deg, #1D2125, #2E343A)' : 'transparent';
   const html = path.join(tmp, `${full ? 'full' : 'round'}.html`);
   await writeFile(html, `<body style="margin:0;background:${bg}"><img src="${svg}" width="512" height="512" style="display:block">`);
   execFileSync(chrome, ['--headless', '--hide-scrollbars', '--default-background-color=00000000',

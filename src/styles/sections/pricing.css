@@ -1,11 +1,13 @@
-/* Pricing (Kosten): ivory (--bg-alt), under the page head band (title and intro). One overview card with
-   hairline-divided rows (label left, value column right; below 1100 px the value sits under the label).
-   Decided values carry a small check, open ones an outlined "offen" tag. */
+/* Pricing (Kosten): kalk (--bg-alt), under the page head band (title and intro). One overview card like a spec
+   sheet: radius 16, 1 px border, 40 px inner margin, hairline-divided rows with the item as an uppercase label on
+   the left and the answer on the right (below 1100 px the answer sits under the label). Decided answers carry a
+   small check, open ones a ring and the "offen" pill. */
 
-.price-main { max-width: 52rem; }
+.price-main { max-width: 56rem; }
 
 .price-card {
   margin: 0;
+  padding: clamp(.5rem, .25rem + .8vw, 1rem) clamp(1.5rem, 1rem + 1.4vw, 2.5rem);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -13,20 +15,24 @@
 
 .price-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: .4rem 2rem;
-  align-items: start;
-  padding: 1.35rem 1.75rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: .5rem 2rem;
+  align-items: baseline;
+  padding-block: 1.5rem;
 }
 .price-row + .price-row { border-top: 1px solid var(--line); }
 
-.price-label { font-weight: 600; color: var(--heading); line-height: 1.45; }
+.price-label {
+  font-size: var(--fs-label); font-weight: 600; line-height: 1.5;
+  letter-spacing: var(--label-tracking); text-transform: uppercase;
+  color: var(--accent-text);
+}
 
 /* Value column reads as one aligned column: marker first, text with a hanging indent */
 .price-value {
   margin: 0;
-  display: flex; align-items: flex-start; gap: .6rem;
-  color: var(--text); line-height: 1.45;
+  display: flex; align-items: flex-start; gap: .75rem;
+  font-size: var(--fs-body); line-height: 1.45; color: var(--heading);
 }
 .price-value-text { min-width: 0; }
 
@@ -35,7 +41,7 @@
 .price-mark {
   flex: none;
   display: block;
-  width: 16px; height: 16px; margin-top: .25em;
+  width: 16px; height: 16px; margin-top: .2em;
 }
 .price-marker {
   display: block;
@@ -45,21 +51,24 @@
 }
 .price-check { stroke-width: 2; }
 .price-marker-open { stroke-width: 1.6; }
+.price-row-open .price-value { color: var(--text); }
 
-/* "offen" tag follows the value text */
+/* "offen" pill after the value text */
 .price-tag {
   display: inline-block;
-  margin-left: .4rem;
-  padding: 0 .5rem;
-  vertical-align: .1em;
-  border: 1px solid color-mix(in srgb, var(--text) 35%, transparent); border-radius: 6px;
-  font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--text);
+  margin-left: .5rem;
+  padding: .1rem .65rem;
+  vertical-align: .15em;
+  border: 1px solid var(--line); border-radius: var(--radius-pill);
+  font-size: var(--fs-label); font-weight: 600; line-height: 1.5;
+  letter-spacing: var(--label-tracking); text-transform: uppercase;
+  color: var(--text);
   white-space: nowrap;
 }
 
 .price-note {
-  margin-top: 1.25rem;
-  font-size: .9375rem; line-height: 1.55; color: var(--text);
+  margin-top: 1.5rem;
+  font-size: var(--fs-small); line-height: 1.55; color: var(--text);
 }
 
 /* Scroll-driven motion (DESIGN.md -> Motion; dormant: /kosten/ has no html.scroll-fx). The card zooms in gently, the note fades
@@ -100,5 +109,5 @@
 }
 
 @media (max-width: 600px) {
-  .price-row { padding: 1.15rem 1.25rem; }
+  .price-row { padding-block: 1.25rem; }
 }

@@ -289,7 +289,7 @@ function MatchCard({ rank, match, sponsor, partnership, saved, hidden, onToggleS
   return (
     <article className={`mt-card${hidden ? ' is-hidden' : ''}`} aria-labelledby={titleId}>
       <header className="mt-card-head">
-        <Avatar name={sponsor.name} tone="gold" size={52} />
+        <Avatar name={sponsor.name} tone="brass" size={52} />
         <div className="mt-card-id">
           <h3 id={titleId}>{sponsor.name}</h3>
           <p className="mt-card-meta">{sponsor.industry} · {sponsor.region}</p>
@@ -357,7 +357,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
           <EmptyState
             title="Diesen Sponsor gibt es nicht"
             text="Der Link ist vielleicht veraltet. In der Liste finden Sie alle Vorschläge."
-            action={<Button variant="navy" href={href('partner')}>Zu den Vorschlägen</Button>}
+            action={<Button variant="graphit" href={href('partner')}>Zu den Vorschlägen</Button>}
           />
         </Card>
       </div>
@@ -396,14 +396,14 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
       <header className="ui-page-header">
         <a className="ui-back" href={href('partner')}><Icon name="arrowLeft" size={16} />Alle Vorschläge</a>
         <div className="mt-detail-id">
-          <Avatar name={sponsor.name} tone="gold" size={76} />
+          <Avatar name={sponsor.name} tone="brass" size={76} />
           <div className="mt-detail-text">
             <h1>{sponsor.name}</h1>
             <p className="mt-detail-meta">{sponsor.industry} · {sponsor.region}</p>
             <div className="mt-detail-badges">
               <ScoreBadge score={match.score} />
               {hidden && <Badge tone="muted"><Icon name="eyeOff" size={12} />Ausgeblendet</Badge>}
-              {saved && <Badge tone="gold"><Icon name="star" size={12} />Gemerkt</Badge>}
+              {saved && <Badge tone="brass"><Icon name="star" size={12} />Gemerkt</Badge>}
             </div>
           </div>
         </div>
@@ -432,7 +432,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
                           : `Mit ${sponsor.name} besteht bereits eine Partnerschaft. Unter «Zur Partnerschaft» sehen Sie Gegenleistungen, Termine und Notizen.`}
                 </p>
                 <div className="mt-next-buttons">
-                  <Button variant="navy" href={href('partnerschaften', partnership.id)} icon="handshake">Zur Partnerschaft</Button>
+                  <Button variant="graphit" href={href('partnerschaften', partnership.id)} icon="handshake">Zur Partnerschaft</Button>
                   {(partnership.status === 'abgeschlossen' || declined) && !openDraft && (
                     <Button variant="ghost" icon="sparkles" onClick={prepareRequest}>Neue Anfrage vorbereiten</Button>
                   )}
@@ -443,14 +443,14 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
                 <p className="mt-next-text">
                   Für {sponsor.name} liegt bereits ein Entwurf im KI-Manager. Prüfen und senden Sie ihn dort; erst dann entsteht die Anfrage.
                 </p>
-                <Button variant="gold" icon="edit" href={href('ki-manager', openDraft.id)}>Entwurf öffnen</Button>
+                <Button variant="brass" icon="edit" href={href('ki-manager', openDraft.id)}>Entwurf öffnen</Button>
               </>
             ) : (
               <>
                 <p className="mt-next-text">
                   Im KI-Manager entsteht aus Ihrem Profil ein Entwurf für eine Anfrage, den Sie prüfen und anpassen.
                 </p>
-                <Button variant="gold" icon="sparkles" onClick={prepareRequest}>Anfrage vorbereiten</Button>
+                <Button variant="brass" icon="sparkles" onClick={prepareRequest}>Anfrage vorbereiten</Button>
               </>
             )}
             <div className="mt-next-secondary">
@@ -486,7 +486,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
                 <dt>Unterstützung</dt>
                 <dd className="mt-offers">
                   {sponsor.offers.map((o) => (
-                    <Badge key={o} tone={neededOffers.includes(o) ? 'gold' : 'neutral'}>
+                    <Badge key={o} tone={neededOffers.includes(o) ? 'brass' : 'neutral'}>
                       {neededOffers.includes(o) && <Icon name="check" size={12} />}
                       {o}
                       {neededOffers.includes(o) && <span className="visually-hidden"> (von Ihnen gesucht)</span>}
@@ -528,7 +528,7 @@ function SponsorDetail({ sponsorId }: { sponsorId: string }) {
                     const own = seeker.discipline.includes(i);
                     return (
                       <li key={i}>
-                        <Badge tone={own ? 'gold' : 'neutral'}>
+                        <Badge tone={own ? 'brass' : 'neutral'}>
                           {own && <Icon name="check" size={12} />}
                           {i}
                           {own && <span className="visually-hidden"> (Ihre Disziplin)</span>}

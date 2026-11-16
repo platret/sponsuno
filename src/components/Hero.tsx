@@ -5,7 +5,7 @@ import '../styles/sections/hero.css';
 
 type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
-// Start frame of the story (Harvey-style): raw papers left of a thin gold line, ordered pairs right of it.
+// Start frame of the story (Harvey-style): raw papers left of a thin brass line, ordered pairs right of it.
 // Its own papers (never the ones on the story stage, which fades in as this picture fades out).
 // x in px from the line (negative = left), y in % of the art height; m = phone position or null (hidden);
 // b = height on the moving belt (html.motion), in array order along the belt.
@@ -18,21 +18,22 @@ const PAPERS: { kind: PaperKind; x: number; y: number; m: [number, number] | nul
   { kind: 'liste', x: -500, y: 46, m: null, b: 24 },
 ];
 
-/** Navy hero, centred (Harvey frame): badge, H1, lead, the two audience buttons, the demo link, then the start
-    frame of the scroll story inside the first viewport. The story itself follows in Story.tsx. */
+/** Graphit hero, left-aligned on the grid: launch label, H1 with the brass accent word, lead, the two audience pills,
+    the demo link, then the start frame of the scroll story inside the first viewport. The story itself follows in
+    Story.tsx. */
 export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
   return (
     <section className="hero" id="top" aria-labelledby="hero-title">
-      <div className="hero-glow" aria-hidden="true" />
+      <div className="hero-ground" aria-hidden="true" />
       <div className="container hero-copy" data-scroll="recede">
-        <p className="hero-badge">{hero.badge}</p>
+        <p className="label hero-badge">{hero.badge}</p>
         <h1 id="hero-title">
           {hero.titleStart} <span className="hero-accent">{hero.titleAccent}</span>
         </h1>
         <p className="hero-lead">{hero.lead}</p>
         <div className="hero-actions">
           <div className="hero-buttons">
-            <a className="btn btn-gold" href="#warteliste" onClick={() => onChooseRole(hero.ctaSeeker.role)}>{hero.ctaSeeker.label}</a>
+            <a className="btn btn-brass" href="#warteliste" onClick={() => onChooseRole(hero.ctaSeeker.role)}>{hero.ctaSeeker.label}</a>
             <a className="btn btn-ghost" href="#warteliste" onClick={() => onChooseRole(hero.ctaSponsor.role)}>{hero.ctaSponsor.label}</a>
           </div>
           <p className="hero-demo">

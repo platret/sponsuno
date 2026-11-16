@@ -5,7 +5,7 @@ import { match } from '../content';
 
 /**
  * The fictional match (mountain biker and bike shop, four criteria, "Passt in 4 von 4 Kriterien"). Shown on the
- * story stage in the "match" step, where it grows out of the lead pair card. Presentational only: the gold line
+ * story stage in the "match" step, where it grows out of the lead pair card. Presentational only: the brass line
  * draws and the criteria tick when the live stage reaches "match" (story.css); snapshots and reduced motion show
  * the final state. Decorative there (the stage is aria-hidden; the step text carries the meaning).
  */

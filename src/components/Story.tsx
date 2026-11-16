@@ -5,7 +5,7 @@ import { pageHref } from '../lib/links';
 import { StageArt } from './StoryArt';
 import '../styles/sections/story.css';
 
-const Label = ({ children }: { children: string }) => <p className="st-label">{children}</p>;
+const Label = ({ children }: { children: string }) => <p className="label st-label">{children}</p>;
 
 // Where the stage is pinned (story.css, "Pinned"; keep the two in step). There the snapshots are display: none.
 const PINNED = '(min-height: 561px) and (min-width: 761px), (min-height: 561px) and (prefers-reduced-motion: no-preference)';

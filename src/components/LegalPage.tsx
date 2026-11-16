@@ -18,16 +18,15 @@ export function LegalPage({ page }: { page: LegalPageId }) {
       <PageHeader current={{ path, kind: 'legal' }} />
 
       <main id="inhalt" className="lg">
-        <PageBand titleId="lg-title" title={content.title} narrow>
+        <PageBand titleId="lg-title" title={content.title} narrow eyebrow={legal.updated}>
           <p className="lg-intro">{rich(content.intro)}</p>
-          <p className="lg-updated">{legal.updated}</p>
         </PageBand>
         <div className="container">
-          <article className="lg-col" aria-labelledby="lg-title">
+          <article className="lg-col lg-doc" aria-labelledby="lg-title">
             <nav className="lg-toc" aria-labelledby="lg-toc-title">
-              <p className="lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
+              <p className="label lg-toc-title" id="lg-toc-title">{legal.tocLabel}</p>
               <ol>
-                {content.sections.map((s) => <li key={s.id}><a href={`#${s.id}`}>{s.title}</a></li>)}
+                {content.sections.map((s) => <li key={s.id}><a href={`#${s.id}`}><span>{s.title}</span></a></li>)}
               </ol>
             </nav>
 

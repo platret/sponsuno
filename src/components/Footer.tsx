@@ -16,8 +16,8 @@ type FooterProps = {
 };
 
 /**
- * Navy closing block. On the landing page it continues the waitlist without a seam; on sub-pages it
- * stands alone (ft-standalone). Ends on the logotype and the legal row.
+ * Graphit closing block. On the landing page it continues the waitlist without a seam; on sub-pages it
+ * stands alone (ft-standalone). Ends on the kalk loop wordmark and the legal row.
  */
 export function Footer({ onLanding = true, current }: FooterProps) {
   return (
@@ -28,7 +28,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           <nav className="ft-cols" aria-label="Fusszeile">
             {footer.columns.map((col, i) => (
               <div className="ft-col" key={col.title}>
-                <p className="ft-head" id={`ft-head-${i}`}>{col.title}</p>
+                <p className="ft-head label" id={`ft-head-${i}`}>{col.title}</p>
                 <ul aria-labelledby={`ft-head-${i}`}>
                   {col.links.map((link) => (
                     <li key={link.href}>
@@ -46,7 +46,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
             ))}
             {(CONTACT_EMAIL || CONTACT_TOWN) && (
               <div className="ft-col">
-                <p className="ft-head" id="ft-head-contact">{footer.contactTitle}</p>
+                <p className="ft-head label" id="ft-head-contact">{footer.contactTitle}</p>
                 <ul aria-labelledby="ft-head-contact">
                   {CONTACT_EMAIL && (
                     <li><a className="ft-link ft-mail" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
@@ -58,7 +58,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={600} height={152} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
+        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>

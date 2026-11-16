@@ -25,19 +25,19 @@ const images: Record<AudienceImage, { jpg: string; avif: string }> = {
   firma: { jpg: firma, avif: `${firma480} 480w, ${firma640} 640w` },
 };
 
-/** Rendered tile width (audience.css): four columns of at most 253 px from 1024 px, two below, one below 601 px. */
-const SIZES = '(min-width: 1024px) 253px, (min-width: 601px) 46vw, 92vw';
+/** Rendered photo width (audience.css): four cards of at most 264 px from 1024 px, two below, one below 601 px. */
+const SIZES = '(min-width: 1024px) 264px, (min-width: 601px) 46vw, 92vw';
 
 /**
- * Paper section under the proof line: who Sponsuno is meant for. Four stock photos (Symbolbilder, named as such in
- * the landing page footer and the Impressum, credited there), each with a short label, one sentence and a link to where that
- * side goes next ("two doors": seekers to a guide, companies to /fuer-firmen/). No cards.
- * Scroll motion (DESIGN.md -> Motion): head and tiles rise with stagger, each photo opens inside its frame (the frame
+ * Kalk band under the proof line: who Sponsuno is meant for. Four photo cards (stock photos, Symbolbilder, named as such
+ * in the landing page footer and the Impressum, credited there), each with a short label, one sentence and a link to where
+ * that side goes next ("two doors": seekers to a guide, companies to /fuer-firmen/).
+ * Scroll motion (DESIGN.md -> Motion): head and cards rise with stagger, each photo opens inside its frame (the frame
  * clips, the <picture> scales).
  */
 export function Audience() {
   return (
-    <section className="section surface-paper aud" id="fuer-wen" aria-labelledby="aud-title">
+    <section className="section surface-kalk aud" id="fuer-wen" aria-labelledby="aud-title">
       <div className="container">
         <div className="section-head aud-head" data-reveal="" data-scroll="rise">
           <h2 id="aud-title">{audience.title}</h2>

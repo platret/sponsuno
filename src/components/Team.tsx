@@ -10,7 +10,7 @@ function initials(name: string): string {
   return (first + last).toUpperCase();
 }
 
-/** Real photo when content.ts provides one, otherwise a monogram in the CD (decorative: the name follows). */
+/** Real photo when content.ts provides one, otherwise a monogram disc (decorative: the name follows). */
 function Portrait({ member }: { member: TeamMember }) {
   if (member.photo) {
     return (
@@ -30,7 +30,7 @@ function Portrait({ member }: { member: TeamMember }) {
 }
 
 /** "Stand des Projekts": the programme with a link, then the steps so far and the planned ones as a short
-    vertical sequence. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
+    vertical sequence, in a graphit card. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
 function ProjectStatus() {
   return (
     <div className="team-status">
@@ -53,12 +53,12 @@ function ProjectStatus() {
   );
 }
 
-/** Ivory section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
+/** Kalk section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
     and "Stand des Projekts" are H2, styled as H3): the four founders with their provisional focus, then the project
     status. */
 export function Team() {
   return (
-    <section className="section surface-ivory team" id="team" aria-labelledby="team-title">
+    <section className="section surface-kalk team" id="team" aria-labelledby="team-title">
       <div className="container">
         <ul className="team-grid" role="list" data-scroll-stagger="">
           {team.members.map((member) => (

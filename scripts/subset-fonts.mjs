@@ -4,7 +4,7 @@
 //
 // Source: fontsource's "latin" woff2 files (devDependencies). Each face is cut into a core and an extra file with
 // disjoint unicode-ranges (font-glyphs.mjs). Kept OpenType features: the ones browsers apply by default plus lnum and
-// tnum (font-variant-numeric); dropped: fractions (frac/numr/dnom) and Manrope's pnum, which the site never asks for.
+// tnum (font-variant-numeric); dropped: fractions (frac/numr/dnom) and other features the site never asks for.
 // Hinting stays (a few bytes; keeps Windows rendering as before). Glyph names stay too (post table format 2, about
 // 0.4 KB per file): without them Chrome on macOS rasterises text below about 19 px slightly differently (measured
 // pixel diffs against the fontsource files); with them every page renders pixel-identical.
@@ -20,9 +20,9 @@ const cssFile = path.join(root, 'src/styles/fonts.css');
 
 /** Only the CD weights (DESIGN.md -> Typography). Do not add weights or families. */
 const FACES = [
-  { family: 'Cormorant Garamond', weight: 600, pkg: 'cormorant-garamond', name: 'cormorant-garamond-600' },
-  { family: 'Manrope', weight: 400, pkg: 'manrope', name: 'manrope-400' },
-  { family: 'Manrope', weight: 600, pkg: 'manrope', name: 'manrope-600' },
+  { family: 'Schibsted Grotesk', weight: 400, pkg: 'schibsted-grotesk', name: 'schibsted-grotesk-400' },
+  { family: 'Schibsted Grotesk', weight: 600, pkg: 'schibsted-grotesk', name: 'schibsted-grotesk-600' },
+  { family: 'Schibsted Grotesk', weight: 700, pkg: 'schibsted-grotesk', name: 'schibsted-grotesk-700' },
 ];
 const FEATURES = ['kern', 'liga', 'calt', 'ccmp', 'locl', 'mark', 'mkmk', 'lnum', 'tnum'];
 const PARTS = [

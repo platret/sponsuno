@@ -1,8 +1,9 @@
-/* Audience (Für wen): paper, directly under the proof line (whose hairline separates the two paper bands).
-   Four stock photos (Symbolbilder) with a label, one sentence and a link ("two doors") each. No cards, no overlays.
-   Motion (DESIGN.md -> Motion): head rises, tiles rise with stagger, each photo opens from an inset (4%, 6%/8% on desktop) inside
+/* Audience (Für wen): the Kalk band between the proof line (paper) and the Ablauf (paper). Four photo cards
+   (Symbolbilder): photo flush at the top, then the group as H3, one sentence and a link at the card's foot
+   ("two doors"), so the four links line up whatever the sentence length.
+   Motion (DESIGN.md -> Motion): head rises, cards rise with stagger, each photo opens from an inset (4%, 6%/8% on desktop) inside
    its .aud-frame and settles from 1.18 to 1 (data-scroll primitives in site.css).
-   Without scroll timelines the tiles keep the data-reveal fade.
+   Without scroll timelines the cards keep the data-reveal fade.
    Layouts: >=1024 four columns; 601-1023 two columns; <=600 one column, each photo full width above its
    text (a small thumbnail made the subjects unreadable). The four files share one colour grade
    (see DESIGN.md -> Imagery). */
@@ -11,17 +12,30 @@
 .section.aud { padding-top: clamp(3.5rem, 2.5rem + 4vw, 6.5rem); }
 
 .aud-grid {
+  --aud-pad: 1.5rem;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  gap: 1.5rem;
 }
 
-/* Wrapper for the photo primitive (overflow clip, radius, clip-path). Same box as the img, so no layout shift;
-   the img keeps its own radius for the fallback. Inside it the <picture> (AVIF srcset, JPEG fallback) is what
-   scales: a block, because an inline box cannot take `scale`. */
+/* Card: Papier on the Kalk band (graphit-700 on the dark band), 1 px rule, radius 16, no shadow.
+   It clips the photo's top corners, so the frame itself only rounds while it opens. */
+.aud-item {
+  display: flex; flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: clip;
+}
+
+/* Wrapper for the photo primitive (overflow clip, radius, clip-path). Same box as the img, so no layout shift.
+   Inside it the <picture> (AVIF srcset, JPEG fallback) is what scales: a block, because an inline box cannot
+   take `scale`. Its end radius matches the card's inner top corners (16 px minus the 1 px border). */
 .aud-frame {
-  display: block; border-radius: var(--radius);
-  /* Photos start with their tile's stagger but all settle within a few vh of each other: with the full
+  display: block;
+  --scroll-photo-radius: 15px 15px 0 0;
+  /* Photos start with their card's stagger but all settle within a few vh of each other: with the full
      stagger the fourth photo of a row would still be zooming with its top at 28% of the viewport.
      Inherited by the img, so frame clip and image scale stay in step. */
   --scroll-range-end: cover calc(var(--scroll-dist-long) + var(--scroll-i, 0) * var(--scroll-stagger) / 3);
@@ -30,17 +44,22 @@
 .aud-picture { display: block; }
 
 .aud-photo {
+  display: block;
   width: 100%; height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius);
   background: var(--bg-alt);
 }
 
-.aud-text { margin-top: 1.1rem; }
-.aud-desc { margin-top: .45rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
-/* Where this side goes next (a guide, or the page for companies): navy label, Gold dunkel arrow, 44 px tall */
-.aud-link { min-height: 44px; margin-top: .15rem; font-size: var(--fs-small); color: var(--heading); }
+.aud-text {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: var(--aud-pad) var(--aud-pad) calc(var(--aud-pad) - .75rem);
+}
+.aud-desc { margin-top: .5rem; margin-bottom: 1rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
+/* Where this side goes next (a guide, or the page for companies): heading-colour label, accent arrow, 44 px tall,
+   pinned to the foot of the card */
+.aud-link { min-height: 44px; margin-top: auto; font-size: var(--fs-small); color: var(--heading); }
 .aud-link svg { color: var(--accent-text); }
 
 
@@ -50,15 +69,15 @@
 .motion .aud-item[data-reveal]:nth-child(4) { transition-delay: .18s; }
 
 /* Four columns: a calmer row (half the stagger, a shorter rise) and a frame that visibly opens (6% / 8%
-   inset instead of 4%, about 15 x 20px on a 253px tile). The image keeps its 1.18 -> 1 zoom. */
+   inset instead of 4%, about 15 x 20px on a 260px card). The image keeps its 1.18 -> 1 zoom. */
 @media (min-width: 1024px) {
   .aud-grid { --scroll-stagger: 2vh; }
   .aud-item { --scroll-y: 32px; }
-  .aud-frame { --scroll-photo-inset: 6% 8%; --scroll-photo-radius: 16px; }
+  .aud-frame { --scroll-photo-inset: 6% 8%; }
 }
 
 @media (max-width: 1023px) {
-  .aud-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+  .aud-grid { --aud-pad: 2rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .motion .aud-item[data-reveal]:nth-child(n) { transition-delay: 0s; }
 }
 
@@ -69,17 +88,14 @@
 }
 
 @media (max-width: 600px) {
-  .aud-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
-  .aud-item { padding-block: 1.75rem; border-top: 1px solid var(--line); }
-  .aud-item:first-child { padding-top: 0; border-top: 0; }
-  .aud-text { margin-top: .9rem; }
-  .aud-desc { margin-top: .3rem; }
+  .aud-grid { --aud-pad: 1.5rem; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .aud-desc { margin-top: .4rem; }
 }
 
 /* Very tall viewports (portrait tablets such as a 1024 x 1366 iPad Pro, portrait monitors): the hero is
    capped at 940px, so parts of this section can be in view at scroll 0. Nothing visible at load may start
    hidden, so whatever can be above the fold there stays static (final state). Thresholds are the smallest
-   measured offsets at any width (head ~1145px, tiles ~1340px from the top of the page). */
+   measured offsets at any width (head ~1145px, cards ~1340px from the top of the page). */
 @media (min-height: 1140px) {
   .scroll-fx .aud-head { animation: none; }
 }

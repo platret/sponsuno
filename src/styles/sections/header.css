@@ -1,18 +1,19 @@
-/* Header: transparent at the top, solid navy over the hero and the story, solid page-surface bar once the page
-   surface reaches it (paper in the light theme, navy in the dark one). Without JS it is always solid navy (nothing
-   runs under it). Mobile: sheet menu on the page surface. */
+/* Header: transparent at the top, solid graphit over the hero and the story, solid page-surface bar once the page
+   surface reaches it (kalk in the light theme, graphit in the dark one). Without JS it is always solid graphit (nothing
+   runs under it). Nav links get a quiet pill on hover; the CTA is a brass pill on graphit, the theme's primary pill
+   on the page surface. Mobile: sheet menu on the page surface. */
 
 .site-header {
   position: fixed; inset: 0 0 auto; z-index: 50;
   padding-top: env(safe-area-inset-top, 0px);
-  color: var(--ivory);
+  color: var(--kalk);
   border-bottom: 1px solid transparent;
   transition: background-color .25s ease, border-color .25s ease, color .25s ease;
-  --focus: var(--gold-light);
+  --focus: var(--brass-light);
 }
 .site-header.is-dark,
 html:not(.js) .site-header {
-  background: var(--navy);
+  background: var(--graphit);
   border-bottom-color: var(--card-dark-line);
 }
 .site-header.is-solid {
@@ -25,29 +26,28 @@ html:not(.js) .site-header {
 .header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
 
 .brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
-.brand img { width: 118px; height: auto; }
+.brand img { width: 132px; height: auto; }
 .brand-on-light { display: none; }
-/* Solid bar: the navy wordmark on paper (light theme), the ivory one on navy (dark theme) */
-.is-solid .brand-on-dark { display: var(--wordmark-ivory); }
+/* Solid bar: the graphit wordmark on kalk (light theme), the kalk one on graphit (dark theme) */
+.is-solid .brand-on-dark { display: var(--wordmark-light); }
 .is-solid .brand-on-light { display: var(--wordmark-ink); }
 
 .main-nav ul { display: flex; gap: .25rem; }
 .main-nav a {
-  display: block; padding: .5rem .8rem; border-radius: 8px;
+  display: flex; align-items: center; min-height: 44px; padding: 0 .8rem; border-radius: var(--radius-pill);
   font-size: var(--fs-small); text-decoration: none;
-  color: rgba(243, 239, 230, .78);
-  transition: color .2s ease;
+  color: var(--steel);
+  transition: color .2s ease, background-color .2s ease;
 }
 .main-nav a:hover,
-.main-nav a[aria-current] { color: var(--ivory); }
+.main-nav a[aria-current] { color: var(--kalk); background: rgba(245, 243, 238, .07); }
 .is-solid .main-nav a { color: var(--text); }
 .is-solid .main-nav a:hover,
-.is-solid .main-nav a[aria-current] { color: var(--heading); }
-.main-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 8px; }
+.is-solid .main-nav a[aria-current] { color: var(--heading); background: color-mix(in srgb, var(--heading) 7%, transparent); }
 
 .header-actions { display: flex; align-items: center; gap: .5rem; }
-.header-cta { background: var(--gold-light); color: var(--navy); }
-.header-cta:hover { background: var(--gold); }
+.header-cta { margin-left: .25rem; background: var(--brass); color: var(--graphit); }
+.header-cta:hover { background: var(--brass-light); }
 .is-solid .header-cta { background: var(--btn-bg); color: var(--btn-fg); }
 .is-solid .header-cta:hover { background: var(--btn-bg-hover); }
 .header-cta-short { display: none; }
@@ -55,7 +55,7 @@ html:not(.js) .site-header {
 .menu-toggle {
   display: none; place-items: center;
   width: 44px; height: 44px; padding: 0;
-  border: 0; border-radius: var(--radius-sm); background: transparent; color: inherit; cursor: pointer;
+  border: 0; border-radius: var(--radius-pill); background: transparent; color: inherit; cursor: pointer;
 }
 .menu-toggle-bars,
 .menu-toggle-bars::before,
@@ -82,10 +82,11 @@ html:not(.js) .site-header {
 .menu-sheet[hidden] { display: none; }
 .menu-links li { border-bottom: 1px solid var(--line); }
 .menu-links a {
-  display: block; padding: .9rem 0;
-  font: 600 clamp(1.75rem, 7vw, 2.25rem)/1.15 var(--serif); color: var(--heading); text-decoration: none;
+  display: block; padding: 1rem 0;
+  font: 700 clamp(1.625rem, 6.5vw, 2rem)/1.15 var(--display); letter-spacing: var(--display-tracking);
+  color: var(--heading); text-decoration: none;
 }
-.menu-cta { width: 100%; margin-top: 1.75rem; }
+.menu-cta { width: 100%; margin-top: 2rem; }
 .motion .menu-sheet:not([hidden]) { animation: sheet-in .35s var(--ease-out); }
 @keyframes sheet-in { from { opacity: 0; transform: translateY(-8px); } }
 

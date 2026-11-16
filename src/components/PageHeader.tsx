@@ -14,8 +14,8 @@ type PageHeaderProps = {
 };
 
 /**
- * Skip link and slim navy header of the static pages (topic pages, guides, legal pages, 404): wordmark, the same nav
- * as the landing page header (content.ts → nav), the theme switch and the waitlist button. Navy in both themes, so
+ * Skip link and slim graphit header of the static pages (topic pages, guides, legal pages, 404): wordmark, the same nav
+ * as the landing page header (content.ts → nav), the theme switch and the waitlist button. Graphit in both themes, so
  * every page opens like the landing page; PageBand continues it with the H1. No JavaScript module: below 961 px the
  * nav sits in a native <details> menu that drops down under the bar; the theme switch runs on the inline head script.
  */
@@ -32,14 +32,14 @@ export function PageHeader({ current, role }: PageHeaderProps) {
       <header className="lg-header" id="top">
         <div className="container lg-header-inner">
           <a className="lg-brand" href={pageHref('')} aria-label={legal.homeLabel}>
-            <img src={wordmarkLight} alt="" width={118} height={30} />
+            <img src={wordmarkLight} alt="" width={141} height={24} />
           </a>
           <nav className="lg-nav" aria-label="Hauptnavigation">
             <ul>{links}</ul>
           </nav>
           <div className="lg-actions">
             <ThemeToggle />
-            <a className="btn btn-sm btn-gold lg-cta" href={waitlistHref(role)}>
+            <a className="btn btn-sm btn-brass lg-cta" href={waitlistHref(role)}>
               <span className="lg-cta-long">{cta.waitlist}</span>
               <span className="lg-cta-short">{cta.waitlistShort}</span>
             </a>
@@ -63,21 +63,24 @@ type PageBandProps = {
   /** id of the H1 (sections and articles below point their aria-labelledby at it) */
   titleId: string;
   title: string;
-  /** Reading-column pages (legal pages, guides, Für Firmen, 404): the band lines up with the 42rem column */
+  /** Reading-column pages (legal pages, guides, Für Firmen, 404): the band text keeps to the reading column's 42rem */
   narrow?: boolean;
-  /** Intro, byline, note … under the H1 */
+  /** Short line above the H1, set as a label (legal pages and guides: the date of the text, the byline) */
+  eyebrow?: ReactNode;
+  /** Intro, note … under the H1 */
   children?: ReactNode;
 };
 
 /**
- * Page head band of the static pages, the first child of <main>: the H1 and its intro on navy, right under the navy
- * header, in both themes (legal.css → .lg-band). Calm: no picture, no motion.
+ * Page head band of the static pages, the first child of <main>: the H1 and its intro on graphit, right under the graphit
+ * header, in both themes (legal.css → .lg-band). Starts in column 1 like every title; calm: no picture, no motion.
  */
-export function PageBand({ titleId, title, narrow = false, children }: PageBandProps) {
+export function PageBand({ titleId, title, narrow = false, eyebrow, children }: PageBandProps) {
   return (
     <div className="lg-band">
       <div className="container">
-        <div className={narrow ? 'lg-col' : 'lg-band-inner'}>
+        <div className={narrow ? 'lg-band-inner lg-band-narrow' : 'lg-band-inner'}>
+          {eyebrow && <p className="label lg-band-label">{eyebrow}</p>}
           <h1 id={titleId}>{title}</h1>
           {children}
         </div>

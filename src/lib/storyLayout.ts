@@ -27,7 +27,7 @@ export interface StageItem {
   m: Track | null;
 }
 
-// The gold line sits at this share of the stage width (desktop / phone). story.css reads the same numbers.
+// The brass line sits at this share of the stage width (desktop / phone). story.css reads the same numbers.
 export const LINE = { d: 52, m: 40 };
 
 const off = { o: 0 };

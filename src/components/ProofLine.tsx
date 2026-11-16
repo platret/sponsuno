@@ -1,7 +1,7 @@
 import { proof } from '../content';
 import '../styles/sections/proof.css';
 
-/** Quiet band under the hero: three proof points, then example disciplines. Static; later a logo row.
+/** Quiet kalk band under the hero: three proof points, then example disciplines under a label. Static; later a logo row.
     role="list" keeps list semantics in Safari/VoiceOver despite list-style: none. */
 export function ProofLine() {
   return (
@@ -13,7 +13,7 @@ export function ProofLine() {
           ))}
         </ul>
         <div className="proof-disciplines">
-          <span className="proof-label" id="proof-disciplines-label">{proof.disciplinesLabel}</span>
+          <span className="label proof-label" id="proof-disciplines-label">{proof.disciplinesLabel}</span>
           <ul className="proof-list" role="list" aria-labelledby="proof-disciplines-label">
             {proof.disciplines.map((d) => (
               <li key={d}>{d}</li>

@@ -34,13 +34,14 @@ export function NoticePage({ id }: { id: NoticePageId }) {
         <div className="container">
           <article className="lg-col" aria-labelledby="lg-title">
             <nav className="gd-related" aria-labelledby="nf-links-title">
-              <p className="gd-related-title" id="nf-links-title">{content.linksTitle}</p>
+              <p className="label gd-related-title" id="nf-links-title">{content.linksTitle}</p>
               <ul>
                 {content.links.map((link) => (
                   <li key={link.label}>
                     <a href={siteHref(link.href, false)}>
                       <span className="gd-related-name">{link.label}</span>
                       <span className="gd-related-desc">{link.text}</span>
+                      <Arrow />
                     </a>
                   </li>
                 ))}
@@ -54,5 +55,14 @@ export function NoticePage({ id }: { id: NoticePageId }) {
 
       <Footer onLanding={false} />
     </>
+  );
+}
+
+/** Arrow at the end of a "Weiterlesen" link (here and in GuidePage.tsx); decorative, the link text names the page. */
+export function Arrow() {
+  return (
+    <svg className="gd-related-arrow" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+      <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

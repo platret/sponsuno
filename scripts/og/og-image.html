@@ -4,38 +4,38 @@
   Regenerate after a change (see AGENTS.md → SEO):
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
     --window-size=1200,630 --screenshot=public/og-image.png scripts/og/og-image.html
-  Colours and fonts from the CD (DESIGN.md): navy 135° gradient, ivory Cormorant 600 headline,
-  steel Manrope line, one gold hairline. No photos, no faces, no numbers. The product is planned: say so.
+  Colours and fonts from the design system (DESIGN.md): graphit 135° gradient (verlauf-dunkel), kalk headline in
+  Schibsted Grotesk 700, grey line, one Messing hairline. No photos, no faces, no numbers. The product is planned: say so.
 -->
 <html lang="de-CH">
 <head>
 <meta charset="utf-8">
 <title>Sponsuno share image</title>
 <style>
-  @font-face { font-family: 'Cormorant Garamond'; font-weight: 600; src: url('../../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 400; src: url('../../node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff2') format('woff2'); }
-  @font-face { font-family: 'Manrope'; font-weight: 600; src: url('../../node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 400; src: url('../../node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 600; src: url('../../node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 700; src: url('../../node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-700-normal.woff2') format('woff2'); }
   html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
   body {
     box-sizing: border-box;
     display: flex; flex-direction: column; justify-content: space-between;
     padding: 76px 88px 72px;
-    background: linear-gradient(135deg, #0B1830 0%, #0B1830 45%, #1D2F52 100%);
-    color: #F3EFE6;
+    background: linear-gradient(135deg, #1D2125, #2E343A);
+    color: #F5F3EE;
     -webkit-font-smoothing: antialiased;
   }
   .wordmark { display: block; width: 236px; height: auto; }
-  .rule { width: 72px; height: 2px; background: #B08D57; margin-bottom: 34px; }
+  .rule { width: 72px; height: 2px; background: #C9A15B; margin-bottom: 34px; }
   h1 {
     margin: 0; max-width: 900px;
-    font: 600 92px/0.98 'Cormorant Garamond', Georgia, serif;
-    letter-spacing: -0.01em; color: #F3EFE6;
+    font: 700 84px/1.02 'Schibsted Grotesk', Arial, sans-serif;
+    letter-spacing: -0.025em; color: #F5F3EE;
   }
   .line {
     display: flex; justify-content: space-between; align-items: baseline; gap: 32px;
-    font: 400 26px/1.4 Manrope, system-ui, sans-serif; color: #B9BFCB;
+    font: 400 26px/1.4 'Schibsted Grotesk', Arial, sans-serif; color: #B7B9BC;
   }
-  .domain { font-weight: 600; color: #C4A36B; }
+  .domain { font-weight: 600; color: #C9A15B; }
 </style>
 </head>
 <body>

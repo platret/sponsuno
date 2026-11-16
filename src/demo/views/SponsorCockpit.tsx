@@ -129,7 +129,7 @@ function OverviewTab({ own, requests }: { own: Partnership[]; requests: Partners
   return (
     <div className="sp-overview">
       <div className="sp-col">
-        <Card title="Neue Anfragen" action={requests.length > 0 ? <Badge tone="gold">{requests.length} offen</Badge> : undefined}>
+        <Card title="Neue Anfragen" action={requests.length > 0 ? <Badge tone="brass">{requests.length} offen</Badge> : undefined}>
           {requests.length === 0 ? (
             <EmptyState title="Keine neuen Anfragen" text="Wenn Sportlerinnen, Sportler oder Vereine Sie anfragen, erscheint das hier." />
           ) : (
@@ -524,7 +524,7 @@ function SuggestionCard({ match, seeker, partnership }: { match: MatchResult; se
           </div>
         ) : (
           <Button
-            variant="gold"
+            variant="brass"
             size="md"
             icon="mail"
             onClick={() => toast('Kontakt aufgenommen (simuliert).')}
@@ -546,7 +546,7 @@ function ProfileTab() {
     <div className="sp-profile">
       <Card className="sp-profile-main">
         <div className="sp-profile-head">
-          <Avatar name={sponsor.name} tone="gold" size={64} />
+          <Avatar name={sponsor.name} tone="brass" size={64} />
           <div>
             <h2>{sponsor.name}</h2>
             <p className="sp-quiet">{sponsor.industry} · {sponsor.region}</p>
@@ -566,7 +566,7 @@ function ProfileTab() {
           </div>
           <div>
             <dt>Unterstützung, die Sie anbieten</dt>
-            <dd><ul className="sp-badges">{sponsor.offers.map((o) => <li key={o}><Badge tone="gold">{o}</Badge></li>)}</ul></dd>
+            <dd><ul className="sp-badges">{sponsor.offers.map((o) => <li key={o}><Badge tone="brass">{o}</Badge></li>)}</ul></dd>
           </div>
           <div>
             <dt>Budget pro Partnerschaft und Jahr</dt>
@@ -613,7 +613,7 @@ function ProfileTab() {
           </div>
         </dl>
         <p className="sp-quiet">Sponsuno ordnet die Vorschläge nach diesen vier Kriterien.</p>
-        <Button variant="navy" size="md" href={href('sponsor', 'vorschlaege')} icon="arrowRight">Vorschläge ansehen</Button>
+        <Button variant="graphit" size="md" href={href('sponsor', 'vorschlaege')} icon="arrowRight">Vorschläge ansehen</Button>
       </section>
     </div>
   );
