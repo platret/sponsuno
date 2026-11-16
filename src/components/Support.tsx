@@ -40,13 +40,12 @@ const icons: Record<KindIcon, { viewBox: string; glyph: ReactNode }> = {
   },
 };
 
-/** Paper section: support is not only money. Three kinds side by side, separated by hairlines, no cards. */
+/** Paper section: support is not only money. Title in column 1, the three kinds below as three cards. */
 export function Support() {
   return (
     <section className="section surface-paper sup" id="sachleistungen" aria-labelledby="sup-title">
       <div className="container">
         <div className="section-head sup-head" data-reveal="" data-scroll="rise">
-          <span className="sup-rule" data-scroll="draw-x" aria-hidden="true" />
           <h2 id="sup-title">{support.title}</h2>
           <p className="section-intro">{support.intro}</p>
         </div>

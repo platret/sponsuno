@@ -26,7 +26,8 @@ interface WaitlistProps {
   onRoleChange: (role: Role) => void;
 }
 
-/** Graphit closing block, part one: a narrow centred form. Continues seamlessly into the footer. */
+/** Graphit closing block, part one: title and intro in the left column, the form in a card on the right (stacked on
+ * phones). Continues seamlessly into the footer. */
 export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
@@ -118,17 +119,16 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
             {intro && <p className="wl-intro">{intro}</p>}
           </div>
 
+          <div className="wl-card" data-reveal="" data-scroll="rise">
           {status !== 'done' ? (
             <form
               className="wl-form"
               method="post"
               action={ENDPOINT || undefined}
               noValidate
-              data-reveal=""
-              data-scroll="rise"
               onSubmit={submit} aria-busy={status === 'sending' || undefined}>
               <fieldset className="wl-roles">
-                <legend className="wl-legend">{waitlist.legend}</legend>
+                <legend className="wl-legend label">{waitlist.legend}</legend>
                 <div className="wl-chips">
                   {waitlist.roles.map((r) => (
                     <label className="wl-chip" key={r.value}>
@@ -216,6 +216,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
               </p>
             </div>
           )}
+          </div>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react';
-import logoDark from '../assets/Sponsuno_Logo_dunkel.svg';
+import logoLight from '../assets/Sponsuno_Logo_hell.svg';
 import type { Role as WaitlistRole } from '../content';
 import { href, navigate, useRoute, type RouteName } from './router';
 import { useDemo } from './store';
@@ -174,7 +174,7 @@ export default function DemoApp() {
 
         <aside className="demo-sidebar" aria-label="Navigation der Vorschau">
           <a className="demo-brand" href={href(HOME[state.role])} aria-label="Sponsuno Vorschau, Startansicht">
-            <img src={logoDark} alt="Sponsuno" width={130} height={22} />
+            <img src={logoLight} alt="Sponsuno" width={130} height={22} />
             <span className="demo-brand-tag">Vorschau</span>
           </a>
 

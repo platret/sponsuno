@@ -34,7 +34,9 @@
   --display-tracking: -0.025em;
   --label-tracking: 0.15em;
 
-  --radius: 16px;
+  --radius: 16px;       /* radius-md: cards */
+  --radius-sm: 8px;     /* small parts, inputs inside cards */
+  --radius-pill: 999px; /* buttons, chips */
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
 

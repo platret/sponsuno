@@ -1,83 +1,90 @@
 # DESIGN.md – Sponsuno visual system
 
-The source of truth for colours and fonts is the **Sponsuno Corporate Design Manual v1.0 (November 2026)**. This file translates it into how the website uses them. It was rewritten in November 2026 after a research round (Mobbin heroes and landing pages, Awwwards winners, a palette analysis and an audit of the old page). If the code and this file disagree, fix one of them in the same change.
+The source of truth for colours, type, shapes and the logo is the **Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk")**, Alex's design-system artifact. It replaced the navy/gold/Cormorant look of the CD manual on the branch `redesign/graphit` (November 2026). This file translates it into how the website uses it. If the code and this file disagree, fix one of them in the same change.
 
 Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.css); the landing page base layer is [`src/styles/site.css`](src/styles/site.css); each section has its own stylesheet in `src/styles/sections/`.
 
 ## Principles
 
 1. **Calm, clear, credible.** The page must work for a 22-year-old athlete, a volunteer club board and an SME owner. Clarity first, then atmosphere.
-2. **Calm motion that leads into the content.** Since November 2026 the page moves with the scroll: sections rise in, photos and frames open as you scroll into them, the hero recedes as the page moves on. Every movement is scroll-linked or tied to a scroll step, small and finished by the time an element is comfortably in view; nothing bounces, spins or types. The thin gold line (the hero start frame and the scroll story, where messy papers pass it and come out as ordered pairs) is the page's signature and echoes in the steps line.
-3. **Light page, navy frame, gold accent** (light theme; the dark theme turns the page surface navy too, see Theme). Light surfaces carry about 75% of the page. Navy is used for the hero plus the scroll story under it (see Layout → Navy share) and the closing waitlist + footer block. Gold is a flat accent (about 5%): never a surface, never a gradient, never a glow.
-4. **Show the product, not decoration.** Product UI (the match card, the KI-Manager draft) explains Sponsuno better than abstract visuals.
-5. **Honest content in honest form, without meta-clutter.** Since 2026-11-10 (owner's direction) the site looks and reads like a real SaaS page before its launch: one discreet "Beispieldaten" label per illustration with example people or companies, one launch signal per page, AI images labelled as AI-generated, stock photos named as Symbolbilder once in the landing page footer and the Impressum. No fake logos, numbers or testimonials (copy rules in AGENTS.md).
+2. **Calm motion that leads into the content.** Since November 2026 the page moves with the scroll: sections rise in, photos and frames open as you scroll into them, the hero recedes as the page moves on. Every movement is scroll-linked or tied to a scroll step, small and finished by the time an element is comfortably in view; nothing bounces, spins or types. The thin Messing line (the hero start frame and the scroll story, where messy papers pass it and come out as ordered pairs) is the page's signature and echoes in the steps line.
+3. **Graphit trägt, Kalk gibt Raum, Messing setzt Akzente** (design system). Kalk carries most of the page (about 55 %), Graphit the hero, the scroll story, the closing waitlist + footer block and text (about 33 %), Messing stays small (under 10 %): accent lines, the accent word of the H1, fills of the primary button on graphit. Never Messing as text on Kalk.
+4. **Laut ist nur die Schlaufe.** Type and colour stay quiet; the loop of the wordmark carries the identity. Sport comes through images and content, not through loud colour.
+5. **Show the product, not decoration.** Product UI (the match card, the KI-Manager draft) explains Sponsuno better than abstract visuals.
+6. **Honest content in honest form, without meta-clutter.** Since 2026-11-10 (owner's direction) the site looks and reads like a real SaaS page before its launch: one discreet "Beispieldaten" label per illustration with example people or companies, one launch signal per page, AI images labelled as AI-generated, stock photos named as Symbolbilder once in the landing page footer and the Impressum. No fake logos, numbers or testimonials (copy rules in AGENTS.md).
 
 What we removed and should not bring back: WebGL shaders, the 3D emblem, tilted marquees, gold liquid sections, magnetic buttons, card tilt and glare, shine sweeps, rotating borders, scroll hijacking (Lenis), smooth-scroll overrides, glass navigation.
 
 ## Colour
 
-| Token | Hex | CD name | Use |
-| --- | --- | --- | --- |
-| `--paper` | `#FBF9F4` | (card start) | Default page surface and the scrolled header |
-| `--ivory` | `#F3EFE6` | Elfenbein | Alternate light band; all text on navy |
-| `--navy` | `#0B1830` | Navy | Hero, waitlist + footer block, headings on light, primary button on light |
-| `--navy-2` | `#1D2F52` | Navy mittel | End of the hero gradient; card fill inside navy areas |
-| `--ink` | `#3B4560` | Textgrau | Body and secondary text on light |
-| `--steel` | `#B9BFCB` | Stahlgrau | Secondary text on navy only (never on light: 1.6:1) |
-| `--gold` | `#B08D57` | Gold | Non-text accents: logo dot and "uno", lines, rules |
-| `--gold-light` | `#C4A36B` | Gold hell | Primary button on navy (navy label, 7.4:1), the accent word in the H1, text accents on navy |
-| `--gold-dark` | `#6E5228` | Gold dunkel | All gold text and icons on light (6.3:1) |
-| `--rule` | `#D9D2C1` | (card border) | Hairlines and card borders on light |
-| `--card-dark-line` | `#33476F` | (dark card border) | Borders inside navy areas |
+From the design system (names in German as there). Raw tokens in `tokens.css`:
 
-Theme tokens (`tokens.css`, see Theme below): section CSS paints page surfaces and their text with these, never with the raw tokens above, so they follow the theme. Navy-by-design surfaces keep the raw tokens.
+| Token | Hex | Design system | Use |
+| --- | --- | --- | --- |
+| `--graphit` | `#1D2125` | graphit-900, Graphit | Hero, story, waitlist + footer block, static header and page band, headings on light, primary button on light |
+| `--graphit-2` | `#2E343A` | graphit-700, Graphit hell | End of the graphit gradient; cards inside graphit areas |
+| `--kalk` | `#F5F3EE` | kalk-50, Kalk | Page ground; all light text on graphit |
+| `--kalk-2` | `#E6E1D6` | kalk-200, Kalk dunkel | Alternate band, end of the light gradient |
+| `--paper` | `#F5F3EE` | kalk-50 | The page ground under its old name (surfaces) |
+| `--ink` | `#5A6068` | grau-600, Textgrau | Body text on light (5.7:1 on Kalk, 4.9:1 on Kalk dunkel) |
+| `--steel` | `#B7B9BC` | grau-300, Grau hell | Body text on graphit (8.2:1, 6.4:1 on Graphit hell) |
+| `--brass` | `#C9A15B` | messing-500, Messing | Accent on graphit (6.7:1), fill of the primary button on graphit with a graphit label |
+| `--brass-light` | `#DCC08A` | messing-300, Messing hell | Gradient end; hover of Messing fills |
+| `--brass-dark` | `#74592A` | messing-700, Messing dunkel | Messing as text and icons on Kalk (5.9:1, 5.0:1 on Kalk dunkel) |
+| `--rule` | `#D9D4C8` | border (hell) | Hairlines and card borders on light |
+| `--card-dark-line` | `#3A4148` | border (dunkel) | Borders inside graphit areas |
+
+Gradients (always 135°, only between neighbouring tones of one colour, never Graphit → Messing): `--grad-dark` (verlauf-dunkel, `#1D2125` → `#2E343A`, every graphit surface), `--grad-light` (verlauf-hell), `--grad-brass` (verlauf-messing `#B8904D` → `#DCC08A`, at most one accent area).
+
+Theme tokens (`tokens.css`, see Theme below): section CSS paints page surfaces and their text with these, never with the raw tokens above, so they follow the theme. Graphit-by-design surfaces keep the raw tokens.
 
 | Token | Light | Dark | Use |
 | --- | --- | --- | --- |
-| `--bg` | `--paper` | `--navy` | Page surface: paper sections, reading column, the landing header once solid, the sticky bar, menu sheets |
-| `--bg-alt` | `--ivory` | `#10203D` | Alternate band (KI-Manager, Kosten, Über uns), boxes on the page surface (table of contents, Weiterlesen, templates) |
-| `--surface` | `--paper` | `#15284A` | Cards (KI cards, pricing card) |
-| `--heading` | `--navy` | `--ivory` | H1–H3, labels, link text |
-| `--text` | `--ink` | `--steel` | Body and secondary text (dark: 9.6:1 on navy, 7.9:1 on `#15284A`) |
+| `--bg` | `--paper` (Kalk) | `--graphit` | Page surface, the landing header once solid, the sticky bar, menu sheets |
+| `--bg-alt` | `--kalk-2` | `#262B30` | Alternate band, boxes on the page surface |
+| `--surface` | `--paper` | `--graphit-2` | Cards (always with a 1 px `--line` border) |
+| `--heading` | `--graphit` | `--kalk` | H1–H3, link text |
+| `--text` | `--ink` | `--steel` | Body and secondary text |
 | `--line` | `--rule` | `--card-dark-line` | Hairlines, card borders |
-| `--accent-text` | `--gold-dark` | `--gold-light` | Gold text and icons (dark: 7.4:1 on navy, 6.1:1 on `#15284A`) |
-| `--btn-bg` / `--btn-fg` / `--btn-bg-hover` | navy / ivory / navy-2 | gold-light / navy / gold | Primary button on the page surface (`.btn-navy`), selected tabs |
-| `--edge` | transparent | `--card-dark-line` | Hairline where a navy block meets the navy page (page head band, standalone footer, menu sheet; on the landing page the top of the proof line under the story and the top of the waitlist) |
-| `--focus` | `--gold-dark` | `--gold-light` | Focus ring on the page surface (navy blocks set gold-light themselves) |
-| `--wordmark-ink` / `--wordmark-ivory` | block / none | none / block | Which wordmark the solid landing header shows |
-
-Alpha variants follow the tokens with `color-mix()` (outline button border, tab hover, open-marker ring).
+| `--accent-text` | `--brass-dark` | `--brass` | Messing text, labels and icons |
+| `--btn-bg` / `--btn-fg` / `--btn-bg-hover` | graphit / kalk / graphit-2 | brass / graphit / brass-light | Primary button on the page surface (`.btn-graphit`), selected tabs |
+| `--edge` | transparent | `--card-dark-line` | Hairline where a graphit block meets the graphit page |
+| `--focus` | `--brass-dark` | `--brass` | Focus ring on the page surface (graphit blocks set Messing themselves) |
+| `--wordmark-ink` / `--wordmark-light` | block / none | none / block | Which wordmark the solid landing header shows |
 
 Rules:
-- Gold text on light only in `--gold-dark`. `#B08D57` as text on light fails contrast (2.7:1).
-- Small text at least 4.5:1 in both themes, checked by axe in CI (`e2e/a11y.spec.ts`). Text inside the hero start frame and the story stage (both `aria-hidden` pictures) may fade below that as part of the picture (the belt fade, the dimmed "heute" pairs), but its colours must pass at full opacity.
-- Button labels on gold are `--navy`.
-- Flat fills. The only gradient is the subtle 135° navy gradient of navy surfaces.
-- Documented extras outside the CD: `#F2C5B5` (form error text on navy), the dark theme's `#10203D` and `#15284A` (navy steps between `--navy` and `--card-dark-a`). The demo adds its own few, listed under "Demo app".
+- Messing as text on light only in `--brass-dark`. `#C9A15B` on Kalk is 2.2:1.
+- Small text at least 4.5:1 in both themes, checked by axe in CI (`e2e/a11y.spec.ts`). Text inside the hero start frame and the story stage (both `aria-hidden` pictures) may fade below that as part of the picture, but its colours must pass at full opacity.
+- Button labels on Messing are `--graphit`.
+- No shadows, no glass, no coloured side stripes on cards (`--shadow-card` is `none`).
+- Documented extras outside the design system: `#F2C5B5` (form error text on graphit), the dark theme's `#262B30` (a step between Graphit and Graphit hell), `#262B30` for `--card-dark-b`. The demo adds its own few, listed under "Demo app".
 
 ## Theme
 
-Since 2026-11-10 (owner's direction) the site has a light and a dark theme. The visitor switches with the sun/moon button in every header (44 px, ivory on navy, `--heading` on the solid landing header; moon in the light theme, sun in the dark one; label "Dunkles Design" with `aria-pressed`). Default: the system setting; an explicit choice is saved and holds on every page (mechanics in AGENTS.md → Theme).
+Since 2026-11-10 (owner's direction) the site has a light and a dark theme. The visitor switches with the sun/moon button in every header (44 px; moon in the light theme, sun in the dark one; label "Dunkles Design" with `aria-pressed`). Default: the system setting; an explicit choice is saved and holds on every page (mechanics in AGENTS.md → Theme).
 
-- **Light** is the look the site had: navy hero and story, paper and ivory sections, navy waitlist and footer.
-- **Dark** is the navy brand world on every page: the page surface is navy, the alternate band and cards are slightly lighter navy steps, text is steel, headings ivory, gold text Gold hell, the primary button gold with a navy label (as on navy everywhere). Hairlines are `--card-dark-line`; where a navy block meets the navy page a hairline (`--edge`) marks the seam.
-- **Every page opens on navy, in both themes.** The homepage opens on the navy hero; every other page (topic pages, guides, legal pages, 404) opens with the navy static header and the navy page head band (H1 and intro). That removes the old mismatch of a navy homepage and beige subpages; what follows the band is the theme.
-- **Navy by design in both themes:** hero, story, KI device, waitlist, footer, static header and page head band, the match card and pair cards inside the story (product UI). They use the raw CD tokens.
-- **Stays light:** the demo (`/demo/`, `data-theme="light"`; its stylesheets use the CD colours directly, a dark demo would be a separate job), stock photos and the founders' monograms (navy discs in both themes).
-- Wordmarks: the static header and the footer always use the light wordmark (they are navy); the landing header shows the navy wordmark only when it is solid in the light theme.
-- `theme-color` is navy in both themes (every page starts with navy at the top). `color-scheme` follows the theme, so form controls and scrollbars match.
-- A switch is instant on every page: for the one frame of the change `html.theme-switching` turns all transitions off (`site.css`), so the solid landing header and the buttons never fade over a page surface that has already changed.
+- **Light**: graphit hero and story, Kalk and Kalk dunkel sections, graphit waitlist and footer.
+- **Dark**: the page surface is Graphit, the alternate band and cards are Graphit steps, text Grau hell, headings Kalk, Messing text in Messing, the primary button Messing with a graphit label. Where a graphit block meets the graphit page a hairline (`--edge`) marks the seam.
+- **Every page opens on Graphit, in both themes**: the homepage on the hero, every other page with the static header and the page head band.
+- **Graphit by design in both themes:** hero, story, KI device, waitlist, footer, static header and page head band, the match card and pair cards inside the story (product UI).
+- **Stays light:** the demo (`/demo/`, `data-theme="light"`).
+- Wordmarks: the static header and the footer always use the Kalk wordmark; the landing header shows the graphit wordmark only when it is solid in the light theme.
+- `theme-color` is Graphit (`#1D2125`) in both themes. `color-scheme` follows the theme.
+- A switch is instant on every page: for the one frame of the change `html.theme-switching` turns all transitions off (`site.css`).
 
 ## Typography
 
-| Role | Family | Weight |
+One family for everything: **Schibsted Grotesk** (Google Fonts, SIL Open Font License), self-hosted subsets of 400, 600 and 700 (`--display` and `--sans` both point to it, with the metric-matched "Schibsted Fallback" from Arial in `tokens.css`).
+
+| Role | Weight | Notes |
 | --- | --- | --- |
-| H1, H2, big numerals, the menu links, the step headings (H3) of the scroll story | Cormorant Garamond (`--serif`), self-hosted | 600 (also the monogram discs; no 700 since 2026-11-10) |
-| Everything else: other H3, body, labels, buttons, product UI | Manrope (`--sans`), self-hosted | 400, 600 |
+| H1, H2, big numerals, monograms | 700 | `letter-spacing: -0.025em` (`--display-tracking`) |
+| H3, buttons, labels, strong UI | 600 | |
+| Body, lead, small | 400 | |
 
-Scale (tokens in `site.css`): H1 `clamp(2.75rem, 1.4rem + 4.4vw, 5.5rem)` / 0.98; H2 `clamp(2.125rem, 1.5rem + 2.6vw, 3.5rem)` / 1.04; H3 1.1875rem Manrope 600; lead `clamp(1.125rem, …, 1.3125rem)`; body 1.0625rem / 1.6; small 0.9375rem; never below 0.75rem.
+Scale (tokens in `site.css`, design system web sizes titel 64 / untertitel 40 / zwischentitel 28 / fliesstext 18 / klein 14 / label 12 px, fluid below desktop): H1 `--fs-h1` `clamp(2.5rem, 1.55rem + 3.6vw, 4rem)` / 1.02; H2 `--fs-h2` `clamp(1.875rem, 1.45rem + 1.7vw, 2.5rem)` / 1.08; sub-heading `--fs-sub` up to 1.75rem; H3 1.25rem; lead up to 1.3125rem; body 1.125rem / 1.6; small 0.875rem; label 0.75rem.
 
-Rules: Cormorant never below about 28px and never for UI or body text. One exception: the monogram letters in the round discs (pair cards, seeker and company cards, match card, team monograms) are Cormorant 600 (700 until 2026-11-10, dropped to save a font file; checked at 2× in the hero belt and the match card, both themes) down to 15 px; they are marks, not text. The demo's serif headings (card h2/h3, about 18–22 px), serif figures and monogram avatars are 600 too (700 until 2026-11-10; they read slightly lighter, the only visible change of dropping the 700 file). Sentence case, no all-caps labels, no letter-spaced eyebrows. Lining figures for numerals. Fonts are self-hosted subsets (`src/assets/fonts/`, cut from `@fontsource` "latin" by `npm run fonts`, see AGENTS.md → Performance budget), not from Google's servers. They render pixel-identical to the full fontsource files; a character outside the core subset (German, Basic Latin, Swiss punctuation) still renders in the brand font from an extra file loaded on demand.
+Labels (`.label`): uppercase, `letter-spacing: 0.15em` (`--label-tracking`), 600, 12 px, in `--accent-text` (Messing on graphit). They replace the old sentence-case eyebrows with a short gold rule. Titles start left in column 1, never centred above the content. Lining figures for numerals, tabular figures (`tnum`) in tables and numbers. Fonts are self-hosted subsets (`src/assets/fonts/`, cut from `@fontsource/schibsted-grotesk` "latin" by `npm run fonts`); a character outside the core subset still renders in the brand font from an extra file loaded on demand.
 
 ## Layout
 
@@ -171,11 +178,11 @@ Replaces the Problem section (`Story.tsx`, `StoryArt.tsx`, `lib/storyLayout.ts`,
 
 ## Logo
 
-The current mark (rounded navy square with a serif "S." and the wordmark "Spons|uno") comes from the CD. On the website the header and the footer use the **wordmark alone** (`src/assets/wordmark-light.svg`, `wordmark-dark.svg`, cut from the CD logo files); the square is kept for favicon and app icons (`public/favicon.svg`, and the PNG/ICO sizes generated from `src/assets/Sponsuno_Icon.svg` by `scripts/icons.mjs`; the apple-touch icon is a full navy square because iOS rounds the corners itself).
+The wordmark **«sponsuno»** in lowercase, Schibsted Grotesk 700, where u and n share one stem and become a loop (design system: "Im Wort teilen sich u und n einen Stamm und werden zur Schlaufe, so wie aus Verein und Firma eine Partnerschaft"). It is never set as text: no font has the loop. Files: `src/assets/wordmark-dark.svg` (Graphit, on light), `wordmark-light.svg` (Kalk, on graphit), `Sponsuno_Logo_dunkel.svg` / `_hell.svg` (the same, used by the demo). The loop alone (`src/assets/loop.svg`, `currentColor`) is the small mark: favicon and app icons (`public/favicon.svg`, and the PNG/ICO sizes generated from `src/assets/Sponsuno_Icon.svg`, a Graphit tile with a Kalk loop, by `scripts/icons.mjs`). Clear space: the x-height of the wordmark all round. Minimum size: 16 px high on screen, 6 mm in print; below that the loop alone. Never: stretch, rotate, recolour, add shadows or outlines, put the Messing loop on light ground (2.2:1), type «sponsuno» with a normal u and n, or set the loop next to the word.
 
-Share image (`public/og-image.png`, 1200 × 630, source `scripts/og/og-image.html`): the 135° navy gradient, the light wordmark, one gold hairline, the headline in Cormorant 600 ivory, one line in Manrope steel with the launch signal ("Bald verfügbar in der Deutschschweiz"), the domain in Gold hell. No photos, faces or numbers.
+Share image (`public/og-image.png`, 1200 × 630, source `scripts/og/og-image.html`): the 135° graphit gradient, the Kalk wordmark, one Messing hairline, the headline in Schibsted Grotesk 700 Kalk, one line in Grau hell with the launch signal ("Bald verfügbar in der Deutschschweiz"), the domain in Messing. No photos, faces or numbers.
 
-Recommendation from the research (needs the team and the CD owner): refine rather than replace. Build on the two-tone "Spons|uno" and the gold thread, e.g. a custom-drawn wordmark where a gold stroke joins "uno". Before any logo work, run a trademark check (Swissreg/IGE, EUIPO): Sponsoo (sponsoo.de) is an established DACH sport-sponsoring marketplace with a similar name and an S monogram.
+Open (design system, "Offene Punkte"): test the loop's legibility with three to five people who do not know Sponsuno; trademark check of name and logo (IGE, DACH) before the launch; CMYK and Pantone for Graphit and Messing with the printer.
 
 ## Demo app
 

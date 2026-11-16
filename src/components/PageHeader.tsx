@@ -63,21 +63,24 @@ type PageBandProps = {
   /** id of the H1 (sections and articles below point their aria-labelledby at it) */
   titleId: string;
   title: string;
-  /** Reading-column pages (legal pages, guides, Für Firmen, 404): the band lines up with the 42rem column */
+  /** Reading-column pages (legal pages, guides, Für Firmen, 404): the band text keeps to the reading column's 42rem */
   narrow?: boolean;
-  /** Intro, byline, note … under the H1 */
+  /** Short line above the H1, set as a label (legal pages and guides: the date of the text, the byline) */
+  eyebrow?: ReactNode;
+  /** Intro, note … under the H1 */
   children?: ReactNode;
 };
 
 /**
  * Page head band of the static pages, the first child of <main>: the H1 and its intro on graphit, right under the graphit
- * header, in both themes (legal.css → .lg-band). Calm: no picture, no motion.
+ * header, in both themes (legal.css → .lg-band). Starts in column 1 like every title; calm: no picture, no motion.
  */
-export function PageBand({ titleId, title, narrow = false, children }: PageBandProps) {
+export function PageBand({ titleId, title, narrow = false, eyebrow, children }: PageBandProps) {
   return (
     <div className="lg-band">
       <div className="container">
-        <div className={narrow ? 'lg-col' : 'lg-band-inner'}>
+        <div className={narrow ? 'lg-band-inner lg-band-narrow' : 'lg-band-inner'}>
+          {eyebrow && <p className="label lg-band-label">{eyebrow}</p>}
           <h1 id={titleId}>{title}</h1>
           {children}
         </div>

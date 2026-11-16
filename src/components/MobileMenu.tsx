@@ -3,7 +3,7 @@ import { cta, menu, nav } from '../content';
 import { pageHref } from '../lib/links';
 import { scrollToHash } from '../lib/motion';
 
-/** Landing page only: full-height paper sheet under the header for narrow layouts. Modal: the page behind is inert.
+/** Landing page only: full-height sheet on the page surface under the header for narrow layouts. Modal: the page behind is inert.
     Same links as the header (content.ts → nav); the static pages use the no-JS menu in PageHeader. */
 export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);

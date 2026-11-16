@@ -12,10 +12,9 @@ const TRACKS: { key: TrackKey; role: Role; cta: string; btn: string }[] = [
 ];
 
 const NARROW = '(max-width: 960px)';
-/** Screen-reader context for each step heading. Proposed as howItWorks.stepLabel in content.ts. */
 
 /**
- * Two tracks, one process. Desktop: side by side. Phones: a tab switch shows one track at a time.
+ * Two tracks, one process, each a card. Desktop: side by side. Phones: a pill tab switch shows one track at a time.
  * The server and the first client render are identical (both tracks, switch hidden), so without JS
  * both tracks simply stack. Once html.js is set before first paint (index.html), CSS shows the phone
  * layout before hydration and React only adds roles, aria-selected and data-active, so nothing moves.
@@ -61,7 +60,7 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
         </header>
 
         <div className="how-switch-wrap" hidden={!tabs}>
-          <p className="how-switch-label" id="how-switch-label">{howItWorks.switchLabel}</p>
+          <p className="label how-switch-label" id="how-switch-label">{howItWorks.switchLabel}</p>
           <div className="how-switch" role="tablist" aria-labelledby="how-switch-label">
             {TRACKS.map((t, i) => {
               const selected = active === t.key;
@@ -99,7 +98,7 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
                 data-reveal=""
                 data-scroll="group"
               >
-                <p className="how-label" id={`how-label-${t.key}`}>{track.label}</p>
+                <p className="label how-label" id={`how-label-${t.key}`}>{track.label}</p>
                 <ol className="how-steps" role="list" aria-labelledby={`how-label-${t.key}`}>
                   {track.steps.map((step, i) => (
                     <li key={step.title} className="how-step" style={{ '--i': i } as CSSProperties}>

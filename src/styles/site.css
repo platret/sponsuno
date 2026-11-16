@@ -18,9 +18,7 @@
   --fs-small: 0.875rem;
   --fs-label: 0.75rem;
 
-  --radius-sm: 8px;
-  --radius-lg: 16px;
-  --radius-pill: 999px;
+  --radius-lg: var(--radius);
   --shadow-card: none; /* the design system has no shadows: cards are a 1 px border on their surface */
 }
 @media (max-width: 760px) { :root { --header-h: 64px; } }

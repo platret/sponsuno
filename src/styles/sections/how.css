@@ -1,30 +1,30 @@
-/* Ablauf: two tracks of four steps. Desktop side by side; phones switch between them with tabs.
-   The brass line between the numerals echoes the hero match line and draws once per track. */
+/* Ablauf: two tracks of four steps, each a Kalk card (1 px rule, radius 16, no shadow) on the paper band.
+   Desktop side by side; phones switch between them with pill tabs. The brass line between the numerals
+   draws once per track; both buttons line up at the foot of their cards. */
 
 .how-tracks {
-  --how-gutter: clamp(2rem, .5rem + 3.5vw, 4.5rem);
-  --how-num: 44px;    /* numeral circle */
+  --how-pad: clamp(1.5rem, .75rem + 2vw, 2.5rem); /* card padding: 40 px on desktop */
+  --how-num: 40px;    /* numeral circle */
   --how-col: 1.25rem; /* numeral to step text */
-  --how-row: 2.25rem; /* step to step */
+  --how-row: 2rem;    /* step to step */
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
 }
 
-.how-track { display: flex; flex-direction: column; min-width: 0; }
-.how-track-seeker { padding-right: var(--how-gutter); }
-.how-track-sponsor { padding-left: var(--how-gutter); border-left: 1px solid var(--line); }
-
-/* Track label: heads its column, so it sits above the step titles in size, with a short brass-dark rule */
-.how-label {
-  display: flex; align-items: center; gap: .75rem;
-  margin-bottom: 2rem;
-  font-size: var(--fs-lead); font-weight: 600; line-height: 1.3; color: var(--heading);
+.how-track {
+  display: flex; flex-direction: column; min-width: 0;
+  padding: var(--how-pad);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-alt);
 }
-.how-label::before { content: ""; width: 28px; height: 1px; background: var(--accent-text); flex: none; }
+
+/* Track label: the design-system .label (uppercase, 0.15em, accent colour) heading its card */
+.how-label { margin-bottom: 2rem; }
 
 /* ---------- Steps ---------- */
 
-.how-steps { display: grid; gap: var(--how-row); margin-bottom: 2.75rem; }
+.how-steps { display: grid; gap: var(--how-row); margin-bottom: 2.5rem; }
 
 .how-step {
   position: relative;
@@ -44,20 +44,20 @@
   display: grid; place-items: center;
   width: var(--how-num); height: var(--how-num);
   border: 1px solid var(--brass); border-radius: 50%;
-  background: var(--bg);
-  font: 600 1.75rem/1 var(--display); color: var(--accent-text);
-  font-variant-numeric: lining-nums;
-  padding-bottom: 3px; /* optical centring: Cormorant figures sit high on their line box */
+  background: var(--bg-alt);
+  font: 700 1rem/1 var(--display); color: var(--heading);
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
-.how-step-body { padding-top: .55rem; }
+/* Centres the first line of the H3 (1.25rem x 1.3) on the 40 px circle */
+.how-step-body { padding-top: calc((var(--how-num) - 1.625rem) / 2); }
 .how-step-body p { margin-top: .4rem; max-width: 30rem; font-size: 1rem; line-height: 1.6; color: var(--text); }
 
-.how-cta { align-self: flex-start; margin-top: auto; margin-left: calc(var(--how-num) + var(--how-col)); }
+.how-cta { align-self: flex-start; margin-top: auto; }
 
-/* Firmen track only: two quiet links (demo cockpit, /fuer-firmen/) between the steps and the button. They sit above
-   the button, so margin-top: auto still lines both buttons up at the foot of their columns. */
-.how-more { display: grid; gap: .1rem; margin: -1.5rem 0 1.75rem calc(var(--how-num) + var(--how-col)); }
+/* Firmen track only: two quiet links (demo cockpit, /fuer-firmen/) between the steps and the button, on the
+   step text's axis. They sit above the button, so margin-top: auto still lines both buttons up at the foot. */
+.how-more { display: grid; gap: .1rem; margin: -1.25rem 0 1.5rem calc(var(--how-num) + var(--how-col)); }
 .how-more-link { min-height: 44px; font-size: var(--fs-small); color: var(--heading); }
 .how-more-link svg { flex: none; color: var(--accent-text); }
 
@@ -87,7 +87,7 @@
       animation-range: cover 25vh cover 55vh;
     }
 
-    /* .how-num is position: relative; z-index: 1, so the disc sits above its page-surface fill, under the numeral */
+    /* .how-num is position: relative; z-index: 1, so the disc sits above its card-coloured fill, under the numeral */
     .scroll-fx .how-num::after {
       content: "";
       position: absolute;
@@ -112,43 +112,38 @@
 /* ---------- Phone switch ---------- */
 
 .how-switch-wrap[hidden] { display: none; }
-.how-switch-wrap { margin-bottom: 2.25rem; }
-.how-switch-label { margin-bottom: .6rem; font-size: var(--fs-small); color: var(--text); }
+.how-switch-wrap { margin-bottom: 1.5rem; }
+.how-switch-label { margin-bottom: .75rem; }
 
 .how-switch {
   display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 4px;
   max-width: 30rem; padding: 4px;
-  border: 1px solid var(--line); border-radius: 12px;
+  border: 1px solid var(--line); border-radius: var(--radius-pill);
   background: var(--bg-alt);
 }
 .how-tab {
-  min-height: 44px; padding: .5rem .75rem;
-  border: 0; border-radius: 8px; cursor: pointer;
+  min-height: 44px; padding: .5rem 1rem;
+  border: 0; border-radius: var(--radius-pill); cursor: pointer;
   background: transparent; color: var(--heading);
-  font-size: .9375rem; font-weight: 600; line-height: 1.25;
+  font-size: .875rem; font-weight: 600; line-height: 1.25;
   transition: background-color .2s ease, color .2s ease;
 }
 @media (hover: hover) {
-  .how-tab:hover:not([aria-selected="true"]) { background: color-mix(in srgb, var(--heading) 5%, transparent); }
+  .how-tab:hover:not([aria-selected="true"]) { background: color-mix(in srgb, var(--heading) 6%, transparent); }
 }
 .how-tab[aria-selected="true"] { background: var(--btn-bg); color: var(--btn-fg); }
-.how-tab:focus-visible { outline-offset: 2px; }
+.how-tab:focus-visible { outline-offset: 2px; border-radius: var(--radius-pill); }
 
 /* ---------- Responsive ---------- */
 
 @media (max-width: 960px) {
+  /* Without JS (or if the app never starts) both cards stack */
   .how-tracks { grid-template-columns: minmax(0, 1fr); }
-  .how-track-seeker { padding-right: 0; }
-  /* Without JS (or if the app never starts) both tracks stack, separated by a hairline */
-  .how-track-sponsor { padding-left: 0; border-left: 0; margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--line); }
 
   /* Phone switch: one track at a time. After hydration React drives it with data-active; before
      hydration html.js (set before first paint) gives the same layout, so hydration moves nothing.
      html.reveal-all means the app never started, so the stacked no-JS layout stays. */
   .js:not(.reveal-all) .how-switch-wrap[hidden] { display: block; }
-
-  .how-tracks[data-active] .how-track-sponsor,
-  .js:not(.reveal-all) .how-track-sponsor { margin-top: 0; padding-top: 0; border-top: 0; }
 
   .how-tracks[data-active="seeker"] .how-track-sponsor,
   .how-tracks[data-active="sponsor"] .how-track-seeker,
@@ -163,9 +158,9 @@
 }
 
 @media (max-width: 600px) {
-  .how-tracks { --how-row: 2rem; --how-col: 1rem; }
-  .how-steps { margin-bottom: 2.25rem; }
-  .how-cta { margin-left: 0; align-self: stretch; }
+  .how-tracks { --how-row: 1.75rem; --how-col: 1rem; }
+  .how-steps { margin-bottom: 2rem; }
+  .how-cta { align-self: stretch; }
   .how-more { margin-left: 0; }
   .how-step-body p { font-size: .9375rem; }
 }

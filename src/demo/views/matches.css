@@ -12,7 +12,7 @@
   padding: clamp(1rem, 2vw, 1.35rem) clamp(1rem, 2.2vw, 1.5rem);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: linear-gradient(135deg, var(--paper), #F7F4EC);
+  background: var(--paper);
 }
 .mt-filters-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 32px; }
 .mt-filters-title { font-size: 1.25rem; }
@@ -117,10 +117,10 @@
   display: flex; flex-direction: column; gap: 1rem;
   padding: clamp(1.1rem, 2.2vw, 1.5rem);
   border: 1px solid var(--rule); border-radius: var(--radius);
-  background: linear-gradient(135deg, var(--paper), #F7F4EC);
-  transition: border-color .25s ease, box-shadow .35s var(--ease-out);
+  background: var(--paper);
+  transition: border-color .25s ease;
 }
-.mt-card:hover { border-color: var(--brass-light); box-shadow: 0 18px 40px -28px rgba(29, 33, 37, .45); }
+.mt-card:hover { border-color: rgba(29, 33, 37, .45); }
 .mt-card.is-hidden { background: var(--paper); }
 .mt-card.is-hidden .ui-avatar { filter: grayscale(.7); opacity: .75; }
 
@@ -130,9 +130,8 @@
 .mt-card-meta { margin-top: .2rem; font-size: .875rem; color: var(--ink); }
 .mt-rank {
   position: absolute; top: .85rem; right: 1.1rem;
-  font-family: var(--display); font-weight: 600; font-size: 1.75rem; line-height: 1;
+  font-family: var(--display); font-weight: 700; letter-spacing: var(--display-tracking); font-size: 1.75rem; line-height: 1;
   color: var(--brass-dark);
-  font-variant-numeric: lining-nums;
 }
 
 .mt-card-score { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
@@ -186,9 +185,9 @@
 .mt-note {
   display: flex; align-items: flex-start; gap: 1rem;
   margin-top: .5rem; padding: 1.1rem 1.25rem;
-  border-left: 2px solid var(--brass);
-  border-radius: 0 12px 12px 0;
-  background: rgba(201, 161, 91, .1);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--kalk-2);
   max-width: 52rem;
 }
 .mt-note-icon { margin-top: .15rem; }
@@ -240,7 +239,6 @@
 .mt-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
 .mt-tags .ui-badge { font-size: .8125rem; padding: .3rem .7rem; }
 
-.mt-next { box-shadow: 0 18px 44px -32px rgba(29, 33, 37, .5); }
 .mt-next-text { font-size: .9375rem; line-height: 1.6; margin-bottom: 1rem; }
 .mt-next .ui-btn { width: 100%; }
 .mt-next-buttons { display: grid; gap: .5rem; }

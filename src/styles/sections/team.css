@@ -1,113 +1,102 @@
-/* Team: kalk, between FAQ (paper) and the graphit waitlist. Four founders in a row, each with a round
-   portrait: a monogram (Cormorant initials, kalk on graphit, brass hairline ring) until a real photo exists.
-   A photo uses the same circle and ring. No cards.
-   Motion (DESIGN.md -> Motion, dormant on /ueber-uns/): founders rise with stagger, their hairlines draw from the left,
-   portraits zoom in (.86 -> 1); the project status head and steps rise. Firefox keeps the data-reveal fade;
-   reduced motion is static. */
+/* Team (/ueber-uns/): kalk band under the page head band. Four founders as cards (radius 16, 1 px border, no
+   shadow), each with a round portrait: a monogram (Schibsted 700 initials, kalk on the 135° graphit gradient) until
+   a real photo exists; a photo uses the same disc. Then "Stand des Projekts" as one graphit card: the head on the
+   left, the steps as a short vertical sequence on the right, with uppercase labels for date and state.
+   Motion (DESIGN.md -> Motion, dormant on /ueber-uns/): founders rise with stagger, portraits zoom in (.86 -> 1);
+   the project status head and steps rise. Firefox keeps the data-reveal fade; reduced motion is static. */
 
 .team-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  gap: clamp(1rem, .5rem + 1.4vw, 2rem);
 }
 
-.team-member { padding-top: 2rem; border-top: 1px solid var(--line); }
+.team-member {
+  padding: clamp(1.25rem, .75rem + 1.4vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
 
 .team-portrait {
   display: block;
-  width: 96px; height: 96px;
+  width: 88px; height: 88px;
   border-radius: 50%;
-  /* Messing hairline ring with an kalk gap, drawn outside the circle (no layout shift). The 5px inset
-     aligns the ring's outer edge with the hairline, name and focus text of the column. */
-  margin-left: 5px;
-  box-shadow: 0 0 0 4px var(--bg-alt), 0 0 0 5px var(--brass);
 }
 .team-mono {
   display: grid; place-items: center;
-  background: var(--graphit);
+  background: var(--grad-dark);
+  border: 1px solid var(--card-dark-line);
   color: var(--kalk);
-  font: 600 2.25rem/1 var(--display);
-  letter-spacing: .02em;
-  font-variant-numeric: lining-nums;
+  font: 700 2rem/1 var(--display);
+  letter-spacing: var(--display-tracking);
 }
 .team-photo { object-fit: cover; background: var(--graphit); }
-/* zoom-in tuning: grows in place from its centre (the ring scales with it). Scale only (sfx-scale, below):
-   the member around it already fades in, and a second fade turned the graphit disc grey mid-scroll. */
+/* zoom-in tuning: grows in place from its centre. Scale only (sfx-scale, below): the member around it already
+   fades in, and a second fade turned the graphit disc grey mid-scroll. */
 .team-portrait { --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%; }
 
-.team-name { margin-top: 1.6rem; }
-.team-focus { margin-top: .35rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); max-width: 18rem; }
+.team-name { margin-top: 2rem; }
+.team-focus { margin-top: .5rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); max-width: 18rem; }
 
 /* Quiet stagger for the reveal (only applies while motion is on) */
 .motion .team-member[data-reveal]:nth-child(2) { transition-delay: .06s; }
 .motion .team-member[data-reveal]:nth-child(3) { transition-delay: .12s; }
 .motion .team-member[data-reveal]:nth-child(4) { transition-delay: .18s; }
 
-/* Scroll-driven: the hairline becomes a ::before that draws from the left on the member's own timeline,
-   in step with its rise (same stagger). Static styles stay the final state: without the animation (reduced
-   motion switched on mid-visit) the ::before is simply a full 1px rule where the border was. */
-.scroll-fx .team-member {
-  position: relative;
-  border-top-color: transparent;
-  view-timeline: --team-member block; view-timeline-inset: 0px;
-}
-.scroll-fx .team-member::before {
-  content: "";
-  position: absolute;
-  top: -1px; left: 0; right: 0;
-  height: 1px;
-  background: var(--line);
-  transform-origin: 0 50%;
-  animation: sfx-draw-x linear both;
-  animation-duration: auto;
-  animation-timeline: --team-member;
-  animation-range:
-    cover calc(var(--scroll-i, 0) * var(--scroll-stagger))
-    cover calc(var(--scroll-dist) + var(--scroll-i, 0) * var(--scroll-stagger));
-}
-
-/* Stand des Projekts: under the founders, above a hairline. Head in the first column, the steps beside it as
-   a short vertical sequence: a hairline runs through the markers (filled = done, ring = planned, dashed line
+/* Stand des Projekts: one graphit card under the founders (graphit by design in both themes). Head in the first
+   column, the steps beside it: a hairline runs through the markers (filled = done, ring = planned, dashed line
    after planned steps). The state is also written out; the markers are decorative. */
 .team-status {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
-  margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
-  padding-top: 2rem;
-  border-top: 1px solid var(--line);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 1rem + 2vw, 3rem);
+  margin-top: clamp(1rem, .5rem + 1.4vw, 2rem);
+  padding: clamp(1.5rem, 1rem + 2vw, 3rem);
+  border: 1px solid var(--card-dark-line);
+  border-radius: var(--radius);
+  background: var(--grad-dark);
+  color: var(--steel);
 }
-.team-status-intro { margin-top: .6rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
-.team-status-intro a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }
+.team-status .pg-h3 { color: var(--kalk); }
+.team-status-intro { margin-top: .75rem; font-size: var(--fs-small); line-height: 1.6; color: var(--steel); }
+.team-status-intro a {
+  color: var(--kalk); font-weight: 600;
+  text-decoration-color: var(--brass); text-underline-offset: 3px;
+}
+.team-status-intro a:hover { text-decoration-thickness: 2px; }
 
-.team-steps { grid-column: 2 / -1; max-width: 38rem; display: grid; gap: 1.5rem; }
-.team-step { position: relative; padding-left: 1.75rem; }
-/* Line to the next marker, 1px clear of both: starts below this marker (.375rem + 9px), ends above the next one
-   (list gap 1.5rem + marker offset .375rem) */
+.team-steps { grid-column: 2 / -1; max-width: 40rem; display: grid; gap: 1.75rem; }
+.team-step { position: relative; padding-left: 2rem; }
+/* Line to the next marker, 1px clear of both: starts below this marker (.25rem + 10px), ends above the next one
+   (list gap 1.75rem + marker offset .25rem) */
 .team-step::before {
   content: "";
   position: absolute;
-  left: 4px; top: 1rem; bottom: calc(1px - 1.875rem);
-  border-left: 1px solid var(--line);
+  left: 4.5px; top: calc(.25rem + 11px); bottom: calc(1px - 2rem);
+  border-left: 1px solid var(--card-dark-line);
 }
 .team-step:not(.is-done)::before { border-left-style: dashed; }
 .team-step:last-child::before { display: none; }
-/* Marker, centred on the meta line */
+/* Marker, centred on the label line */
 .team-step::after {
   content: "";
   position: absolute;
-  left: 0; top: .375rem;
-  width: 9px; height: 9px;
+  left: 0; top: .25rem;
+  width: 10px; height: 10px;
   border-radius: 50%;
-  border: 1px solid var(--accent-text);
-  background: var(--bg-alt);
+  border: 1px solid var(--brass);
 }
-.team-step.is-done::after { background: var(--accent-text); }
+.team-step.is-done::after { background: var(--brass); }
 
-.team-step-meta { display: flex; flex-wrap: wrap; gap: .25rem .75rem; font-size: var(--fs-small); line-height: 1.4; }
-.team-step-when { font-weight: 600; color: var(--accent-text); font-variant-numeric: lining-nums; }
-.team-step-state { color: var(--text); }
-.team-step-text { margin-top: .3rem; color: var(--text); line-height: 1.55; }
+.team-step-meta {
+  display: flex; flex-wrap: wrap; gap: .25rem 1rem;
+  font-size: var(--fs-label); font-weight: 600; line-height: 1.5;
+  letter-spacing: var(--label-tracking); text-transform: uppercase;
+}
+.team-step-when { color: var(--brass); font-variant-numeric: tabular-nums; }
+.team-step-state { color: var(--steel); }
+.team-step-text { margin-top: .4rem; color: var(--kalk); line-height: 1.55; }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -115,14 +104,9 @@
   }
 }
 
-/* Forced colours (Windows High Contrast): the ::before would be forced to Canvas and cover the forced border */
-@media (forced-colors: active) {
-  .scroll-fx .team-member::before { display: none; }
-}
-
 @media (max-width: 960px) {
-  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
-  .team-status { grid-template-columns: minmax(0, 1fr); row-gap: 1.75rem; }
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .team-status { grid-template-columns: minmax(0, 1fr); }
   .team-status-head { max-width: 36rem; }
   .team-steps { grid-column: auto; }
   .motion .team-member[data-reveal]:nth-child(n) { transition-delay: 0s; }
@@ -133,9 +117,9 @@
 
 @media (max-width: 600px) {
   /* Phones keep two columns, so they keep the row stagger (the token is 0 on phones) */
-  .team-grid { column-gap: 1.25rem; row-gap: 2rem; --scroll-stagger: 4vh; }
-  .team-member { padding-top: 1.5rem; }
-  .team-portrait { width: 72px; height: 72px; }
-  .team-mono { font-size: 1.75rem; }
+  .team-grid { gap: .75rem; --scroll-stagger: 4vh; }
+  .team-member { padding: 1.25rem; }
+  .team-portrait { width: 64px; height: 64px; }
+  .team-mono { font-size: 1.5rem; }
   .team-name { margin-top: 1.25rem; font-size: 1.0625rem; }
 }

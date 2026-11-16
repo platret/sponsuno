@@ -13,12 +13,13 @@ import path from 'node:path';
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib';
 
 /** Budgets in bytes, gzip -9. Measured 2026-11-10: 84,658 (React 67,543 + main 17,115) / 15,549 / 89,820 (#/ki-manager;
-    #/uebersicht 85,176) / 10,469 (the topic pages with sections-*.css; the guides and legal pages 6,532). */
+    #/uebersicht 85,176) / 10,469 (the topic pages with sections-*.css; the guides and legal pages 6,532). Graphit redesign
+    (2026-11-16): the topic pages 11,5xx (cards, labels and the band loop), budget raised to 12,700. */
 export const BUDGETS = {
   homeJs: 93_000,
   homeCss: 17_100,
   demoJs: 98_800,
-  staticCss: 11_500,
+  staticCss: 12_700,
 };
 
 const gzip = (buf) => gzipSync(buf, { level: 9 }).length;
