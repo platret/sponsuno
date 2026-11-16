@@ -5,17 +5,15 @@
 </p>
 
 <p align="center">
-  <a href="https://sponsuno.ch"><img src="https://img.shields.io/badge/Live--Demo-ansehen-C4A36B?style=for-the-badge&labelColor=0B1830" alt="Live-Demo ansehen"></a>
-  <img src="https://img.shields.io/badge/Status-im%20Aufbau-1D2F52?style=for-the-badge&labelColor=0B1830" alt="Status: im Aufbau">
-  <img src="https://img.shields.io/badge/Start-Deutschschweiz-B08D57?style=for-the-badge&labelColor=0B1830" alt="Start: Deutschschweiz">
+  <a href="https://sponsuno.ch"><img src="https://img.shields.io/badge/Live-ansehen-C9A15B?style=for-the-badge&labelColor=1D2125" alt="Live ansehen"></a>
+  <img src="https://img.shields.io/badge/Status-im%20Aufbau-2E343A?style=for-the-badge&labelColor=1D2125" alt="Status: im Aufbau">
+  <img src="https://img.shields.io/badge/Start-Deutschschweiz-C9A15B?style=for-the-badge&labelColor=1D2125" alt="Start: Deutschschweiz">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19-F3EFE6?style=flat-square&labelColor=1D2F52" alt="React 19">
-  <img src="https://img.shields.io/badge/TypeScript-strict-F3EFE6?style=flat-square&labelColor=1D2F52" alt="TypeScript strict">
-  <img src="https://img.shields.io/badge/Vite-8-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Vite 8">
-  <img src="https://img.shields.io/badge/WebGL-eigener%20Shader-F3EFE6?style=flat-square&labelColor=1D2F52" alt="WebGL-Shader">
-  <img src="https://img.shields.io/badge/Three.js-r187-F3EFE6?style=flat-square&labelColor=1D2F52" alt="Three.js r187">
-  <img src="https://img.shields.io/badge/GSAP-3.15-F3EFE6?style=flat-square&labelColor=1D2F52" alt="GSAP 3.15">
+  <img src="https://img.shields.io/badge/React-19-F5F3EE?style=flat-square&labelColor=2E343A" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-strict-F5F3EE?style=flat-square&labelColor=2E343A" alt="TypeScript strict">
+  <img src="https://img.shields.io/badge/Vite-8-F5F3EE?style=flat-square&labelColor=2E343A" alt="Vite 8">
+  <img src="https://img.shields.io/badge/Cloudflare-Workers-F5F3EE?style=flat-square&labelColor=2E343A" alt="Cloudflare Workers">
 </p>
 
 <p align="center">
@@ -38,55 +36,22 @@
 
 <br>
 
-## Der Moment
-
-Eine Mountainbikerin aus dem Zürcher Oberland sucht Material, ein Velogeschäft aus derselben Region möchte sponsern. Ein goldener Faden läuft von der einen Karte zur anderen und hakt dabei Region, Unterstützungsart, Branche und Budget ab. Im Hintergrund fliesst ein Seiden-Shader in Navy und Gold, der auf die Maus reagiert.
-
-<p align="center">
-  <img src="docs/hero.gif" alt="Hero-Animation: Die Überschrift baut sich Wort für Wort auf, dann verbindet ein goldener Faden eine Sportlerin mit einem Sponsor und hakt vier Kriterien ab." width="100%">
-</p>
-<p align="center"><sub>Aufgenommen auf der Live-Seite. Beispiel mit fiktiven Angaben und KI-generiertem Symbolbild.</sub></p>
-
-<br>
-
 ## Was drin steckt
+
+Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf, Warteliste), fünf Themenseiten, vier Ratgeber, Impressum und Datenschutz, eine klickbare Produktvorschau mit Beispieldaten und eine (noch ruhende) Warteliste mit Double-Opt-in. Helles und dunkles Design, auf allen Seiten.
 
 <table>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/steps.jpg" alt="Vier Schritte mit grossen goldenen Ziffern und einer goldenen Linie">
-      <h3>Ablauf mit Goldlinie</h3>
-      Die Linie füllt sich beim Scrollen, jeder Punkt leuchtet auf, sobald sie ihn erreicht. Die Ziffern rollen von unten ins Bild.
-    </td>
-    <td width="50%" valign="top">
-      <img src="docs/audiences.jpg" alt="Zwei Karten: für Sportlerinnen, Sportler und Vereine sowie für Sponsoren">
-      <h3>Zwei Seiten, zwei Karten</h3>
-      Eine helle und eine dunkle Karte für die beiden Seiten einer Partnerschaft. Beide kippen leicht mit der Maus und tragen einen Lichtreflex.
-    </td>
+    <td width="50%"><img src="docs/audiences.jpg" alt="Für wen Sponsuno gemacht ist: vier Fotokarten für Sportlerinnen und Sportler, Sportvereine, Kulturvereine und Firmen"><br><sub>Für wen: vier Fotokarten auf Kalk</sub></td>
+    <td width="50%"><img src="docs/how.jpg" alt="So funktioniert Sponsuno: zwei Karten mit je vier nummerierten Schritten"><br><sub>Ablauf: zwei Spuren mit je vier Schritten</sub></td>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/ki.jpg" alt="KI-Sponsoringmanager mit Erinnerung, Fortschrittsbalken und Entwurf">
-      <h3>KI-Sponsoringmanager</h3>
-      Das Panel baut sich beim Hinscrollen auf: Erinnerung, Gegenleistungen mit Fortschritt, und ein Entwurf, der sich selbst tippt. Ein Lichtstreifen umrundet den Rahmen.
-    </td>
-    <td width="50%" valign="top">
-      <img src="docs/gold.jpg" alt="Goldener Abschnitt mit flüssigem Gold-Shader und drei hellen Karten">
-      <h3>Flüssiges Gold</h3>
-      Derselbe Shader in der Goldpalette, ruhiger hinter dem Text. Die Karten folgen dem CD: Elfenbein auf Gold, ohne Rahmen.
-    </td>
+    <td width="50%"><img src="docs/waitlist.jpg" alt="Warteliste im dunklen Design: Titel links, Formular mit Rollenauswahl rechts, darunter der Footer mit der grossen Wortmarke"><br><sub>Warteliste und Footer im dunklen Design</sub></td>
+    <td width="50%"><img src="docs/kosten.jpg" alt="Themenseite Kosten: grafitfarbener Seitenkopf, darunter die Übersicht der Konditionen"><br><sub>Themenseite «Kosten»</sub></td>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/waitlist.jpg" alt="Warteliste mit Rollenauswahl und einem goldgerahmten 3D-Logo">
-      <h3>Das Logo in 3D</h3>
-      Das Icon wird direkt aus dem Logo-SVG extrudiert: Navy-Emaille, Goldrahmen, Goldpunkt, schwebender Goldstaub. Nach der Anmeldung dreht es sich einmal und sprüht Funken.
-    </td>
-    <td width="50%" valign="top">
-      <img src="docs/footer.jpg" alt="Footer mit grosser Wortmarke Sponsuno, «uno» in Gold">
-      <h3>Footer mit Wortmarke</h3>
-      «Sponsuno.» über die ganze Breite. Über das «uno» zieht ein Goldglanz, ein Licht folgt dem Mauszeiger, und die Buchstaben steigen beim Scrollen auf.
-    </td>
+    <td width="50%"><img src="docs/guide.jpg" alt="Ratgeber «Sponsoren finden» im dunklen Design mit nummeriertem Inhaltsverzeichnis"><br><sub>Ratgeber mit Inhaltsverzeichnis</sub></td>
+    <td width="50%"><img src="docs/demo.jpg" alt="Produktvorschau: Übersicht der Sportlerin mit Terminen, Profil und KI-Manager"><br><sub>Produktvorschau mit Beispieldaten</sub></td>
   </tr>
 </table>
 
@@ -94,9 +59,9 @@ Eine Mountainbikerin aus dem Zürcher Oberland sucht Material, ein Velogeschäft
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="docs/m-hero.jpg" alt="Mobile Startansicht" width="100%"><br><sub>Kompakter Header mit Wartelisten-Button</sub></td>
-    <td align="center" width="33%"><img src="docs/m-match.jpg" alt="Mobile Match-Ansicht" width="100%"><br><sub>Das Match startet, sobald es im Bild ist</sub></td>
-    <td align="center" width="33%"><img src="docs/m-menu.jpg" alt="Mobiles Vollbild-Menü" width="100%"><br><sub>Vollbild-Menü als modaler Dialog</sub></td>
+    <td align="center" width="33%"><img src="docs/m-hero.jpg" alt="Mobile Startansicht" width="100%"><br><sub>Hero mit Produktbild</sub></td>
+    <td align="center" width="33%"><img src="docs/m-guide.jpg" alt="Mobiler Ratgeber" width="100%"><br><sub>Ratgeber</sub></td>
+    <td align="center" width="33%"><img src="docs/m-demo.jpg" alt="Mobiles Sponsor-Cockpit der Vorschau" width="100%"><br><sub>Sponsor-Cockpit</sub></td>
   </tr>
 </table>
 
@@ -104,47 +69,29 @@ Eine Mountainbikerin aus dem Zürcher Oberland sucht Material, ein Velogeschäft
 
 ## Technik
 
-Vite, React 19 und TypeScript im Strict-Modus. Die Seite wird beim Build vorgerendert, damit Inhalt und Suchmaschinen nicht auf JavaScript warten müssen; React übernimmt danach im Browser. Alle Texte stehen typisiert in [`src/content.ts`](src/content.ts).
-
-| Teil | Umsetzung |
-| --- | --- |
-| Seiden-Shader | Eigener WebGL-Fragment-Shader mit Domain-Warping ([`src/lib/silk.ts`](src/lib/silk.ts)). Rendert mit 42 bis 60 % der Auflösung, pausiert ausserhalb des Sichtfelds und in Hintergrund-Tabs. |
-| 3D-Emblem | Three.js, Logo-SVG per `SVGLoader` extrudiert, Studio-Licht über `RoomEnvironment` ([`src/lib/emblem.ts`](src/lib/emblem.ts)). Eigener Chunk, wird erst geladen, wenn man in die Nähe scrollt. |
-| Scroll-Choreografie | GSAP mit ScrollTrigger und `useGSAP`, sanftes Scrollen mit Lenis ([`src/lib/motion.ts`](src/lib/motion.ts)). |
-| Vorrendern | `renderToString` beim Build ([`src/entry-server.tsx`](src/entry-server.tsx), [`scripts/prerender.mjs`](scripts/prerender.mjs)), im Browser `hydrateRoot`. |
-| Hero-Match | SVG-Pfad mit `stroke-dashoffset`, der Funke folgt `getPointAtLength`. Jedes Kriterium hakt ab, wenn der Faden seine Zeile erreicht ([`src/lib/match.ts`](src/lib/match.ts)). |
-| Header | Schwebende Glas-Pille, goldener Marker gleitet zum aktiven Abschnitt, Fortschrittslinie, blendet sich beim Runterscrollen aus. |
-| Barrierefreiheit | Bei «Bewegung reduzieren» bleibt alles still. Menü als modaler Dialog mit `inert`, Laufband pausierbar, Fokus sichtbar, Fehlermeldungen werden vorgelesen. |
-
-### Gemessen
-
-Mobil mit vierfach gedrosselter CPU und Fast 4G, am 2. November 2026 (statische Vorgängerversion; die React-Version wird vorgerendert und hält dasselbe Ziel):
-
-| Largest Contentful Paint | Cumulative Layout Shift | Best Practices | SEO |
-| :---: | :---: | :---: | :---: |
-| **1,6 s** | **0,03** | **100** | **100** |
+Vite 8, React 19 und TypeScript im Strict-Modus, ohne UI- oder CSS-Framework. Jede Seite wird beim Build vorgerendert; die Themenseiten, Ratgeber und Rechtsseiten laden kein JavaScript. Bewegung läuft über CSS-Scroll-Timelines (`animation-timeline: view()`) mit ruhigem Ersatz bei «Bewegung reduzieren». Alle Texte stehen typisiert in [`src/content.ts`](src/content.ts). Details, Budgets und Regeln: [AGENTS.md](AGENTS.md).
 
 <br>
 
 ## Design-System
 
-Alles folgt dem Sponsuno CD Manual v1.0. Navy und Elfenbein tragen die Seite, Gold setzt Akzente.
+Alles folgt dem Sponsuno Design-System v1.0 «Graphit, Messing, Kalk»: Graphit trägt, Kalk gibt Raum, Messing setzt Akzente. Laut ist nur die Schlaufe der Wortmarke.
 
 <p>
-  <img src="https://img.shields.io/badge/Navy-0B1830-0B1830?style=for-the-badge&labelColor=0B1830" alt="Navy #0B1830">
-  <img src="https://img.shields.io/badge/Navy%20mittel-1D2F52-1D2F52?style=for-the-badge&labelColor=1D2F52" alt="Navy mittel #1D2F52">
-  <img src="https://img.shields.io/badge/Elfenbein-F3EFE6-F3EFE6?style=for-the-badge&labelColor=0B1830" alt="Elfenbein #F3EFE6">
-  <img src="https://img.shields.io/badge/Gold-B08D57-B08D57?style=for-the-badge&labelColor=0B1830" alt="Gold #B08D57">
-  <img src="https://img.shields.io/badge/Gold%20hell-C4A36B-C4A36B?style=for-the-badge&labelColor=0B1830" alt="Gold hell #C4A36B">
-  <img src="https://img.shields.io/badge/Gold%20dunkel-6E5228-6E5228?style=for-the-badge&labelColor=0B1830" alt="Gold dunkel #6E5228">
+  <img src="https://img.shields.io/badge/Graphit-1D2125-1D2125?style=for-the-badge&labelColor=1D2125" alt="Graphit #1D2125">
+  <img src="https://img.shields.io/badge/Graphit%20hell-2E343A-2E343A?style=for-the-badge&labelColor=2E343A" alt="Graphit hell #2E343A">
+  <img src="https://img.shields.io/badge/Messing-C9A15B-C9A15B?style=for-the-badge&labelColor=1D2125" alt="Messing #C9A15B">
+  <img src="https://img.shields.io/badge/Messing%20dunkel-74592A-74592A?style=for-the-badge&labelColor=1D2125" alt="Messing dunkel #74592A">
+  <img src="https://img.shields.io/badge/Kalk-F5F3EE-F5F3EE?style=for-the-badge&labelColor=1D2125" alt="Kalk #F5F3EE">
+  <img src="https://img.shields.io/badge/Kalk%20dunkel-E6E1D6-E6E1D6?style=for-the-badge&labelColor=1D2125" alt="Kalk dunkel #E6E1D6">
 </p>
 
 | Rolle | Schrift |
 | --- | --- |
-| Titel, Kartentitel, Wortmarke | **Cormorant Garamond** 600 und 700 |
-| Fliesstext, Beschriftungen, Buttons | **Manrope** 400 und 600 |
+| Titel | **Schibsted Grotesk** 700, Laufweite −0,025 em |
+| Fliesstext, Buttons, Labels | **Schibsted Grotesk** 400 und 600; Labels in Versalien mit 0,15 em |
 
-Texte in Hochdeutsch mit Schweizer Schreibweise, sachlich und ohne Werbefloskeln. Was noch nicht entschieden ist, steht als offen da.
+Die Wortmarke «sponsuno»: u und n teilen sich einen Stamm und werden zur Schlaufe. Die Schlaufe allein ist Favicon und App-Icon. Texte in Hochdeutsch mit Schweizer Schreibweise, sachlich und ohne Werbefloskeln. Was noch nicht entschieden ist, steht als offen da. Einzelheiten: [DESIGN.md](DESIGN.md).
 
 <br>
 
@@ -177,7 +124,7 @@ sponsuno/
 │   ├── pages.ts            Alle Seiten mit Titel und Beschreibung (Head-Tags, Sitemap)
 │   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match, Emblem
 │   ├── hooks/              Scroll-Reveals, Kippen, magnetische Buttons
-│   ├── lib/                motion.ts, match.ts, silk.ts (Shader), emblem.ts (3D)
+│   ├── lib/                motion.ts, links.ts, theme.ts, templates.ts, storyLayout.ts
 │   ├── styles/site.css     Design-Tokens aus dem CD und alle Styles
 │   └── assets/             Logos und Symbolbild
 ├── scripts/prerender.mjs   Vorrendern beim Build, Head-Tags und sitemap.xml
@@ -195,11 +142,7 @@ Deploy: Jeder Push auf `main` baut die Seite und veröffentlicht sie über Cloud
 
 ## Vor dem Launch
 
-- [ ] Warteliste an einen Dienst anbinden: Repository-Variable `VITE_WAITLIST_ENDPOINT` setzen (JSON-POST mit `{ rolle, email }`). Bis dahin speichert das Formular nichts.
-- [x] Impressum und Datenschutzerklärung (`/impressum/`, `/datenschutz/`). Offen: Postadresse und Kontakt-E-Mail; vor dem Freischalten der Warteliste den Abschnitt «Warteliste» anpassen.
-- [ ] Provisionsmodell festlegen: Höhe, Auslöser und welche Seite sie trägt sind noch offen.
-- [ ] 3D-Emblem und Wortmarken-Effekt mit dem Branding abstimmen (das CD sieht beim Logo keine Effekte vor).
-- [x] Handy, Tablet und Desktop, «Bewegung reduzieren», Lazy-Loading, Tastaturbedienung.
+Die aktuelle Liste steht in [AGENTS.md → Open before launch](AGENTS.md#open-before-launch): Warteliste mit Brevo, Provisionsmodell, Namens- und Markenprüfung, Freigabe des Design-Systems durch das Team, Fotos.
 
 <br>
 
@@ -209,14 +152,8 @@ Bevor du etwas änderst: [AGENTS.md](AGENTS.md) (Architektur, Regeln für Texte,
 
 <br>
 
-## Design-Referenzen
-
-Recherchiert über [Mobbin](https://mobbin.com): Function (Ablauf mit Serifen), Trawelt (grosse Schrittziffern), Upwork (Aufteilung nach Zielgruppen), Superhuman und Intercom (KI-Assistent mit Vorschau), Origin und Slash (dunkler Hero mit Serifentitel), Base (Warteliste).
-
-<br>
-
 <p align="center">
-  <img src="src/assets/Sponsuno_Icon.svg" alt="Sponsuno Icon" width="64">
+  <img src="docs/icon.svg" alt="Sponsuno Icon" width="64">
 </p>
 <p align="center">
   <sub>Team Sponsuno · Youngpreneurs-Programm · Start in der Deutschschweiz</sub>
