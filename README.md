@@ -153,7 +153,7 @@ Bevor du etwas änderst: [AGENTS.md](AGENTS.md) (Architektur, Regeln für Texte,
 <br>
 
 <p align="center">
-  <img src="src/assets/Sponsuno_Icon.svg" alt="Sponsuno Icon" width="64">
+  <img src="docs/icon.svg" alt="Sponsuno Icon" width="64">
 </p>
 <p align="center">
   <sub>Team Sponsuno · Youngpreneurs-Programm · Start in der Deutschschweiz</sub>
