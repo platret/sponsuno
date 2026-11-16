@@ -37,7 +37,7 @@ export function StickyCta() {
   return (
     <div className={`sticky-cta${show ? ' is-shown' : ''}`} aria-hidden={!show}>
       <p>{stickyCta.text}</p>
-      <a className="btn btn-sm btn-navy" href="#warteliste" tabIndex={show ? 0 : -1}>{stickyCta.button}</a>
+      <a className="btn btn-sm btn-graphit" href="#warteliste" tabIndex={show ? 0 : -1}>{stickyCta.button}</a>
     </div>
   );
 }

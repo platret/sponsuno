@@ -33,7 +33,7 @@
 .pg-end-more { margin-top: .75rem; max-width: 38rem; }
 .pg-end-more a {
   color: var(--heading); font-weight: 600;
-  text-decoration-color: var(--gold); text-underline-offset: 3px;
+  text-decoration-color: var(--brass); text-underline-offset: 3px;
 }
 .pg-end-more a:hover { text-decoration-thickness: 2px; }
 .pg-end-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 1.75rem; }
@@ -41,5 +41,5 @@
   display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
   font-weight: 600; color: var(--heading); text-decoration: none;
 }
-.pg-end-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+.pg-end-demo-label { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px; }
 .pg-end-demo:hover .pg-end-demo-label { text-decoration-thickness: 2px; }

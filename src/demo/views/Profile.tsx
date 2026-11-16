@@ -499,7 +499,7 @@ export default function Profile() {
                     onKeyDown={onOfferKey}
                     aria-describedby={describedBy(offerNote && ids.offerHint)}
                   />
-                  <Button variant="navy" icon="plus" onClick={() => addOffer(newOffer, true)}>Hinzufügen</Button>
+                  <Button variant="graphit" icon="plus" onClick={() => addOffer(newOffer, true)}>Hinzufügen</Button>
                 </div>
                 {offerNote && <p className="pf-error" id={ids.offerHint} role="alert">{offerNote}</p>}
               </div>
@@ -592,7 +592,7 @@ export default function Profile() {
               <Button variant="quiet" icon="reset" onClick={discard} aria-disabled={!dirty || undefined}>
                 <span className="pf-long">Änderungen verwerfen</span><span className="pf-short">Verwerfen</span>
               </Button>
-              <Button variant="gold" type="submit" icon="check" aria-disabled={!dirty || undefined}>Speichern</Button>
+              <Button variant="brass" type="submit" icon="check" aria-disabled={!dirty || undefined}>Speichern</Button>
             </div>
           </div>
         </form>
@@ -640,7 +640,7 @@ function Preview({ draft, showPhoto, headingId }: { draft: Draft; showPhoto: boo
     <Card tone="dark" className="pf-preview" title={<span id={headingId} tabIndex={-1} className="pf-preview-title">So sehen Sponsoren Ihr Profil</span>}>
       <div className="pf-pv-head">
         <figure className="pf-pv-avatar">
-          <Avatar name={name} src={showPhoto ? photo : undefined} size={76} tone="gold" />
+          <Avatar name={name} src={showPhoto ? photo : undefined} size={76} tone="brass" />
           {showPhoto && <figcaption>KI-generiertes Symbolbild</figcaption>}
         </figure>
         <div className="pf-pv-id">
@@ -657,7 +657,7 @@ function Preview({ draft, showPhoto, headingId }: { draft: Draft; showPhoto: boo
           <dt>Sucht</dt>
           <dd>
             {needs.length > 0
-              ? <span className="pf-pv-badges">{needs.map((n) => <Badge key={n} tone="gold">{n}</Badge>)}</span>
+              ? <span className="pf-pv-badges">{needs.map((n) => <Badge key={n} tone="brass">{n}</Badge>)}</span>
               : <span className="pf-pv-empty">Keine Angabe</span>}
           </dd>
         </div>

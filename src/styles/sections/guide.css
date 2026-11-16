@@ -1,15 +1,15 @@
 /* Guide pages (Ratgeber): the legal-page layout (legal.css) plus the blocks only guides use. Classes prefixed gd-.
-   No motion. On the page surface of the theme, so gold text is --accent-text (Gold dunkel / Gold hell, DESIGN.md → Colour). */
+   No motion. On the page surface of the theme, so brass text is --accent-text (Messing dunkel / Messing hell, DESIGN.md → Colour). */
 
-/* Launch note (/fuer-firmen/, in the page head band): a gold hairline on the left, small text */
+/* Launch note (/fuer-firmen/, in the page head band): a brass hairline on the left, small text */
 .gd-note {
   margin-top: 1.25rem;
   padding: .15rem 0 .15rem 1rem;
-  border-left: 2px solid var(--gold);
+  border-left: 2px solid var(--brass);
   font-size: var(--fs-small); line-height: 1.55; color: var(--text);
 }
 
-/* Numbered steps: numerals in Gold dunkel, same rhythm as .lg-list */
+/* Numbered steps: numerals in Messing dunkel, same rhythm as .lg-list */
 .gd-steps { margin-top: .9rem; padding-left: 1.5rem; list-style: decimal; }
 .gd-steps li { padding-left: .25rem; }
 .gd-steps li + li { margin-top: .5rem; }
@@ -49,7 +49,7 @@
 .gd-template-download svg { flex: none; color: var(--accent-text); }
 /* Label and size wrap inside their own box, so on phones the size lines up under the label, not under the icon */
 .gd-template-download-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .5rem; }
-.gd-template-download-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+.gd-template-download-label { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px; }
 .gd-template-download a:hover .gd-template-download-label { text-decoration-thickness: 2px; }
 .gd-template-download-info { font-size: .875rem; font-weight: 400; color: var(--text); }
 
@@ -63,7 +63,7 @@
   display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
   text-decoration: none;
 }
-.gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+.gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px; }
 .gd-cta-demo:hover .gd-cta-demo-label { text-decoration-thickness: 2px; }
 
 /* "Weiterlesen": the other guides, each with its description */
@@ -79,7 +79,7 @@
 .gd-related a { display: block; padding-block: .85rem; text-decoration: none; color: var(--text); }
 .gd-related-name {
   display: block; font-weight: 600; color: var(--heading);
-  text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px;
+  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px;
 }
 .gd-related a:hover .gd-related-name { text-decoration-thickness: 2px; }
 .gd-related-desc { display: block; margin-top: .25rem; font-size: var(--fs-small); line-height: 1.5; }
@@ -101,5 +101,5 @@
 /* Invitation to a talk under the closing buttons, set off by a hairline */
 .lg-section .pg-talk { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
 
-/* The launch note inside the navy page head band (/fuer-firmen/) */
-.lg-band .gd-note { color: var(--steel); border-left-color: var(--gold-light); }
+/* The launch note inside the graphit page head band (/fuer-firmen/) */
+.lg-band .gd-note { color: var(--steel); border-left-color: var(--brass-light); }

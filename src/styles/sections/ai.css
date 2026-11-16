@@ -1,4 +1,4 @@
-/* KI-Manager: ivory section (--bg-alt), bento grid. One navy device frame with a draft (left, ~7/12) and two
+/* KI-Manager: kalk section (--bg-alt), bento grid. One graphit device frame with a draft (left, ~7/12) and two
    small light cards (right, ~5/12). No typing, no animated borders; the scroll motion is at the end. */
 
 .ai-bento {
@@ -8,13 +8,13 @@
   align-items: stretch;
 }
 
-/* ---------- Large card: navy device frame with the draft ---------- */
+/* ---------- Large card: graphit device frame with the draft ---------- */
 
 .ai-device {
   display: flex; flex-direction: column;
   min-width: 0;
   border-radius: var(--radius-lg);
-  background: var(--navy);
+  background: var(--graphit);
   border: 1px solid var(--card-dark-line);
   color: var(--steel);
   /* clip, not hidden: hidden makes the frame a scroll container, and the draft sheet's view() timeline
@@ -29,7 +29,7 @@
   border-bottom: 1px solid var(--card-dark-line);
 }
 .ai-device-icon { width: 24px; height: 24px; border-radius: 6px; flex: none; outline: 1px solid var(--card-dark-line); }
-.ai-device-app { font-size: .9375rem; font-weight: 600; line-height: 1.3; color: var(--ivory); }
+.ai-device-app { font-size: .9375rem; font-weight: 600; line-height: 1.3; color: var(--kalk); }
 
 .ai-device-body {
   flex: 1;
@@ -37,7 +37,7 @@
   padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
 }
 
-.ai-draft-label { font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--gold-light); }
+.ai-draft-label { font-size: .875rem; font-weight: 600; line-height: 1.4; color: var(--brass-light); }
 
 .ai-draft-sheet {
   flex: 1;
@@ -54,7 +54,7 @@
   max-width: 34rem;
   font-family: var(--sans); font-weight: 400;
   font-size: clamp(1rem, .95rem + .2vw, 1.0625rem); line-height: 1.7;
-  color: var(--ivory);
+  color: var(--kalk);
 }
 
 .ai-draft-foot {
@@ -67,7 +67,7 @@
   display: inline-flex; align-items: center; gap: .55rem;
   font-size: .875rem; line-height: 1.4; color: var(--steel);
 }
-.ai-draft-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-light); flex: none; }
+.ai-draft-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brass-light); flex: none; }
 
 .ai-draft-actions { display: flex; gap: .5rem; }
 /* Illustrative controls (spans, not buttons): shaped like the small buttons, but not interactive */
@@ -78,8 +78,8 @@
   font-size: .875rem; font-weight: 600; line-height: 1.2;
   cursor: default; user-select: none;
 }
-.ai-chip-primary { background: var(--gold-light); color: var(--navy); }
-.ai-chip-outline { border-color: rgba(243, 239, 230, .35); color: var(--ivory); }
+.ai-chip-primary { background: var(--brass-light); color: var(--graphit); }
+.ai-chip-outline { border-color: rgba(245, 243, 238, .35); color: var(--kalk); }
 
 /* ---------- Small light cards ---------- */
 
@@ -142,8 +142,8 @@
 .motion .ai-side > [data-reveal]:nth-child(2) { transition-delay: .16s; }
 
 /* ---------- Scroll-driven (html.scroll-fx, signature 1 "into the product", DESIGN.md -> Motion) ----------
-   The device uses data-scroll="zoom-in" for its knobs and range, but its own keyframe without opacity: a navy
-   frame at partial opacity over ivory reads as a grey slab. It enters from below the fold, so nothing pops.
+   The device uses data-scroll="zoom-in" for its knobs and range, but its own keyframe without opacity: a graphit
+   frame at partial opacity over kalk reads as a grey slab. It enters from below the fold, so nothing pops.
    The draft sheet rises inside it on its own range (set explicitly, so it never inherits the device's).
    Phones and tablets (<= 960 px): device .92 -> 1 with a small lift over the normal range, the cards rise. */
 .ai-draft-sheet {

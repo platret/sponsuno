@@ -151,7 +151,7 @@ export default function Overview() {
                   return (
                     <li key={p.id} className="ov-deliv">
                       <div className="ov-deliv-head">
-                        <Avatar name={name} size={40} tone="gold" />
+                        <Avatar name={name} size={40} tone="brass" />
                         <div className="ov-deliv-title">
                           <h3>{name}</h3>
                           <p className="ov-small">{p.support.kind} · bis {formatDate(p.end)}</p>
@@ -218,7 +218,7 @@ export default function Overview() {
                   return (
                     <li key={sp.id} className="ov-sugg">
                       <div className="ov-sugg-top">
-                        <Avatar name={sp.name} size={44} tone="gold" />
+                        <Avatar name={sp.name} size={44} tone="brass" />
                         <span className="ov-sugg-score" aria-hidden="true"><ScoreBadge score={m.score} /></span>
                       </div>
                       <h3 className="ov-sugg-name">
@@ -227,7 +227,7 @@ export default function Overview() {
                         </a>
                       </h3>
                       <p className="ov-small">{sp.industry} · {sp.region}</p>
-                      {saved && <p className="ov-sugg-saved"><Badge tone="gold"><Icon name="star" size={12} />Gemerkt</Badge></p>}
+                      {saved && <p className="ov-sugg-saved"><Badge tone="brass"><Icon name="star" size={12} />Gemerkt</Badge></p>}
                       <CriteriaList criteria={m.criteria} compact />
                     </li>
                   );
@@ -411,13 +411,13 @@ function AssistantCard({ pending, sponsorName }: {
             </p>
             <p className="ov-ai-subject">{newest.subject}</p>
           </div>
-          <Button variant="gold" href={href('ki-manager', newest.id)} icon="edit" className="ov-ai-btn">Neuesten Entwurf prüfen</Button>
+          <Button variant="brass" href={href('ki-manager', newest.id)} icon="edit" className="ov-ai-btn">Neuesten Entwurf prüfen</Button>
           {pending.length > 1 && <a className="ov-ai-all" href={href('ki-manager')}>Alle Entwürfe ansehen</a>}
         </>
       ) : (
         <>
           <p className="ov-ai-count">Keine Entwürfe offen</p>
-          <Button variant="gold" href={href('ki-manager')} className="ov-ai-btn">Zum KI-Manager</Button>
+          <Button variant="brass" href={href('ki-manager')} className="ov-ai-btn">Zum KI-Manager</Button>
         </>
       )}
       <p className="ov-ai-note">

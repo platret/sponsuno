@@ -16,7 +16,7 @@ type FooterProps = {
 };
 
 /**
- * Navy closing block. On the landing page it continues the waitlist without a seam; on sub-pages it
+ * Graphit closing block. On the landing page it continues the waitlist without a seam; on sub-pages it
  * stands alone (ft-standalone). Ends on the logotype and the legal row.
  */
 export function Footer({ onLanding = true, current }: FooterProps) {
@@ -58,7 +58,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={600} height={152} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
+        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>

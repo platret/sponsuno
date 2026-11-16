@@ -56,7 +56,7 @@ const Disc = ({ side, mark }: { side: 'seeker' | 'firm'; mark: string }) => (
   <span className={`disc disc-${side}`}>{mark}</span>
 );
 
-/** One fictional pair: seeker on top, company below, joined by a thin gold connector; four criteria dots and the score. */
+/** One fictional pair: seeker on top, company below, joined by a thin brass connector; four criteria dots and the score. */
 export function PairCard({ index, lead = false }: { index: number; lead?: boolean }) {
   const p = story.pairs[index];
   const partial = p.score < 4;

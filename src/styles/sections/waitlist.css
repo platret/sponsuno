@@ -1,26 +1,26 @@
-/* Waitlist: first half of the navy closing block. Flat navy so it runs into the footer without a seam.
+/* Waitlist: first half of the graphit closing block. Flat graphit so it runs into the footer without a seam.
    Narrow centred column: title, intro, role chips (real radios), one email row, hint. */
 
 .wl {
-  /* Local until a shared token exists (proposed: --error-on-navy in tokens.css). */
+  /* Local until a shared token exists (proposed: --error-on-dark in tokens.css). */
 }
-.wl.surface-navy { background: var(--navy); }
-/* Dark theme: a hairline marks where the navy block meets the navy page (--edge is transparent in the light theme) */
+.wl.surface-graphit { background: var(--graphit); }
+/* Dark theme: a hairline marks where the graphit block meets the graphit page (--edge is transparent in the light theme) */
 .wl { border-top: 1px solid var(--edge); }
 .wl.section { padding-bottom: clamp(4rem, 3rem + 4vw, 6.5rem); }
 
 /* ---------- Signature 2: "the page opens" (DESIGN.md -> Motion) ----------
-   With scroll timelines, the navy moves from the section onto .wl-surface, a layer behind the content.
+   With scroll timelines, the graphit moves from the section onto .wl-surface, a layer behind the content.
    It opens (data-scroll="frame") from an inset card with rounded top corners to full bleed while the
    section enters, over paper that continues the band above it (So funktioniert es). Bottom inset and radius are 0, and the frame is
-   final once the section is fully in view (or after 60vh), so it is full bleed before the navy footer can
+   final once the section is fully in view (or after 60vh), so it is full bleed before the graphit footer can
    show: no seam. The content is never inside the clip (focus outlines stay intact); the top inset is far
    smaller than the section padding and the side inset narrower than the gutter on phones, and on wide
    screens the column is centred well away from it. Without .scroll-fx (Firefox, reduced motion, no JS)
-   the layer is not rendered and the section stays flat navy. */
+   the layer is not rendered and the section stays flat graphit. */
 .wl-surface { display: none; }
 
-.scroll-fx .wl.surface-navy {
+.scroll-fx .wl.surface-graphit {
   position: relative;
   isolation: isolate;
   background: var(--bg);
@@ -30,7 +30,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--navy);
+  background: var(--graphit);
   --scroll-frame-inset: clamp(.75rem, 2vw, 1.5rem) clamp(.5rem, 3vw, 3rem) 0;
   --scroll-frame-radius: 28px 28px 0 0;
 }
@@ -41,7 +41,7 @@
 .wl-inner { max-width: 36rem; margin-inline: auto; }
 
 .wl-head { text-align: center; }
-.wl-title { color: var(--ivory); }
+.wl-title { color: var(--kalk); }
 .wl-intro {
   margin: 1.1rem auto 0; max-width: 30rem;
   font-size: var(--fs-lead); line-height: 1.55; color: var(--steel);
@@ -54,7 +54,7 @@
 .wl-roles { margin: 0; padding: 0; border: 0; min-width: 0; }
 .wl-legend {
   padding: 0; margin-bottom: .85rem;
-  font-size: var(--fs-small); font-weight: 600; color: var(--ivory);
+  font-size: var(--fs-small); font-weight: 600; color: var(--kalk);
 }
 
 .wl-chips {
@@ -73,13 +73,13 @@
 .wl-chip-box {
   display: flex; align-items: center; justify-content: center;
   min-height: 48px; padding: .6rem .9rem;
-  border: 1px solid rgba(243, 239, 230, .4); border-radius: var(--radius-sm);
+  border: 1px solid rgba(245, 243, 238, .4); border-radius: var(--radius-sm);
   font-size: .9375rem; font-weight: 600; line-height: 1.25; text-align: center;
-  color: var(--ivory);
+  color: var(--kalk);
   transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 }
-.wl-chip:hover .wl-chip-box { border-color: rgba(243, 239, 230, .65); }
-.wl-chip-input:checked + .wl-chip-box { background: var(--ivory); border-color: var(--ivory); color: var(--navy); }
+.wl-chip:hover .wl-chip-box { border-color: rgba(245, 243, 238, .65); }
+.wl-chip-input:checked + .wl-chip-box { background: var(--kalk); border-color: var(--kalk); color: var(--graphit); }
 .wl-chip-input:focus-visible + .wl-chip-box { outline: 3px solid var(--focus); outline-offset: 3px; }
 
 /* ---------- Email row ---------- */
@@ -89,15 +89,15 @@
 .wl-email {
   flex: 1 1 auto; min-width: 0;
   height: 52px; padding: 0 1rem;
-  border: 1px solid rgba(243, 239, 230, .4); border-radius: var(--radius-sm);
-  background: var(--navy-2); color: var(--ivory);
+  border: 1px solid rgba(245, 243, 238, .4); border-radius: var(--radius-sm);
+  background: var(--graphit-2); color: var(--kalk);
   font-size: 1rem;
   transition: border-color .2s ease;
 }
 .wl-email::placeholder { color: var(--steel); opacity: .8; }
-.wl-email:hover { border-color: rgba(243, 239, 230, .55); }
+.wl-email:hover { border-color: rgba(245, 243, 238, .55); }
 .wl-email:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-color: transparent; border-radius: var(--radius-sm); }
-.wl-email[aria-invalid="true"] { border-color: var(--error-on-navy); }
+.wl-email[aria-invalid="true"] { border-color: var(--error-on-dark); }
 
 .wl-submit { flex: none; }
 .wl-submit:disabled { opacity: .7; cursor: progress; }
@@ -110,13 +110,13 @@
   90% { transform: translateX(1px); }
 }
 
-.wl-error { margin-top: .75rem; font-size: var(--fs-small); color: var(--error-on-navy); }
+.wl-error { margin-top: .75rem; font-size: var(--fs-small); color: var(--error-on-dark); }
 .wl-hint { margin-top: .85rem; font-size: .875rem; line-height: 1.5; color: var(--steel); }
 
-/* Links in the hint and the success box: ivory, underlined in gold (hover: thicker) */
+/* Links in the hint and the success box: kalk, underlined in brass (hover: thicker) */
 .wl-hint a, .wl-next a {
-  color: var(--ivory); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--gold-light);
+  color: var(--kalk); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--brass-light);
   text-underline-offset: 3px; text-decoration-thickness: 1px;
   overflow-wrap: anywhere;
 }
@@ -127,9 +127,9 @@
 .wl-success {
   margin-top: clamp(2.25rem, 1.75rem + 1.5vw, 3rem);
   padding: 1.25rem 1.4rem;
-  border: 1px solid rgba(243, 239, 230, .25); border-radius: var(--radius-sm);
-  background: var(--navy-2);
-  color: var(--ivory); font-size: 1.0625rem; line-height: 1.55;
+  border: 1px solid rgba(245, 243, 238, .25); border-radius: var(--radius-sm);
+  background: var(--graphit-2);
+  color: var(--kalk); font-size: 1.0625rem; line-height: 1.55;
 }
 .wl-success:focus { outline: none; }
 .wl-success:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
@@ -137,9 +137,9 @@
 .wl-success-main p + p { margin-top: .5rem; }
 .wl-success svg {
   width: 24px; height: 24px; flex: none; margin-top: .05rem;
-  fill: none; stroke: var(--gold-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  fill: none; stroke: var(--brass-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
-/* Interim e-mail (no endpoint yet): the gold button, the address as text beside it for copying */
+/* Interim e-mail (no endpoint yet): the brass button, the address as text beside it for copying */
 .wl-success .wl-mail {
   display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem;
   margin-top: 1rem;
@@ -158,7 +158,7 @@
 
 /* Desktop: a clearly inset card that opens to full bleed. The column is 36rem and centred, so even at 961px
    (column from ~192px) the side inset (~58px) stays far outside the content. Range unchanged: full bleed
-   once the section is fully in view or after 60vh, before the navy footer can show. */
+   once the section is fully in view or after 60vh, before the graphit footer can show. */
 @media (min-width: 961px) {
   .scroll-fx .wl-surface {
     --scroll-frame-inset: clamp(1.5rem, 4vw, 3.5rem) clamp(2rem, 6vw, 6.5rem) 0;

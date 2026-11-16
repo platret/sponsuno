@@ -1,5 +1,5 @@
-/* Team: ivory, between FAQ (paper) and the navy waitlist. Four founders in a row, each with a round
-   portrait: a monogram (Cormorant initials, ivory on navy, gold hairline ring) until a real photo exists.
+/* Team: kalk, between FAQ (paper) and the graphit waitlist. Four founders in a row, each with a round
+   portrait: a monogram (Cormorant initials, kalk on graphit, brass hairline ring) until a real photo exists.
    A photo uses the same circle and ring. No cards.
    Motion (DESIGN.md -> Motion, dormant on /ueber-uns/): founders rise with stagger, their hairlines draw from the left,
    portraits zoom in (.86 -> 1); the project status head and steps rise. Firefox keeps the data-reveal fade;
@@ -17,22 +17,22 @@
   display: block;
   width: 96px; height: 96px;
   border-radius: 50%;
-  /* Gold hairline ring with an ivory gap, drawn outside the circle (no layout shift). The 5px inset
+  /* Messing hairline ring with an kalk gap, drawn outside the circle (no layout shift). The 5px inset
      aligns the ring's outer edge with the hairline, name and focus text of the column. */
   margin-left: 5px;
-  box-shadow: 0 0 0 4px var(--bg-alt), 0 0 0 5px var(--gold);
+  box-shadow: 0 0 0 4px var(--bg-alt), 0 0 0 5px var(--brass);
 }
 .team-mono {
   display: grid; place-items: center;
-  background: var(--navy);
-  color: var(--ivory);
-  font: 600 2.25rem/1 var(--serif);
+  background: var(--graphit);
+  color: var(--kalk);
+  font: 600 2.25rem/1 var(--display);
   letter-spacing: .02em;
   font-variant-numeric: lining-nums;
 }
-.team-photo { object-fit: cover; background: var(--navy); }
+.team-photo { object-fit: cover; background: var(--graphit); }
 /* zoom-in tuning: grows in place from its centre (the ring scales with it). Scale only (sfx-scale, below):
-   the member around it already fades in, and a second fade turned the navy disc grey mid-scroll. */
+   the member around it already fades in, and a second fade turned the graphit disc grey mid-scroll. */
 .team-portrait { --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%; }
 
 .team-name { margin-top: 1.6rem; }

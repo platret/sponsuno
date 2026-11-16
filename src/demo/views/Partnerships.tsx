@@ -19,7 +19,7 @@ interface Counterpart {
   /** Industry (sponsor) or kind and discipline (seeker). */
   sub: string;
   region: string;
-  tone: 'gold' | 'navy';
+  tone: 'brass' | 'graphit';
 }
 
 function counterpartOf(
@@ -30,10 +30,10 @@ function counterpartOf(
 ): Counterpart | undefined {
   if (role === 'seeker') {
     const s = sponsorById(p.sponsorId);
-    return s && { name: s.name, sub: s.industry, region: s.region, tone: 'gold' };
+    return s && { name: s.name, sub: s.industry, region: s.region, tone: 'brass' };
   }
   const s = seekerById(p.seekerId);
-  return s && { name: s.name, sub: `${kindLabel[s.kind]}, ${s.discipline}`, region: s.region, tone: 'navy' };
+  return s && { name: s.name, sub: `${kindLabel[s.kind]}, ${s.discipline}`, region: s.region, tone: 'graphit' };
 }
 
 const byDue = (a: Deliverable, b: Deliverable) => a.due.localeCompare(b.due);
@@ -106,7 +106,7 @@ function NotFound() {
         <EmptyState
           title="Diese Partnerschaft gibt es in dieser Ansicht nicht"
           text="Vielleicht gehört sie zur anderen Ansicht, oder die Vorschau wurde zurückgesetzt."
-          action={<Button href={href('partnerschaften')} variant="navy" icon="arrowLeft">Alle Partnerschaften</Button>}
+          action={<Button href={href('partnerschaften')} variant="graphit" icon="arrowLeft">Alle Partnerschaften</Button>}
         />
       </Card>
     </>
@@ -144,8 +144,8 @@ function List({ items }: { items: Partnership[] }) {
             title="Noch keine Partnerschaften"
             text={role === 'seeker' ? 'Sobald Sie einen Sponsor anfragen, erscheint die Partnerschaft hier.' : 'Sobald Sie jemand anfragt, erscheint die Anfrage hier.'}
             action={role === 'seeker'
-              ? <Button href={href('partner')} variant="gold" icon="match">Passende Partner ansehen</Button>
-              : <Button href={href('sponsor')} variant="navy" icon="building">Zum Cockpit</Button>}
+              ? <Button href={href('partner')} variant="brass" icon="match">Passende Partner ansehen</Button>
+              : <Button href={href('sponsor')} variant="graphit" icon="building">Zum Cockpit</Button>}
           />
         </Card>
       </>
@@ -360,7 +360,7 @@ function Agreement({ p, cp, role, declined }: { p: Partnership; cp: Counterpart;
       <dl className="ps-facts">
         <div>
           <dt>Unterstützung</dt>
-          <dd><Badge tone="gold">{p.support.kind}</Badge><span className="ps-fact-text">{p.support.description}</span></dd>
+          <dd><Badge tone="brass">{p.support.kind}</Badge><span className="ps-fact-text">{p.support.description}</span></dd>
         </div>
         <div>
           <dt>Wert</dt>
@@ -520,7 +520,7 @@ function Deliverables({ p, cp, role, declined }: { p: Partnership; cp: Counterpa
   };
 
   return (
-    <Card title="Gegenleistungen" action={overdue > 0 ? <Badge tone="gold"><Icon name="clock" size={14} />{overdue} überfällig</Badge> : undefined}>
+    <Card title="Gegenleistungen" action={overdue > 0 ? <Badge tone="brass"><Icon name="clock" size={14} />{overdue} überfällig</Badge> : undefined}>
       <p className="ps-card-intro">{deliverablesIntro(p, cp, role, declined)}</p>
 
       {total > 0 ? (
@@ -608,7 +608,7 @@ function Deliverables({ p, cp, role, declined }: { p: Partnership; cp: Counterpa
                 onChange={(e) => setDue(e.target.value)}
               />
             </Field>
-            <Button type="submit" variant="navy" icon="plus" className="ps-add-btn">Hinzufügen</Button>
+            <Button type="submit" variant="graphit" icon="plus" className="ps-add-btn">Hinzufügen</Button>
           </div>
           {error && <p id={`${uid}-err`} className="ps-error" role="alert">{error}</p>}
         </form>
@@ -685,7 +685,7 @@ function Notes({ p }: { p: Partnership }) {
         </Field>
         <div className="ps-notes-actions">
           {/* aria-disabled instead of disabled: the focused button stays focusable after saving */}
-          <Button type="submit" variant="navy" size="md" aria-disabled={!dirty || undefined}>Speichern</Button>
+          <Button type="submit" variant="graphit" size="md" aria-disabled={!dirty || undefined}>Speichern</Button>
           {dirty && <span className="ps-small">Nicht gespeichert</span>}
         </div>
       </form>
@@ -695,7 +695,7 @@ function Notes({ p }: { p: Partnership }) {
 
 /* ---------- Related drafts (seeker only) ---------- */
 
-const DRAFT_TONE: Record<DraftStatus, 'neutral' | 'navy' | 'muted'> = { entwurf: 'neutral', geprueft: 'navy', versendet: 'muted' };
+const DRAFT_TONE: Record<DraftStatus, 'neutral' | 'graphit' | 'muted'> = { entwurf: 'neutral', geprueft: 'graphit', versendet: 'muted' };
 
 function Drafts({ p, cp }: { p: Partnership; cp: Counterpart }) {
   const { state } = useDemo();
@@ -728,7 +728,7 @@ function Drafts({ p, cp }: { p: Partnership; cp: Counterpart }) {
 
 /* ---------- Next step (status actions) ---------- */
 
-interface StepAction { label: string; to: PartnershipStatus; toast: string; variant: 'gold' | 'outline' }
+interface StepAction { label: string; to: PartnershipStatus; toast: string; variant: 'brass' | 'outline' }
 
 function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; role: Role; declined: boolean }) {
   const { state, dispatch } = useDemo();
@@ -788,22 +788,22 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
           text = `Ihre Anfrage liegt bei ${cp.name}. Den nächsten Schritt macht der Sponsor.`;
           if (!cockpitSponsor) {
             text += ' Die Antwort des Sponsors können Sie hier simulieren.';
-            actions = [{ label: 'Antwort des Sponsors simulieren', to: 'gespraech', toast: `Simuliert: ${cp.name} schlägt ein Gespräch vor.`, variant: 'gold' }];
+            actions = [{ label: 'Antwort des Sponsors simulieren', to: 'gespraech', toast: `Simuliert: ${cp.name} schlägt ein Gespräch vor.`, variant: 'brass' }];
           }
         }
         if (cockpitSponsor) text += ' Im Sponsor-Cockpit beantworten Sie die Anfrage selbst aus Sicht des Sponsors.';
         break;
       case 'gespraech':
         text = 'Wenn Sie sich über Unterstützung und Gegenleistungen einig sind, halten Sie die Vereinbarung hier fest.';
-        actions = [{ label: 'Als vereinbart markieren', to: 'vereinbart', toast: 'Als vereinbart markiert', variant: 'gold' }];
+        actions = [{ label: 'Als vereinbart markieren', to: 'vereinbart', toast: 'Als vereinbart markiert', variant: 'brass' }];
         break;
       case 'vereinbart':
         text = 'Die Vereinbarung steht. Starten Sie die Partnerschaft, sobald sie beginnt. Ab dann zählen die Gegenleistungen.';
-        actions = [{ label: 'Partnerschaft starten', to: 'aktiv', toast: 'Partnerschaft gestartet', variant: 'gold' }];
+        actions = [{ label: 'Partnerschaft starten', to: 'aktiv', toast: 'Partnerschaft gestartet', variant: 'brass' }];
         break;
       case 'aktiv':
         text = 'Wenn die Laufzeit vorbei ist, schliessen Sie die Partnerschaft ab und ziehen beim Termin «Gemeinsam prüfen» Bilanz.';
-        actions = [{ label: 'Abschliessen und Bilanz ziehen', to: 'abgeschlossen', toast: 'Partnerschaft abgeschlossen', variant: 'gold' }];
+        actions = [{ label: 'Abschliessen und Bilanz ziehen', to: 'abgeschlossen', toast: 'Partnerschaft abgeschlossen', variant: 'brass' }];
         break;
       case 'abgeschlossen':
         text = 'Diese Partnerschaft ist abgeschlossen. Ein kurzer Dank hält den Kontakt warm, falls beide Seiten später wieder zusammenarbeiten möchten.';
@@ -816,13 +816,13 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
     switch (p.status) {
       case 'anfrage':
         text = `${cp.name} möchte mit Ihnen zusammenarbeiten. Schlagen Sie ein Gespräch vor oder sagen Sie freundlich ab.`;
-        actions = [{ label: 'Gespräch vorschlagen', to: 'gespraech', toast: 'Gespräch vorgeschlagen.', variant: 'gold' }];
+        actions = [{ label: 'Gespräch vorschlagen', to: 'gespraech', toast: 'Gespräch vorgeschlagen.', variant: 'brass' }];
         decline = { label: 'Absagen', to: 'abgesagt', toast: 'Anfrage abgesagt.', variant: 'outline' };
         break;
       case 'gespraech':
         if (otherSeeker) {
           text = `Sie sind im Gespräch mit ${cp.name}. Sobald beide Seiten einig sind, halten Sie die Vereinbarung hier fest; in der Vorschau übernehmen Sie diesen Schritt für beide Seiten. Oder sagen Sie freundlich ab.`;
-          actions = [{ label: 'Als vereinbart markieren', to: 'vereinbart', toast: 'Als vereinbart markiert.', variant: 'gold' }];
+          actions = [{ label: 'Als vereinbart markieren', to: 'vereinbart', toast: 'Als vereinbart markiert.', variant: 'brass' }];
           decline = { label: 'Absagen', to: 'abgesagt', toast: 'Anfrage abgesagt.', variant: 'outline' };
         } else {
           text = `Sie sind im Gespräch. Sobald beide Seiten einig sind, hält ${cp.name} die Vereinbarung fest.`;
@@ -855,7 +855,7 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
         <h2 id="ps-next-title" ref={headingRef} tabIndex={-1}>Nächster Schritt</h2>
         <p className="ps-next-text">{text}</p>
         <div className="ps-next-actions">
-          {actions.map((a) => <Button key={a.to} variant="gold" icon="arrowRight" onClick={() => run(a)}>{a.label}</Button>)}
+          {actions.map((a) => <Button key={a.to} variant="brass" icon="arrowRight" onClick={() => run(a)}>{a.label}</Button>)}
           {declineAction && !confirmDecline && (
             <button ref={declineRef} type="button" className="ps-btn-outline" onClick={askDecline}>{declineAction.label}</button>
           )}
@@ -875,16 +875,16 @@ function NextStep({ p, cp, role, declined }: { p: Partnership; cp: Counterpart; 
             <button type="button" className="ps-btn-outline" onClick={() => run(secondaryAction)}>{secondaryAction.label}</button>
           )}
           {role === 'seeker' && p.status === 'anfrage' && unsentRequest && (
-            <Button href={href('ki-manager', unsentRequest.id)} variant="gold" icon="sparkles">Anfrage im KI-Manager prüfen</Button>
+            <Button href={href('ki-manager', unsentRequest.id)} variant="brass" icon="sparkles">Anfrage im KI-Manager prüfen</Button>
           )}
           {canViewAsSponsor && (
-            <Button variant="gold" icon="building" onClick={viewAsSponsor}>Als Sponsor ansehen</Button>
+            <Button variant="brass" icon="building" onClick={viewAsSponsor}>Als Sponsor ansehen</Button>
           )}
           {declined && role === 'seeker' && (
-            <Button href={href('partner')} variant="gold" icon="match">Passende Partner ansehen</Button>
+            <Button href={href('partner')} variant="brass" icon="match">Passende Partner ansehen</Button>
           )}
           {thanks && (
-            <a className="ui-btn ui-btn-gold ui-btn-md" href={href('ki-manager')} aria-describedby={hintId}>
+            <a className="ui-btn ui-btn-brass ui-btn-md" href={href('ki-manager')} aria-describedby={hintId}>
               <Icon name="sparkles" size={18} /><span>Im KI-Manager entwerfen</span>
             </a>
           )}

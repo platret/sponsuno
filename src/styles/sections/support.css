@@ -1,9 +1,9 @@
-/* Support (Sachleistungen): paper, short and flat. A gold rule above the title, three kinds in a row,
-   each separated by a hairline on top. No cards, no gold surfaces. */
+/* Support (Sachleistungen): paper, short and flat. A brass rule above the title, three kinds in a row,
+   each separated by a hairline on top. No cards, no brass surfaces. */
 
 .sup-rule {
   display: block; width: 48px; height: 2px; margin-bottom: 1.75rem;
-  background: var(--gold);
+  background: var(--brass);
 }
 
 .sup-kinds {
@@ -39,7 +39,7 @@
 .motion .sup-kind[data-reveal]:nth-child(2) { transition-delay: .08s; }
 .motion .sup-kind[data-reveal]:nth-child(3) { transition-delay: .16s; }
 
-/* Scroll-driven motion (DESIGN.md -> Motion). Gold rule draws (data-scroll="draw-x"), head and kinds rise
+/* Scroll-driven motion (DESIGN.md -> Motion). Messing rule draws (data-scroll="draw-x"), head and kinds rise
    with stagger, icons zoom in (attributes in Support.tsx). Here: each kind's hairline draws from the left.
    The border stays in the layout (transparent), the line is a 1px ::before on top of it, so nothing shifts.
    Static style = final state, so reduced motion switched on mid-visit simply shows the full line. */

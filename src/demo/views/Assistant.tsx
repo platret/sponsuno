@@ -16,7 +16,7 @@ const NEW_PARAM = 'neu';
 const STATUSES: DraftStatus[] = ['entwurf', 'geprueft', 'versendet'];
 const TAB_LABEL: Record<DraftStatus, string> = { entwurf: 'Entwürfe', geprueft: 'Geprüft', versendet: 'Versendet (simuliert)' };
 // The type badge is neutral; the status uses its own tones so the two never look alike.
-const STATUS_TONE = { entwurf: 'muted', geprueft: 'gold', versendet: 'success' } as const;
+const STATUS_TONE = { entwurf: 'muted', geprueft: 'brass', versendet: 'success' } as const;
 const EMPTY_TAB: Record<DraftStatus, string> = {
   entwurf: 'Keine offenen Entwürfe. Beginnen Sie einen neuen oder schauen Sie bei den geprüften nach.',
   geprueft: 'Noch nichts geprüft. Lesen Sie einen Entwurf und markieren Sie ihn danach als geprüft.',
@@ -351,7 +351,7 @@ function DraftList({ tab, onTab, selectedId, onNew }: { tab: DraftStatus; onTab:
     <section className="as-pane-card as-list" aria-labelledby={headingId}>
       <div className="as-list-head">
         <h2 id={headingId}>Ihre Entwürfe</h2>
-        <Button variant="gold" size="sm" icon="plus" onClick={onNew}>Neuer Entwurf</Button>
+        <Button variant="brass" size="sm" icon="plus" onClick={onNew}>Neuer Entwurf</Button>
       </div>
 
       <Tabs
@@ -534,7 +534,7 @@ function StatusSteps({ status }: { status: DraftStatus }) {
 function Recipient({ sponsor, type, status, partnership }: { sponsor?: Sponsor; type: DraftType; status: DraftStatus; partnership?: Partnership }) {
   return (
     <div className="as-recipient">
-      <Avatar name={sponsor?.name ?? '?'} tone="gold" size={48} />
+      <Avatar name={sponsor?.name ?? '?'} tone="brass" size={48} />
       <div className="as-recipient-copy">
         <p className="as-recipient-label">An</p>
         <p className="as-recipient-name">{sponsor?.name ?? 'Unbekannter Sponsor'}</p>
@@ -742,7 +742,7 @@ function DraftEditor({ draft }: { draft: Draft }) {
           {error && <p id={errorId} className="as-error" role="alert">{error.text}</p>}
 
           {reviewed && dirty && (
-            <p className="as-note as-note-gold">
+            <p className="as-note as-note-brass">
               <Icon name="clock" size={16} />
               Wenn Sie diese Änderungen speichern, wird der Entwurf wieder auf «Entwurf» gesetzt und muss erneut geprüft werden.
             </p>
@@ -750,14 +750,14 @@ function DraftEditor({ draft }: { draft: Draft }) {
 
           <div ref={actionsRef} className="as-actions">
             {/* aria-disabled instead of disabled: the focused button keeps focus after saving */}
-            <Button type="submit" variant={dirty ? 'navy' : 'ghost'} aria-disabled={!dirty || undefined}>Speichern</Button>
+            <Button type="submit" variant={dirty ? 'graphit' : 'ghost'} aria-disabled={!dirty || undefined}>Speichern</Button>
             {reviewed ? (
               <Button variant="quiet" onClick={backToDraft} disabled={dirty}>Zurück zu Entwurf</Button>
             ) : (
               <Button variant="ghost" icon="check" onClick={markReviewed}>Als geprüft markieren</Button>
             )}
             <Button
-              variant="gold"
+              variant="brass"
               icon="mail"
               className="as-send"
               onClick={send}
@@ -857,7 +857,7 @@ function NewDraft({ preset }: { preset: Preset }) {
         <EmptyState
           title="Noch kein Sponsor für einen Entwurf"
           text="Setzen Sie zuerst Sponsoren auf Ihre Merkliste. Danach bereitet der KI-Manager eine Anfrage für Sie vor."
-          action={<Button variant="gold" href={href('partner')} icon="match">Passende Partner ansehen</Button>}
+          action={<Button variant="brass" href={href('partner')} icon="match">Passende Partner ansehen</Button>}
         />
       </div>
     );
@@ -948,7 +948,7 @@ function NewDraft({ preset }: { preset: Preset }) {
           </select>
         </Field>
         {anfrageToPartner && existing && (
-          <p id={`${ids}-partner-hint`} className="as-note as-note-gold">
+          <p id={`${ids}-partner-hint`} className="as-note as-note-brass">
             <Icon name="handshake" size={16} />
             Mit {sponsor?.name} besteht bereits eine Partnerschaft ({statusLabel[existing.status]}). Eine Anfrage ist für den ersten Kontakt gedacht; für laufende Partnerschaften passen Update, Verlängerung oder Dank besser.
           </p>
@@ -972,7 +972,7 @@ function NewDraft({ preset }: { preset: Preset }) {
 
         <div className="as-actions">
           {/* aria-disabled while writing (onSubmit ignores it): a disabled button would drop keyboard focus */}
-          <Button type="submit" variant="gold" icon="sparkles" disabled={!sponsor} aria-disabled={busy || undefined}>
+          <Button type="submit" variant="brass" icon="sparkles" disabled={!sponsor} aria-disabled={busy || undefined}>
             {busy ? 'Wird geschrieben …' : 'Vorschlag erstellen'}
           </Button>
           {busy

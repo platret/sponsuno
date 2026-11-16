@@ -26,7 +26,7 @@ interface WaitlistProps {
   onRoleChange: (role: Role) => void;
 }
 
-/** Navy closing block, part one: a narrow centred form. Continues seamlessly into the footer. */
+/** Graphit closing block, part one: a narrow centred form. Continues seamlessly into the footer. */
 export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
@@ -107,8 +107,8 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const invalid = error !== null;
 
   return (
-    <section className="wl section surface-navy" id="warteliste" aria-labelledby="warteliste-title">
-      {/* Signature 2 ("the page opens"): the navy surface as its own layer, so the scroll-driven clip
+    <section className="wl section surface-graphit" id="warteliste" aria-labelledby="warteliste-title">
+      {/* Signature 2 ("the page opens"): the graphit surface as its own layer, so the scroll-driven clip
           (data-scroll="frame") never touches the content or its focus outlines. Hidden without .scroll-fx. */}
       <div className="wl-surface" data-scroll="frame" aria-hidden="true" />
       <div className="container">
@@ -167,7 +167,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                   aria-invalid={invalid || undefined}
                   aria-describedby={invalid ? 'wl-error wl-hint' : 'wl-hint'}
                 />
-                <button className="btn btn-gold wl-submit" type="submit" disabled={status === 'sending' || !hydrated}>
+                <button className="btn btn-brass wl-submit" type="submit" disabled={status === 'sending' || !hydrated}>
                   {waitlist.submit}
                 </button>
               </div>
@@ -204,7 +204,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                     <>
                       <p>{waitlist.previewMailIntro}</p>
                       <p className="wl-mail">
-                        <a className="btn btn-gold" href={mailHref(role)}>{waitlist.previewMailButton}</a>
+                        <a className="btn btn-brass" href={mailHref(role)}>{waitlist.previewMailButton}</a>
                         <span className="wl-mail-address">{CONTACT}</span>
                       </p>
                     </>

@@ -9,7 +9,7 @@ import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
 
 /**
- * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: navy header and page
+ * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: graphit header and page
  * head band, one 42rem column, table of contents, standalone footer) plus a few guide blocks (guide.css, prefix gd-).
  * Static: prerendered at build time, shipped without JavaScript. Copy in content.ts → guides,
  * title and description in src/pages.ts.
@@ -99,7 +99,7 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
     case 'cta':
       return (
         <div className="gd-cta">
-          <a className="btn btn-navy" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
+          <a className="btn btn-graphit" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
           </a>

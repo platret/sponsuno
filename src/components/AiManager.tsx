@@ -6,9 +6,9 @@ import '../styles/sections/ai.css';
 const { draft, reminder, deliverables } = aiManager;
 
 /**
- * Ivory section, the body of /ki-manager/ (InfoPage): what the planned AI manager is meant to do after a match.
+ * Kalk section, the body of /ki-manager/ (InfoPage): what the planned AI manager is meant to do after a match.
  * Its title and intro are the page head band (InfoPage → PageBand, the H1), the card titles are H2 (styled as H3, .pg-h3). A bento grid shows one illustrative
- * draft (navy device frame) and two small light cards. The page ships no JavaScript module; an inline script in its
+ * draft (graphit device frame) and two small light cards. The page ships no JavaScript module; an inline script in its
  * head sets html.scroll-fx (`scrollFx` in pages.ts, entry-server.tsx), so the scroll motion in ai.css runs: from
  * 961 px wide and 700-1999 px tall the bento pins while the device zooms in. Everything else stays still (draft sheet,
  * cards, caption; the device where it does not pin), because it sits in or near the first screen; with reduced
@@ -16,7 +16,7 @@ const { draft, reminder, deliverables } = aiManager;
  */
 export function AiManager() {
   return (
-    <section className="section surface-ivory" id="ki-manager" aria-labelledby="ki-title">
+    <section className="section surface-kalk" id="ki-manager" aria-labelledby="ki-title">
       <div className="container">
         <figure className="ai-figure" aria-labelledby="ai-caption">
           {/* .ai-pin: plain block; under .scroll-fx on large screens it holds the bento in place for a short

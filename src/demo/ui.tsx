@@ -44,7 +44,7 @@ export function Icon({ name, size = 20, className }: { name: IconName; size?: nu
 
 /* ---------- Buttons ---------- */
 
-type Variant = 'gold' | 'navy' | 'ghost' | 'quiet' | 'danger';
+type Variant = 'brass' | 'graphit' | 'ghost' | 'quiet' | 'danger';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -54,7 +54,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string;
 }
 
-export function Button({ variant = 'navy', size = 'md', icon, href, className, children, type = 'button', ...rest }: ButtonProps) {
+export function Button({ variant = 'graphit', size = 'md', icon, href, className, children, type = 'button', ...rest }: ButtonProps) {
   const cls = `ui-btn ui-btn-${variant} ui-btn-${size}${className ? ` ${className}` : ''}`;
   const inner = (
     <>
@@ -117,14 +117,14 @@ export function EmptyState({ title, text, action }: { title: string; text?: stri
 
 /* ---------- Data display ---------- */
 
-type Tone = 'neutral' | 'gold' | 'navy' | 'success' | 'muted' | 'danger';
+type Tone = 'neutral' | 'brass' | 'graphit' | 'success' | 'muted' | 'danger';
 
 export function Badge({ tone = 'neutral', children }: { tone?: Tone; children: ReactNode }) {
   return <span className={`ui-badge ui-badge-${tone}`}>{children}</span>;
 }
 
 const STATUS_TONE: Record<PartnershipStatus, Tone> = {
-  anfrage: 'gold', gespraech: 'gold', vereinbart: 'navy', aktiv: 'success', abgeschlossen: 'muted', abgesagt: 'muted',
+  anfrage: 'brass', gespraech: 'brass', vereinbart: 'graphit', aktiv: 'success', abgeschlossen: 'muted', abgesagt: 'muted',
 };
 
 export function StatusBadge({ status }: { status: PartnershipStatus }) {
@@ -140,7 +140,7 @@ export function Progress({ value, label }: { value: number; label: string }) {
   );
 }
 
-export function Avatar({ name, src, size = 40, tone = 'navy' }: { name: string; src?: string; size?: number; tone?: 'navy' | 'gold' | 'ivory' }) {
+export function Avatar({ name, src, size = 40, tone = 'graphit' }: { name: string; src?: string; size?: number; tone?: 'graphit' | 'brass' | 'kalk' }) {
   if (src) return <img className="ui-avatar" src={src} alt="" width={size} height={size} style={{ width: size, height: size }} />;
   return (
     <span className={`ui-avatar ui-avatar-${tone}`} style={{ width: size, height: size, fontSize: size * 0.38 }} aria-hidden="true">

@@ -7,8 +7,8 @@ import { MobileMenu } from './MobileMenu';
 import { ThemeToggle } from './ThemeToggle';
 import '../styles/sections/header.css';
 
-/** Landing page header. Plain full-width bar: transparent at the top, solid navy while the hero and the story run
-    under it, solid on the page surface once it reaches it (paper, or navy in the dark theme). The theme switch has no
+/** Landing page header. Plain full-width bar: transparent at the top, solid graphit while the hero and the story run
+    under it, solid on the page surface once it reaches it (paper, or graphit in the dark theme). The theme switch has no
     React state: the inline head script runs it (ThemeToggle.tsx). The nav links to the topic pages (content.ts → nav, shared
     with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
 export function Header() {
@@ -28,7 +28,7 @@ export function Header() {
     });
     if (sentinel) solidIo.observe(sentinel);
 
-    // While the navy hero or the navy story runs under the bar, the solid bar stays navy (no paper strip over
+    // While the graphit hero or the graphit story runs under the bar, the solid bar stays graphit (no paper strip over
     // the pinned stage); it turns paper once the light page reaches it. The band is the bar's own height.
     const darkZones = [document.getElementById('top'), document.getElementById('problem')].filter((el): el is HTMLElement => el !== null);
     const underBar = new Map<Element, boolean>();
@@ -77,9 +77,9 @@ export function Header() {
       <header className={`site-header${isSolid ? ' is-solid' : ''}${isDark ? ' is-dark' : ''}`}>
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
-            <img className="brand-on-dark" src={wordmarkLight} alt="" width={118} height={30} />
+            <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} />
             {/* Hidden until the bar turns paper (light theme only): low priority, so React does not preload it with the first screen */}
-            <img className="brand-on-light" src={wordmarkDark} alt="" width={118} height={30} fetchPriority="low" />
+            <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>

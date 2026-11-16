@@ -1,5 +1,5 @@
 /* Sponsuno landing page: base layer. Tokens in tokens.css, one stylesheet per section in styles/sections/.
-   Colour proportions (DESIGN.md): light surfaces carry the page, navy frames it, gold is a flat accent. */
+   Colour proportions (DESIGN.md): light surfaces carry the page, graphit frames it, brass is a flat accent. */
 @import './tokens.css';
 
 :root {
@@ -7,16 +7,21 @@
   --container: 1200px;
   --section-pad: clamp(4.5rem, 3rem + 6vw, 8.5rem);
 
-  --fs-h1: clamp(2.75rem, 1.4rem + 4.4vw, 5.5rem);
-  --fs-h2: clamp(2.125rem, 1.5rem + 2.6vw, 3.5rem);
-  --fs-h3: 1.1875rem;
-  --fs-lead: clamp(1.125rem, 1.02rem + 0.45vw, 1.3125rem);
-  --fs-body: 1.0625rem;
-  --fs-small: 0.9375rem;
+  /* Type scale of the design system (web): titel 64, untertitel 40, zwischentitel 28, fliesstext 18, klein 14,
+     label 12 px; fluid below the desktop size. */
+  --fs-h1: clamp(2.5rem, 1.55rem + 3.6vw, 4rem);
+  --fs-h2: clamp(1.875rem, 1.45rem + 1.7vw, 2.5rem);
+  --fs-sub: clamp(1.375rem, 1.15rem + .9vw, 1.75rem);
+  --fs-h3: 1.25rem;
+  --fs-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-body: 1.125rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
 
-  --radius-sm: 10px;
-  --radius-lg: 20px;
-  --shadow-card: 0 1px 2px rgba(11, 24, 48, .06), 0 12px 32px -18px rgba(11, 24, 48, .22);
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-card: none; /* the design system has no shadows: cards are a 1 px border on their surface */
 }
 @media (max-width: 760px) { :root { --header-h: 64px; } }
 
@@ -47,18 +52,28 @@ a { color: inherit; }
 img, svg { display: block; max-width: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
 
-/* Cormorant only at display sizes (H1, H2, big numerals). Everything else is Manrope. */
+/* One family, Schibsted Grotesk: titles 700 with -0.025em tracking, text 400, UI 600. */
 h1, h2 {
-  font-family: var(--serif);
-  font-weight: 600;
+  font-family: var(--display);
+  font-weight: 700;
   color: var(--heading);
-  letter-spacing: -0.015em;
+  letter-spacing: var(--display-tracking);
   text-wrap: balance;
   font-variant-numeric: lining-nums;
 }
-h1 { font-size: var(--fs-h1); line-height: 0.98; }
-h2 { font-size: var(--fs-h2); line-height: 1.04; }
-h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-height: 1.3; color: var(--heading); }
+h1 { font-size: var(--fs-h1); line-height: 1.02; }
+h2 { font-size: var(--fs-h2); line-height: 1.08; }
+h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-height: 1.3; letter-spacing: -0.01em; color: var(--heading); }
+
+/* Label (design system): small caps line in the accent colour above a title or a group. */
+.label {
+  display: block;
+  font: 600 var(--fs-label)/1.4 var(--sans);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+.surface-graphit .label { color: var(--brass); }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
 
@@ -70,7 +85,7 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 .skip-link {
   position: absolute; left: 1rem; top: -4rem; z-index: 100;
   padding: .75rem 1rem; border-radius: var(--radius-sm);
-  background: var(--gold-light); color: var(--navy); font-weight: 600; text-decoration: none;
+  background: var(--brass); color: var(--graphit); font-weight: 600; text-decoration: none;
 }
 .skip-link:focus { top: 1rem; }
 
@@ -80,38 +95,38 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 
 .section { padding-block: var(--section-pad); }
 .surface-paper { background: var(--bg); }
-.surface-ivory { background: var(--bg-alt); }
-.surface-navy {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy) 45%, var(--navy-2) 100%);
+.surface-kalk { background: var(--bg-alt); }
+.surface-graphit {
+  background: var(--grad-dark);
   color: var(--steel);
-  --focus: var(--gold-light);
+  --focus: var(--brass);
 }
-.surface-navy h1, .surface-navy h2, .surface-navy h3 { color: var(--ivory); }
+.surface-graphit h1, .surface-graphit h2, .surface-graphit h3 { color: var(--kalk); }
 
 .section-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem); }
 .section-intro { margin-top: 1.1rem; font-size: var(--fs-lead); line-height: 1.55; max-width: 40rem; }
-.surface-navy .section-intro { color: var(--steel); }
+.surface-graphit .section-intro { color: var(--steel); }
 .section-intro a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }
 
 /* ---------- Buttons and links ---------- */
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  min-height: 52px; padding: .8rem 1.4rem;
-  border: 1px solid transparent; border-radius: var(--radius-sm); cursor: pointer;
+  min-height: 52px; padding: .8rem 1.6rem;
+  border: 1px solid transparent; border-radius: var(--radius-pill); cursor: pointer;
   font: 600 1rem/1.2 var(--sans); text-decoration: none; white-space: nowrap;
   transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 }
 .btn-sm { min-height: 44px; padding: .6rem 1.1rem; font-size: .9375rem; }
-/* Primary on navy: gold light fill, navy label (7.41:1) */
-.btn-gold { background: var(--gold-light); color: var(--navy); }
-.btn-gold:hover { background: var(--gold); }
-/* Secondary on navy */
-.btn-ghost { border-color: rgba(243, 239, 230, .4); color: var(--ivory); background: transparent; }
-.btn-ghost:hover { border-color: var(--ivory); background: rgba(243, 239, 230, .06); }
-/* Primary on the page surface: navy with an ivory label (light theme), gold light with a navy label (dark theme) */
-.btn-navy { background: var(--btn-bg); color: var(--btn-fg); }
-.btn-navy:hover { background: var(--btn-bg-hover); }
+/* Primary on graphit: messing fill (accent-fill), graphit label (6.7:1) */
+.btn-brass { background: var(--brass); color: var(--graphit); }
+.btn-brass:hover { background: var(--brass-light); }
+/* Secondary on graphit */
+.btn-ghost { border-color: rgba(245, 243, 238, .4); color: var(--kalk); background: transparent; }
+.btn-ghost:hover { border-color: var(--kalk); background: rgba(245, 243, 238, .06); }
+/* Primary on the page surface: graphit with a kalk label (light theme), messing with a graphit label (dark theme) */
+.btn-graphit { background: var(--btn-bg); color: var(--btn-fg); }
+.btn-graphit:hover { background: var(--btn-bg-hover); }
 /* Secondary on the page surface */
 .btn-outline { border-color: color-mix(in srgb, var(--heading) 25%, transparent); color: var(--heading); background: transparent; }
 .btn-outline:hover { border-color: var(--heading); }

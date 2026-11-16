@@ -1,7 +1,7 @@
-/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on navy in
+/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on graphit in
    both themes: the slim header with the site nav, then the page head band (PageBand: H1, intro). Below it the page
    follows the theme (DESIGN.md -> Theme). Legal pages and guides (and /fuer-firmen/) use one readable column (~42rem)
-   on the page surface, then the standalone navy footer. No motion; one inline head script (theme). Classes prefixed lg-.
+   on the page surface, then the standalone graphit footer. No motion; one inline head script (theme). Classes prefixed lg-.
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
 /* The static header scrolls away with the page (not fixed like the landing page header), so anchor jumps (table of
@@ -9,27 +9,27 @@
 html:has(.lg-header) { scroll-padding-top: 1rem; }
 
 /* ---------- Header (PageHeader.tsx): wordmark, nav, theme switch, waitlist button; below 961 px a native <details> menu.
-   Navy in both themes; it runs into the page head band without a seam. ---------- */
+   Graphit in both themes; it runs into the page head band without a seam. ---------- */
 .lg-header {
   position: relative; z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
-  background: var(--navy);
-  color: var(--ivory);
-  --focus: var(--gold-light);
+  background: var(--graphit);
+  color: var(--kalk);
+  --focus: var(--brass-light);
 }
 /* Gaps match .header-inner (header.css), so the nav and the button sit in the same place on every page */
 .lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
 .lg-actions { display: flex; align-items: center; gap: .5rem; }
 .lg-brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
-.lg-brand img { width: 118px; height: auto; }
+.lg-brand img { width: 132px; height: auto; }
 
 .lg-nav ul { display: flex; gap: .25rem; }
 .lg-nav a {
   display: block; padding: .5rem .8rem; border-radius: 8px;
-  font-size: var(--fs-small); color: rgba(243, 239, 230, .78); text-decoration: none;
+  font-size: var(--fs-small); color: rgba(245, 243, 238, .78); text-decoration: none;
 }
-.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--ivory); }
-.lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 8px; }
+.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--kalk); }
+.lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 .lg-cta-short { display: none; }
 
 .lg-menu { display: none; }
@@ -61,9 +61,9 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
 .lg-menu-sheet li { border-bottom: 1px solid var(--line); }
 .lg-menu-sheet a {
   display: block; padding: .8rem 0;
-  font: 600 clamp(1.625rem, 6vw, 2.125rem)/1.15 var(--serif); color: var(--heading); text-decoration: none;
+  font: 600 clamp(1.625rem, 6vw, 2.125rem)/1.15 var(--display); color: var(--heading); text-decoration: none;
 }
-.lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
 /* Six nav items plus the button: tighter between 961 and 1140 px, the menu below */
 @media (max-width: 1140px) {
@@ -81,24 +81,24 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
   .lg-cta-short { display: inline; }
 }
 
-/* ---------- Page head band (PageBand in PageHeader.tsx): H1 and intro on navy, right under the header ----------
-   Navy in both themes, like the landing page hero, so every page opens the same way. Flat navy (no gradient), so it
-   meets the header without a seam; in the dark theme a hairline (--edge) sets it off the navy page below. */
+/* ---------- Page head band (PageBand in PageHeader.tsx): H1 and intro on graphit, right under the header ----------
+   Graphit in both themes, like the landing page hero, so every page opens the same way. Flat graphit (no gradient), so it
+   meets the header without a seam; in the dark theme a hairline (--edge) sets it off the graphit page below. */
 .lg-band {
-  background: var(--navy);
+  background: var(--graphit);
   color: var(--steel);
   border-bottom: 1px solid var(--edge);
   padding-block: clamp(2rem, 1.25rem + 3vw, 4rem) clamp(3rem, 2rem + 4vw, 5.5rem);
-  --focus: var(--gold-light);
+  --focus: var(--brass-light);
 }
 .lg-band-inner { max-width: 46rem; }
-.lg-band h1 { color: var(--ivory); }
+.lg-band h1 { color: var(--kalk); }
 .lg-band .lg-intro, .lg-band .section-intro { color: var(--steel); }
 .lg-band .lg-updated { color: var(--steel); }
-/* Links on navy: ivory with a Gold hell underline (as in the waitlist) */
+/* Links on graphit: kalk with a Messing hell underline (as in the waitlist) */
 .lg-band a:not(.btn) {
-  color: var(--ivory); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--gold-light); text-underline-offset: 3px;
+  color: var(--kalk); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--brass-light); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-band a:not(.btn):hover { text-decoration-thickness: 2px; }
@@ -140,7 +140,7 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
 
 .lg-intro a, .lg-section a, .nf-contact a {
   color: var(--heading); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 3px;
+  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-intro a:hover, .lg-section a:hover, .nf-contact a:hover { text-decoration-thickness: 2px; }
@@ -150,7 +150,7 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
 
 .lg-list { list-style: disc; padding-left: 1.25rem; }
 .lg-list li + li { margin-top: .35rem; }
-.lg-list li::marker { color: var(--gold); }
+.lg-list li::marker { color: var(--brass); }
 
 /* Two by two (auto-fill left "Dozie Ilunga" alone on a second row); one column on phones */
 .lg-persons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem 1.5rem; font-weight: 600; color: var(--heading); }
@@ -159,9 +159,9 @@ html:has(.lg-header) { scroll-padding-top: 1rem; }
 .lg-contact div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; }
 .lg-contact dt { font-weight: 600; color: var(--heading); }
 .lg-contact dd { margin: 0; }
-/* Missing contact data is marked, not hidden: gold text (Gold dunkel / Gold hell by theme) with a short gold rule in front */
+/* Missing contact data is marked, not hidden: brass text (Messing dunkel / Messing hell by theme) with a short brass rule in front */
 .lg-pending { color: var(--accent-text); font-weight: 600; }
-.lg-pending::before { content: ""; display: inline-block; width: .9rem; height: 2px; margin-right: .5rem; vertical-align: middle; background: var(--gold); }
+.lg-pending::before { content: ""; display: inline-block; width: .9rem; height: 2px; margin-right: .5rem; vertical-align: middle; background: var(--brass); }
 
 @media (max-width: 520px) {
   .lg-persons { grid-template-columns: minmax(0, 1fr); }

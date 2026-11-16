@@ -1,5 +1,5 @@
 /* Ablauf: two tracks of four steps. Desktop side by side; phones switch between them with tabs.
-   The gold line between the numerals echoes the hero match line and draws once per track. */
+   The brass line between the numerals echoes the hero match line and draws once per track. */
 
 .how-tracks {
   --how-gutter: clamp(2rem, .5rem + 3.5vw, 4.5rem);
@@ -14,7 +14,7 @@
 .how-track-seeker { padding-right: var(--how-gutter); }
 .how-track-sponsor { padding-left: var(--how-gutter); border-left: 1px solid var(--line); }
 
-/* Track label: heads its column, so it sits above the step titles in size, with a short gold-dark rule */
+/* Track label: heads its column, so it sits above the step titles in size, with a short brass-dark rule */
 .how-label {
   display: flex; align-items: center; gap: .75rem;
   margin-bottom: 2rem;
@@ -31,11 +31,11 @@
   display: grid; grid-template-columns: var(--how-num) minmax(0, 1fr); column-gap: var(--how-col);
 }
 
-/* One segment of the gold line from this numeral down to the next */
+/* One segment of the brass line from this numeral down to the next */
 .how-step:not(:last-child)::before {
   content: ""; position: absolute;
   left: calc(var(--how-num) / 2 - .5px); top: var(--how-num); bottom: calc(-1 * var(--how-row));
-  width: 1px; background: var(--gold);
+  width: 1px; background: var(--brass);
   transform-origin: top;
 }
 
@@ -43,9 +43,9 @@
   position: relative; z-index: 1;
   display: grid; place-items: center;
   width: var(--how-num); height: var(--how-num);
-  border: 1px solid var(--gold); border-radius: 50%;
+  border: 1px solid var(--brass); border-radius: 50%;
   background: var(--bg);
-  font: 600 1.75rem/1 var(--serif); color: var(--accent-text);
+  font: 600 1.75rem/1 var(--display); color: var(--accent-text);
   font-variant-numeric: lining-nums;
   padding-bottom: 3px; /* optical centring: Cormorant figures sit high on their line box */
 }
@@ -73,7 +73,7 @@
 /* ---------- Scroll-driven (html.scroll-fx, DESIGN.md -> Motion) ----------
    Each step is a view timeline. The line segment below numeral k fills while step k's top moves from
    75 % to 45 % of the viewport, so the stroke follows the reader down the list; the numeral gets a
-   gold tint disc while its step's top moves from 80 % to 60 %. Static styles are the final state
+   brass tint disc while its step's top moves from 80 % to 60 %. Static styles are the final state
    (full line, no disc outside .scroll-fx), so reduced motion and Firefox stay complete. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -94,7 +94,7 @@
       inset: -1px;
       z-index: -1;
       border-radius: 50%;
-      background: rgba(176, 141, 87, .16);
+      background: rgba(201, 161, 91, .16);
       pointer-events: none;
       animation: how-light linear both;
       animation-duration: auto;

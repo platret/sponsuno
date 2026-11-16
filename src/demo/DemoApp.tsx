@@ -70,7 +70,7 @@ const HOME: Record<Role, RouteName> = { seeker: 'uebersicht', sponsor: 'sponsor'
 const WAITLIST_ROLE: Record<Role, WaitlistRole> = { seeker: 'athlete', sponsor: 'sponsor' };
 
 /** Way back to the landing page waitlist: in the sidebar on wide screens, at the end of the view on narrow ones. */
-function WaitlistCta({ role, className, tone }: { role: Role; className: string; tone: 'gold' | 'navy' }) {
+function WaitlistCta({ role, className, tone }: { role: Role; className: string; tone: 'brass' | 'graphit' }) {
   return (
     <div className={className}>
       <p>Sponsuno startet bald. Möchten Sie von Anfang an dabei sein?</p>
@@ -174,7 +174,7 @@ export default function DemoApp() {
 
         <aside className="demo-sidebar" aria-label="Navigation der Vorschau">
           <a className="demo-brand" href={href(HOME[state.role])} aria-label="Sponsuno Vorschau, Startansicht">
-            <img src={logoDark} alt="Sponsuno" width={132} height={31} />
+            <img src={logoDark} alt="Sponsuno" width={130} height={22} />
             <span className="demo-brand-tag">Vorschau</span>
           </a>
 
@@ -193,12 +193,12 @@ export default function DemoApp() {
             </ul>
           </nav>
 
-          <WaitlistCta role={state.role} className="demo-waitlist" tone="gold" />
+          <WaitlistCta role={state.role} className="demo-waitlist" tone="brass" />
 
           <div className="demo-account">
             {state.role === 'seeker'
               ? <Avatar name={seeker.name} size={40} />
-              : <Avatar name={sponsor.name} tone="gold" size={40} />}
+              : <Avatar name={sponsor.name} tone="brass" size={40} />}
             <div>
               <p className="demo-account-name">{state.role === 'seeker' ? seeker.name : sponsor.name}</p>
               <p className="demo-account-role">{state.role === 'seeker' ? profileKindLabel(seeker) : sponsor.industry}</p>
@@ -216,7 +216,7 @@ export default function DemoApp() {
               the view, so it does not show up top and then jump down. */}
           <Suspense fallback={<div className="demo-view-pending" />}>
             <View />
-            <WaitlistCta role={state.role} className="demo-waitlist-end" tone="navy" />
+            <WaitlistCta role={state.role} className="demo-waitlist-end" tone="graphit" />
             <AfterFirstView />
           </Suspense>
         </main>

@@ -16,11 +16,11 @@
   position: relative;
   --st-read: 50;  /* reading line in % of the viewport height (Story.tsx reads it) */
   padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
-  background: var(--navy);
+  background: var(--graphit);
   color: var(--steel);
-  --focus: var(--gold-light);
+  --focus: var(--brass-light);
 }
-.story h2, .story h3 { color: var(--ivory); }
+.story h2, .story h3 { color: var(--kalk); }
 
 /* ---------- Text steps ---------- */
 
@@ -28,19 +28,19 @@
 .st-intro { margin-top: 1.1rem; max-width: 30rem; font-size: var(--fs-lead); line-height: 1.55; }
 .st-label {
   display: flex; align-items: center; gap: .65rem;
-  font-size: .875rem; font-weight: 600; color: var(--gold-light);
+  font-size: .875rem; font-weight: 600; color: var(--brass-light);
 }
-.st-label::before { content: ""; width: 24px; height: 1px; background: var(--gold); flex: none; }
+.st-label::before { content: ""; width: 24px; height: 1px; background: var(--brass); flex: none; }
 /* Story headings in Cormorant (the story reads as one editorial piece with the H1 above it) */
 .st-step h3 {
   margin-top: .75rem;
-  font-family: var(--serif); font-weight: 600;
+  font-family: var(--display); font-weight: 600;
   font-size: clamp(1.75rem, 1.25rem + 1.4vw, 2.375rem); line-height: 1.08; letter-spacing: -0.01em;
   text-wrap: balance; max-width: 18ch;
 }
 .st-copy > p:not(.st-label):not(.st-intro) { margin-top: .9rem; max-width: 30rem; }
 .st-more { margin-top: 1.25rem; }
-.st-more .link-arrow { min-height: 44px; color: var(--gold-light); }
+.st-more .link-arrow { min-height: 44px; color: var(--brass-light); }
 
 /* ---------- Stage (shared by the live stage and the snapshots) ---------- */
 
@@ -58,7 +58,7 @@
   content: ""; position: absolute; top: 6%; bottom: 6%; right: 0; width: 34%; pointer-events: none;
   -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
   mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
-  background: linear-gradient(90deg, rgba(29, 47, 82, 0), rgba(29, 47, 82, .36));
+  background: linear-gradient(90deg, rgba(46, 52, 58, 0), rgba(46, 52, 58, .36));
   opacity: 0;
 }
 .st-art:is([data-step="linie"], [data-step="sortiert"]) .st-win-l::after { opacity: 1; }
@@ -77,11 +77,11 @@
 .face-clean { opacity: var(--f); }
 
 .it-line { width: 12px; height: 90cqh; }
-.ln { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--gold-light); }
-.ln::before, .ln::after { content: ""; position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--gold-light); }
+.ln { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--brass-light); }
+.ln::before, .ln::after { content: ""; position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--brass-light); }
 .ln::before { top: -3px; }
 .ln::after { bottom: -3px; }
-.head-t { display: block; font-size: .8125rem; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+.head-t { display: block; font-size: .8125rem; font-weight: 600; color: var(--brass-light); white-space: nowrap; }
 .it-match { width: min(27rem, 72cqw); }
 
 /* Caption: centred under the picture on desktop, a bar on the stage's bottom edge on phones */
@@ -103,7 +103,7 @@
   .st-art .it-legend .lg { flex-direction: column; align-items: flex-end; }
 }
 
-/* Faint pairs ("heute" and the findings): a dimmed card, not an ivory bar. The seeker row drops its fill and
+/* Faint pairs ("heute" and the findings): a dimmed card, not an kalk bar. The seeker row drops its fill and
    reads like the company row, the score waits for "sortiert". */
 .st-art:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .it-pair :is(.pc-row, .pc-name, .pc-meta) {
   background: transparent; color: var(--steel);
@@ -148,7 +148,7 @@
 /* The legend's checks tick together with the lead pair's dots */
 .motion .st-live .lg-chk { transition: opacity .3s ease, scale .3s var(--ease-out); transition-delay: calc(650ms + var(--k) * 90ms); }
 .motion .st-live:not([data-step="sortiert"]) .lg-chk { opacity: .3; scale: .7; transition-delay: 0ms; }
-/* Match card: the gold line draws and the criteria tick when the stage reaches "match" */
+/* Match card: the brass line draws and the criteria tick when the stage reaches "match" */
 .motion .st-live .match-line { transition: scale 1s cubic-bezier(.65, 0, .35, 1) .25s; }
 .motion .st-live .match-criteria li { transition: opacity .3s ease calc(.6s + var(--i) * .12s); }
 .motion .st-live .match-criteria path { transition: stroke-dashoffset .35s ease calc(.65s + var(--i) * .12s); }
@@ -179,7 +179,7 @@
 }
 .st-text > *, .st-step + .st-step, .st-findings > .st-step + .st-step { border-top: 1px solid var(--card-dark-line); }
 .st-snap { order: 2; }
-.st-snap .st-art { --st-h: clamp(340px, 100svh - var(--header-h) - 3rem, 600px); border-radius: 20px; background: rgba(29, 47, 82, .28); }
+.st-snap .st-art { --st-h: clamp(340px, 100svh - var(--header-h) - 3rem, 600px); border-radius: 20px; background: rgba(46, 52, 58, .28); }
 /* Hidden or off-screen snapshots skip style and layout work */
 .st-snap { content-visibility: auto; contain-intrinsic-size: auto 600px; }
 
@@ -236,13 +236,13 @@
   .js .st-head > .st-step { padding-block: 0 1.75rem; }
   .js .st-stage {
     position: sticky; top: var(--header-h); z-index: 2;
-    background: var(--navy);
+    background: var(--graphit);
   }
   /* Soft lower edge: text slides under the stage without a hard cut and never shows through. It ends above
      the reading line, so a step that becomes current is already at full contrast. */
   .js .st-stage::after {
     content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 2.5rem; pointer-events: none;
-    background: linear-gradient(var(--navy) 30%, rgba(11, 24, 48, 0));
+    background: linear-gradient(var(--graphit) 30%, rgba(29, 33, 37, 0));
   }
   .js .st-text { position: relative; z-index: 1; padding-inline: var(--gutter); }
   /* A link reached with Tab scrolls in below the stage and its soft edge, not behind them (WCAG 2.4.11) */
@@ -251,7 +251,7 @@
   .js .st-text > .st-step:last-child { min-height: 0; padding-bottom: 2rem; }
 }
 
-/* Tablets: the composition keeps phone proportions, centred in the full-width navy stage */
+/* Tablets: the composition keeps phone proportions, centred in the full-width graphit stage */
 @media (min-width: 761px) and (max-width: 960px) {
   .st-stage .st-art { max-width: 640px; margin-inline: auto; }
 }
@@ -285,7 +285,7 @@
   .st-art .match-score { margin-top: .5rem; font-size: .8125rem; }
   .ki-draft { width: min(300px, 84cqw); }
   /* Caption as a bar on the bottom edge */
-  .st-art .st-cap { padding-block: .4rem; background: var(--navy); border-top: 1px solid rgba(51, 71, 111, .7); font-size: .75rem; }
+  .st-art .st-cap { padding-block: .4rem; background: var(--graphit); border-top: 1px solid rgba(58, 65, 72, .7); font-size: .75rem; }
 }
 
 @media (max-width: 960px) {

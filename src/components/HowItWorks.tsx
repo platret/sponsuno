@@ -7,7 +7,7 @@ import '../styles/sections/how.css';
 type TrackKey = 'seeker' | 'sponsor';
 
 const TRACKS: { key: TrackKey; role: Role; cta: string; btn: string }[] = [
-  { key: 'seeker', role: hero.ctaSeeker.role, cta: hero.ctaSeeker.label, btn: 'btn-navy' },
+  { key: 'seeker', role: hero.ctaSeeker.role, cta: hero.ctaSeeker.label, btn: 'btn-graphit' },
   { key: 'sponsor', role: hero.ctaSponsor.role, cta: hero.ctaSponsor.label, btn: 'btn-outline' },
 ];
 
@@ -19,7 +19,7 @@ const NARROW = '(max-width: 960px)';
  * The server and the first client render are identical (both tracks, switch hidden), so without JS
  * both tracks simply stack. Once html.js is set before first paint (index.html), CSS shows the phone
  * layout before hydration and React only adds roles, aria-selected and data-active, so nothing moves.
- * The gold line between the numerals draws once per track; under html.scroll-fx it fills with scroll
+ * The brass line between the numerals draws once per track; under html.scroll-fx it fills with scroll
  * instead, segment by segment, and each numeral lights up as its step reaches the reading line (how.css).
  */
 export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => void }) {

@@ -53,12 +53,12 @@ function ProjectStatus() {
   );
 }
 
-/** Ivory section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
+/** Kalk section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
     and "Stand des Projekts" are H2, styled as H3): the four founders with their provisional focus, then the project
     status. */
 export function Team() {
   return (
-    <section className="section surface-ivory team" id="team" aria-labelledby="team-title">
+    <section className="section surface-kalk team" id="team" aria-labelledby="team-title">
       <div className="container">
         <ul className="team-grid" role="list" data-scroll-stagger="">
           {team.members.map((member) => (

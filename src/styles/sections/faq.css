@@ -1,8 +1,8 @@
-/* FAQ (/fragen/): title, intro and the guide links in the navy page head band (FaqIntro), the questions below as
+/* FAQ (/fragen/): title, intro and the guide links in the graphit page head band (FaqIntro), the questions below as
    native <details> rows in one column on the page surface. */
 
 .faq-intro { max-width: 40rem; text-wrap: pretty; }
-/* Links into the guides (Ratgeber) under the intro, in the band (links: ivory with a gold underline, legal.css) */
+/* Links into the guides (Ratgeber) under the intro, in the band (links: kalk with a brass underline, legal.css) */
 .faq-guides { margin-top: 1rem; max-width: 40rem; font-size: var(--fs-small); line-height: 1.9; color: var(--text); }
 .lg-band .faq-guides { color: var(--steel); }
 .faq-guides a, .faq-more a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }

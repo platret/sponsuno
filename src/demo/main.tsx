@@ -29,7 +29,7 @@ class DemoErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
           <div className="ui-empty" role="alert">
             <p className="ui-empty-title">Diese Ansicht konnte nicht geladen werden</p>
             <p>Vermutlich passen die in diesem Browser gespeicherten Daten nicht zu dieser Version. Setzen Sie die Vorschau zurück, um mit den Beispieldaten neu zu beginnen.</p>
-            <button type="button" className="ui-btn ui-btn-navy ui-btn-md" onClick={this.reset}>Vorschau zurücksetzen</button>
+            <button type="button" className="ui-btn ui-btn-graphit ui-btn-md" onClick={this.reset}>Vorschau zurücksetzen</button>
           </div>
         </main>
       </div>

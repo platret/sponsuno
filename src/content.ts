@@ -138,7 +138,7 @@ export const problem = {
 export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
 
 export const story = {
-  // Labels before the step headings (short gold rule in front)
+  // Labels before the step headings (short brass rule in front)
   labels: { heute: 'Heute', solution: 'Mit Sponsuno', planned: 'Mit Sponsuno' },
   // Which finding (problem.items, in order) belongs to which stage state
   findingStates: ['kontakte', 'aufwand', 'erwartungen'] as StoryState[],
@@ -167,7 +167,7 @@ export const story = {
     href: pageMeta('ki-manager').path,
   },
   // Text alternative for the decorative graphic (given once, in the hero)
-  artAlt: 'Grafik: Anfragen, Dossiers und Absagen laufen auf eine goldene Linie zu. Rechts davon stehen geordnete Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit den vier Kriterien.',
+  artAlt: 'Grafik: Anfragen, Dossiers und Absagen laufen auf eine Linie zu. Rechts davon stehen geordnete Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit den vier Kriterien.',
   // One discreet label per picture (the hero start frame uses `solution`); the match card has its own (match.label)
   captions: {
     heute: 'Beispieldaten',
@@ -662,7 +662,7 @@ export const legal = {
     photoBy: 'Foto',
     aiLabel: 'KI-generierte Bilder',
     aiImages: ['Porträt der Mountainbikerin in der Produktvorschau (Profil und Sponsor-Cockpit): KI-generiert, Symbolbild ohne reale Person.'],
-    fonts: 'Schriften: Cormorant Garamond und Manrope, beide unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
+    fonts: 'Schrift: Schibsted Grotesk, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
   },
 
   impressum: {

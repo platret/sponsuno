@@ -6,7 +6,7 @@
 
 .proof {
   padding-block: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
-  border-top: 1px solid var(--edge); /* dark theme: the seam under the navy story */
+  border-top: 1px solid var(--edge); /* dark theme: the seam under the graphit story */
   border-bottom: 1px solid var(--line);
   text-align: center;
 }
@@ -17,7 +17,7 @@
 }
 .proof-items li { display: flex; align-items: flex-start; }
 
-/* The dot, declared once. A flat 4px gold-dark disc, centred on the first text line
+/* The dot, declared once. A flat 4px brass-dark disc, centred on the first text line
    (not a character, so screen readers stay quiet). Breakpoints only toggle it and set spacing. */
 .proof-items li::before {
   content: ""; flex: none;

@@ -5,7 +5,7 @@ import '../styles/sections/support.css';
 type KindIcon = (typeof support.kinds)[number]['icon'];
 
 /**
- * Line icons drawn in gold dark (stroke only, see support.css). Each glyph carries its own viewBox,
+ * Line icons drawn in brass dark (stroke only, see support.css). Each glyph carries its own viewBox,
  * cropped so the three share a similar optical width (about 36px of the 40px box) and a common bottom edge.
  */
 const icons: Record<KindIcon, { viewBox: string; glyph: ReactNode }> = {
