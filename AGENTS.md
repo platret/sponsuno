@@ -154,7 +154,8 @@ scripts/photos.mjs      `npm run photos`: encodes the AVIF versions of the JPEGs
 scripts/emails.mjs      `npm run emails`: builds the waitlist e-mails for Brevo (emails/src → emails/dist, committed; not part of
                         the site build). `-- --assets` regenerates public/email/ (wordmark PNG, fonts), `-- --previews`
                         renders emails/previews/*.png. Team guide (German): emails/README.md.
-public/email/           Hosted assets of the e-mails (https://sponsuno.ch/email/…): fixed URLs in sent mail, never rename.
+public/email/           Hosted assets of the e-mails (https://sponsuno.ch/email/…): fixed URLs in sent mail, never rename. Since
+                        2026-11-16 in the design system (graphit plate behind the loop wordmark, Schibsted Grotesk 400/600/700).
 emails/datenschutz-entwurf.md  DRAFT (German) of the Datenschutzerklärung's "Warteliste" section for Brevo, with placeholders for
                         the team's open decisions (DPA, retention). Not live; goes into content.ts when the waitlist is switched on.
 .github/workflows/      deploy.yml: `check` job (typecheck, Worker unit tests, build, check:dist, wrangler dry run, Playwright), then
@@ -372,7 +373,6 @@ On a failure in CI, the Playwright report and traces are attached to the run as 
 - [ ] Commission model: rate, trigger, paying side
 - [ ] Name decision. Desk trademark check done 2026-11-03 (not legal advice): no SPONSUNO mark, company or domain anywhere checked (CH, EU, DE, AT, WIPO). Risk low to medium in CH (Sponsoo is active via sponsoo.ch but has no Swiss mark), high for an EU filing or DACH expansion: SPONSOO (EUTM 013271473) and SPONSU / SPONSUU / SPONZU (DBG, EUTM 019156718 / 019156613 / 019156702) cover sponsorship search in class 35. Next: attorney or IGE clearance opinion, then domains and a Swiss filing (IGE, CHF 350 online for 3 classes), or a rename away from SPONS-. Until decided, the page must not present the name as secured
 - [ ] Identity: the site uses the Sponsuno design system v1.0 (Graphit, Messing, Kalk; loop wordmark; branch `redesign/graphit`, PR #23, November 2026). Open: team approval, legibility test of the loop with three to five people, trademark check of name and loop (IGE, DACH), CMYK/Pantone for Graphit and Messing with the printer
-- [ ] Waitlist e-mails (`emails/`, `public/email/`) still use the navy/gold/Cormorant look, and `scripts/emails.mjs` reads `src/assets/wordmark-light.svg` (now the loop wordmark) on a navy plate: restyle them to the design system before switching the waitlist on
 - [x] Founders section (`#team`, November 2026, now on `/ueber-uns/`) with monograms, and stock photos (Symbolbilder) for the match card and the audience section
 - [ ] Real, consented photos of the founders (the team section is ready for them, see "Team section" above) and, later, own photos of athletes, clubs and a local business to replace the stock Symbolbilder
 - [x] Domain sponsuno.ch on Cloudflare (November 2026). sponsuno.com was free on 2026-11-03 but is not registered

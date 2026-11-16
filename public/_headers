@@ -55,13 +55,13 @@
 /email/wordmark-light-2x.png
   Cache-Control: public, max-age=86400
 
-/email/fonts/cormorant-garamond-600.woff2
+/email/fonts/schibsted-grotesk-400.woff2
   Cache-Control: public, max-age=86400
 
-/email/fonts/manrope-400.woff2
+/email/fonts/schibsted-grotesk-600.woff2
   Cache-Control: public, max-age=86400
 
-/email/fonts/manrope-600.woff2
+/email/fonts/schibsted-grotesk-700.woff2
   Cache-Control: public, max-age=86400
 
 # HTML pages and the 404 page get no rule here: Cloudflare's default (public, max-age=0, must-revalidate), so a deploy

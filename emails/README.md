@@ -1,6 +1,6 @@
 # E-Mails der Warteliste (Brevo)
 
-Zwei fertige E-Mails für die Warteliste, gestaltet wie die Website (Navy, Gold, Ivory). Sie werden von Hand in Brevo eingefügt. Gehört zur Checkliste `team/warteliste-setup.md`, Schritt 7.
+Zwei fertige E-Mails für die Warteliste, gestaltet wie die Website (Design-System v1.0: Graphit, Messing, Kalk; Schrift Schibsted Grotesk). Sie werden von Hand in Brevo eingefügt. Gehört zur Checkliste `team/warteliste-setup.md`, Schritt 7.
 
 | Datei | Wozu | Betreff | Vorschautext (Preheader) |
 |---|---|---|---|
@@ -58,10 +58,10 @@ Hinweis Gratisplan: Brevo kann im Gratisplan ein eigenes Logo oder einen Hinweis
 
 Zuerst in Brevo **Send a test** (an eigene Adressen), danach einmal den ganzen Ablauf über die Vorschau-URL des Pull Requests (Checkliste, Schritt 12). Prüfen in:
 
-- [ ] **Gmail im Browser** (hell und mit dunklem Design): Logo sichtbar, Button gold, Text vollständig, kein «[Nachricht gekürzt] Gesamte Nachricht anzeigen» am Ende.
-- [ ] **Gmail-App** iOS und Android, Dunkelmodus ein: Gmail färbt selbst um. Der Kopf darf heller werden; das Logo steht dann als dunkles Schild mit heller Schrift darauf (das Logo-Bild hat dafür eine Navy-Fläche, die auf dem normalen Kopf unsichtbar ist) und muss gut lesbar sein. Vergleich: `previews/*-600-inverted.png`.
-- [ ] **Apple Mail** (Mac und iPhone), hell und dunkel: Im Dunkelmodus erscheint die eigene dunkle Fassung (Navy-Karte, Ivory-Schrift). Hier laden auch die Webfonts (Cormorant, Manrope).
-- [ ] **Outlook** (Windows-App, falls vorhanden, sonst Outlook im Browser): Button als goldenes Rechteck mit Text, Schrift Georgia/Arial, Breite höchstens 600 px.
+- [ ] **Gmail im Browser** (hell und mit dunklem Design): Logo sichtbar, Button graphit mit heller Schrift, Text vollständig, kein «[Nachricht gekürzt] Gesamte Nachricht anzeigen» am Ende.
+- [ ] **Gmail-App** iOS und Android, Dunkelmodus ein: Gmail färbt selbst um. Der Kopf darf heller werden; das Logo steht dann als dunkles Schild mit heller Schrift darauf (das Logo-Bild hat dafür eine Graphit-Fläche, die auf dem normalen Kopf unsichtbar ist) und muss gut lesbar sein. Vergleich: `previews/*-600-inverted.png`.
+- [ ] **Apple Mail** (Mac und iPhone), hell und dunkel: Im Dunkelmodus erscheint die eigene dunkle Fassung (Graphit-Karte, helle Schrift, Button in Messing). Hier lädt auch die Webfont (Schibsted Grotesk).
+- [ ] **Outlook** (Windows-App, falls vorhanden, sonst Outlook im Browser): Button als dunkle Pille mit Text, Schrift Arial, Breite höchstens 600 px.
 - [ ] **Handy schmal** (z. B. iPhone SE): nichts abgeschnitten, Button über die ganze Breite.
 - [ ] Inbox-Vorschau zeigt den Vorschautext aus der Tabelle, nicht «Warteliste» oder Fragmente.
 - [ ] Alle Links: Bestätigungslink (eine Adresse von Brevo, führt danach zur Bestätigungsseite), Datenschutz, beide Ratgeber (Sponsoren finden, Kultursponsoring), Produktvorschau, Für Firmen, Abmelden (Abmeldeseite von Brevo erscheint, Kontakt ist danach abgemeldet).
@@ -87,7 +87,7 @@ Die Website schickt Anmeldungen an `POST /api/warteliste` (Cloudflare Worker, `w
 Nie die Dateien in `dist/` von Hand bearbeiten. Text und Gestaltung stehen in `src/`:
 
 - `src/doi-bestaetigung.html`, `src/willkommen.html`: Betreff, Vorschautext und Inhalt; `src/*.txt`: Textversionen.
-- `src/layout.html`: Kopf (Logo, Goldlinie), Karte, Fuss, Dunkelmodus und Handy-Regeln.
+- `src/layout.html`: Kopf (Logo, Messinglinie), Karte, Fuss, Dunkelmodus und Handy-Regeln.
 - `src/inline.css`: Farben, Schriften, Abstände; das Build-Skript schreibt sie in jedes Element (`style=""`), weil Gmail und Outlook Stylesheets teils ignorieren.
 
 Dann im Repo:
@@ -104,7 +104,7 @@ Das Skript bricht ab, wenn eine Regel verletzt ist: E-Mail ab 102 KB (Gmail kür
 
 Die Postadresse und die E-Mail-Adresse im Fuss kommen aus dem Impressum (`src/content.ts` → `legal.contact`). Ändert sich die Adresse dort: `npm run emails` und in Brevo neu einfügen.
 
-**Neues Logo:** Das Logo ist eine einzige Datei, `public/email/wordmark-light-2x.png`, erzeugt aus `src/assets/wordmark-light.svg` (Einstellung `WORDMARK` in `scripts/emails.mjs`). Neues SVG dort ablegen oder `WORDMARK.source` umstellen, dann `npm run emails -- --assets --previews`. Der Dateiname bleibt gleich; nach dem Deploy zeigen alle E-Mails, auch bereits verschickte, das neue Logo (Browser-Cache bis 1 Tag). Das Logo muss hell auf Navy funktionieren; das Skript legt es auf eine abgerundete Navy-Fläche (`WORDMARK.plate`), die Ecken bleiben transparent.
+**Neues Logo:** Das Logo ist eine einzige Datei, `public/email/wordmark-light-2x.png`, erzeugt aus `src/assets/wordmark-light.svg` (Einstellung `WORDMARK` in `scripts/emails.mjs`). Neues SVG dort ablegen oder `WORDMARK.source` umstellen, dann `npm run emails -- --assets --previews`. Der Dateiname bleibt gleich; nach dem Deploy zeigen alle E-Mails, auch bereits verschickte, das neue Logo (Browser-Cache bis 1 Tag). Das Logo muss hell auf Graphit funktionieren; das Skript legt es auf eine abgerundete Graphit-Fläche (`WORDMARK.plate`), die Ecken bleiben transparent.
 
 **Texte:** Gleiche Regeln wie auf der Website (AGENTS.md, «Rules for copy»): Schweizer Rechtschreibung, «Sie», nichts erfunden (keine Daten, Zahlen, Partner), höchstens ein Startsignal («Sponsuno startet bald in der Deutschschweiz»), Youngpreneurs nicht erwähnen. Die Bestätigungs-E-Mail bleibt ohne Werbung und ohne Personalisierung.
 
