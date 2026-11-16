@@ -395,6 +395,7 @@ export const projectStatus = {
     { href: 'https://youngpreneurs.org/zuerich/', label: 'Youngpreneurs Zürich' },
     ' 2026/27.',
   ] satisfies LegalText,
+  follow: (url: string) => ['Neues aus dem Projekt teilen wir auf ', { href: url, label: 'LinkedIn' }, '.'] satisfies LegalText,
   doneLabel: 'Erledigt',
   plannedLabel: 'Geplant',
   steps: [
@@ -642,6 +643,8 @@ export const photoCredits: PhotoCredit[] = [
 export const contact = {
   postalAddress: ['Klosterstrasse 34', '8406 Winterthur', 'Schweiz'] as string[] | null,
   email: 'hello@sponsuno.ch' as string | null,
+  /** Official company page (team, 2026-11-16): footer Kontakt column, "Stand des Projekts" and sameAs in the JSON-LD */
+  linkedin: 'https://www.linkedin.com/company/sponsuno/' as string | null,
 };
 
 export const legal = {

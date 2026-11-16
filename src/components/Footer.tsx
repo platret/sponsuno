@@ -4,7 +4,7 @@ import wordmark from '../assets/wordmark-light.svg';
 import '../styles/sections/footer.css';
 
 // Kontakt column: the e-mail address as visible text (a mailto link) and the town of the postal address
-// ('8406 Winterthur' -> 'Winterthur'). Missing fields are left out; without both the column is not shown.
+// ('8406 Winterthur' -> 'Winterthur'), with the LinkedIn company page between them. Missing fields are left out; without both the column is not shown.
 const CONTACT_EMAIL = contact.email;
 const CONTACT_TOWN = contact.postalAddress?.find((line) => /^\d{4}\s/.test(line))?.replace(/^\d{4}\s+/, '') ?? null;
 
@@ -51,6 +51,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
                   {CONTACT_EMAIL && (
                     <li><a className="ft-link ft-mail" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
                   )}
+                  {contact.linkedin && <li><a className="ft-link" href={contact.linkedin}>LinkedIn</a></li>}
                   {CONTACT_TOWN && <li className="ft-text">{CONTACT_TOWN}</li>}
                 </ul>
               </div>

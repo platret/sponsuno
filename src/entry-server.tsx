@@ -120,6 +120,7 @@ function homeGraph() {
         logo: site.logo,
         description: home.description,
         ...(contact.email ? { email: contact.email } : {}),
+        ...(contact.linkedin ? { sameAs: [contact.linkedin] } : {}),
         ...(street && city
           ? {
               address: {
