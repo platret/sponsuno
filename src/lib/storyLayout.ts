@@ -38,9 +38,9 @@ const behind = { x: L + 14, o: 0 };
 const mBehind = { x: ML + 18, o: 0 };
 
 /**
- * A raw paper. By default it slides behind the line in "linie" (the ones nearest to it). `dl` / `ml` instead keep
- * it at the line in "linie": a short, evenly spaced stack, small and faint, so the line takes in one at a time.
- * `ds` / `ms`: its "sortiert" state (default: behind the line).
+ * A raw input (an input tile). By default it slides behind the line in "linie". `dl` / `ml` instead keep it at the
+ * line in "linie": faint and small, half fed into it (the left window clips it at the line), above or below the
+ * seeker queue. `ds` / `ms`: its "sortiert" state (default: behind the line).
  */
 const paper = (
   key: string, spot: StoryState[], d: Rec, m: Rec | null,
@@ -50,48 +50,53 @@ const paper = (
   d: { heute: d, linie: o.dl ?? behind, sortiert: o.ds ?? behind, match: off },
   m: m && { heute: m, linie: o.ml ?? mBehind, sortiert: o.ms ?? mBehind, match: off },
 });
-const atLine = (y: number): Rec => ({ x: L - 7, y, o: .3, s: .82 });
+const atLine = (y: number): Rec => ({ x: L, xo: 8, y, o: .3, s: .82 });
 
 // Frame y centres (desktop three, phone two)
 const FY = [19, 46, 73];
-const MFY = [22, 57];
+const MFY = [20, 55];
+// The heap ("heute"): one loose column of inputs and seeker cards, one per row, each nudged left or right
+// (desktop x 22-29 % keeps every tile inside the window left of the line at every desktop stage width).
+const HY = [6, 16.75, 27.5, 38.25, 49, 59.75, 70.5, 81.25, 92];
+const MHY = [9, 23, 37.5, 52, 66, 80.5];
 
 export const STAGE_ITEMS: StageItem[] = [
-  // ---- chaos: papers (left window), two loose columns with room between neighbours. Right column (nearest
-  //      the line) slides behind it in "linie"; the left column queues at the line. ----
-  paper('p-dossier', ['aufwand'], { x: 14, y: 14 }, { x: 12, y: 15 }, { dl: atLine(22) }),
-  paper('p-absage', ['aufwand'], { x: 38, y: 12 }, { x: 25, y: 37 }),
-  paper('p-training', ['aufwand'], { x: 41, y: 32 }, null),
-  paper('p-antwort', ['kontakte'], { x: 38, y: 52 }, null),
-  paper('p-zustaendig', ['kontakte'], { x: 13, y: 60 }, { x: 29, y: 15 }, { dl: atLine(50) }),
-  paper('p-gelohnt', ['erwartungen'], { x: 38, y: 67 }, null),
-  paper('p-gegenleistung', ['erwartungen'], { x: 38, y: 77 }, { x: 24, y: 66 }, {
-    dl: atLine(77), ds: { o: 0 },
-    ml: { x: ML - 6, y: 9, o: .2, s: .9 }, ms: { o: 0 },
+  // ---- chaos: inputs (left window), the three findings mixed. In "linie" three queue at the line, the rest slide
+  //      behind it. Phones show four of them (the longest labels do not fit the narrow window). ----
+  paper('p-dossier', ['aufwand'], { x: 24, y: HY[0] }, { x: 20, y: MHY[0] }, { dl: atLine(9) }),
+  paper('p-zustaendig', ['kontakte'], { x: 29, y: HY[1] }, { x: 20, y: MHY[1] }, { dl: atLine(77) }),
+  paper('p-absage', ['aufwand'], { x: 23, y: HY[2] }, null),
+  paper('p-gelohnt', ['erwartungen'], { x: 28, y: HY[4] }, null),
+  paper('p-training', ['aufwand'], { x: 22, y: HY[5] }, null),
+  paper('p-antwort', ['kontakte'], { x: 27, y: HY[6] }, { x: 20, y: MHY[3] }),
+  paper('p-gegenleistung', ['erwartungen'], { x: 23, y: HY[8] }, { x: 20, y: MHY[4] }, {
+    dl: atLine(86), ds: { o: 0 },
+    ml: { x: ML, xo: 6, y: 86, o: .2, s: .62 }, ms: { o: 0 },
   }),
 
-  // ---- seekers: raw (tilted, role line) in the heap, clean in the queue, then behind the line ----
+  // ---- seekers: in the heap (with their role), then straight in the queue (with their region), then behind the line ----
   {
     key: 's-0', chaos: true, spot: ['kontakte'],
-    d: { heute: { x: 16, y: 37 }, linie: { x: 20, y: 34, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
-    m: { heute: { x: 23, y: 52 }, linie: { x: 23, y: 38, f: 1, o: 1, s: 1 }, sortiert: { x: ML + 22, o: 0, f: 1 }, match: off },
+    d: { heute: { x: 26, y: HY[3] }, linie: { x: 24, y: 34, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
+    m: { heute: { x: 20, y: MHY[2] }, linie: { x: 20, y: 38, f: 1, o: 1, s: 1 }, sortiert: { x: ML + 22, o: 0, f: 1 }, match: off },
   },
   {
     key: 's-1', chaos: true, spot: ['erwartungen'],
-    d: { heute: { x: 16, y: 88 }, linie: { x: 20, y: 50, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
-    m: { heute: { x: 23, y: 80 }, linie: { x: 23, y: 64, f: 1, o: 1, s: 1 }, sortiert: { x: ML + 22, o: 0, f: 1 }, match: off },
+    d: { heute: { x: 26, y: HY[7] }, linie: { x: 24, y: 50, f: 1 }, sortiert: { x: L + 16, o: 0, f: 1 }, match: off },
+    m: { heute: { x: 20, y: MHY[5] }, linie: { x: 20, y: 64, f: 1, o: 1, s: 1 }, sortiert: { x: ML + 22, o: 0, f: 1 }, match: off },
   },
   {
     key: 's-2',
-    d: { heute: { x: -14, y: 66, o: 0, f: 1 }, linie: { x: 20, y: 66, o: 1 }, sortiert: { x: L + 16, o: 0 }, match: off },
+    d: { heute: { x: -14, y: 66, o: 0, f: 1 }, linie: { x: 24, y: 66, o: 1 }, sortiert: { x: L + 16, o: 0 }, match: off },
     m: null,
   },
 
-  // ---- companies: enter from the right edge in "linie", settle into their pair card in "sortiert" ----
+  // ---- companies: enter from the right edge in "linie", settle into their pair card in "sortiert" (the chip's disc
+  //      lands on the card's company disc: card padding + half a disc to the right of the line, at the card's centre) ----
   ...[0, 1, 2].map((i): StageItem => ({
     key: `f-${i}`,
-    d: { heute: { x: 116, y: [34, 50, 66][i], o: 0 }, linie: { x: 77, o: 1 }, sortiert: { x: L, xo: 126, y: FY[i], yo: 22, o: 0 }, match: off },
-    m: i < 2 ? { heute: { x: 118, y: [38, 64][i], o: 0 }, linie: { x: 74, o: 1 }, sortiert: { x: ML, xo: 112, y: MFY[i], yo: 18, o: 0 }, match: off } : null,
+    d: { heute: { x: 116, y: [34, 50, 66][i], o: 0 }, linie: { x: 77, o: 1 }, sortiert: { x: L, xo: 130, y: FY[i], yo: 0, o: 0 }, match: off },
+    m: i < 2 ? { heute: { x: 118, y: [38, 64][i], o: 0 }, linie: { x: 74, o: 1 }, sortiert: { x: ML, xo: 91, y: MFY[i], yo: 0, o: 0 }, match: off } : null,
   })),
 
   // ---- pair cards (right window): faint promise in "heute", gone in "linie", out from behind the line in "sortiert" ----
@@ -122,8 +127,8 @@ export const STAGE_ITEMS: StageItem[] = [
   })),
   {
     key: 'head-seeker',
-    d: { heute: { x: 20, y: 22, o: 0 }, linie: { o: 1 }, sortiert: { o: 0 } },
-    m: { heute: { x: 23, y: 22, o: 0 }, linie: { o: 1 }, sortiert: { o: 0 } },
+    d: { heute: { x: 24, y: 22, o: 0 }, linie: { o: 1 }, sortiert: { o: 0 } },
+    m: { heute: { x: 20, y: 22, o: 0 }, linie: { o: 1 }, sortiert: { o: 0 } },
   },
   {
     key: 'head-firm',
@@ -139,8 +144,8 @@ export const STAGE_ITEMS: StageItem[] = [
       match: { x: 50, xo: 0, y: 47, o: 1, s: 1 }, danach: { x: 28, y: 36, s: .9 },
     },
     m: {
-      heute: { x: 50, y: 45, o: 0, s: .8 }, sortiert: { x: ML, xo: 106, y: MFY[0], o: 0, s: .78 },
-      match: { x: 50, xo: 0, y: 45, o: 1, s: .88 }, danach: { y: 40, o: 0, s: .8 },
+      heute: { x: 50, y: 45, o: 0, s: .8 }, sortiert: { x: ML, xo: 109, y: MFY[0], o: 0, s: .66 },
+      match: { x: 50, xo: 0, y: 45, o: 1, s: 1 }, danach: { y: 40, o: 0, s: .8 },
     },
   },
   {

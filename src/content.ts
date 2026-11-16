@@ -43,6 +43,8 @@ export const hero = {
   lead: 'Sponsuno bringt Sportlerinnen, Sportler und Vereine aus Sport und Kultur mit Firmen aus ihrer Region zusammen.',
   ctaSeeker: { label: 'Ich suche Sponsoren', role: 'athlete' as Role },
   ctaSponsor: { label: 'Ich möchte sponsern', role: 'sponsor' as Role },
+  // Toggle under the start frame (aria-pressed): the loop runs longer than 5 s, so it can be stopped (WCAG 2.2.2)
+  pauseLabel: 'Animation anhalten',
 };
 
 // Fictional example for the match card on the story stage ("Ein Match" step). Keep the label whenever this changes:
@@ -167,7 +169,16 @@ export const story = {
     href: pageMeta('ki-manager').path,
   },
   // Text alternative for the decorative graphic (given once, in the hero)
-  artAlt: 'Grafik: Anfragen, Dossiers und Absagen laufen auf eine Linie zu. Rechts davon stehen geordnete Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit den vier Kriterien.',
+  artAlt: 'Grafik: Anfragen, Unterlagen, offene Fragen und Rückrufe laufen über feine Linien in einem Punkt zusammen. Daraus entsteht die Liste «Passende Partner»: Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit der Übereinstimmung in den vier Kriterien.',
+  // Hero start frame: the inputs (paper kinds, top to bottom; phones show the ones marked phone) and the product
+  // window they feed, titled like the list in the product preview (/demo/ "Passende Partner").
+  heroInputs: [
+    { kind: 'nachfassen', icon: 'mail', phone: true },
+    { kind: 'praesentation', icon: 'pdf', phone: true },
+    { kind: 'fragen', icon: 'ask', phone: false },
+    { kind: 'rueckruf', icon: 'call', phone: true },
+  ] as const,
+  heroWindow: { title: 'Passende Partner', tab: 'Vorschläge' },
   // One discreet label per picture (the hero start frame uses `solution`); the match card has its own (match.label)
   captions: {
     heute: 'Beispieldaten',
@@ -175,16 +186,14 @@ export const story = {
     planned: 'Beispieldaten',
   },
   columns: { seeker: 'Sucht Unterstützung', sponsor: 'Möchte sponsern' },
-  // The raw papers left of the line. Short labels only; they illustrate the three findings. The hero start
-  // frame uses its own set (anfrage, liste, nachfassen, praesentation, fragen, rueckruf), the story stage the
-  // rest, so the two pictures never show the same papers at once.
+  // Labels of the input tiles. Short labels only. The hero start frame uses its own set (nachfassen,
+  // praesentation, fragen, rueckruf, see heroInputs); the story stage's "heute" picture the rest, which
+  // illustrate the three findings, so the two pictures never show the same inputs at once.
   papers: {
-    anfrage: 'Anfrage: Trikot\u00ADsponsoring',
     dossier: 'Sponsoring\u00ADdossier.pdf',
     absage: 'Danke für Ihre Anfrage. Leider …',
     antwort: 'Noch keine Antwort',
     zustaendig: 'Wer ist dort zuständig?',
-    liste: 'Firmenliste Region',
     training: 'Nach dem Training schreiben',
     gegenleistung: 'Gegenleistung: ?',
     gelohnt: 'Hat es sich gelohnt?',
@@ -192,7 +201,6 @@ export const story = {
     praesentation: 'Vereins\u00ADmappe.pdf',
     fragen: 'Wen könnten wir fragen?',
     rueckruf: 'Rückruf: offen',
-    pdfTag: 'PDF',
   },
   // Fictional pairs (seeker + company from the same region). The first is the match card's example.
   pairs: [
@@ -202,7 +210,7 @@ export const story = {
     { seeker: { mark: 'T', name: 'Theaterverein' }, firm: { mark: 'D', name: 'Druckerei' }, region: 'Zürcher Weinland', score: 4 },
     { seeker: { mark: 'C', name: 'Chor' }, firm: { mark: 'B', name: 'Bäckerei' }, region: 'Toggenburg', score: 4 },
   ],
-  // Short score on the pair cards; the lead card uses match.result ("Passt in 4 von 4 Kriterien").
+  // Short score on the pair cards and the hero window rows; the match card uses match.result.
   // A 3 marks the last criterion (Budget) as partly matching, as in the demo.
   scoreShort: (n: number) => `${n} von 4`,
 };

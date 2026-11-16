@@ -17,11 +17,11 @@ type Violation = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'][number
 /**
  * Exception, color-contrast only: text inside the two aria-hidden pictures of the landing page, the hero start frame
  * (.ha-canvas) and the story stage (.st-stage), while an element between the picture and the text is faded
- * (opacity < 1). The fade is the picture: the pairs on the hero belt fade out as they travel right (hero.css,
- * ha-out), the "heute" pairs on the story stage are dimmed on purpose (story.css). Such text is part of a picture and
- * has no contrast requirement (WCAG 1.4.3, "incidental"), and on the belt the ratio depends on the moment axe looks
- * (it made the Lighthouse score flip between 97 and 100). The same text at full opacity is still checked: the lead
- * pair here, and every hero pair in the test below.
+ * (opacity < 1). The fade is the picture: in the hero window a new pair fades in at the top and the bottom one fades
+ * out on every beat of the loop (hero.css, ha-row), the "heute" pairs on the story stage are dimmed on purpose
+ * (story.css). Such text is part of a picture and has no contrast requirement (WCAG 1.4.3, "incidental"), and in the
+ * loop the ratio depends on the moment axe looks. The same text at full opacity is still checked: the rows that stand
+ * still here, and the hero rows of the still frame (the first three) and the input tiles in the test below.
  */
 const FADED_ART = '.ha-canvas[aria-hidden="true"], .st-stage[aria-hidden="true"]';
 
@@ -45,7 +45,7 @@ async function open(page: Page, path: string, theme: Theme) {
     await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
   }
   await page.evaluate(() => document.fonts.ready);
-  // Wait for the time-based animations and transitions to end (the hero load, a reveal in view). The belt runs
+  // Wait for the time-based animations and transitions to end (the hero load, a reveal in view). The hero loop runs
   // forever and scroll-driven animations follow the scroll, so neither is waited for.
   await page.waitForFunction(() =>
     document.getAnimations().every((a) =>
@@ -88,13 +88,16 @@ test.describe('axe, reduced motion', () => {
       });
     }
 
-    test(`hero pair cards meet 4.5:1 at full opacity (${theme})`, async ({ page }) => {
-      // The belt fades its pairs out by design (see FADED_ART); their text colours must pass whenever a pair is
-      // fully visible. Reduced motion lays the pairs out side by side; this lifts the step-wise dimming.
+    test(`hero window rows and input tiles meet 4.5:1 at full opacity (${theme})`, async ({ page }) => {
+      // The loop fades rows in and out by design (see FADED_ART); their text colours must pass whenever a row is
+      // fully visible. Reduced motion shows the still frame; this also lifts any fade, should one be added.
       await open(page, '/', theme);
-      await page.addStyleTag({ content: '.hero-art .ha-pair { opacity: 1 !important; }' });
+      await page.addStyleTag({ content: '.hero-art :is(.ha-row, .ha-tile, .ha-win) { opacity: 1 !important; }' });
       const { violations, passes } = await new AxeBuilder({ page }).include('.hero-art').withRules(['color-contrast']).analyze();
-      expect(passes.flatMap((p) => p.nodes).length, 'axe checked the pair text').toBeGreaterThan(0);
+      const checked = passes.flatMap((p) => p.nodes).map((n) => n.html);
+      for (const cls of ['ha-names', 'ha-region', 'ha-score', 'ha-title', 'in-label']) {
+        expect(checked.some((html) => html.includes(`class="${cls}"`)), `axe checked .${cls}`).toBe(true);
+      }
       expect(await failures(page, violations)).toEqual([]);
     });
   }

@@ -5,50 +5,43 @@ import { match } from '../content';
 
 /**
  * The fictional match (mountain biker and bike shop, four criteria, "Passt in 4 von 4 Kriterien"). Shown on the
- * story stage in the "match" step, where it grows out of the lead pair card. Presentational only: the brass line
- * draws and the criteria tick when the live stage reaches "match" (story.css); snapshots and reduced motion show
- * the final state. Decorative there (the stage is aria-hidden; the step text carries the meaning).
+ * story stage in the "match" step, where it grows out of the lead pair card. One surface in the pair card's
+ * language: both parties on the same grid (photo and brass disc the same size), then under a hairline the four
+ * criteria as brass dots with their names and the result as plain text. Presentational only: the dots tick and the
+ * result appears when the live stage reaches "match" (story.css); snapshots and reduced motion show the final state.
+ * Decorative there (the stage is aria-hidden; the step text carries the meaning).
  */
 export function MatchCard() {
+  const parties = [
+    { key: 'athlete', p: match.athlete, mark: (
+      // AVIF with the JPEG as fallback (scripts/photos.mjs)
+      <picture className="match-picture">
+        <source type="image/avif" srcSet={photoAvif} />
+        <img className="match-photo" src={photo} alt="" width={48} height={48} decoding="async" loading="lazy" />
+      </picture>
+    ) },
+    { key: 'sponsor', p: match.sponsor, mark: <span className="match-mark">{match.sponsor.mark}</span> },
+  ];
   return (
     <figure className="match">
       <figcaption className="match-label">{match.label}</figcaption>
-
-      <div className="match-party match-athlete">
-        {/* AVIF with the JPEG as fallback (scripts/photos.mjs) */}
-        <picture className="match-picture">
-          <source type="image/avif" srcSet={photoAvif} />
-          <img className="match-photo" src={photo} alt="" width={52} height={52} decoding="async" loading="lazy" />
-        </picture>
-        <div className="match-party-text">
-          <p className="match-role">{match.athlete.role}</p>
-          <p className="match-name">{match.athlete.name}</p>
-          <p className="match-meta">{match.athlete.meta} · {match.athlete.need}</p>
+      {parties.map(({ key, p, mark }) => (
+        <div key={key} className="match-party">
+          {mark}
+          <div className="match-party-text">
+            <p className="match-role">{p.role}</p>
+            <p className="match-name">{p.name}</p>
+            <p className="match-meta">{p.meta} · {p.need}</p>
+          </div>
         </div>
-      </div>
-
-      <div className="match-link">
-        <span className="match-line" />
-        <div className="match-result">
-          <ul className="match-criteria">
-            {match.criteria.map((c, i) => (
-              <li key={c} style={{ '--i': i } as CSSProperties}>
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" /></svg>
-                {c}
-              </li>
-            ))}
-          </ul>
-          <p className="match-score">{match.result}</p>
-        </div>
-      </div>
-
-      <div className="match-party match-sponsor">
-        <span className="match-mark">{match.sponsor.mark}</span>
-        <div className="match-party-text">
-          <p className="match-role">{match.sponsor.role}</p>
-          <p className="match-name">{match.sponsor.name}</p>
-          <p className="match-meta">{match.sponsor.meta} · {match.sponsor.need}</p>
-        </div>
+      ))}
+      <div className="match-foot">
+        <ul className="match-criteria">
+          {match.criteria.map((c, i) => (
+            <li key={c} style={{ '--i': i } as CSSProperties}><i className="match-dot" />{c}</li>
+          ))}
+        </ul>
+        <p className="match-score">{match.result}</p>
       </div>
     </figure>
   );
