@@ -138,7 +138,7 @@ export const problem = {
 export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
 
 export const story = {
-  // Labels before the step headings (short brass rule in front)
+  // Labels before the step headings (design-system .label)
   labels: { heute: 'Heute', solution: 'Mit Sponsuno', planned: 'Mit Sponsuno' },
   // Which finding (problem.items, in order) belongs to which stage state
   findingStates: ['kontakte', 'aufwand', 'erwartungen'] as StoryState[],

@@ -16,7 +16,7 @@
 }
 
 .sup-kind {
-  padding: clamp(1.5rem, 1rem + 1.4vw, 2.5rem);
+  padding: var(--card-pad);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);

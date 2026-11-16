@@ -44,7 +44,7 @@
 .pp-flap { position: absolute; left: 0; top: 0; width: 100%; height: 46%; fill: none; stroke: var(--card-dark-line); stroke-width: 1.2; }
 .pp-sticky { width: 116px; height: 90px; }
 /* Muted paper tone: the raw side stays quieter than the ordered pairs (the lit side, as in the reference) */
-.pp-sticky .pp { background: #CFC7B6; border-color: transparent; border-radius: 3px 3px 12px 3px; }
+.pp-sticky .pp { background: var(--kalk-2); border-color: transparent; border-radius: 3px 3px 12px 3px; }
 .pp-sticky .pp-lab { color: var(--graphit); font-size: .8125rem; }
 .pp-sheet { width: 120px; height: 98px; }
 .pp-sheet .pp-lab { order: -1; }

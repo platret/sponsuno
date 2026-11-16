@@ -18,11 +18,9 @@
   --brass: #C9A15B;          /* messing-500: accent on graphit, accent fills with graphit text; never text on kalk */
   --brass-light: #DCC08A;    /* messing-300: gradient end, lighter accent on graphit */
   --brass-dark: #74592A;     /* messing-700: brass as text on kalk */
-  --brass-pale: #DCC08A;
   --error-on-dark: #F2C5B5;
   --steel: #B7B9BC;          /* grau-300: body text on graphit */
   --ink: #5A6068;            /* grau-600: body text on kalk */
-  --card-dark-a: #2E343A;
   --card-dark-b: #262B30;
   --card-dark-line: #3A4148; /* border on dark */
   --grad-dark: linear-gradient(135deg, #1D2125, #2E343A);   /* verlauf-dunkel */
@@ -37,6 +35,7 @@
   --radius: 16px;       /* radius-md: cards */
   --radius-sm: 8px;     /* small parts, inputs inside cards */
   --radius-pill: 999px; /* buttons, chips */
+  --card-pad: clamp(1.5rem, .5rem + 2.5vw, 2.5rem); /* space-10 (40 px) inside cards from 1200 px, 24 px on phones */
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
 
@@ -103,7 +102,6 @@
   --wordmark-ink: none;
   --wordmark-light: block;
   --focus: var(--brass);
-  --shadow-card: 0 1px 2px rgba(8, 10, 12, .3), 0 12px 32px -18px rgba(8, 10, 12, .7);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
@@ -122,7 +120,6 @@
     --wordmark-ink: none;
     --wordmark-light: block;
     --focus: var(--brass);
-    --shadow-card: 0 1px 2px rgba(8, 10, 12, .3), 0 12px 32px -18px rgba(8, 10, 12, .7);
     color-scheme: dark;
   }
 }

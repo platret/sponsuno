@@ -10,8 +10,8 @@
 // Known cost of the split: no kerning between a core and an extra glyph (they come from different files), so a name
 // typed into the demo such as "Ángel" or "Muñoz" can sit up to about 1 px off. Shipped text is never affected. Moving
 // the other French, Italian, Spanish and Portuguese accents (ÁÂÊËÍÎÏÑÒÓÔÙÚÛáãìíñòóõúœ) into CORE would cost 2.6 KB
-// on every page (Cormorant 600 +1.0 KB, Manrope 400 +0.8 KB, Manrope 600 +0.7 KB; all Latin-1 letters +5.6 KB),
-// measured 2026-11-10, so they stay in extra.
+// on every page (measured 2026-11-10 with the faces of that time; all Latin-1 letters +5.6 KB), so they stay in extra.
+// Re-measure for Schibsted Grotesk before moving them.
 
 /** fontsource's "latin" unicode-range (unicode.json in the @fontsource packages, v5): the union of core and extra. */
 export const LATIN_RANGE =

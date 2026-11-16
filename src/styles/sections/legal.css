@@ -29,9 +29,9 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-nav ul { display: flex; gap: .25rem; }
 .lg-nav a {
   display: flex; align-items: center; min-height: 44px; padding: 0 .8rem; border-radius: var(--radius-pill);
-  font-size: var(--fs-small); color: rgba(245, 243, 238, .78); text-decoration: none;
+  font-size: var(--fs-small); color: var(--steel); text-decoration: none;
 }
-.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--kalk); }
+.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--kalk); background: rgba(245, 243, 238, .07); }
 .lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 .lg-cta-short { display: none; }
 
@@ -139,14 +139,14 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 /* Table of contents: a card with a label and numbered links (01, 02 …); the same numbers stand over the sections */
 .lg-toc {
   margin-top: 0;
-  padding: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  padding: var(--card-pad);
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-alt);
 }
 .lg-toc ol { margin-top: 1rem; counter-reset: lg-toc; columns: 2 15rem; column-gap: 2.5rem; }
 .lg-toc li { counter-increment: lg-toc; break-inside: avoid; font-size: var(--fs-small); }
-/* Block flex row, so the number stays on the first line when a title wraps; .4rem padding gives a 44px-high hit area */
-.lg-toc a { display: flex; gap: .75rem; padding-block: .4rem; color: var(--text); text-decoration: none; line-height: 1.45; }
+/* Block flex row, so the number stays on the first line when a title wraps; at least 44 px high */
+.lg-toc a { display: flex; gap: .75rem; min-height: 44px; padding-block: .6rem; color: var(--text); text-decoration: none; line-height: 1.45; }
 .lg-toc a::before {
   content: counter(lg-toc, decimal-leading-zero) / "";
   flex: none; min-width: 1.4rem; padding-top: .1em;

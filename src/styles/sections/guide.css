@@ -2,13 +2,14 @@
    No motion. On the page surface of the theme, so brass text is --accent-text (Messing dunkel / Messing by theme,
    DESIGN.md → Colour); boxes are cards: radius 16, 1px border, no shadow. */
 
-/* Launch note (/fuer-firmen/, in the page head band): small text in a hairline box */
+/* Launch note (/fuer-firmen/, in the page head band): the same label with a dot as the landing page hero badge */
 .gd-note {
+  display: flex; align-items: center; gap: .6rem;
   margin-top: 1.5rem; max-width: 42rem;
-  padding: .875rem 1.25rem;
-  border: 1px solid var(--line); border-radius: var(--radius-sm);
-  font-size: var(--fs-small); line-height: 1.55; color: var(--text);
+  font: 600 var(--fs-label)/1.4 var(--sans); letter-spacing: var(--label-tracking); text-transform: uppercase;
+  color: var(--brass);
 }
+.gd-note::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
 /* Numbered steps: the number in a small outlined circle, a hairline joins the circles */
 .gd-steps { margin-top: 1.5rem; counter-reset: gd-step; }
@@ -81,7 +82,7 @@
 /* "Weiterlesen" (guides) and the link list of the 404 and notice pages: a card with a label, one row per page */
 .gd-related {
   margin-top: clamp(3rem, 2.25rem + 2.5vw, 4.5rem);
-  padding: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  padding: var(--card-pad);
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-alt);
 }
@@ -114,7 +115,7 @@
 /* The demo's sponsor cockpit, first under the page head band: a card like the guides' "Weiterlesen" */
 .pg-cockpit {
   margin-top: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
-  padding: clamp(1.25rem, .75rem + 1.5vw, 2rem) clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+  padding: var(--card-pad);
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-alt);
 }
