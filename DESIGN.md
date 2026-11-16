@@ -1,6 +1,6 @@
 # DESIGN.md – Sponsuno visual system
 
-The source of truth for colours, type, shapes and the logo is the **Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk")**, Alex's design-system artifact. It replaced the navy/gold/Cormorant look of the CD manual on the branch `redesign/graphit` (November 2026). This file translates it into how the website uses it. If the code and this file disagree, fix one of them in the same change.
+The source of truth for colours, type, shapes and the logo is the **Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk")**, Alex's design-system artifact. It replaced the navy/gold/Cormorant look of the CD manual on 2026-11-16 (PR #23). This file translates it into how the website uses it. If the code and this file disagree, fix one of them in the same change.
 
 Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.css); the landing page base layer is [`src/styles/site.css`](src/styles/site.css); each section has its own stylesheet in `src/styles/sections/`.
 
