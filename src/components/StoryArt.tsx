@@ -1,99 +1,60 @@
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import { aiManager, match, story, type StoryState } from '../content';
 import { STAGE_ITEMS, visibleIn } from '../lib/storyLayout';
+import { InputIcon, type IconName } from './InputIcon';
 import { MatchCard } from './MatchCard';
 import '../styles/sections/story-art.css';
 
-// Pieces of the story graphic (hero start frame and the story stage). All of it is decorative: the parents
-// mark it aria-hidden and give the text alternative once (story.artAlt in the hero).
+// Pieces of the story stage. All of it is decorative: the stage is aria-hidden; the text alternative is given once
+// (story.artAlt in the hero).
 
 type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
 const Check = () => <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" /></svg>;
-const Half = () => (
-  <svg viewBox="0 0 16 16" aria-hidden="true" className="half"><circle cx="8" cy="8" r="5.5" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" /></svg>
+
+// The inputs of the "heute" picture (the hero's start frame uses its own set) and their icons
+const PAPER_ICON = {
+  dossier: 'pdf', absage: 'mail', antwort: 'clock', zustaendig: 'ask', training: 'pen', gegenleistung: 'open', gelohnt: 'chart',
+} as const satisfies Record<string, IconName>;
+type PaperKind = keyof typeof PAPER_ICON;
+
+/** A raw input as an input tile, the same tile as in the hero (.in-tile): one size, never tilted. */
+const Paper = ({ kind }: { kind: PaperKind }) => (
+  <div className="in-tile paper"><InputIcon name={PAPER_ICON[kind]} /><span className="in-label">{story.papers[kind]}</span></div>
 );
-
-const scribble = (n: number, widths = [88, 70, 80, 56]) => (
-  <span className="pp-lines">{Array.from({ length: n }, (_, k) => <i key={k} style={{ width: `${widths[k % widths.length]}%` }} />)}</span>
-);
-
-export type PaperKind = keyof Omit<typeof story.papers, 'pdfTag'>;
-
-// Static tilt per paper (never animated: "straightening" is a crossfade between faces)
-const TILT: Record<PaperKind, number> = {
-  anfrage: -6, dossier: 5, absage: -3, antwort: 4, zustaendig: -5, liste: 3, training: 6, gegenleistung: -4, gelohnt: 3,
-  nachfassen: 3, praesentation: -5, fragen: 5, rueckruf: -3,
-};
-
-const SHAPE: Record<PaperKind, string> = {
-  anfrage: 'letter', dossier: 'pdf', absage: 'mail', antwort: 'env', zustaendig: 'sticky', liste: 'sheet', training: 'sticky',
-  gegenleistung: 'small', gelohnt: 'small', nachfassen: 'mail', praesentation: 'pdf', fragen: 'sticky', rueckruf: 'small',
-};
-
-/** A raw paper: request letter, PDF, e-mail, envelope, sticky note, list or small question card. */
-export function Paper({ kind, className = '', style }: { kind: PaperKind; className?: string; style?: Vars }) {
-  const label = <span className="pp-lab">{story.papers[kind]}</span>;
-  let body: ReactNode;
-  const shape = SHAPE[kind];
-  switch (shape) {
-    case 'letter': body = <>{scribble(3)}{label}</>; break;
-    case 'pdf': body = <><span className="pp-ear" /><span className="pp-tag">{story.papers.pdfTag}</span>{scribble(4, [80, 64, 72, 48])}{label}</>; break;
-    case 'mail': body = <><span className="pp-dots"><b /><b /><b /></span>{label}{scribble(2, [86, 60])}</>; break;
-    case 'env': body = <><svg className="pp-flap" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M1 1 L50 30 L99 1" /></svg>{label}</>; break;
-    case 'sheet': body = <><span className="pp-grid" />{label}</>; break;
-    case 'small': body = <><span className="pp-open" />{label}</>; break;
-    default: body = label;
-  }
-  return (
-    <div className={`paper pp-${shape} ${className}`} style={{ '--t': `${TILT[kind]}deg`, ...style } as Vars}>
-      <div className="pp">{body}</div>
-    </div>
-  );
-}
 
 const Disc = ({ side, mark }: { side: 'seeker' | 'firm'; mark: string }) => (
   <span className={`disc disc-${side}`}>{mark}</span>
 );
 
-/** One fictional pair: seeker on top, company below, joined by a thin brass connector; four criteria dots and the score. */
-export function PairCard({ index, lead = false }: { index: number; lead?: boolean }) {
+/** One fictional pair on one surface: seeker and company on the same grid (same disc style), then the region, the
+    four criteria as dots (a ring for "teilweise" on Budget) and the score. Same order as the rows of the hero's
+    product window. */
+function PairCard({ index }: { index: number }) {
   const p = story.pairs[index];
-  const partial = p.score < 4;
   return (
-    <div className={`pc${lead ? ' pc-lead' : ''}`}>
-      <div className="pc-row">
-        <Disc side="seeker" mark={p.seeker.mark} />
-        <span className="pc-t"><span className="pc-name">{p.seeker.name}</span><span className="pc-meta">{p.region}</span></span>
-      </div>
-      <div className="pc-mid">
-        <span className="pc-link" />
+    <div className="pc">
+      {([['seeker', p.seeker], ['firm', p.firm]] as const).map(([side, who]) => (
+        <p key={side} className="pc-row"><Disc side={side} mark={who.mark} /><span className="pc-name">{who.name}</span></p>
+      ))}
+      <p className="pc-foot">
+        <span className="pc-meta">{p.region}</span>
         <span className="pc-dots">
-          {match.criteria.map((c, k) => (
-            <i key={c} className={`pc-dot${partial && k === 3 ? ' is-half' : ''}`} style={{ '--k': k } as Vars}>
-              {partial && k === 3 ? <Half /> : <Check />}
-            </i>
-          ))}
+          {match.criteria.map((c, k) => <i key={c} className={`pc-dot${k < p.score ? ' is-on' : ''}`} style={{ '--k': k } as Vars} />)}
         </span>
-      </div>
-      <div className="pc-row">
-        <Disc side="firm" mark={p.firm.mark} />
-        <span className="pc-t"><span className="pc-name">{p.firm.name}</span><span className="pc-meta">{p.region}</span></span>
-      </div>
-      <p className={`pc-score${partial ? ' is-part' : ''}`}>
-        {partial && <Half />}
-        {lead ? match.result : story.scoreShort(p.score)}
+        <span className="pc-score">{story.scoreShort(p.score)}</span>
       </p>
     </div>
   );
 }
 
-/** Seeker as a loose card in the heap (raw, tilted, with its role) and as a straight card in the queue (clean). */
+/** Seeker as a card in the heap (with its role) and as a card in the queue (with its region): same size and surface
+    as the input tiles' family, never tilted; the two faces crossfade. */
 function SeekerChip({ index }: { index: number }) {
   const p = story.pairs[index];
   return (
     <>
-      <div className="face face-raw chip" style={{ '--t': `${[-4, 3, -3][index] ?? 0}deg` } as Vars}>
+      <div className="face face-raw chip">
         <Disc side="seeker" mark={p.seeker.mark} />
         <span className="chip-t"><span className="chip-role">{story.columns.seeker}</span><span className="chip-name">{p.seeker.name}</span></span>
       </div>
@@ -115,18 +76,17 @@ function FirmChip({ index }: { index: number }) {
   );
 }
 
-/** The four criteria, named once (the dots on the pair cards are unlabelled). Checks tick with the lead pair's dots. */
-export function CriteriaLegend() {
+function CriteriaLegend() {
   return (
     <p className="lg">
       {match.criteria.map((c, k) => (
-        <span key={c} className="lg-chip"><i className="lg-chk" style={{ '--k': k } as Vars}><Check /></i>{c}</span>
+        <span key={c} className="lg-chip"><i className="lg-chk" style={{ '--k': k } as Vars} />{c}</span>
       ))}
     </p>
   );
 }
 
-export function LockDisc() {
+function LockDisc() {
   return <span className="lock"><Check /></span>;
 }
 
@@ -152,19 +112,15 @@ function KiDeliverables() {
   );
 }
 
-const PAPER_OF: Record<string, PaperKind> = {
-  'p-anfrage': 'anfrage', 'p-dossier': 'dossier', 'p-liste': 'liste', 'p-antwort': 'antwort', 'p-zustaendig': 'zustaendig',
-  'p-training': 'training', 'p-absage': 'absage', 'p-gegenleistung': 'gegenleistung', 'p-gelohnt': 'gelohnt',
-};
-
 function itemBody(key: string): { layer: 'l' | 'r' | 't'; kind: string; body: ReactNode; i?: number } {
-  if (PAPER_OF[key]) return { layer: 'l', kind: 'paper', body: <Paper kind={PAPER_OF[key]} /> };
+  const paper = key.startsWith('p-') ? key.slice(2) : '';
+  if (paper in PAPER_ICON) return { layer: 'l', kind: 'paper', body: <Paper kind={paper as PaperKind} /> };
   const [type, n] = key.split('-');
   const i = Number(n);
   switch (type) {
     case 's': return { layer: 'l', kind: 'seeker', body: <SeekerChip index={i} />, i };
     case 'f': return { layer: 'r', kind: 'firm', body: <FirmChip index={i} />, i };
-    case 'pair': return { layer: 'r', kind: 'pair', body: <PairCard index={i} lead={i === 0} />, i };
+    case 'pair': return { layer: 'r', kind: 'pair', body: <PairCard index={i} />, i };
     case 'lock': return { layer: 't', kind: 'lock', body: <LockDisc />, i };
     case 'line': return { layer: 't', kind: 'line', body: <span className="ln" /> };
     case 'head': return { layer: 't', kind: 'head', body: <span className="head-t">{n === 'seeker' ? story.columns.seeker : story.columns.sponsor}</span> };

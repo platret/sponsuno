@@ -1,4 +1,4 @@
-import { projectStatus, team, type TeamMember } from '../content';
+import { contact, projectStatus, team, type TeamMember } from '../content';
 import { rich } from './rich';
 import '../styles/sections/team.css';
 
@@ -37,6 +37,7 @@ function ProjectStatus() {
       <div className="team-status-head" data-reveal="" data-scroll="rise">
         <h2 className="pg-h3" id="team-status-title">{projectStatus.title}</h2>
         <p className="team-status-intro">{rich(projectStatus.intro)}</p>
+        {contact.linkedin && <p className="team-status-intro">{rich(projectStatus.follow(contact.linkedin))}</p>}
       </div>
       <ol className="team-steps" role="list" aria-labelledby="team-status-title" data-reveal="" data-scroll="rise">
         {projectStatus.steps.map((step) => (

@@ -67,10 +67,10 @@
   opacity: var(--o); scale: calc(var(--s) * var(--k, 1));
 }
 .st-win-r .it { translate: calc((var(--x) - var(--lx)) * 1cqw + var(--xo) - var(--ax, 50%)) calc(var(--y) * 1cqh + var(--yo) - 50%); }
-.it-seeker { width: 210px; height: 56px; }
+.it-seeker { width: var(--cw); height: 52px; }
 .it-pair, .it-legend { --ax: 0%; transform-origin: 0 50%; }  /* scales keep the left edge on the line */
 .face { position: absolute; inset: 0; }
-.face-raw { opacity: calc(1 - var(--f)); rotate: var(--t, 0deg); }
+.face-raw { opacity: calc(1 - var(--f)); }
 .face-clean { opacity: var(--f); }
 
 .it-line { width: 12px; height: 90cqh; }
@@ -106,11 +106,7 @@
   .st-art .it-legend .lg { flex-direction: column; align-items: flex-end; }
 }
 
-/* Faint pairs ("heute" and the findings): a dimmed card, not a kalk bar. The seeker row drops its fill and
-   reads like the company row, the score waits for "sortiert". */
-.st-art:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .it-pair :is(.pc-row, .pc-name, .pc-meta) {
-  background: transparent; color: var(--steel);
-}
+/* Faint pairs ("heute" and the findings): a dimmed card; the score waits for "sortiert" */
 .st-art:is([data-step="heute"], [data-step="kontakte"], [data-step="aufwand"], [data-step="erwartungen"]) .it-pair .pc-score { opacity: 0; }
 
 /* The match card carries its own "fiktiv" label; in "danach" it is smaller and the label would be too small */
@@ -123,7 +119,7 @@
    so nothing is cut at the stage edges and the KI draft only covers the match card's empty corner. On short
    desktop stages the two KI pieces get smaller still, so they do not cover each other. */
 @media (min-width: 961px) {
-  @container (max-width: 720px) { :is(.it-seeker, .it-firm) { --k: .9; } .st-art[data-step="danach"] .it-match { --k: .78; } .it-ki { --k: .88; } }
+  @container (max-width: 720px) { :is(.it-seeker, .it-firm, .it-paper) { --k: .9; } .st-art[data-step="danach"] .it-match { --k: .78; } .it-ki { --k: .88; } }
   @container (max-height: 500px) { .it-ki { --k: .8; } }
 }
 
@@ -145,20 +141,13 @@
 .motion .st-live .pc-score { transition: opacity .4s ease calc(var(--d, 0ms) + 1050ms); }
 .motion .st-live:not([data-step="sortiert"]) .pc-dot { opacity: .3; scale: .7; transition-delay: 0ms; }
 .motion .st-live:not([data-step="sortiert"]) .pc-score { opacity: 0; transition-delay: 0ms; }
-/* The faint pairs change colour together with their own fade, so a skipped step ("erwartungen" straight to
-   "sortiert" or back) never snaps; on the usual path through "linie" the change happens while they are hidden */
-.motion .st-live .it-pair :is(.pc-row, .pc-name, .pc-meta) { transition: background-color .45s ease var(--d, 0ms), color .45s ease var(--d, 0ms); }
 /* The legend's checks tick together with the lead pair's dots */
 .motion .st-live .lg-chk { transition: opacity .3s ease, scale .3s var(--ease-out); transition-delay: calc(650ms + var(--k) * 90ms); }
 .motion .st-live:not([data-step="sortiert"]) .lg-chk { opacity: .3; scale: .7; transition-delay: 0ms; }
-/* Match card: the brass line draws and the criteria tick when the stage reaches "match" */
-.motion .st-live .match-line { transition: scale 1s cubic-bezier(.65, 0, .35, 1) .25s; }
-.motion .st-live .match-criteria li { transition: opacity .3s ease calc(.6s + var(--i) * .12s); }
-.motion .st-live .match-criteria path { transition: stroke-dashoffset .35s ease calc(.65s + var(--i) * .12s); }
-.motion .st-live .match-score { transition: opacity .4s ease 1.2s, translate .5s var(--ease-out) 1.2s; }
-.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-line { scale: 1 0; transition-delay: 0s; }
-.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-criteria li { opacity: .45; transition-delay: 0s; }
-.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-criteria path { stroke-dashoffset: 14; transition-delay: 0s; }
+/* Match card: the criteria dots tick and the result appears when the stage reaches "match" */
+.motion .st-live .match-dot { transition: opacity .3s ease calc(.6s + var(--i) * .1s), scale .3s var(--ease-out) calc(.6s + var(--i) * .1s); }
+.motion .st-live .match-score { transition: opacity .4s ease 1.1s, translate .5s var(--ease-out) 1.1s; }
+.motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-dot { opacity: .3; scale: .6; transition-delay: 0s; }
 .motion .st-live:not(:is([data-step="match"], [data-step="danach"])) .match-score { opacity: 0; translate: 0 6px; transition-delay: 0s; }
 
 /* The stage fades in as it enters, so it continues the hero picture (which fades out) instead of doubling it */
@@ -260,7 +249,7 @@
 @media (min-width: 761px) and (max-width: 960px) {
   .st-stage .st-art { max-width: 640px; margin-inline: auto; }
 }
-/* Tall tablets (portrait): a taller stage, so the pairs are not scaled down to .72 and their text stays readable */
+/* Tall tablets (portrait): a taller stage, so the pieces have more room between them */
 @media (min-width: 761px) and (max-width: 960px) and (min-height: 960px) {
   .js .story { --st-h: clamp(420px, 52svh, 540px); }
 }
@@ -269,25 +258,28 @@
 
 @media (max-width: 960px) {
   .st-art { --lx: 40; }
-  /* The pairs fill the window right of the line at their scale (--k), so the names fit on narrow stages */
+  /* The pairs fill the window right of the line at full size (smaller only on very short stages), so their text
+     stays at 11 px or more */
+  .st-art :is(.it-pair, .it-legend) { --k: 1; }
+  .st-art .it-match { --k: 1; }
+  @container (max-height: 330px) { .st-art :is(.it-pair, .it-legend) { --k: .86; } .st-art .it-match { --k: .86; } }
   .st-art .it-pair { --pc-w: min(300px, ((100 - var(--lx)) * 1cqw - 16px) / var(--k, 1)); }
   .st-art .it-paper { --k: .7; }
   .st-art :is(.it-seeker, .it-firm) { --k: .8; }
   /* Legend under the pairs, starting at the line; wraps to two rows where the window is narrow */
   .st-art .it-legend .lg { flex-wrap: wrap; width: calc((100 - var(--lx)) * 1cqw - 16px); padding-left: 2px; }
-  .it-match { width: 20.5rem; }
+  .it-match { width: min(21rem, 92cqw); }
   /* A tighter match card so it fits the 45svh stage */
-  .st-art .match { padding: .8rem; }
-  .st-art .match-label { margin-bottom: .55rem; }
-  .st-art .match-party { padding: .6rem .75rem; gap: .7rem; }
+  .st-art .match { gap: .7rem; padding: .85rem; }
   .st-art .match-photo, .st-art .match-mark { width: 40px; height: 40px; }
   .st-art .match-mark { font-size: 1.25rem; }
+  .st-art .match-party { gap: .75rem; }
   .st-art .match-name { font-size: .9375rem; }
   .st-art .match-meta { font-size: .75rem; }
-  .st-art .match-link { padding: .7rem 0 .7rem 3.2rem; }
-  .st-art .match-line { left: calc(.75rem + 19px); }
-  .st-art .match-criteria li { font-size: .75rem; padding: .2rem .55rem .2rem .4rem; }
-  .st-art .match-score { margin-top: .5rem; font-size: .8125rem; }
+  .st-art .match-foot { gap: .45rem; padding-top: .7rem; }
+  .st-art .match-criteria { column-gap: .8rem; }
+  .st-art .match-criteria li { font-size: .75rem; }
+  .st-art .match-score { font-size: .875rem; }
   .ki-draft { width: min(300px, 84cqw); }
   /* Caption as a bar on the bottom edge */
   .st-art .st-cap { padding-block: .4rem; background: var(--graphit); border-top: 1px solid var(--card-dark-line); font-size: .75rem; }
@@ -301,12 +293,13 @@
 
 /* Phones: the seeker cards are narrower and smaller, so their text stays inside the window left of the line */
 @media (max-width: 760px) {
-  .st-art .it-seeker { width: 200px; --k: .74; }
+  .st-art .it-seeker { --k: .74; }
   /* Column heads on two lines and tighter tracking, so "Sucht Unterstützung" in capitals stays left of the line */
   .st-art .head-t { width: min-content; white-space: normal; text-align: center; line-height: 1.3; font-size: .6875rem; letter-spacing: .05em; }
 }
 /* Narrow stages (the snapshots inside the page gutter on phones) */
-@container (max-width: 360px) { .st-art .it-seeker { --k: .7; } }
+@container (max-width: 360px) { .st-art :is(.it-seeker, .it-paper) { --k: .7; } }
+@container (max-width: 340px) { .st-art :is(.it-seeker, .it-paper) { --k: .62; } }
 
 /* Forced colours and print: the picture goes, the text stays */
 @media (forced-colors: active) { .st-stage, .st-snap { display: none !important; } }
