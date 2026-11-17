@@ -271,7 +271,7 @@ These come from the team's project rules. Breaking them makes the page say thing
 8. Do not present the name or trademark as secured. The domain sponsuno.ch and the address hello@sponsuno.ch exist; do not invent other addresses.
 9. Sustainability claims (reused equipment, shared event tech) are ideas being checked, not results ("Eine Idee, die wir prüfen").
 10. **Youngpreneurs only on `/ueber-uns/`** (team section and "Stand des Projekts", with the link to youngpreneurs.org/zuerich). Check with `grep -ril youngpreneur dist` after a build: only `dist/ueber-uns/index.html` may match. Never "gefördert durch" or "Partner" (see "Project status").
-11. The waitlist stores nothing yet (no endpoint): say so plainly, without apology ("Die Anmeldung läuft vorerst per E-Mail"), and keep the `mailto:` route. The Worker route exists but stays dormant; never set `VITE_WAITLIST_ENDPOINT` before the team has finished the Brevo setup and the Datenschutzerklärung is updated (see "Deploy").
+11. The waitlist is live since 2026-11-17 (`VITE_WAITLIST_ENDPOINT=/api/warteliste`, Brevo double opt-in, Datenschutzerklärung section "Warteliste"). If the route answers `not_configured` the form falls back to the e-mail route by itself; keep that `mailto:` path and its plain wording ("Die Anmeldung läuft vorerst per E-Mail").
 
 ## SEO
 
@@ -385,7 +385,7 @@ On a failure in CI, the Playwright report and traces are attached to the run as 
 
 ## Open before launch
 
-- [ ] Waitlist with double opt-in: Worker route, confirmation page and e-mails are built (November 2026); Brevo set up on 2026-11-17 (domain sponsuno.ch authenticated with DKIM, sender hello@sponsuno.ch verified, list "Warteliste" ID 3, attribute ROLLE, template "Warteliste Bestätigung" ID 1 with tag optin, template "Warteliste Willkommen" ID 2, automation "Warteliste Willkommen": contact added to list 3 → send template 2, no re-entry; both templates send from and reply to hello@sponsuno.ch; IDs in `wrangler.jsonc`). Open: the team sets the Worker secret `BREVO_API_KEY` and decides on Brevo's IP lock, retention and who answers deletion requests; then the Datenschutzerklärung from `emails/datenschutz-entwurf.md`, then `VITE_WAITLIST_ENDPOINT=/api/warteliste` (see "Deploy"; then also update the "Später" step in `projectStatus` and copy rule 11)
+- [x] Waitlist with double opt-in: live since 2026-11-17. Brevo: domain sponsuno.ch authenticated with DKIM, sender hello@sponsuno.ch verified, list "Warteliste" ID 3, attribute ROLLE, template "Warteliste Bestätigung" ID 1 (tag optin), template "Warteliste Willkommen" ID 2, automation "Warteliste Willkommen" (contact added to list 3 → template 2, no re-entry); both send from and reply to hello@sponsuno.ch. Worker secret `BREVO_API_KEY` set by the team, IDs in `wrangler.jsonc`, `VITE_WAITLIST_ENDPOINT` set. Retention (owner, 2026-11-17): kept until the person unsubscribes, list deleted when the project ends. Open: Brevo's IP lock for API keys (Settings → Security → Authorized IPs; the Worker has no fixed IP), and who answers deletion requests
 - [x] Impressum and privacy notice (`/impressum/`, `/datenschutz/`, November 2026). The waitlist section must be rewritten before the endpoint goes live
 - [x] Contact data in `contact` (`content.ts`) (Klosterstrasse 34, 8406 Winterthur; hello@sponsuno.ch)
 - [ ] Commission model: rate, trigger, paying side
