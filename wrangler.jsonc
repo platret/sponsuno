@@ -18,8 +18,8 @@
   // Brevo IDs from the team (setup doc, step 11). Empty = the waitlist route answers 503 not_configured. The API key is
   // never here: it is the secret BREVO_API_KEY, set by the team (npx wrangler secret put BREVO_API_KEY).
   "vars": {
-    "BREVO_LIST_ID": "",
-    "BREVO_DOI_TEMPLATE_ID": ""
+    "BREVO_LIST_ID": "3",
+    "BREVO_DOI_TEMPLATE_ID": "1"
   },
   // Per Cloudflare location and approximate (Cloudflare docs, Rate Limiting). Same numbers as IP_LIMIT and EMAIL_LIMIT
   // in worker/waitlist.ts, which uses an in-memory fallback where a binding is missing (previews, tests).
@@ -41,8 +41,8 @@
   // afterwards; Cloudflare docs, Worker Previews).
   "previews": {
     "vars": {
-      "BREVO_LIST_ID": "",
-      "BREVO_DOI_TEMPLATE_ID": ""
+      "BREVO_LIST_ID": "3",
+      "BREVO_DOI_TEMPLATE_ID": "1"
     },
     "ratelimits": [
       { "name": "WAITLIST_IP_LIMIT", "namespace_id": "4801", "simple": { "limit": 10, "period": 60 } },
