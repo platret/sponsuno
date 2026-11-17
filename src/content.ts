@@ -49,6 +49,8 @@ export const hero = {
   lead: 'Sponsuno bringt Sportlerinnen, Sportler und Vereine aus Sport und Kultur mit Firmen aus ihrer Region zusammen.',
   ctaSeeker: { label: 'Ich suche Sponsoren', role: 'athlete' as Role },
   ctaSponsor: { label: 'Ich möchte sponsern', role: 'sponsor' as Role },
+  // Accessible name of the round arrow on the hero's base line (leads to the statement)
+  scrollHint: 'Weiter',
 };
 
 // Fictional example for the match card in "So funktioniert es" (Steps.tsx, MatchCard.tsx). Keep the label whenever
@@ -307,9 +309,20 @@ export const guideLinks: FooterLink[] = [
   { href: pageMeta('kultursponsoring').path, label: 'Kultursponsoring' },
 ];
 
+// The parked two-track "So funktioniert Sponsuno" (HowItWorks.tsx). Its intro line and the companies' steps are also
+// used elsewhere (the confirmation page's link list, the parked /fuer-firmen/): they are plain constants, so those
+// objects do not read `howItWorks` and the landing page bundle does not have to keep the whole parked object.
+const HOW_INTRO = 'Ein Ablauf für beide Seiten: vom ersten Profil bis zur Bilanz nach der Saison.';
+const HOW_SPONSOR_STEPS = [
+  { title: 'Firmenprofil anlegen', text: 'Region, Budget, Ziele und welche Unterstützung Sie geben möchten: Geld, Material oder Dienstleistungen.' },
+  { title: 'Vorschläge erhalten', text: 'Sie sehen Sportlerinnen, Sportler und Vereine aus Ihrer Region, die zu Ihrer Firma passen.' },
+  { title: 'Anfragen prüfen', text: 'Sie schlagen ein Gespräch vor oder sagen ab. Ohne Dossierstapel und ohne kalte Anfragen.' },
+  { title: 'Vereinbaren und Wirkung prüfen', text: 'Gegenleistungen werden vor Beginn festgehalten. Nach der Saison ziehen Sie gemeinsam Bilanz.' },
+];
+
 export const howItWorks = {
   title: 'So funktioniert Sponsuno',
-  intro: 'Ein Ablauf für beide Seiten: vom ersten Profil bis zur Bilanz nach der Saison.',
+  intro: HOW_INTRO,
   switchLabel: 'Ablauf anzeigen für',
   stepLabel: 'Schritt',
   tracks: {
@@ -324,12 +337,7 @@ export const howItWorks = {
     },
     sponsor: {
       label: 'Firmen',
-      steps: [
-        { title: 'Firmenprofil anlegen', text: 'Region, Budget, Ziele und welche Unterstützung Sie geben möchten: Geld, Material oder Dienstleistungen.' },
-        { title: 'Vorschläge erhalten', text: 'Sie sehen Sportlerinnen, Sportler und Vereine aus Ihrer Region, die zu Ihrer Firma passen.' },
-        { title: 'Anfragen prüfen', text: 'Sie schlagen ein Gespräch vor oder sagen ab. Ohne Dossierstapel und ohne kalte Anfragen.' },
-        { title: 'Vereinbaren und Wirkung prüfen', text: 'Gegenleistungen werden vor Beginn festgehalten. Nach der Saison ziehen Sie gemeinsam Bilanz.' },
-      ],
+      steps: HOW_SPONSOR_STEPS,
     },
   },
 };
@@ -568,11 +576,14 @@ export const footer = {
   copyright: '© 2026 Team Sponsuno',
 };
 
-// Sticker album in the footer (Easter egg, an optional layer hidden from assistive technology): its title and the
-// line shown once all six stickers are collected.
+// Sticker album in the footer (Easter egg, an optional layer hidden from assistive technology): its title, the hint
+// under the six empty slots, and the line shown once all six stickers are collected. `goal` is the word on the small
+// scoreboard that appears when someone types t, o, r (lib/eggs.ts); the score after it is counted in the browser.
 export const album = {
   title: 'Stickeralbum',
+  hint: 'Sechs Sticker sind auf dieser Seite versteckt.',
   full: 'Album voll. Sie haben ein Auge für Details.',
+  goal: 'TOR!',
 };
 
 export const stickyCta = {
@@ -1549,7 +1560,7 @@ export const forFirms = {
     id: 'ablauf',
     title: 'Was Sponsuno für Ihre Firma tut',
     intro: 'Vom Firmenprofil bis zur Bilanz nach der Saison:',
-    items: howItWorks.tracks.sponsor.steps,
+    items: HOW_SPONSOR_STEPS,
   },
   support: {
     id: 'unterstuetzung',
@@ -1663,7 +1674,7 @@ export const waitlistConfirmed = {
   intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start.',
   linksTitle: 'Bis dahin',
   links: [
-    { href: '#ablauf', label: 'So funktioniert es', text: howItWorks.intro },
+    { href: '#ablauf', label: 'So funktioniert es', text: HOW_INTRO },
     { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
     { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
     { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },

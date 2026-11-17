@@ -1,55 +1,152 @@
-/* "So funktioniert es" (#ablauf, Steps.tsx): parkett-2 band. H2, three steps side by side (one column on phones),
-   each with an illustration slot, an H3 and one sentence; then the match card: one wide card on the same three
-   columns on desktop, a normal card after the list on phones. Prefix steps-. */
+/* "So funktioniert es" (#ablauf, Steps.tsx): parkett-2 band. A large H2, three steps side by side (one column on
+   phones), each a sticker scene of 220 x 196 px, the step number as a small label, an H3 and one sentence; then the
+   match card on the steps' own three columns (its green result panel under step three), a normal card after step
+   three on phones. Motion only under html.motion: static styles are the final state. Prefix steps-. */
 
-.steps-title { max-width: 14em; }
+.steps { --steps-gap: clamp(1.5rem, 1rem + 3vw, 4rem); }
+.steps-title { max-width: 14em; font-size: clamp(2rem, 1.2rem + 3.6vw, 4.5rem); line-height: 1; }
 
 .steps-list {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(2rem, 1.5rem + 2vw, 3.5rem) clamp(1.5rem, 1rem + 3vw, 4rem);
+  gap: clamp(2.5rem, 2rem + 2vw, 3.5rem) var(--steps-gap);
   margin-top: clamp(2.5rem, 2rem + 3vw, 5rem);
 }
 .steps-item { display: grid; align-content: start; justify-items: start; }
 
-/* Illustration slot: 96 px, home of the kit's sticker-style illustration. Until then the step number on a disc. */
-.steps-art {
-  display: grid; place-items: center;
-  width: 96px; height: 96px; margin-bottom: 1.5rem;
-  border-radius: 50%;
-  color: var(--weiss);
-}
-.steps-art-blau { background: var(--blau); rotate: -6deg; }
-.steps-art-rot { background: var(--rot); rotate: 4deg; }
-.steps-art-gruen { background: var(--gruen); rotate: -3deg; }
-.steps-num { font-size: 2.75rem; line-height: 1; color: inherit; }
-
+.steps-num { margin-bottom: .6rem; font-variant-numeric: tabular-nums; }
 .steps-item-title { font-size: clamp(1.25rem, 1.15rem + .4vw, 1.5rem); line-height: 1.2; text-wrap: balance; }
 .steps-item-text { margin-top: .75rem; max-width: 26rem; font-size: 1.0625rem; line-height: 1.55; }
 
-/* Match card: the result under the three steps. On desktop one wide card on the steps' own three columns (the seeker
-   under step one, the firm under step two, criteria and result under step three); stacked as a normal card below. */
-.steps-match { margin-top: clamp(2.5rem, 2rem + 2.5vw, 4.5rem); }
+/* ---------- Scenes ----------
+   One fixed box per step; every piece is placed in px inside it (.steps-p), so the composition is the same at every
+   width. `color` is what a collected sticker's dashed outline takes. */
+.steps-art {
+  position: relative;
+  inline-size: 220px; block-size: 196px;
+  margin-bottom: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  color: var(--tinte);
+  --cl-w: 5px;
+}
+.steps-line { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; max-width: none; overflow: visible; }
+.steps-p { position: absolute; display: block; line-height: 0; }
+
+/* 1 Both sides in one place: ball and note on the left, the pretzel on the right, overlapping in the circle */
+.steps-s1-note { left: 34px; top: -2px; }
+.steps-s1-ball { left: 2px; top: 74px; }
+.steps-s1-brezel { left: 102px; top: 50px; }
+
+/* 2 Suggestions: a little list card cut like a sticker, the first row marked, the "4 von 4" sticker on its corner */
+.steps-card {
+  left: 10px; top: 20px;
+  display: grid; gap: 5px;
+  inline-size: 152px; padding: 8px;
+  border: 4px solid var(--weiss); border-radius: 22px;
+  background: var(--parkett);
+  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
+  rotate: -4deg;
+}
+.steps-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 7px;
+  border: 2px solid transparent; border-radius: 12px;
+}
+.steps-row-on { border-color: var(--tinte); background: var(--weiss); }
+.steps-dot { flex: none; display: grid; place-items: center; inline-size: 24px; block-size: 24px; border-radius: 50%; color: var(--weiss); }
+.steps-dot-gelb { background: var(--gelb); color: var(--tinte); }
+.steps-dot-blau { background: var(--blau); }
+.steps-dot-gruen { background: var(--gruen); }
+.steps-bars { flex: 1; display: grid; gap: 5px; }
+.steps-bars i { display: block; block-size: 5px; border-radius: 3px; background: var(--tinte); }
+.steps-bars i + i { inline-size: 58%; background: rgba(26, 28, 32, .22); }
+.steps-row:not(.steps-row-on) .steps-bars i:first-child { inline-size: 82%; background: rgba(26, 28, 32, .55); }
+.steps-score { left: 122px; top: 6px; --stk-fs: 14px; white-space: nowrap; }
+
+/* 3 The match: the start number with a green check cut like a sticker */
+.steps-s3-bib { left: 16px; top: 18px; }
+.steps-check {
+  left: 134px; top: 4px;
+  display: grid; place-items: center;
+  inline-size: 60px; block-size: 60px;
+  border: 5px solid var(--weiss); border-radius: 50%;
+  background: var(--gruen); background-clip: padding-box;
+  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
+  color: var(--weiss);
+  rotate: 8deg;
+}
+.steps-check .icn { stroke-width: 3; }
+
+/* ---------- Match card under the steps ---------- */
+.steps-match { margin-top: clamp(3rem, 2.25rem + 3vw, 5rem); }
 
 @media (min-width: 861px) {
+  /* The card hangs out of the text column by its own padding, so its three columns are exactly the steps' columns:
+     the seeker under step one, the firm under step two, the green result panel under step three. */
   .steps-match .match {
-    --steps-gap: clamp(1.5rem, 1rem + 3vw, 4rem);
+    --match-pad: clamp(1.25rem, .9rem + 1vw, 1.75rem);
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: var(--steps-gap); row-gap: 1.25rem;
+    column-gap: var(--steps-gap); row-gap: 0;
     align-items: center;
-    padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+    margin-inline: calc(var(--match-pad) * -1);
+    padding: 0 var(--match-pad);
   }
-  .steps-match .match-label { grid-column: 1 / -1; }
+  .steps-match .match-criteria { display: grid; grid-template-columns: repeat(2, max-content); justify-items: start; }
+  .steps-match .match-party { padding-block: clamp(2rem, 1.5rem + 1.5vw, 2.75rem); }
   .steps-match .match-foot {
     align-self: stretch; align-content: center;
-    padding-top: 0; border-top: 0;
-    padding-left: var(--steps-gap); margin-left: calc(var(--steps-gap) * -1);
-    border-left: 1px solid var(--line);
+    margin: 0 calc(var(--match-pad) * -1);
+    padding: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem) var(--match-pad);
+    border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
   }
 }
 
+/* Wide columns: the scenes a fifth larger (zoom scales the whole composition, stickers and lines included) */
+@media (min-width: 1100px) { .steps-art { zoom: 1.2; } }
+
 @media (max-width: 860px) {
   .steps-list { grid-template-columns: minmax(0, 1fr); }
-  .steps-art { width: 80px; height: 80px; margin-bottom: 1.25rem; }
-  .steps-num { font-size: 2.25rem; }
+  .steps-match { margin-top: 2.5rem; }
   .steps-match .match { max-width: 30rem; }
+}
+
+/* One column but wide (small tablets): the scene stands beside its text, the text centred on the scene's height */
+@media (min-width: 600px) and (max-width: 860px) {
+  .steps-item {
+    grid-template-columns: auto minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr;
+    column-gap: clamp(1.5rem, 6vw, 3.5rem);
+  }
+  .steps-art { grid-column: 1; grid-row: 1 / -1; margin-bottom: 0; }
+  .steps-num { grid-column: 2; grid-row: 2; }
+  .steps-item-title { grid-column: 2; grid-row: 3; }
+  .steps-item-text { grid-column: 2; grid-row: 4; }
+  .steps-match .match { max-width: none; }
+}
+
+/* ---------- Motion ----------
+   Settle: the three steps fade in one after another (data-reveal, site.css); inside each, the line draws and the
+   pieces settle with a short stagger (--i: the step, --d: the piece). All of it is over in about a second. */
+@keyframes steps-row-in { from { opacity: 0; translate: -10px 0; } }
+@keyframes steps-pop { from { opacity: 0; scale: .5; } 60% { opacity: 1; scale: 1.1; } }
+
+html.motion .steps-item[data-reveal] { transition-delay: calc(var(--i, 0) * 90ms); }
+html.motion .steps-item.is-in .cl-path {
+  animation: kit-draw .8s cubic-bezier(.65, 0, .35, 1) calc(var(--i, 0) * 90ms + 100ms) backwards;
+}
+html.motion .steps-item.is-in :is(.stk, .tstk) { animation-delay: calc(var(--i, 0) * 90ms + var(--d, 0ms) + 180ms); }
+html.motion .steps-item.is-in .steps-row {
+  animation: steps-row-in .4s var(--ease-out) calc(var(--i, 0) * 90ms + var(--d, 0ms) + 200ms) backwards;
+}
+html.motion .steps-item.is-in .steps-check {
+  animation: steps-pop .45s var(--ease-out) calc(var(--i, 0) * 90ms + 480ms) backwards;
+}
+
+/* Hover: one small reaction per scene. The two sides move together, the marked row slides out, the check pops. */
+html.motion .steps-p,
+html.motion .steps-row { transition: translate .4s var(--ease-out), scale .4s var(--ease-out), rotate .4s var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  html.motion .steps-item:hover :is(.steps-s1-ball, .steps-s1-note) { translate: 9px 0; }
+  html.motion .steps-item:hover .steps-s1-brezel { translate: -9px 0; rotate: -4deg; }
+  html.motion .steps-item:hover .steps-row-on { translate: 7px 0; }
+  html.motion .steps-item:hover .steps-score { translate: 7px -3px; rotate: 6deg; }
+  html.motion .steps-item:hover .steps-check { scale: 1.14; rotate: -6deg; }
+  html.motion .steps-item:hover .steps-s3-bib { rotate: 3deg; }
 }

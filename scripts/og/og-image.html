@@ -4,46 +4,55 @@
   Regenerate after a change (see AGENTS.md → SEO):
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
     --window-size=1200,630 --screenshot=public/og-image.png scripts/og/og-image.html
-  Colours and fonts from the design system (DESIGN.md): graphit 135° gradient (verlauf-dunkel), kalk headline in
-  Schibsted Grotesk 700, grey line, one Messing hairline. No photos, no faces, no numbers. The product is planned: say so.
+  (or any Chromium at 1200 × 630, device scale factor 1; wait for document.fonts.ready).
+  Look: design system v2 «Turnhalle» (DESIGN.md). Parquet ground, the hero line in Archivo Wide 800 (ink, the last word
+  blue), the ink loop wordmark, the launch signal as a yellow text sticker, court lines (blue centre circle, red
+  line) and two picture stickers. Fonts: the site's own subsets (src/assets/fonts). Sticker and line styles come straight
+  from src/styles/kit.css (it carries every colour as a fallback, so it works without tokens.css); the two sticker
+  drawings are copies of what components/kit/Sticker.tsx renders (ball, note): copy them again from the
+  rendered page if a drawing changes. No photos, no faces, no numbers. The product is not live: the pill says so.
+  Keep the pill in step with hero.badge (content.ts) and site.ogImageAlt (pages.ts).
 -->
 <html lang="de-CH">
 <head>
 <meta charset="utf-8">
 <title>Sponsuno share image</title>
+<link rel="stylesheet" href="../../src/styles/kit.css">
 <style>
-  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 400; src: url('../../node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-400-normal.woff2') format('woff2'); }
-  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 600; src: url('../../node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-600-normal.woff2') format('woff2'); }
-  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 700; src: url('../../node_modules/@fontsource/schibsted-grotesk/files/schibsted-grotesk-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Archivo Wide'; font-weight: 800; src: url('../../src/assets/fonts/archivo-wide-800.woff2') format('woff2'); }
+  @font-face { font-family: 'Schibsted Grotesk'; font-weight: 600; src: url('../../src/assets/fonts/schibsted-grotesk-600.woff2') format('woff2'); }
   html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
   body {
-    box-sizing: border-box;
-    display: flex; flex-direction: column; justify-content: space-between;
-    padding: 76px 88px 72px;
-    background: linear-gradient(135deg, #1D2125, #2E343A);
-    color: #F5F3EE;
+    position: relative; box-sizing: border-box;
+    padding: 64px 72px;
+    background: #F8F4EA; color: #1A1C20;
+    font-family: 'Schibsted Grotesk', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wordmark { display: block; width: 236px; height: auto; }
-  .rule { width: 72px; height: 2px; background: #C9A15B; margin-bottom: 34px; }
+  .cl { --cl-w: 7px; }
+  .wordmark { position: relative; display: block; width: 212px; height: auto; }
   h1 {
-    margin: 0; max-width: 900px;
-    font: 700 84px/1.02 'Schibsted Grotesk', Arial, sans-serif;
-    letter-spacing: -0.025em; color: #F5F3EE;
+    position: absolute; left: 72px; top: 214px; margin: 0;
+    font: 800 96px/1 'Archivo Wide', 'Arial Black', sans-serif; letter-spacing: -0.02em;
   }
-  .line {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 32px;
-    font: 400 26px/1.4 'Schibsted Grotesk', Arial, sans-serif; color: #B7B9BC;
-  }
-  .domain { font-weight: 600; color: #C9A15B; }
+  h1 span { display: block; color: #1F4E9C; }
+  .tstk { position: absolute; left: 66px; bottom: 54px; --stk-fs: 25px; }
+  .domain { position: absolute; right: 72px; bottom: 72px; margin: 0; font: 600 26px/1 'Schibsted Grotesk', Arial, sans-serif; }
+  .stk { position: absolute; }
+  .s-ball { left: 898px; top: 30px; }
+  .s-note { left: 1070px; top: 388px; }
 </style>
 </head>
 <body>
-  <img class="wordmark" src="../../src/assets/wordmark-light.svg" alt="Sponsuno">
-  <div>
-    <div class="rule"></div>
-    <h1>Sponsoren finden für Sport und Kultur</h1>
-  </div>
-  <p class="line" style="margin:0"><span>Bald verfügbar in der Deutschschweiz</span><span class="domain">sponsuno.ch</span></p>
+  <svg class="cl" viewBox="0 0 1200 630" aria-hidden="true">
+    <path class="cl-path" data-line="blau" d="M1210 257.5A176 176 0 1 1 1210 -65.5" />
+    <path class="cl-path" data-line="rot" d="M-10 462H1210" />
+  </svg>
+  <img class="wordmark" src="../../src/assets/wordmark-dark.svg" alt="Sponsuno">
+  <h1>Sponsoring, das <span>zusammenpasst.</span></h1>
+  <span class="stk s-ball" style="--stk-size:132px;--stk-rot:10deg;--stk-n:132"><svg viewBox="0 0 120 120"><g><g class="stk-edge"><path d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z" style="--w: 7px;"/></g><g class="stk-cut"><path d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z" style="--w: 7px;"/></g><g class="stk-art"><path class="stk-o" d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z"/><path class="stk-gelb" d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z"/><path class="stk-blau" d="M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z"/><path class="stk-l" d="M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46"/><path class="stk-h" d="M45 27a36 36 0 0 1 13-3"/></g></g></svg></span>
+  <span class="stk s-note" style="--stk-size:120px;--stk-rot:8deg;--stk-n:120"><svg viewBox="0 0 120 120"><g><g class="stk-edge"><path d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z" style="--w: 7px;"/><path d="M46 31L90 22V76L48 84Z"/></g><g class="stk-cut"><path d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z" style="--w: 7px;"/><path d="M46 31L90 22V76L48 84Z"/></g><g class="stk-art"><path class="stk-o" d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z"/><path class="stk-rot" d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z"/><path class="stk-h" d="M28 86.5a8 6 -20 0 1 7-4.5M73 76.5a8 6 -20 0 1 7-4.5"/></g></g></svg></span>
+  <span class="tstk" data-tone="gelb" style="--stk-rot:-3deg">Bald verfügbar in der Deutschschweiz</span>
+  <p class="domain">sponsuno.ch</p>
 </body>
 </html>

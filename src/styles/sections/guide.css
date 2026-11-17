@@ -1,133 +1,33 @@
-/* Guide pages (Ratgeber): the legal-page layout (legal.css) plus the blocks only guides use. Classes prefixed gd-.
-   No motion. Accent text and underlines use --accent-text (blue on parquet, yellow in the ink band,
-   DESIGN.md → Colour); boxes are cards: radius 20, 1px border, no shadow. */
+/* The link list of the 404 page and /warteliste/bestaetigt/ (NoticePage.tsx), and the "Weiterlesen" box of the parked
+   guides: one row per page, the page's name in large type, one line about it, an arrow on a round button.
+   Classes prefixed gd- (they come from the guide pages). The other guide blocks (steps, letter templates, closing
+   links, the two blocks of /fuer-firmen/) are parked in guide-parked.css. No motion. */
 
-/* Launch note (/fuer-firmen/, in the page head band): the same label with a dot as the landing page hero badge */
-.gd-note {
-  display: flex; align-items: center; gap: .6rem;
-  margin-top: 1.5rem; max-width: 42rem;
-  font: 600 var(--fs-label)/1.4 var(--sans); letter-spacing: var(--label-tracking); text-transform: uppercase;
-  color: var(--accent-text);
-}
-.gd-note::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
-/* Numbered steps: the number in a small outlined circle, a hairline joins the circles */
-.gd-steps { margin-top: 1.5rem; counter-reset: gd-step; }
-.gd-steps li { counter-increment: gd-step; position: relative; padding-left: 3.25rem; min-height: 2rem; }
-.gd-steps li + li { margin-top: 1.25rem; }
-.gd-steps li::before {
-  content: counter(gd-step) / "";
-  position: absolute; left: 0; top: -.05rem;
-  display: grid; place-items: center; width: 2rem; height: 2rem;
-  border: 1px solid var(--line); border-radius: var(--radius-pill);
-  background: var(--surface);
-  font: 600 var(--fs-small)/1 var(--sans); font-variant-numeric: tabular-nums;
-  color: var(--accent-text);
-}
-.gd-steps li:not(:last-child)::after {
-  content: ""; position: absolute; left: calc(1rem - .5px); top: 2.25rem; bottom: -1.1rem;
-  width: 1px; background: var(--line);
-}
-
-/* Letter template: a card of selectable plain text that keeps its line breaks. No copy button. */
-.gd-template {
-  margin: 1.75rem 0 0;
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--bg-alt);
-  overflow: hidden;
-}
-.gd-template figcaption {
-  padding: 1.25rem clamp(1.25rem, .75rem + 1.5vw, 2.5rem) 0;
-}
-.gd-template pre {
-  margin: 0;
-  padding: 1rem clamp(1.25rem, .75rem + 1.5vw, 2.5rem) clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
-  font: 400 1rem/1.65 var(--sans); color: var(--text);
-  white-space: pre-wrap; overflow-wrap: anywhere;
-  user-select: text;
-}
-
-/* Word download under the template: a quiet underlined link (like the demo link), file type and size beside it.
-   .5rem padding leaves room for the 3px focus ring at offset 3px, which the figure's overflow: hidden would clip. */
-.gd-template-download {
-  padding: .5rem clamp(1.25rem, .75rem + 1.5vw, 2.5rem);
-  border-top: 1px solid var(--line);
-  background: var(--surface);
-}
-.lg-section .gd-template-download { margin-top: 0; }
-.lg-section .gd-template-download a {
-  display: inline-flex; align-items: center; gap: .5rem; min-height: 44px;
-  text-decoration: none;
-}
-.gd-template-download svg { flex: none; color: var(--accent-text); }
-/* Label and size wrap inside their own box, so on phones the size lines up under the label, not under the icon */
-.gd-template-download-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .5rem; }
-.gd-template-download-label { text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px; }
-.gd-template-download a:hover .gd-template-download-label { text-decoration-thickness: 2px; }
-.gd-template-download-info { font-size: var(--fs-small); font-weight: 400; color: var(--text); }
-
-/* Closing links: waitlist as the primary pill button, the demo as a quiet link */
-.gd-cta {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem;
-  margin-top: 2rem;
-}
-.lg-section .gd-cta .btn { color: var(--btn-fg); text-decoration: none; }
-.lg-section .gd-cta .gd-cta-demo {
-  display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
-  text-decoration: none;
-}
-.gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px; }
-.gd-cta-demo:hover .gd-cta-demo-label { text-decoration-thickness: 2px; }
-
-/* "Weiterlesen" (guides) and the link list of the 404 and notice pages: a card with a label, one row per page */
-.gd-related {
-  margin-top: clamp(3rem, 2.25rem + 2.5vw, 4.5rem);
-  padding: var(--card-pad);
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--bg-alt);
-}
+.gd-related { margin-top: clamp(3rem, 2.25rem + 2.5vw, 4.5rem); }
 .lg-col > .gd-related:first-child { margin-top: 0; }
-.gd-related ul { margin-top: .75rem; }
-.gd-related li + li { border-top: 1px solid var(--line); }
+.gd-related ul { margin-top: 1rem; border-top: 2px solid var(--heading); }
+.gd-related li { border-bottom: 1px solid var(--line); }
 .gd-related a {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5rem; align-items: center;
-  padding-block: 1.125rem; text-decoration: none; color: var(--text);
+  padding-block: 1.375rem; text-decoration: none; color: var(--text);
 }
-.gd-related li:last-child a { padding-bottom: 0; }
 .gd-related-name {
-  font-size: var(--fs-h3); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; color: var(--heading);
+  font: var(--display-weight) var(--fs-sub)/1.1 var(--display); letter-spacing: var(--display-tracking);
+  color: var(--heading);
 }
-.gd-related a:hover .gd-related-name { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-.gd-related-desc { grid-column: 1; margin-top: .375rem; font-size: var(--fs-small); line-height: 1.5; }
+.gd-related-desc { grid-column: 1; margin-top: .5rem; font-size: var(--fs-small); line-height: 1.5; }
 .gd-related-arrow {
   grid-column: 2; grid-row: 1 / span 2;
-  width: 2.5rem; height: 2.5rem; padding: .7rem;
-  border: 1px solid var(--line); border-radius: var(--radius-pill);
-  color: var(--heading);
-  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+  width: 3rem; height: 3rem; padding: .9rem;
+  border-radius: 50%;
+  background: var(--bg-alt); color: var(--heading);
+  transition: background-color .2s ease, translate .2s var(--ease-out);
 }
-.gd-related a:hover .gd-related-arrow { background: var(--btn-bg); border-color: var(--btn-bg); color: var(--btn-fg); }
-@media (prefers-reduced-motion: reduce) { .gd-related-arrow { transition: none; } }
-
-/* ---------- /fuer-firmen/ (InfoPage.tsx → FirmsPage): guide layout plus these two blocks ----------
-   Here, not in page.css, so /fuer-firmen/ needs only the stylesheets of the guides (no src/static/sections.ts).
-   They keep the pg- prefix of the topic pages. */
-/* The demo's sponsor cockpit, first under the page head band: a card like the guides' "Weiterlesen" */
-.pg-cockpit {
-  margin-top: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
-  padding: var(--card-pad);
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--bg-alt);
-}
-.lg-col > .pg-cockpit:first-child { margin-top: 0; }
-.pg-cockpit-link { min-height: 44px; color: var(--heading); }
-.pg-cockpit-link svg { flex: none; color: var(--accent-text); }
-.pg-cockpit-text { margin-top: .1rem; font-size: var(--fs-small); line-height: 1.5; color: var(--text); }
-
-/* Invitation to a talk under the closing buttons, set off by a hairline */
-.lg-section .pg-talk { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.gd-related a:hover .gd-related-name { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 3px; text-underline-offset: 5px; }
+.gd-related a:hover .gd-related-arrow { background: var(--gelb); translate: 4px 0; }
+@media (prefers-reduced-motion: reduce) { .gd-related-arrow { transition: none; translate: none !important; } }
 
 @media (max-width: 520px) {
   .gd-related a { column-gap: 1rem; }
-  .gd-related-arrow { width: 2.25rem; height: 2.25rem; padding: .6rem; }
+  .gd-related-arrow { width: 2.5rem; height: 2.5rem; padding: .7rem; }
 }

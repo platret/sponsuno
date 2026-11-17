@@ -26,9 +26,9 @@ export function Faq() {
   return (
     <section className="section surface-parkett-2" id="fragen" aria-labelledby="fragen-title">
       <div className="container">
-        <div className="faq-list" data-reveal="" data-scroll="group">
+        <div className="faq-list">
           {faq.items.map((item) => (
-            <details className="faq-item" data-scroll="rise" key={item.q}>
+            <details className="faq-item" key={item.q}>
               <summary className="faq-q">
                 <span className="faq-q-text">{item.q}</span>
                 <span className="faq-icon" aria-hidden="true" />

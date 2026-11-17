@@ -1,33 +1,72 @@
-/* Match card (MatchCard.tsx): one card on the page surface (parquet, 1 px line, radius 20), used in "So funktioniert
-   es". Label, two parties with vector avatars, then the four criteria as dots in the four line colours and the
-   result. Prefix match-. (The parked scroll story styled the same markup on ink in story-art.css.) */
+/* Match card (MatchCard.tsx): one parquet card (1 px line, radius 20), used in "So funktioniert es". The
+   "Beispieldaten" text sticker sits on the card's top edge; two parties with vector avatars cut like stickers; then
+   the green result panel (white text on --gruen, 5.7:1): the result line in the display face and the four criteria
+   as parquet chips with line icons. Base layout: one column (phones); steps.css lays it out on three columns from
+   861 px. Prefix match-. (The parked scroll story styled the same class names on ink in story-art.css.) */
 
 .match {
-  display: grid; gap: 1.1rem;
-  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  --match-pad: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  position: relative;
+  display: grid; gap: 1.25rem;
+  padding: calc(var(--match-pad) + .5rem) var(--match-pad) var(--match-pad);
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--parkett);
   color: var(--text);
 }
-.match-label { font-size: .75rem; line-height: 1.4; color: var(--text); }
-.match-party { display: flex; align-items: center; gap: .9rem; }
+
+/* The one label: a small text sticker straddling the top edge, on the card's text column */
+.match-label { position: absolute; top: 0; left: var(--match-pad); translate: -.35rem -50%; line-height: 0; }
+.match-label .tstk { --stk-fs: 12px; }
+
+.match-party { display: flex; align-items: center; gap: 1rem; min-width: 0; }
 .match-mark {
   flex: none; display: grid; place-items: center;
-  width: 48px; height: 48px; border-radius: 50%;
-  font: 800 1.375rem/1 var(--display);
+  inline-size: 64px; block-size: 64px;
+  border: 4px solid var(--weiss); border-radius: 50%;
+  background-clip: padding-box;
+  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
 }
-.match-mark-seeker { background: var(--blau); color: var(--weiss); }
-.match-mark-seeker svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.match-mark-firm { background: var(--gelb); color: var(--tinte); }
+.match-mark-seeker { background-color: var(--blau); color: var(--weiss); rotate: -6deg; }
+.match-mark-firm { background-color: var(--gelb); color: var(--tinte); rotate: 5deg; }
 .match-party-text { min-width: 0; }
-.match-role { font-size: .75rem; font-weight: 600; color: var(--accent-text); }
-.match-name { margin-top: .1rem; font-weight: 600; font-size: 1.0625rem; line-height: 1.25; color: var(--heading); }
-.match-meta { margin-top: .15rem; font-size: .8125rem; line-height: 1.4; }
-.match-foot { display: grid; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--line); }
-.match-criteria { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; }
-.match-criteria li { display: inline-flex; align-items: center; gap: .45rem; font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--heading); }
-.match-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--blau); }
-.match-criteria li:nth-child(2) .match-dot { background: var(--rot); }
-.match-criteria li:nth-child(3) .match-dot { background: var(--gruen); }
-.match-criteria li:nth-child(4) .match-dot { background: var(--gelb); }
-.match-score { font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--heading); }
+.match-role { font-size: .8125rem; font-weight: 600; line-height: 1.4; color: var(--accent-text); }
+.match-name { margin-top: .1rem; font-weight: 600; font-size: 1.125rem; line-height: 1.25; color: var(--heading); hyphens: manual; overflow-wrap: break-word; }
+.match-meta { margin-top: .2rem; font-size: .875rem; line-height: 1.45; }
+
+/* Result panel: bleeds to the card's edges (bottom on phones; steps.css turns it into the right column) */
+.match-foot {
+  display: grid; gap: 1rem;
+  margin: .25rem calc(var(--match-pad) * -1) calc(var(--match-pad) * -1);
+  padding: var(--match-pad);
+  border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px);
+  background: var(--gruen);
+  color: var(--weiss);
+}
+.match-score {
+  display: flex; align-items: flex-start; gap: .65rem;
+  font-size: clamp(1.25rem, 1.05rem + .6vw, 1.5rem); line-height: 1.12;
+  color: var(--weiss);
+  text-wrap: wrap;
+}
+.match-check {
+  flex: none; display: grid; place-items: center;
+  inline-size: 1.3em; block-size: 1.3em; margin-top: -.05em;
+  border-radius: 50%;
+  background: var(--weiss); color: var(--gruen);
+}
+.match-check .icn { inline-size: .8em; block-size: .8em; stroke-width: 3; }
+.match-criteria { display: flex; flex-wrap: wrap; gap: .4rem; }
+.match-criteria li {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .3rem .7rem .3rem .55rem;
+  border-radius: var(--radius-pill);
+  background: var(--parkett);
+  font-size: .8125rem; font-weight: 600; line-height: 1.4; color: var(--tinte);
+}
+
+/* Settle (only under html.motion, inside a revealed [data-reveal] block): avatars, check and chips pop in turn */
+@keyframes match-pop { from { opacity: 0; scale: .7; } 60% { opacity: 1; scale: 1.06; } }
+html.motion [data-reveal].is-in .match-mark { animation: match-pop .45s var(--ease-out) .15s backwards; }
+html.motion [data-reveal].is-in .match-mark-firm { animation-delay: .25s; }
+html.motion [data-reveal].is-in .match-check { animation: match-pop .45s var(--ease-out) .4s backwards; }
+html.motion [data-reveal].is-in .match-criteria li { animation: match-pop .4s var(--ease-out) calc(.5s + var(--i, 0) * 70ms) backwards; }

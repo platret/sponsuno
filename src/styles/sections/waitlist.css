@@ -2,14 +2,55 @@
    across the full width; under it, from 961 px, two columns on the 12-column grid: the intro in columns 1-5, the form
    in an ink card (.surface-tinte, radius 20) in columns 6-12. Below that the card sits under the intro. The card holds
    the role pills (real radios), one e-mail row with the yellow pill button, the hint; after sending, the success box.
+   Decoration: one parquet court line from the left edge down to the footer (wide screens) and two stickers.
    The ink footer follows. Prefix wl-. */
 
-.wl.section { padding-block: clamp(4rem, 3rem + 5vw, 7.5rem); }
+.wl.section {
+  --wl-pad: clamp(4rem, 3rem + 5vw, 7.5rem);
+  /* left edge of the text column, measured from the left edge of the band */
+  --wl-x0: calc((100% - min(100%, var(--container))) / 2 + var(--gutter));
+  /* how far into the text column the court line's lower end lies: 420 px, or less so that it stays left of the card
+     (which starts at column 6 of 12) */
+  --wl-tail: min(420px, calc((min(100vw, var(--container)) - 2 * var(--gutter) + 24px) * 5 / 12 - 44px));
+  position: relative;
+  overflow: clip; /* the title's sticker may hang over the right edge on phones */
+  padding-block: var(--wl-pad);
+}
+.wl > .container { position: relative; }
 
 /* ---------- Layout ---------- */
 
-/* The closing statement of the page, as large as the hero title */
-.wl-title { font-size: var(--fs-hero); line-height: .98; }
+/* The closing statement of the page: one line, as wide as the text column allows (the three words measure about
+   9.4 em in Archivo Wide) */
+.wl-title { position: relative; font-size: clamp(1.75rem, 9.3vw, 7.375rem); line-height: .98; }
+
+/* ---------- Decoration: court line and stickers (aria-hidden) ---------- */
+
+/* The court line: up from the footer in a quarter circle, then out to the left edge of the band under the intro. Its
+   lower end lies --wl-tail into the text column, left of the card. Wide screens only (below, the card fills the row). */
+.wl-line { display: none; }
+@media (min-width: 961px) {
+  .wl-line {
+    display: block;
+    inset: auto auto 0 calc(var(--wl-x0) + var(--wl-tail) - 2400px);
+    inline-size: 2400px; block-size: 300px;
+    --cl-hell: var(--parkett);
+    /* Only the first third of the path is on screen (the rest runs out to the left): a long range, so the curve is
+       drawn while the lower half of the band scrolls in */
+    --draw-start: cover 12vh;
+    --draw-end: cover 170vh;
+  }
+}
+/* A sticker's slot: no size of its own, the sticker hangs from it. Collected, it leaves its outline in ink. */
+.wl-stk { position: absolute; display: block; inline-size: 0; block-size: 0; color: var(--tinte); }
+.wl-stk .stk { position: absolute; }
+/* Start number: stuck on the end of the title, over the top of its last letters (the slot follows the last word) */
+.wl-stk-title { position: relative; display: inline-block; vertical-align: baseline; }
+.wl-stk-title .stk { inline-size: clamp(3.75rem, .95em, 7rem); left: -.42em; bottom: .46em; }
+/* Whistle: on the court line's curve (wide screens): its centre on the middle of the quarter circle, which lies
+   65 px left of the line's lower end and 175 px above the band's lower edge */
+.wl-stk-line { left: calc(var(--wl-tail) - 121px); bottom: calc(119px - var(--wl-pad)); }
+.wl-stk-line .stk { left: 0; bottom: 0; }
 
 .wl-inner {
   display: grid;
@@ -17,6 +58,7 @@
   gap: clamp(1.5rem, 1.25rem + 1.5vw, 2.5rem);
   margin-top: clamp(2rem, 1.5rem + 2.5vw, 4rem);
   max-width: 40rem;
+  position: relative;
 }
 
 .wl-intro {
@@ -84,7 +126,8 @@
 .wl-email::placeholder { color: var(--grau-hell); opacity: 1; }
 .wl-email:hover { border-color: rgba(248, 244, 234, .65); }
 .wl-email:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-color: transparent; border-radius: var(--radius-pill); }
-.wl-email[aria-invalid="true"] { border-color: var(--error-on-dark); }
+.wl-email[aria-invalid="true"],
+.wl-email[aria-invalid="true"]:focus-visible { border-color: var(--error-on-dark); }
 
 .wl-submit { flex: none; }
 .wl-submit:disabled { opacity: .7; cursor: progress; }
@@ -154,6 +197,16 @@
 @media (min-width: 1200px) {
   .wl-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .625rem; }
   .wl-row { flex-direction: row; }
+}
+
+/* Phones: the title fills the row, so its sticker moves in over the last letters instead of hanging off the screen */
+@media (max-width: 760px) {
+  .wl-stk-title .stk { left: -2.75rem; bottom: .52em; }
+}
+/* Without the court line: the whistle sits on the card's lower right corner, half on the yellow */
+@media (max-width: 960px) {
+  .wl-stk-line { left: auto; right: 1rem; bottom: -2.75rem; }
+  .wl-stk-line .stk { left: auto; right: 0; inline-size: 4.5rem; }
 }
 
 @media (max-width: 560px) {

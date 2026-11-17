@@ -21,8 +21,8 @@ type Drawing = { sil: Sil[]; slot: string; shift?: string; art: ReactNode };
 
 /* ---- ball: a generic two-tone hall ball, four curved panels around an off-centre pole ---- */
 const BALL = 'M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z';
-const BALL_PANELS = 'M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z';
-const BALL_SEAMS = 'M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46';
+export const BALL_PANELS = 'M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z';
+export const BALL_SEAMS = 'M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46';
 
 /* ---- note: a beamed pair ---- */
 const NOTE_HEADS = 'M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2Z';

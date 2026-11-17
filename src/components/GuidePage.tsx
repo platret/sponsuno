@@ -8,6 +8,7 @@ import { Arrow } from './NoticePage';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
+import '../styles/sections/guide-parked.css';
 
 /**
  * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: graphit header and page

@@ -18,6 +18,8 @@ const CONTENT = { notfound: notFound, 'warteliste-bestaetigt': waitlistConfirmed
  * - /warteliste/bestaetigt/, where Brevo sends people after they confirm their waitlist sign-up (worker/waitlist.ts).
  * Layout of the legal pages, links as in the guides' "Weiterlesen". Static and without JavaScript, noindex; every link
  * is absolute, because the 404 page is shown under any address.
+ * The band's sticker tells the story: on the 404 page the ball is missing from the centre spot (only its dashed
+ * album slot is left), the confirmation page shows the start number and a green check.
  */
 export function NoticePage({ id }: { id: NoticePageId }) {
   const { path, kind } = pageMeta(id);
@@ -28,7 +30,14 @@ export function NoticePage({ id }: { id: NoticePageId }) {
       <PageHeader current={{ path, kind }} />
 
       <main id="inhalt" className="lg">
-        <PageBand titleId="lg-title" title={content.title} narrow>
+        <PageBand
+          titleId="lg-title"
+          title={content.title}
+          narrow
+          sticker={id === 'notfound' ? 'ball' : 'startnummer'}
+          missing={id === 'notfound'}
+          done={id === 'warteliste-bestaetigt'}
+        >
           <p className="lg-intro">{content.intro}</p>
         </PageBand>
         <div className="container">

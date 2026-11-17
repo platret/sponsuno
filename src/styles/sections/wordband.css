@@ -1,37 +1,138 @@
-/* Word band (WordBand.tsx): ink, full width. A small yellow label, then two rows of giant Archivo words that run out
-   of the screen on both sides; every second word is an outline. Static here: row two is shifted against row one.
-   Prefix wb-. */
+/* Word band (WordBand.tsx): ink, full width. A small yellow label, then two rows of giant Archivo words between two
+   lane lines; every second word of row two is an outline. The rows slide against each other with the scroll and are
+   clipped by the band. Prefix wb-.
+
+   The lockup. At rest the rows fill the band exactly from gutter to gutter, so the type is as large as the width
+   allows and every crop falls between two words:
+     from 641 px   row one "Sport Kultur", row two "Triathlon Chor Turnverein"
+     up to 640 px  row one "Sport", row two "Turnverein"
+   The font sizes are worked out from the widths of these words in Archivo Wide 800 at -0.02em tracking, measured
+   in Chromium (canvas measureText), in em: advance Sport 3.294, Triathlon 5.276, Chor 2.878; ink from the origin
+   to the right edge Sport 3.273, Kultur 3.592, Turnverein 6.315; left side bearing S .05, T .024. So it is the
+   ink of the first and the last letter that meets the gutter, not the letter's box.
+   The space between two words is the gutter plus a little, so the neighbours of the lockup stay outside the band.
+   If the words in content.ts change, measure again and update the divisors below; nothing breaks if they are off,
+   the lockup is then only no longer flush. */
 
 .wb {
+  position: relative;
   overflow: clip;
-  padding-block: clamp(3rem, 2rem + 5vw, 6.5rem);
+  /* Height the kit's band drawing (240 units) is set at: 1 px per unit on phones, 1.4 px from 1360 px wide */
+  --wb-lane: clamp(15rem, 12.5rem + 10vw, 21rem);
+  /* A lane line with its ticks reaches this far in from the band's edge (56 of the 240 units) */
+  --wb-edge: calc(var(--wb-lane) * 56 / 240);
+  padding-block: calc(var(--wb-edge) + clamp(1.25rem, 1rem + 1vw, 2rem)) calc(var(--wb-edge) + clamp(.75rem, .5rem + 1vw, 1.5rem));
+  view-timeline: --wb block;
+  view-timeline-inset: 0px;
 }
-.wb-label { margin-bottom: clamp(1.25rem, 1rem + 1.5vw, 2.5rem); }
 
-.wb-rows { display: grid; gap: clamp(.25rem, 1vw, 1rem); }
-.wb-row {
-  display: flex; width: max-content;
-  /* Rest position of the row (the kit's slide-x moves it from here) */
-  translate: var(--wb-shift, -4vw) 0;
+/* Lane lines (kit: CourtLines variant "band", a line with ticks near each edge), blue with yellow ticks. The
+   drawing is set twice at the fixed height --wb-lane (on desktop a tick is 28 px long and the line sits 50 px from
+   the edge) and each strip shows one of its two lines; the band can then be any height. They draw with the scroll,
+   the upper one when the band comes in, the lower one when its end does. */
+.wb-lane {
+  position: absolute; inset-inline: 0; block-size: calc(var(--wb-lane) * .26);
+  overflow: clip; pointer-events: none;
 }
-.wb-row-2 { --wb-shift: -38vw; }
+.wb-lane-top { inset-block-start: 0; }
+.wb-lane-end { inset-block-end: 0; }
+.wb-lane .wb-lines { --cl-hell: var(--blau); block-size: var(--wb-lane); }
+.wb-lane-end .wb-lines { inset-block: auto 0; }
+
+.wb-label {
+  position: relative;
+  margin-bottom: clamp(.75rem, .5rem + 1vw, 1.5rem);
+  padding-inline: var(--gutter);
+  /* Its own ink ground (not visible): a contrast checker then measures the label against ink instead of giving up
+     on the lane drawing, whose unclipped box lies behind it */
+  inline-size: fit-content;
+  background: var(--bg);
+}
+
+.wb-rows {
+  position: relative;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(.375rem, 1.1vw, 1rem);
+  container-type: inline-size;
+  /* Band width the lockup is built for (no larger than 1920 px: beyond that the rows keep their size and run on) */
+  --wb-w: min(100vw, 120rem);
+  --wb-t1: calc(var(--wb-w) * .56);   /* how far row one travels during the pass (to the left) */
+  --wb-t2: calc(var(--wb-w) * .76);    /* row two (to the right) */
+}
+@supports (width: 1cqi) {
+  .wb-rows { --wb-w: min(100cqi, 120rem); }
+}
+
+.wb-track { display: flex; }
+.wb-track-2 { justify-content: flex-end; }
+
+.wb-row {
+  position: relative; flex: none;
+  display: flex; inline-size: max-content;
+  /* slide-x (kit): both rows follow the band's timeline, so they pass the lockup at the same moment */
+  --scroll-timeline: --wb;
+}
+.wb-row-1 {
+  --wb-gap: calc(var(--gutter) + .12em);
+  margin-inline-start: calc(var(--gutter) - .05em);   /* minus the side bearing of the S */
+  font-size: calc((var(--wb-w) - 3 * var(--gutter)) / 6.956);   /* 3.294 - .05 + 3.592 + one gap of .12em */
+  line-height: .98;
+  --slide: calc(-1 * var(--wb-t1));
+}
+.wb-row-2 {
+  --wb-gap: calc(var(--gutter) + .04em);
+  /* the ink of the last n ends at the gutter: its gap is the gutter plus .04em, its right side bearing .043em */
+  margin-inline-end: -.083em;
+  font-size: calc((var(--wb-w) - 4 * var(--gutter)) / 14.525);   /* 5.276 - .024 + 2.878 + 6.315 + two gaps of .04em */
+  line-height: 1.1;
+  --slide: var(--wb-t2);
+}
+@media (max-width: 640px) {
+  .wb-rows { --wb-t1: calc(var(--wb-w) * 1.1); --wb-t2: calc(var(--wb-w) * 1.3); }
+  .wb-row-1 { font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.223); }    /* 3.273 - .05 */
+  .wb-row-2 { font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 6.291); }    /* 6.315 - .024 */
+}
+
 .wb-set { display: flex; flex: none; }
+.wb-pre, .wb-post { position: absolute; top: 0; }
+.wb-pre { right: 100%; }
+.wb-post { left: 100%; }
+
 .wb-word {
-  flex: none;
-  padding-right: .32em;
-  font-size: clamp(3.25rem, 1.5rem + 10.5vw, 11rem);
-  line-height: 1.02;
+  position: relative; flex: none;
+  padding-inline-end: var(--wb-gap);
   white-space: nowrap;
   color: var(--parkett);
 }
-/* The word itself comes from data-word (WordBand.tsx): decoration, the readable lists are separate */
+/* The word itself comes from data-word (WordBand.tsx): decoration, the readable list is separate */
 .wb-word::before { content: attr(data-word); }
-.wb-row-2 .wb-word { font-size: clamp(2.5rem, 1.25rem + 7vw, 7.5rem); line-height: 1.08; }
 /* Outline words: stroke in parquet, no fill. Where text-stroke is missing the word stays filled in light grey. */
 .wb-outline { color: var(--grau-hell); }
 @supports (-webkit-text-stroke: 1px black) {
-  .wb-outline { color: transparent; -webkit-text-stroke: clamp(1.5px, .16vw, 2.5px) var(--parkett); }
+  .wb-outline { color: transparent; -webkit-text-stroke: clamp(1.5px, .026em, 3px) var(--parkett); }
 }
 @media (forced-colors: active) {
   .wb-outline { color: CanvasText; -webkit-text-stroke: 0; }
+}
+
+/* ---------- Stickers on the letters (em of their word, so they keep their letter at every size) ---------- */
+
+.wb-word .wb-stk { position: absolute; z-index: 1; color: var(--parkett); }
+/* ball: in the o of Sport */
+.wb-word .wb-stk-ball { left: 1.645em; top: .235em; inline-size: .66em; }
+/* note: on the second u of Kultur */
+.wb-word .wb-stk-note { left: 2.5em; top: -.14em; inline-size: .56em; }
+/* pennant: on the T of Turnverein */
+.wb-word .wb-stk-wimpel { left: -.04em; top: -.84em; inline-size: 1.08em; }
+
+/* ---------- Motion ---------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* slide-x moves a row from its place to --slide. The track sets it back by half of that, so the row passes its
+       resting place (the lockup) when the band is in the middle of the viewport. */
+    .scroll-fx .wb-track-1 { translate: calc(var(--wb-t1) / 2) 0; }
+    .scroll-fx .wb-track-2 { translate: calc(var(--wb-t2) / -2) 0; }
+    /* The lane lines are done when the band's upper edge is at about half height */
+    .scroll-fx .wb-lines { --draw-end: cover 45vh; }
+  }
 }

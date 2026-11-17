@@ -1,14 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import wordmarkLight from '../assets/wordmark-light.svg';
 import wordmarkDark from '../assets/wordmark-dark.svg';
 import { cta, menu, nav } from '../content';
 import { siteHref } from '../lib/links';
+import { motionEnabled } from '../lib/motion';
 import { MobileMenu } from './MobileMenu';
+import { useAlbum } from './Album';
+import { Icon } from './kit/Icon';
+import { STICKER_IDS } from './kit/Sticker';
 import '../styles/sections/header.css';
 
 /** Landing page header. Plain full-width bar: transparent on the parquet hero with the ink wordmark, solid parquet
     with a hairline after 80 px, solid ink with the parquet wordmark while an ink band (every element marked
-    `data-header-dark`: the word band, the footer) runs under it. The nav links to the topic pages (content.ts → nav,
+    `data-header-dark`: the word band, the footer) runs under it. Over the blue, red and yellow bands it stays the
+    parquet bar (a decision: one calm bar, the colour belongs to the bands). The nav links to the topic pages (content.ts → nav,
     shared with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -27,8 +32,10 @@ export function Header() {
     });
     if (sentinel) solidIo.observe(sentinel);
 
-    // While an ink band runs under the bar, the solid bar is ink (no parquet strip over the band); it turns back to
-    // the page surface once that reaches it. The observed band is the bar's own height.
+    // The solid bar takes the colour of what lies directly below it: ink while an ink band crosses the bar's lower
+    // edge, the page surface otherwise. So it joins a band the moment the band reaches it and lets go the moment the
+    // band has passed (never an ink bar over parquet or a parquet bar over ink). The observed strip is the 1 px line
+    // at the bar's lower edge.
     const darkZones = [...document.querySelectorAll<HTMLElement>('[data-header-dark]')];
     const underBar = new Map<Element, boolean>();
     let darkIo: IntersectionObserver | undefined;
@@ -38,7 +45,7 @@ export function Header() {
       darkIo = new IntersectionObserver((entries) => {
         entries.forEach((entry) => underBar.set(entry.target, entry.isIntersecting));
         setDark(darkZones.some((el) => underBar.get(el)));
-      }, { rootMargin: `0px 0px ${-Math.max(0, window.innerHeight - barH)}px 0px` });
+      }, { rootMargin: `${-Math.round(barH)}px 0px ${-Math.max(0, window.innerHeight - Math.round(barH) - 1)}px 0px` });
       darkZones.forEach((el) => darkIo!.observe(el));
     };
     buildDark();
@@ -67,6 +74,14 @@ export function Header() {
     };
   }, [menuOpen]);
 
+  // Sticker album (Easter egg): the chip shows how many of the six stickers have been found. A pointer extra, so it
+  // is hidden from assistive technology and skipped by Tab; it scrolls to the album without moving focus there.
+  const found = useAlbum().length;
+  const toAlbum = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    document.getElementById('album')?.scrollIntoView({ behavior: motionEnabled() ? 'smooth' : 'auto', block: 'center' });
+  };
+
   const isSolid = (solid && !dark) || menuOpen;
   const isDark = solid && dark && !menuOpen;
 
@@ -88,7 +103,12 @@ export function Header() {
             </ul>
           </nav>
           <div className="header-actions">
-            {/* TODO(kit): the sticker album's counter chip ("2/6", Easter egg, aria-hidden) appears here, before the button */}
+            {found > 0 && (
+              <a className="tstk album-chip" data-tone="gelb" href="#album" aria-hidden="true" tabIndex={-1} onClick={toAlbum}>
+                <Icon name="stern" size={14} />
+                <span className="album-chip-n" key={found}>{found}/{STICKER_IDS.length}</span>
+              </a>
+            )}
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>
               <span className="header-cta-short">{cta.waitlistShort}</span>

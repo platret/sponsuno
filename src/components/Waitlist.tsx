@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { contact, waitlist, type Role } from '../content';
 import { WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
+import { Sticker } from './kit/Sticker';
 import '../styles/sections/waitlist.css';
 
 // Set VITE_WAITLIST_ENDPOINT=/api/warteliste (the Worker route, worker/waitlist.ts: Brevo double opt-in) to store
@@ -28,7 +29,10 @@ interface WaitlistProps {
 
 /** Closing block (#warteliste): a yellow band with the giant H2 in ink across the full width, under it the intro on
  * the left and the form in an ink card (.surface-tinte) on the right (stacked on phones). The ink footer follows.
- * Static surface: no reveal, so the form is never hidden while it waits for a script. */
+ * Static surface: no reveal, so the form is never hidden while it waits for a script.
+ * Decoration (aria-hidden, never needed): one court line in parquet that rises from the footer in a quarter circle and
+ * runs out to the left edge (drawn with the scroll, wide screens only), and two stickers of the album: the start number stuck on
+ * the end of the title, the whistle on the court line (on phones on the card's lower edge). */
 export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
@@ -110,10 +114,18 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
 
   return (
     <section className="wl section surface-gelb" id="warteliste" aria-labelledby="warteliste-title">
-      {/* TODO(kit): <CourtLines variant="band" /> and one or two stickers may sit on this band (aria-hidden layers) */}
+      {/* 1 unit = 1 px: the svg is as large as its viewBox, its right edge 420 px into the text column. The path
+          starts at the footer and runs out to the left, so the part on screen is drawn first. */}
+      <svg className="cl wl-line" data-scroll="draw" viewBox="0 0 2400 300" aria-hidden="true" focusable="false">
+        <path className="cl-path" data-line="hell" pathLength={1} fill="none" d="M2400 310V280a220 220 0 0 0-220-220H0" />
+      </svg>
       <div className="container">
-        <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
+        <h2 className="wl-title" id="warteliste-title">
+          {waitlist.title}
+          <span className="wl-stk wl-stk-title" aria-hidden="true"><Sticker id="startnummer" size={112} rotate={9} /></span>
+        </h2>
         <div className="wl-inner">
+          <span className="wl-stk wl-stk-line" aria-hidden="true"><Sticker id="pfeife" size={112} rotate={-10} /></span>
           <div className="wl-head">
             {intro && <p className="wl-intro">{intro}</p>}
           </div>

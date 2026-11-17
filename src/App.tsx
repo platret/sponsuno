@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { waitlist, type Role } from './content';
+import { album, waitlist, type Role } from './content';
 import { observeReveals, scrollToHash } from './lib/motion';
 import { MOVED_SECTIONS, pageHref, ROLE_PARAM } from './lib/links';
 import { Header } from './components/Header';
@@ -11,11 +11,14 @@ import { Doors } from './components/Doors';
 import { Waitlist } from './components/Waitlist';
 import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
+import { CourtLines } from './components/kit/CourtLines';
 
 /**
  * The landing page («Turnhalle», November 2026), seven short blocks: header, hero, statement, word band, how it works
  * (three steps), the two doors, waitlist + footer. Kosten, Fragen and Team are static pages of their own
  * (InfoPage.tsx), reached from the header. Parked and not imported: Story, StoryArt, ProofLine, Audience, HowItWorks.
+ * Two layers lie over and under the blocks: the page tape line (one court line behind the content from the hero down,
+ * drawn with the scroll; styles at the end of header.css) and the Easter eggs (lib/eggs.ts, loaded when idle).
  */
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
@@ -68,11 +71,35 @@ export default function App() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
+  // Easter eggs (sticker album, dragging, «tor», the loop): their own chunk, fetched once the browser is idle, so
+  // they never compete with the first screen. The page is complete without them.
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    let cancelled = false;
+    const load = () => {
+      import('./lib/eggs')
+        .then((eggs) => { if (!cancelled) cleanup = eggs.initEggs(album.goal); })
+        .catch(() => { /* optional layer: a failed fetch changes nothing on the page */ });
+    };
+    const idle = typeof window.requestIdleCallback === 'function';
+    const handle = idle ? window.requestIdleCallback(load, { timeout: 4000 }) : window.setTimeout(load, 1500);
+    return () => {
+      cancelled = true;
+      if (idle) window.cancelIdleCallback(handle); else window.clearTimeout(handle);
+      cleanup?.();
+    };
+  }, []);
+
   return (
     <>
       <a className="skip-link" href="#inhalt">Zum Inhalt springen</a>
       <Header />
       <main id="inhalt">
+        {/* One line of tape down the hall floor, behind everything: it shows on the parquet blocks and runs under
+            the ink band and the colour tiles. Placement and drawing: end of header.css. */}
+        <div className="page-line" data-scroll="draw" aria-hidden="true">
+          <div className="page-line-fit"><CourtLines variant="page" /></div>
+        </div>
         <Hero onChooseRole={setRole} />
         <Statement />
         <WordBand />

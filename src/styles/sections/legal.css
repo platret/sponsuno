@@ -1,9 +1,17 @@
 /* Static pages (topic pages, guides, legal pages, 404): every page opens on ink: the slim header with the site nav,
-   then the page head band (PageBand: label, H1, intro), both .surface-tinte. Below it the parquet page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
+   then the page head band (PageBand: label, H1, intro, court lines and one sticker), both .surface-tinte. Below it the parquet page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
    the table of contents in a sticky rail beside one readable column (~42rem) from 1100 px; narrower, and on the other
    reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone ink footer.
-   No motion, no script. Classes prefixed lg-.
+   No script; the only motion is the band's load draw (CSS). Classes prefixed lg-. Needs kit.css on the page (the
+   band uses the kit's court-line and sticker classes and its keyframes kit-draw, stk-settle, stk-wiggle).
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
+
+/* The kit (court lines, stickers, icons and their keyframes) for the page head band and the badges. The static pages
+   ship no script, so nothing else brings it, and this file is the one every static page loads. Keep it here and do
+   NOT import kit.css in src/static/main.ts instead (tried 2026-11-18): the bundler then moves the kit into the
+   stylesheet shared with the landing page, which is linked after the landing page's section styles, so kit rules
+   would win ties against section rules in the build but lose them in dev. Must stay the first rule of the file. */
+@import '../kit.css';
 
 /* The static header scrolls away with the page (not fixed like the landing page header), so anchor jumps (table of
    contents, /kosten/#sachleistungen) need only a small margin, not the landing page's header offset (site.css). */
@@ -82,27 +90,57 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 
 /* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on ink, right under the header ----------
    .surface-tinte (set in PageBand) paints the ground and sets the ink roles: parquet H1, light grey intro, yellow label
-   and link underline. The H1 may run wider than the intro (the display face is wide). From 1200 px a large, faint loop
-   sits in the empty right half; the kit may lay court lines over the band. */
+   and link underline. On the right a piece of the hall floor (decoration, aria-hidden): the centre circle rising from
+   the band's lower edge (parquet line, radius --r, its right edge on the container's text edge --edge), the halfway
+   line through its centre (yellow) and one sticker on the centre spot, half on the page below.
+   From 1000 px the text keeps left of the halfway line and the intro left of the circle; below that the lines get
+   their own strip under the text (padding-bottom), so no line ever runs behind a word.
+   Motion without script (these pages ship none): the lines draw once on load (kit-draw of kit.css, under 1.2 s), the
+   sticker settles; with reduced motion nothing moves. The static styles are the final state. */
 .lg-band {
-  position: relative; overflow: hidden;
-  padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) clamp(3rem, 2rem + 4vw, 6rem);
+  --r: clamp(5.25rem, 13vw, 11.25rem);
+  --edge: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+  --cl-hell: var(--parkett);
+  --stk: clamp(4.5rem, 9.2vw, 8.25rem);
+  position: relative;
+  padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) calc(var(--r) + 2.75rem);
 }
 .lg-band > .container { position: relative; z-index: 1; }
 .lg-band h1 { max-width: 14em; }
 .lg-band-label { margin-bottom: 1.25rem; }
-.lg-band .lg-intro, .lg-band .section-intro, .lg-band .gd-note { max-width: 42rem; }
-.lg-band::after {
-  content: ""; display: none;
-  position: absolute; top: 50%; right: max(var(--gutter), calc((100% - 1200px) / 2 + var(--gutter)));
-  width: clamp(16rem, 24vw, 22rem); aspect-ratio: 90 / 58.8;
-  translate: 0 -50%;
-  background: var(--parkett); opacity: .04;
-  -webkit-mask: url("../../assets/loop.svg") center / contain no-repeat;
-  mask: url("../../assets/loop.svg") center / contain no-repeat;
-  pointer-events: none;
+.lg-band .lg-intro, .lg-band .section-intro, .lg-band .gd-note { max-width: 40rem; }
+.lg-band-art { position: absolute; inset: 0; overflow: hidden; }
+.cl.lg-band-arc { inset: auto var(--edge) 0 auto; inline-size: calc(2 * var(--r)); block-size: var(--r); overflow: visible; }
+.cl.lg-band-line {
+  inset: auto calc(var(--edge) + var(--r) - 1px) var(--gap, 0px) auto;
+  inline-size: 2px; block-size: calc(var(--r) + 1.5rem - var(--gap, 0px)); overflow: visible;
 }
-@media (min-width: 1200px) { .lg-band::after { display: block; } }
+.stk.lg-band-stk {
+  position: absolute; z-index: 2; right: calc(var(--edge) + var(--r)); bottom: 0;
+  inline-size: var(--stk);
+  translate: 50% 50%;
+}
+/* The 404 page: the sticker is gone, its dashed album slot stays (the kit's "collected" look) and the halfway line
+   stops at it. Blended with the page, so the outline is light on the ink above the band's edge and dark on the
+   parquet below it (the band makes no stacking context for that reason; the sticker's z-index lifts it over the
+   section that follows). */
+.lg-band-slot { color: var(--weiss); mix-blend-mode: difference; }
+.lg-band-slot .stk-slot { opacity: .8; }
+.lg-band-art:has(+ .lg-band-slot) { --gap: calc(var(--stk) * .44); }
+.lg-band-badge { margin-bottom: 1.5rem; }
+@media (min-width: 1000px) {
+  .lg-band { padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
+  .lg-band-inner { max-width: calc(100% - var(--r) - 2.5rem); }
+  .cl.lg-band-line { block-size: calc(100% - var(--gap, 0px)); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lg-band .cl-path { animation: kit-draw .6s cubic-bezier(.65, 0, .35, 1) backwards; }
+  .lg-band-arc .cl-path { animation-duration: .8s; animation-delay: .3s; }
+  .lg-band-stk { animation: stk-settle .36s var(--ease-out) .7s backwards; }
+  @media (hover: hover) and (pointer: fine) {
+    .stk:hover .stk-in { animation: stk-wiggle .5s ease-in-out; }
+  }
+}
 /* Links on ink: parquet with a yellow underline (as in the waitlist card) */
 .lg-band a:not(.btn) {
   color: var(--heading); font-weight: 600;
@@ -111,12 +149,28 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 }
 .lg-band a:not(.btn):hover { text-decoration-thickness: 2px; }
 
+/* ---------- Badge: a round sticker-style sign with a line icon (kit Icon) inside. White die-cut rim, one hairline
+   around it, a little tilted, flat colour: blue by default, -rot, -gruen, and -offen (an empty dashed slot: "not
+   decided yet"). Decorative, always aria-hidden. Used by the cost cards, the three kinds of support, the project
+   status and the confirmation page. ---------- */
+.lg-badge {
+  display: grid; place-items: center;
+  inline-size: 3.5rem; aspect-ratio: 1;
+  border: 4px solid var(--weiss); border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
+  background: var(--blau); color: var(--weiss);
+  rotate: -6deg;
+}
+.lg-badge-rot { background: var(--rot); rotate: 5deg; }
+.lg-badge-gruen { background: var(--gruen); }
+.lg-badge-offen { border: 2px dashed var(--text); box-shadow: none; background: none; }
+
 /* ---------- Reading column ---------- */
 .lg {
   background: var(--bg);
   padding-bottom: var(--section-pad);
 }
-.lg-band + .container { padding-top: clamp(2.5rem, 1.75rem + 3vw, 4.5rem); }
+.lg-band + .container { padding-top: clamp(3.5rem, 2.75rem + 3vw, 5rem); }
 .lg-col { max-width: 42rem; }
 .lg-col > :first-child { margin-top: 0; }
 
@@ -136,8 +190,8 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-toc a { display: flex; gap: .75rem; min-height: 44px; padding-block: .6rem; color: var(--text); text-decoration: none; line-height: 1.45; }
 .lg-toc a::before {
   content: counter(lg-toc, decimal-leading-zero) / "";
-  flex: none; min-width: 1.4rem; padding-top: .1em;
-  font-size: var(--fs-label); font-weight: 600; letter-spacing: .05em; font-variant-numeric: tabular-nums;
+  flex: none; min-width: 1.6rem; padding-top: .15em;
+  font: var(--display-weight) var(--fs-label)/1.45 var(--display); font-variant-numeric: tabular-nums;
   color: var(--accent-text);
 }
 .lg-toc a:hover { color: var(--heading); }
@@ -148,8 +202,8 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-doc .lg-section { counter-increment: lg-section; }
 .lg-doc .lg-section::before {
   content: counter(lg-section, decimal-leading-zero) / "";
-  display: block; margin-bottom: 1rem;
-  font: 600 var(--fs-label)/1.4 var(--sans); letter-spacing: var(--label-tracking); font-variant-numeric: tabular-nums;
+  display: block; margin-bottom: .75rem;
+  font: var(--display-weight) var(--fs-h3)/1 var(--display); font-variant-numeric: tabular-nums;
   color: var(--accent-text);
 }
 .lg h2 { font-size: var(--fs-sub); line-height: 1.15; }
@@ -178,8 +232,10 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 }
 .lg-list li + li { margin-top: .5rem; }
 
-/* Two by two (auto-fill left "Dozie Ilunga" alone on a second row); one column on phones */
+/* Two by two (auto-fill left "Dozie Ilunga" alone on a second row); one column on phones. A person icon in front. */
 .lg-persons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.5rem; font-weight: 600; color: var(--heading); }
+.lg-persons li { display: flex; align-items: center; gap: .6rem; }
+.lg-persons .icn { color: var(--accent-text); }
 
 .lg-contact { display: grid; border-top: 1px solid var(--line); }
 .lg-contact div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; padding-block: .75rem; border-bottom: 1px solid var(--line); }

@@ -1,6 +1,7 @@
 import { contact, footer } from '../content';
 import { siteHref } from '../lib/links';
 import wordmark from '../assets/wordmark-light.svg';
+import { Album } from './Album';
 import '../styles/sections/footer.css';
 
 // Kontakt column: the e-mail address as visible text (a mailto link) and the town of the postal address
@@ -16,8 +17,8 @@ type FooterProps = {
 };
 
 /**
- * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album slot, the giant
- * loop wordmark in parquet and the copyright row. On the landing page it follows the yellow waitlist band; on
+ * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album (landing page
+ * only), the giant loop wordmark in parquet and the copyright row. On the landing page it follows the yellow waitlist band; on
  * sub-pages it stands alone (ft-standalone). `data-header-dark` turns the landing header ink while the footer runs
  * under it.
  */
@@ -61,11 +62,15 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        {/* Slot of the sticker album (Easter egg, filled by its lazy chunk; copy in content.ts -> album). Empty and
-            without height until then. */}
-        <div className="ft-album" data-album="" />
+        {/* Sticker album (Easter egg, landing page only: the stickers are hidden there). Prerendered with six empty
+            slots; the lazy chunk lib/eggs.ts fills it. */}
+        {onLanding && <Album />}
 
-        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
+        {/* The wrapper carries the scroll motion and is the frame the Easter-egg chunk works in (a click on the loop
+            makes the last «o» bounce); the image and its geometry stay untouched. */}
+        <div className="ft-wordmark" data-wordmark="" data-reveal="" data-scroll="zoom-in">
+          <img src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" />
+        </div>
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>

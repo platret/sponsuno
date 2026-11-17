@@ -57,7 +57,7 @@ const ticks = (y: number, dy: number, from: number) =>
   Array.from({ length: 12 }, (_, i) => `M${from + i * 120} ${y}v${dy}`).join('');
 
 /* door-sport (600 x 600, from above): end line, goal, goal area, penalty mark; the ball's way into the goal */
-const BALL_PATH = 'M30 548C210 548 250 300 400 300H563';
+export const BALL_PATH = 'M30 548C210 548 250 300 400 300H563';
 /* door-firma (600 x 600, front): ground, shop with awning, window and door, the sign on the roof */
 const SIGN = 'M216 96h168a16 16 0 0 1 16 16v36a16 16 0 0 1-16 16H216a16 16 0 0 1-16-16v-36a16 16 0 0 1 16-16Z';
 

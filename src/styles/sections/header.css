@@ -111,3 +111,66 @@ html:not(.js) .site-header {
   width: 1px; height: 1px;
   pointer-events: none; visibility: hidden;
 }
+
+/* ---------- Page tape line (App.tsx: div.page-line > div.page-line-fit > CourtLines variant="page") ----------
+   Lives here because this stylesheet belongs to the landing page's frame (App.tsx has none of its own).
+   One yellow line of tape on the hall floor, drawn with the scroll: it comes out from under the hero in the page
+   margin, crosses the page right below the hero, runs down the other margin beside the statement and goes on under
+   the ink band.
+   - Under everything: <main> is its own stacking context and the line sits at z-index -1, so every block with a
+     ground of its own covers it (the hero, which has its own hall lines; the ink band, parkett-2, the colour tiles,
+     the yellow band) and it never crosses in front of text. The statement gives up its own ground, which is the same
+     parquet <main> now paints, so the line shows there. Everything after the first crossing is covered on purpose.
+   - Where the crossing lies: the kit's drawing is stretched to its box and turns at 15 % of its height. The helper box .page-line-fit reaches from the top of
+     <main> to the hero's lower edge (CSS anchor positioning), and the drawing is made 1/0.15 as tall as that plus a
+     little, so the turn always lands --pl-drop below the hero, whatever the hero's height. Browsers without anchor
+     positioning get no tape line (decoration only).
+   - Sideways the box is widened so the long vertical runs (at 6 % and 94 % of the drawing) lie in the page margin,
+     halfway between the screen edge and the text column. <main> clips what sticks out.
+   - Below 1240 px: no tape line. The line runs halfway between the screen edge and the text column; it needs a
+     margin of at least 60 px to read as tape on the floor. In a narrower margin (40 px on tablets, 16 px on phones)
+     it would hug the text like a quote bar.
+   - Drawing: the kit's data-scroll="draw" on .page-line, but measured against <main> (the named timeline below). */
+main { position: relative; isolation: isolate; overflow: clip; background: var(--parkett); view-timeline: --page-line block; }
+main > .surface-parkett { background: transparent; }
+main > #top { anchor-name: --pl-hero; }
+.page-line { display: none; }
+@supports (anchor-name: --a) {
+  @media (min-width: 1240px) { .page-line { display: block; } }
+  .page-line {
+    block-size: 0;
+    /* the free margin beside the text column, the width of the drawing's box, and how far under the hero it turns */
+    --pl-m: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+    --pl-w: calc((100vw - var(--pl-m)) / .88);
+    --pl-drop: clamp(1.75rem, 1rem + 2.4vw, 3.25rem);
+    --pl-turn: .15;
+    /* how many px of line one px of scroll draws */
+    --pl-speed: 2.8;
+  }
+  .page-line-fit {
+    position: absolute; z-index: -1;
+    top: 0; bottom: anchor(--pl-hero bottom);
+    left: calc(var(--pl-m) / 2 - var(--pl-w) * .06);
+    inline-size: var(--pl-w);
+    pointer-events: none;
+  }
+  .page-line .cl-page {
+    inset: 0 auto auto 0;
+    block-size: calc((100% + var(--pl-drop)) / var(--pl-turn));
+    overflow: visible;
+  }
+  /* The path is far longer than the page (most of it lies under the bands) and its first stretch lies under the
+     hero, so the range is given in px of scroll instead of the kit's "tip at 60 % of the viewport": at scroll 0 the
+     tip is where the hero ends (--pl-hero, the hero's usual height), and from there it runs --pl-speed times as
+     fast as the page, so the crossing is drawn while it is on screen. --pl-len: the path's length in the drawing's
+     own units (about 4010 down plus 2520 across). With a stroke that does not scale, Chromium lays the dash out in
+     screen px but sizes it by that length, so a share p of the animation draws p x 6530 px of line, whatever the
+     size of the box. (An engine that sizes it by the length on screen draws the line sooner; nothing breaks.) */
+  .scroll-fx main .page-line .cl-path { animation-timeline: --page-line; }
+  .scroll-fx main .page-line .cl-page {
+    --pl-hero: min(100svh, 60rem);
+    --pl-len: 6530px;
+    --draw-start: cover calc(100vh - var(--pl-hero) / var(--pl-speed));
+    --draw-end: cover calc(100vh + (var(--pl-len) - var(--pl-hero)) / var(--pl-speed));
+  }
+}

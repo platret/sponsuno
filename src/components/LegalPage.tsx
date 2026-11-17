@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { legal, photoCredits, type LegalBlock, type LegalPageId } from '../content';
 import { Footer } from './Footer';
+import { Icon } from './kit/Icon';
 import { PageBand, PageHeader } from './PageHeader';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
@@ -18,7 +19,7 @@ export function LegalPage({ page }: { page: LegalPageId }) {
       <PageHeader current={{ path, kind: 'legal' }} />
 
       <main id="inhalt" className="lg">
-        <PageBand titleId="lg-title" title={content.title} narrow eyebrow={legal.updated}>
+        <PageBand titleId="lg-title" title={content.title} narrow eyebrow={legal.updated} sticker={page === 'impressum' ? 'brezel' : 'note'}>
           <p className="lg-intro">{rich(content.intro)}</p>
         </PageBand>
         <div className="container">
@@ -54,7 +55,7 @@ function Block({ block }: { block: LegalBlock }) {
     case 'list':
       return <ul className="lg-list">{block.items.map((item, i) => <li key={i}>{rich(item)}</li>)}</ul>;
     case 'persons':
-      return <ul className="lg-persons">{legal.persons.map((name) => <li key={name}>{name}</li>)}</ul>;
+      return <ul className="lg-persons">{legal.persons.map((name) => <li key={name}><Icon name="profil" size={20} />{name}</li>)}</ul>;
     case 'contact':
       return <Contact />;
     case 'credits':

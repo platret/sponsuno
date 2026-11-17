@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { stickyCta } from '../content';
 import '../styles/sections/sticky-cta.css';
 
-/** Phones only: a slim waitlist bar once the hero is out of view, hidden again near the waitlist and footer. */
+/** Phones only: a floating ink pill with the closing line and the yellow waitlist button, once the hero is out of
+    view; hidden again near the waitlist and the footer. */
 export function StickyCta() {
   const [show, setShow] = useState(false);
 
@@ -32,7 +33,7 @@ export function StickyCta() {
   return (
     <div className={`sticky-cta${show ? ' is-shown' : ''}`} aria-hidden={!show}>
       <p>{stickyCta.text}</p>
-      <a className="btn btn-sm btn-tinte" href="#warteliste" tabIndex={show ? 0 : -1}>{stickyCta.button}</a>
+      <a className="btn btn-sm btn-gelb" href="#warteliste" tabIndex={show ? 0 : -1}>{stickyCta.button}</a>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { AiManager } from './AiManager';
 import { Faq, FaqIntro } from './Faq';
 import { Footer } from './Footer';
 import { LinkArrowLabel } from './LinkArrowLabel';
+import { Sticker, type StickerId } from './kit/Sticker';
 import { PageBand, PageHeader } from './PageHeader';
 import { Pricing } from './Pricing';
 import { Support } from './Support';
@@ -63,22 +64,28 @@ function TopicBand({ id }: { id: InfoPageId }) {
     case 'ki-manager':
       return <PageBand titleId="ki-title" title={aiManager.title}><p className="section-intro">{aiManager.intro}</p></PageBand>;
     case 'kosten':
-      return <PageBand titleId="price-title" title={pricing.title}><p className="section-intro">{pricing.intro}</p></PageBand>;
+      return <PageBand titleId="price-title" title={pricing.title} sticker="ball"><p className="section-intro">{pricing.intro}</p></PageBand>;
     case 'fragen':
-      return <PageBand titleId="fragen-title" title={faq.title}><FaqIntro /></PageBand>;
+      return <PageBand titleId="fragen-title" title={faq.title} sticker="pfeife"><FaqIntro /></PageBand>;
     case 'ueber-uns':
-      return <PageBand titleId="team-title" title={team.title}><p className="section-intro">{team.intro}</p></PageBand>;
+      return <PageBand titleId="team-title" title={team.title} sticker="wimpel"><p className="section-intro">{team.intro}</p></PageBand>;
     default:
       return null;
   }
 }
 
-/** Closing block: the waitlist (on the landing page) as the button. */
+/** Sticker on the upper edge of the closing band, per page: never the one already in the page head band, and none of
+    the yellow ones (ball, brezel), which would sink into the yellow band */
+const END_STICKER: Partial<Record<InfoPageId, StickerId>> = { kosten: 'startnummer', fragen: 'note', 'ueber-uns': 'pfeife' };
+
+/** Closing block, the same yellow band as the landing page's waitlist: the giant title, the launch line and one button
+    to the waitlist on the landing page. One sticker sits on the band's upper edge (decorative). */
 function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
   const text = closingLine(infoPage.endText, infoPage.previewEndText);
   return (
-    <section className="section surface-parkett pg-end" aria-labelledby="pg-end-title">
+    <section className="section surface-gelb pg-end" aria-labelledby="pg-end-title">
+      <Sticker id={END_STICKER[id] ?? 'startnummer'} size={168} rotate={9} collectable={false} className="pg-end-stk" />
       <div className="container">
         <h2 id="pg-end-title">{infoPage.endTitle}</h2>
         {text && <p className="pg-end-text">{text}</p>}

@@ -1,4 +1,5 @@
 import { contact, projectStatus, team, type TeamMember } from '../content';
+import { Icon } from './kit/Icon';
 import { rich } from './rich';
 import '../styles/sections/team.css';
 
@@ -10,13 +11,13 @@ function initials(name: string): string {
   return (first + last).toUpperCase();
 }
 
-/** Real photo when content.ts provides one, otherwise a monogram disc (decorative: the name follows). */
+/** Real photo when content.ts provides one, otherwise a monogram disc (decorative: the name follows). Both are cut
+    like a sticker: a white rim and one hairline (team.css). */
 function Portrait({ member }: { member: TeamMember }) {
   if (member.photo) {
     return (
       <img
         className="team-portrait team-photo"
-        data-scroll="zoom-in"
         src={member.photo.src}
         alt={member.photo.alt}
         width={120}
@@ -26,22 +27,24 @@ function Portrait({ member }: { member: TeamMember }) {
       />
     );
   }
-  return <span className="team-portrait team-mono" data-scroll="zoom-in" aria-hidden="true">{initials(member.name)}</span>;
+  return <span className="team-portrait team-mono" aria-hidden="true">{initials(member.name)}</span>;
 }
 
 /** "Stand des Projekts": the programme with a link, then the steps so far and the planned ones as a short
-    vertical sequence, in an ink card. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
+    vertical sequence, in an ink card. The state is written out (Erledigt / Geplant); the marker on the line only echoes
+    it (done: a yellow disc with a check; planned: an empty dashed ring). */
 function ProjectStatus() {
   return (
     <div className="team-status surface-tinte">
-      <div className="team-status-head" data-reveal="" data-scroll="rise">
-        <h2 className="pg-h3" id="team-status-title">{projectStatus.title}</h2>
+      <div className="team-status-head">
+        <h2 className="team-status-title" id="team-status-title">{projectStatus.title}</h2>
         <p className="team-status-intro">{rich(projectStatus.intro)}</p>
         {contact.linkedin && <p className="team-status-intro">{rich(projectStatus.follow(contact.linkedin))}</p>}
       </div>
-      <ol className="team-steps" role="list" aria-labelledby="team-status-title" data-reveal="" data-scroll="rise">
+      <ol className="team-steps" role="list" aria-labelledby="team-status-title">
         {projectStatus.steps.map((step) => (
           <li className={`team-step${step.done ? ' is-done' : ''}`} key={step.when}>
+            <span className="team-step-mark" aria-hidden="true">{step.done && <Icon name="check" size={14} />}</span>
             <p className="team-step-meta">
               <span className="team-step-when">{step.when}</span>
               <span className="team-step-state">{step.done ? projectStatus.doneLabel : projectStatus.plannedLabel}</span>
@@ -54,16 +57,16 @@ function ProjectStatus() {
   );
 }
 
-/** Parkett-2 section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
-    and "Stand des Projekts" are H2, styled as H3): the four founders with their provisional focus, then the project
-    status. */
+/** Parkett-2 section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; the
+    names are H2 styled as H3, "Stand des Projekts" a small display H2): the four founders with their provisional
+    focus, then the project status. No motion. */
 export function Team() {
   return (
     <section className="section surface-parkett-2 team" id="team" aria-labelledby="team-title">
       <div className="container">
-        <ul className="team-grid" role="list" data-scroll-stagger="">
+        <ul className="team-grid" role="list">
           {team.members.map((member) => (
-            <li className="team-member" data-reveal="" data-scroll="rise" key={member.name}>
+            <li className="team-member" key={member.name}>
               <Portrait member={member} />
               <h2 className="pg-h3 team-name">{member.name}</h2>
               <p className="team-focus">{member.focus}</p>

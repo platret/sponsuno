@@ -1,261 +1,205 @@
 # DESIGN.md – Sponsuno visual system
 
-> **Turnhalle (in progress, 2026-11-17).** The site is being moved to design system v2 «Turnhalle» (owner's direction:
-> alive, less text, stickers, court lines, scroll effects). Tokens, fonts, base layer and the homepage skeleton are
-> done; everything below this note still describes v1.0 («Graphit, Messing, Kalk») and is rewritten when the redesign
-> is finished. Where the two disagree, this note and the code win.
->
-> - **Raw tokens** (`src/styles/tokens.css`): `--tinte` #1A1C20, `--tinte-2` #2A2D33, `--parkett` #F8F4EA, `--parkett-2`
->   #EFE8D8, `--grau` #55585E, `--grau-hell` #B9BBBF, `--blau` #1F4E9C, `--rot` #C23B24, `--gruen` #1A7552, `--gelb`
->   #EDBE3A, `--linie` #E2DAC6, `--linie-dunkel` #3A3E45, `--weiss` #FFFFFF (sticker borders, text on blue/red/green),
->   `--error-on-dark` #F2C5B5. Gone: graphit, kalk, paper, brass, steel, ink, rule, card-dark, every `--grad-*` (flat
->   colours only). Card radius `--radius` 20 px, pills 999 px.
-> - **Role tokens** stay (`--bg`, `--bg-alt`, `--surface`, `--heading`, `--text`, `--line`, `--accent-text`, `--btn-*`,
->   `--focus`): `:root` holds the parquet values (accent and focus blue). Surface classes in `site.css` set them again
->   for their ground: `.surface-tinte` (ink: headings parquet, text light grey, accent and focus yellow, cards tinte-2;
->   used by the static header, the page head band, the footer, the waitlist card, the word band), `.surface-blau`,
->   `.surface-rot` (white text), `.surface-gelb` (ink text), `.surface-parkett`, `.surface-parkett-2`.
-> - **Buttons** (pills): `.btn-tinte` (primary on parquet and yellow), `.btn-gelb` (primary on ink), `.btn-parkett`
->   (primary on blue or red), `.btn-outline` (secondary on any ground; `.btn-ghost` is its old name).
-> - **Fonts**: display `--display` = "Archivo Wide" 800 (one static instance of Archivo, wdth 125 / wght 800, cut by
->   `npm run fonts`; fallback "Archivo Wide Fallback" on Arial Bold) for H1, H2, giant words, big numerals and anything
->   with the class `.display`; tracking -0.02em, line-height 0.98 to 1.04, `hyphens: manual` plus soft hyphens in
->   `content.ts`. Text and UI `--sans` = Schibsted Grotesk 400 and 600 (700 is gone). Every page preloads exactly three
->   files: Archivo Wide 800, Schibsted 400, Schibsted 600 (core subsets).
-> - **Cascade**: the base rules of `site.css` sit in `@layer base`; section stylesheets and the kit are unlayered and
->   always win. The reveal and scroll primitives stay unlayered.
-> - **Homepage order**: Header, Hero (`#top`, parquet), Statement (parquet), WordBand (ink), Steps (`#ablauf`,
->   parkett-2), Doors (`#fuer-wen`, blue and red tiles), Waitlist (`#warteliste`, yellow band, form in an ink card),
->   Footer (ink, sticker album slot `.ft-album[data-album]`). Parked: Story, StoryArt, storyLayout, Audience, ProofLine,
->   HowItWorks (sources stay, not imported).
-> - **theme-color**: `#F8F4EA` on the homepage (opens on the parquet hero), `#1A1C20` on every static page (opens on
->   the ink header and page band).
-> - **Kit** (`src/components/kit/`, `src/styles/kit.css`): `Sticker`, `TextSticker`, `Icon`, `CourtLines` and the scroll
->   primitives `draw`, `fill-words`, `slide-x`.
+Design system **v2 «Turnhalle»** (November 2026). It replaced v1.0 («Graphit, Messing, Kalk») on the owner's direction of 2026-11-17: *alive, less text, stickers, Easter eggs, scroll effects, icons and vector graphics, animation that just works*. This file is the source of truth for how the website looks and moves. If the code and this file disagree, fix one of them in the same change.
 
-The source of truth for colours, type, shapes and the logo is the **Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk")**, Alex's design-system artifact. It replaced the navy/gold/Cormorant look of the CD manual on 2026-11-16 (PR #23). This file translates it into how the website uses it. If the code and this file disagree, fix one of them in the same change.
+Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.css); the base layer is [`src/styles/site.css`](src/styles/site.css); the kit (stickers, icons, court lines, three scroll primitives) is [`src/styles/kit.css`](src/styles/kit.css) with its components in `src/components/kit/`; each section has its own stylesheet in `src/styles/sections/`.
 
-Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.css); the landing page base layer is [`src/styles/site.css`](src/styles/site.css); each section has its own stylesheet in `src/styles/sections/`.
+## The idea
+
+**Die Mehrzweckhalle.** One hall floor carries the lines of many sports, and in the evening the Musikgesellschaft rehearses there. Sport, culture and local business meet in that room, and the loop in the wordmark is itself such a line. So: ink type on a light parquet ground, coloured court lines that draw themselves as you scroll, and stickers (the kind clubs collect in albums) as the playful layer.
 
 ## Principles
 
-1. **Calm, clear, credible.** The page must work for a 22-year-old athlete, a volunteer club board and an SME owner. Clarity first, then atmosphere.
-2. **Calm motion that leads into the content.** Since November 2026 the page moves with the scroll: sections rise in, photos and frames open as you scroll into them, the hero recedes as the page moves on. Every movement is scroll-linked or tied to a scroll step, small and finished by the time an element is comfortably in view; nothing bounces, spins or types. The thin Messing line (the scroll story, where messy papers pass it and come out as ordered pairs; in the hero start frame the short brass line from the node into the product window) is the page's signature and echoes in the steps line.
-3. **Graphit trägt, Kalk gibt Raum, Messing setzt Akzente** (design system). Kalk carries most of the page (about 55 %), Graphit the hero, the scroll story, the closing waitlist + footer block and text (about 33 %), Messing stays small (under 10 %): accent lines, the accent word of the H1, fills of the primary button on graphit. Never Messing as text on Kalk.
-4. **Laut ist nur die Schlaufe.** Type and colour stay quiet; the loop of the wordmark carries the identity. Sport comes through images and content, not through loud colour.
-5. **Show the product, not decoration.** Product UI (the match card, the KI-Manager draft) explains Sponsuno better than abstract visuals.
-6. **Honest content in honest form, without meta-clutter.** Since 2026-11-10 (owner's direction) the site looks and reads like a real SaaS page before its launch: one discreet "Beispieldaten" label per illustration with example people or companies, one launch signal per page, AI images labelled as AI-generated, stock photos named as Symbolbilder once in the landing page footer and the Impressum. No fake logos, numbers or testimonials (copy rules in AGENTS.md).
+1. **Big type, few words.** One giant word or one short sentence per screen, almost no body text. If a block needs a second paragraph, it is the wrong block.
+2. **One idea per block.** Hero: the headline with stickers on it. Statement: words that fill. Word band: giant words that slide. Steps: three sticker scenes. Doors: two colour tiles with one drawing each. Waitlist: one giant line and the form. Do not add a second effect to a block.
+3. **Colour comes as lines, stickers and a few full bands.** Text and buttons stay ink (on light) or parquet and yellow (on ink). The four line colours appear as court lines, stickers, icons and bands.
+4. **Alive, but it just works.** Motion follows the scroll or answers the pointer; nothing starts by itself and runs longer than 5 s; every motion has a still final state for reduced motion, no JavaScript and browsers without scroll timelines.
+5. **Made by people.** Stickers sit a little crooked, overlap letters and edges, and can be dragged. Exact alignment everywhere else (one container, one gutter, flush lockups) is what makes the crooked parts read as intended.
+6. **Honest content without meta-clutter.** One launch signal per page, one discreet «Beispieldaten» label per illustration with example people or firms, no fake logos, numbers or testimonials, no stock photos (copy rules in AGENTS.md).
+7. **Laut ist nur die Schlaufe, und die Sticker.** The logo stays untouched (see Logo).
 
-What we removed and should not bring back: WebGL shaders, the 3D emblem, tilted marquees, gold liquid sections, magnetic buttons, card tilt and glare, shine sweeps, rotating borders, scroll hijacking (Lenis), smooth-scroll overrides, glass navigation.
+What we removed and should not bring back: WebGL, canvas physics, 3D, scroll hijacking and smooth-scroll libraries, glass, gradients, drop shadows, stock photos on the landing page, the conveyor hero picture, the pinned scroll story, long explanatory sections on the landing page.
 
 ## Colour
 
-From the design system (names in German as there). Raw tokens in `tokens.css`:
+Raw tokens (German names) in `tokens.css`. Contrast values are WCAG ratios, measured.
 
-| Token | Hex | Design system | Use |
+| Token | Hex | Use | Contrast |
 | --- | --- | --- | --- |
-| `--graphit` | `#1D2125` | graphit-900, Graphit | Hero, story, waitlist + footer block, static header and page band, headings on light, primary button on light |
-| `--graphit-2` | `#2E343A` | graphit-700, Graphit hell | End of the graphit gradient; cards inside graphit areas |
-| `--kalk` | `#F5F3EE` | kalk-50, Kalk | Page ground; all light text on graphit |
-| `--kalk-2` | `#E6E1D6` | kalk-200, Kalk dunkel | Alternate band, end of the light gradient |
-| `--paper` | `#F5F3EE` | kalk-50 | The page ground under its old name (surfaces) |
-| `--ink` | `#5A6068` | grau-600, Textgrau | Body text on light (5.7:1 on Kalk, 4.9:1 on Kalk dunkel) |
-| `--steel` | `#B7B9BC` | grau-300, Grau hell | Body text on graphit (8.2:1, 6.4:1 on Graphit hell) |
-| `--brass` | `#C9A15B` | messing-500, Messing | Accent on graphit (6.7:1), fill of the primary button on graphit with a graphit label |
-| `--brass-light` | `#DCC08A` | messing-300, Messing hell | Gradient end; hover of Messing fills |
-| `--brass-dark` | `#74592A` | messing-700, Messing dunkel | Messing as text and icons on Kalk (5.9:1, 5.0:1 on Kalk dunkel) |
-| `--rule` | `#D9D4C8` | border (hell) | Hairlines and card borders on light |
-| `--card-dark-line` | `#3A4148` | border (dunkel) | Borders inside graphit areas |
+| `--tinte` | `#1A1C20` | Text, logo, primary button on light, ink bands, footer | 15.5:1 on parkett, 14.0:1 on parkett-2, 9.8:1 on gelb |
+| `--tinte-2` | `#2A2D33` | Cards and fields inside ink areas | |
+| `--parkett` | `#F8F4EA` | Page ground, text on ink | 15.5:1 on tinte, 4.8:1 on rot, 7.3:1 on blau |
+| `--parkett-2` | `#EFE8D8` | Alternate band, cards on parquet | |
+| `--grau` | `#55585E` | Body text on parquet | 6.5:1 on parkett, 5.8:1 on parkett-2 |
+| `--grau-hell` | `#B9BBBF` | Body text on ink | 8.9:1 on tinte, 7.2:1 on tinte-2 |
+| `--blau` | `#1F4E9C` | Line colour; accent text and links on parquet; blue band | 7.3:1 on parkett, 6.5:1 on parkett-2; white on blau 8.0:1 |
+| `--rot` | `#C23B24` | Line colour; red band; small text on parquet only where needed | 4.8:1 on parkett; white on rot 5.3:1 |
+| `--gruen` | `#1A7552` | Line colour; green fills | 5.2:1 on parkett; white on gruen 5.7:1 |
+| `--gelb` | `#EDBE3A` | Line colour; accent on ink; yellow band and button with ink text | 9.8:1 on tinte, 7.9:1 on tinte-2. **1.6:1 on parkett: never text on light** |
+| `--linie` | `#E2DAC6` | Hairlines and card borders on parquet | |
+| `--linie-dunkel` | `#3A3E45` | Borders inside ink areas | |
+| `--weiss` | `#FFFFFF` | Die-cut border of stickers; text on blue, red and green | |
+| `--error-on-dark` | `#F2C5B5` | Form error text on ink (documented extra) | 8.8:1 on tinte-2 |
 
-Gradients (always 135°, only between neighbouring tones of one colour, never Graphit → Messing): `--grad-dark` (verlauf-dunkel, `#1D2125` → `#2E343A`, every graphit surface), `--grad-light` (verlauf-hell), `--grad-brass` (verlauf-messing `#B8904D` → `#DCC08A`, at most one accent area).
+**Role tokens** are the layer section CSS uses: `--bg`, `--bg-alt`, `--surface`, `--heading`, `--text`, `--line`, `--accent-text`, `--btn-bg` / `--btn-fg` / `--btn-bg-hover`, `--focus`. `:root` holds the parquet values (accent and focus blue). A block sets them for its ground with a surface class from `site.css`:
 
-Role tokens (`tokens.css`, see Theme below): section CSS paints page surfaces and their text with these, never with the raw tokens above. Graphit-by-design surfaces use the raw tokens (the page head band sets these roles locally for its graphit).
-
-| Token | Value | Use |
+| Class | Ground | Roles |
 | --- | --- | --- |
-| `--bg` | `--paper` (Kalk) | Page surface, the landing header once solid, the sticky bar, menu sheets |
-| `--bg-alt` | `--kalk-2` | Alternate band, boxes on the page surface |
-| `--surface` | `--paper` | Cards (always with a 1 px `--line` border) |
-| `--heading` | `--graphit` | H1–H3, link text |
-| `--text` | `--ink` | Body and secondary text |
-| `--line` | `--rule` | Hairlines, card borders |
-| `--accent-text` | `--brass-dark` | Messing text, labels and icons |
-| `--btn-bg` / `--btn-fg` / `--btn-bg-hover` | graphit / kalk / graphit-2 | Primary button on the page surface (`.btn-graphit`), selected tabs |
-| `--focus` | `--brass-dark` | Focus ring on the page surface (graphit blocks set Messing themselves) |
+| `.surface-parkett`, `.surface-parkett-2` | parquet, parquet 2 | the `:root` roles (background only) |
+| `.surface-tinte` | ink | headings parquet, text grau-hell, lines linie-dunkel, accent and focus yellow, cards tinte-2 |
+| `.surface-blau`, `.surface-rot` | blue, red | text and focus white |
+| `.surface-gelb` | yellow | text and focus ink |
 
 Rules:
-- Messing as text on light only in `--brass-dark`. `#C9A15B` on Kalk is 2.2:1.
-- Small text at least 4.5:1, checked by axe in CI (`e2e/a11y.spec.ts`). Text inside the hero start frame and the story stage (both `aria-hidden` pictures) may fade below that as part of the picture, but its colours must pass at full opacity.
-- Button labels on Messing are `--graphit`.
-- No shadows, no glass, no coloured side stripes on cards (`--shadow-card` is `none`).
-- Documented extras outside the design system: `#F2C5B5` (form error text on graphit), `#262B30` for `--card-dark-b`. The demo adds its own few, listed under "Demo app".
-
-## Theme
-
-One light theme, the designed default (since 2026-11-17, owner's direction: the light/dark switch of 2026-11-10 is gone). There is no switch, no theme script and no dark palette; a dark system setting changes nothing.
-
-- Graphit hero and story, Kalk and Kalk dunkel sections, graphit waitlist and footer.
-- **Every page opens on Graphit**: the homepage on the hero, every other page with the static header and the page head band.
-- **Graphit by design:** hero, story, KI device, waitlist, footer, static header and page head band, the match card and pair cards inside the story (product UI). These are part of the light theme, not a dark mode.
-- Wordmarks: the static header and the footer use the Kalk wordmark; the landing header shows the graphit wordmark when it is solid on Kalk.
-- `theme-color` is Graphit (`#1D2125`), because every page opens on Graphit. `color-scheme` is `light` (meta in every page entry and `:root` in `tokens.css`), so form controls and scrollbars stay light; `<meta name="darkreader-lock">` keeps dark-mode extensions off the CD colours.
+- Flat colours only: no gradients, no drop shadows, no glass. A sticker's hairline and the 1 px ring of floating pills (`box-shadow: 0 0 0 1px rgba(26,28,32,.12)`) are outlines, not shadows.
+- Small text at least 4.5:1, checked by axe in CI on every page **without exceptions** (`e2e/a11y.spec.ts`). Never yellow text on light; red or green as small text only at 4.5:1 or more.
+- At most one full colour band per screen where the order allows it. The one accepted exception is the run blue tile, red tile, yellow band at the end of the page (prescribed order).
+- One light theme. No dark mode, no theme switch; `color-scheme: light` on `:root` and in every page's meta, plus `<meta name="darkreader-lock">`. `theme-color` is `#F8F4EA` on the landing page (opens on the parquet hero) and `#1A1C20` on every static page (opens on the ink header and band).
+- Gone with v1.0: graphit, kalk, paper, brass, steel, ink, rule, every `--grad-*`. No old token name may appear in CSS that is built.
 
 ## Typography
 
-One family for everything: **Schibsted Grotesk** (Google Fonts, SIL Open Font License), self-hosted subsets of 400, 600 and 700 (`--display` and `--sans` both point to it, with the metric-matched "Schibsted Fallback" from Arial in `tokens.css`).
-
-| Role | Weight | Notes |
+| Role | Face | Notes |
 | --- | --- | --- |
-| H1, H2, big numerals, monograms | 700 | `letter-spacing: -0.025em` (`--display-tracking`) |
-| H3, buttons, labels, strong UI | 600 | |
-| Body, lead, small | 400 | |
+| H1, H2, giant words, big numerals, anything with `.display` | **Archivo Wide 800** (`--display`): one static instance of Archivo, width 125, weight 800 | tracking `-0.02em`, line-height 0.98 to 1.04, sentence case, `hyphens: manual` with soft hyphens in `content.ts` (the face is about 0.69 em per character: long German words need them) |
+| Text, UI, labels, buttons | **Schibsted Grotesk 400 and 600** (`--sans`) | the wordmark's family. 700 is gone; never use it |
 
-Scale (tokens in `site.css`, design system web sizes titel 64 / untertitel 40 / zwischentitel 28 / fliesstext 18 / klein 14 / label 12 px, fluid below desktop): H1 `--fs-h1` `clamp(2.5rem, 1.55rem + 3.6vw, 4rem)` / 1.02; H2 `--fs-h2` `clamp(1.875rem, 1.45rem + 1.7vw, 2.5rem)` / 1.08; sub-heading `--fs-sub` up to 1.75rem; H3 1.25rem; lead up to 1.3125rem; body 1.125rem / 1.6; small 0.875rem; label 0.75rem.
+- Exactly **three font files** are preloaded and fetched on every page (Archivo Wide 800, Schibsted 400, Schibsted 600; core subsets, self-hosted, cut by `npm run fonts`). Metric-matched fallbacks (`Archivo Wide Fallback`, `Schibsted Fallback` on Arial, `tokens.css`) keep the swap from moving anything.
+- Scale (`site.css`): `--fs-hero` `clamp(1.5rem, 8.6vw, 6.5rem)` (the hero H1 goes further, see Layout), `--fs-h1` `clamp(1.875rem, 1.1rem + 3.4vw, 3.75rem)`, `--fs-h2` `clamp(1.75rem, 1.2rem + 2.3vw, 3rem)`, `--fs-sub` up to 1.625rem, `--fs-h3` 1.25rem, `--fs-lead` up to 1.3125rem, `--fs-body` 1.125rem / 1.6, `--fs-small` 0.875rem, `--fs-label` 0.75rem.
+- Labels (`.label`): uppercase, 12 px, 600, tracking 0.15em, in `--accent-text` (blue on parquet, yellow on ink, white on blue and red).
+- H2s that should look like H3 on static pages carry `.pg-h3` (Schibsted 600).
 
-Labels (`.label`): uppercase, `letter-spacing: 0.15em` (`--label-tracking`), 600, 12 px, in `--accent-text` (Messing on graphit). They replace the old sentence-case eyebrows (which had a short gold rule); labels have no rule. Titles start left in column 1, never centred above the content. Lining figures for numerals, tabular figures (`tnum`) in tables and numbers. Fonts are self-hosted subsets (`src/assets/fonts/`, cut from `@fontsource/schibsted-grotesk` "latin" by `npm run fonts`); a character outside the core subset still renders in the brand font from an extra file loaded on demand.
+## Shapes
 
-## Layout
+- **Pills** (999 px) for every button and chip. Buttons: `.btn` plus `.btn-tinte` (ink fill: primary on parquet, parquet 2 and yellow), `.btn-gelb` (yellow fill: primary on ink), `.btn-parkett` (parquet fill: primary on blue and red), `.btn-outline` (2 px outline in `--heading`, any ground; `.btn-ghost` is its old name). `.btn-sm` is 44 px high.
+- **Cards**: radius 20 px (`--radius`), 1 px `--line` border, no shadow. Small parts and inputs 8 px (`--radius-sm`).
+- **Court lines**: 6 px stroke at 1440 px wide, 4 px on phones (`--cl-w`), round caps and joins, no fills, `vector-effect: non-scaling-stroke`.
+- **Stickers**: flat fills from the palette, a white die-cut border (about 5 px at 96 px), one hairline `rgba(26,28,32,.12)` around the white, one ink line weight for the whole set, rotation between -12° and 12°, no shadows, no gradients.
+- **Icons**: 24 px grid, 2 px stroke (it scales with the size), round caps and joins, `currentColor`.
 
-- Container 1200 px, gutter `clamp(1rem, 4vw, 2.5rem)`, section padding `clamp(4.5rem, 3rem + 6vw, 8.5rem)`.
-- Section order and surfaces: Hero (graphit) → Scroll story (graphit, `#problem`, replaces the old Problem section) → Proof line (Kalk, left-aligned: three points under hairlines, then the "Zum Beispiel für" label and the disciplines) → Für wen Sponsuno gemacht ist (Kalk dunkel band, `#fuer-wen`) → So funktioniert es, two track cards (Kalk) → Warteliste + Footer (graphit, one continuous block: the title left on the 12-column grid, the form in a graphit card on the right, then the footer with the giant loop wordmark; with scroll timelines the graphit opens over Kalk, continuing the band above). Since November 2026 the landing page stops there; Nicht nur Geld, Kosten, FAQ and Team moved to topic pages (see below), the KI-Manager to the parked `/ki-manager/`.
-- Topic pages (`InfoPage.tsx`, `page.css`, prefix `pg-`): `/kosten/` (Kosten: one overview card, max 52rem, Kalk, then Nicht nur Geld, paper), `/fragen/` (the FAQ rows in one column, max 50rem, paper), `/ueber-uns/` (Team, Kalk), each under the static page header and the page head band, which holds the first section's title as the H1 at `clamp(2.375rem, 1.5rem + 2.8vw, 3.75rem)` and its intro ; the first section then starts with the legal pages' top space (`clamp(3rem, 2rem + 4vw, 5.5rem)`). Each ends with a paper closing block (after a paper section: a hairline at container width instead of a second band): H2 (the waitlist title), one lead sentence, an optional small line (Kosten links to Fragen) and the graphit waitlist button; then the standalone graphit footer. Parked (not built, AGENTS.md → "Parked (not built)"): `/ki-manager/` (KI-Manager bento, Kalk) and `/fuer-firmen/`, which uses the guide layout (42rem column, the launch note "Bald verfügbar in der Deutschschweiz." in the Messing-ruled note style inside the page head band (steel text, Messing hell rule), hairline sections, numbered steps, closing row with the graphit button and the Sponsor-Cockpit demo link) plus, first under the band, an Kalk box (rule border, radius 16 px, like "Weiterlesen") with the cockpit link as a `link-arrow` (graphit, Messing dunkel arrow, 44 px) and one small ink line, and under the closing row, above a hairline, the invitation to a talk with the address as a link (`pg-cockpit`, `pg-talk`, in `guide.css`, so the page loads only the guide styles). No motion on them, except `/ki-manager/` (see Motion → Per section → KI-Manager): only there an inline head script sets `html.scroll-fx`, never `html.motion`.
-- 404 page and the waitlist confirmation `/warteliste/bestaetigt/` (`NoticePage.tsx`, `nf-` in `legal.css`): the legal pages' header, page head band (H1, intro), reading column and footer; then the Kalk "Weiterlesen" box of the guides (`gd-related`) with five links (Startseite, Kosten, Fragen, Über uns, Warteliste; the confirmation page: four, So funktioniert es, Kosten, Fragen, Über uns, the next steps of the welcome e-mail), each with one small line, and under it one small ink line with the contact address as an underlined graphit link (`nf-contact`). No motion.
-- So funktioniert es (`how-`): two cards side by side (`--bg-alt` fill, 1 px `--line`, radius 16, 40 px padding on desktop), one per track ("Sportlerinnen, Sportler und Vereine" and "Firmen", each headed by an uppercase label), four numbered steps each (Schibsted 600 tabular numerals in a small Messing-outlined circle joined by a hairline), each card ending in its pill button (graphit on the first, outline on the second). On phones the tracks become pill tabs.
-- Arrow links whose label can wrap (the cockpit link on the parked `/fuer-firmen/`) use `link-arrow link-arrow-wrap` with `LinkArrowLabel`: inline text, the last word and the arrow kept together, so the arrow follows the text on the second line instead of sitting at the far edge.
-- Für wen (`aud-`): on a Kalk dunkel band (`surface-kalk`), four photo cards (`--surface`, 1 px `--line`, radius 16, no shadow; the 4:3 photo flush at the top, then the H3 label and one small sentence; no links since the guides and `/fuer-firmen/` are parked). Four columns from 1024 px, two down to 601 px, one on phones.
-- Team (`team-`): four founders as cards (radius 16, 1 px `--line`, `--surface`, no shadow; two columns below 961 px), each with a round portrait (88 px): without a photo a monogram, Schibsted 700 initials in Kalk on the 135° Graphit gradient; then the full name (an H2 styled as H3) and the provisional focus in small text. Under them "Stand des Projekts" as one graphit card with uppercase labels per step.
-- Radii (design system): 8 px small parts and inputs, 16 px cards and photo frames (`--radius`), 999 px pills for every button, tab and chip (`--radius-pill`), 22 % for the app icon. Card padding `--card-pad` (24 px on phones, 40 px from 1200 px).
-- Header: plain bar, transparent at the top; after 80 px of scroll solid graphit (hairline `--card-dark-line`) while the hero or the story is under it, solid page surface (`--bg`: paper) with a hairline once the page surface reaches it (IntersectionObservers, no scroll handler). Without JS it is solid graphit throughout. Nav: So funktioniert es (the landing page section `#ablauf`), Kosten, Fragen, Über uns (the same list as the static header; no scroll-spy), then the Messing Warteliste button; between 961 and 1140 px the items sit closer. Mobile: wordmark, Warteliste button, menu sheet.
-- Graphit share: hero plus story are about four to five viewports of graphit at the top of the page. Together with the closing block this is the design system's Graphit share (about a third): the story is the page's main explanation.
-- Phones: the hero fits one screen with the start frame (three input tiles, the node and the product window with two pairs) inside it (390 × 844; on smaller phones the copy alone fills the screen); a slim sticky waitlist bar appears once the hero and the story have scrolled away.
-- Static page header (`PageHeader`, every page except the landing page): slim flat graphit bar, not fixed, running into the page head band without a seam: light wordmark (to the landing page), the same nav as the landing page header at the same position (same gaps: 2rem, 1.25rem between 961 and 1140 px) (Kalk at .78, Kalk on hover; the current page Kalk with a 2 px Messing underline), the Messing Warteliste button (short label "Warteliste" at 420 px and below). Below 961 px the nav moves into a native `<details>` menu (no JS): a 44 px bars button that turns into a cross, and a panel on the page surface (`--bg`) dropping down under the bar with the links in Schibsted 700 600 between hairlines.
-- Page head band (`PageBand`, `.lg-band` in `legal.css`): the first block of `<main>` on every static page, flat graphit: the H1 in Kalk, the intro in steel at lead size, links Kalk with a Messing hell underline; padding `clamp(2rem, 1.25rem + 3vw, 4rem)` on top, `clamp(3rem, 2rem + 4vw, 5.5rem)` below. On reading-column pages it lines up with the 42rem column (byline or date under the intro), on topic pages it is left-aligned in the container (max 46rem). No picture, no motion.
-- Legal pages (Impressum, Datenschutz): the static page header and the page head band (H1, intro, date), one centred column of max 42rem on the page surface, an Kalk (`--bg-alt`) table of contents, sections divided by hairlines, H2 in Schibsted 700 at 28–36 px, then the graphit footer standing alone (`.ft-standalone`, no top rule). Missing contact data is shown in Messing dunkel with a short Messing rule, never hidden. No motion.
-- Guide pages (Ratgeber, parked, not built; `guide.css`, prefix `gd-`, whose "Weiterlesen" box also styles the 404 and confirmation link lists): the legal-page layout (header, page head band with the byline ("Team Sponsuno · Stand") under the intro, 42rem column, Kalk table of contents, hairline sections, standalone footer) plus: no note about Sponsuno at the top (the note style, a 2 px Messing rule on the left, is used by `/fuer-firmen/`), numbered steps with Messing dunkel numerals, a letter template as a bordered Kalk block (`figure` with a caption, `pre` in Schibsted that keeps line breaks, selectable, no copy button; under a hairline at its foot a quiet underlined "Als Word-Datei herunterladen" link with a small Messing dunkel download icon and the file type and size in small ink text, 44 px tall; on phones the size wraps under the label), a closing row with the graphit primary button (Warteliste) and a quiet underlined product preview link (no note), and an Kalk "Weiterlesen" box listing the other guides with their descriptions. No motion, no JavaScript.
-- Waitlist confirmation: a graphit-2 box with a Messing icon (check when stored; envelope while no endpoint is set, with the Messing "E-Mail schreiben" button and the address as text beside it), no further link. Links on graphit are Kalk with a Messing underline.
-- Footer columns: Plattform (So funktioniert es, Kosten, Fragen), Mehr (Über uns, Warteliste, Nach oben), Rechtliches, Kontakt (the e-mail address as a link in the column's link style, the LinkedIn page, the town as plain text at the same size and 44 px row height). Below 1200 px the claim sits above them instead of beside them; they wrap on narrow screens; at 520 px and below they form a two-column grid (Kontakt alone in the last row). Bottom row (small steel text above a faint hairline): the copyright and, on the landing page only, "Fotos: Symbolbilder, Bildnachweise" (the link in the row's colour, underlined, Kalk on hover). No programme line.
+## Kit (`src/components/kit/`, `src/styles/kit.css`)
+
+Decoration is always `aria-hidden`. The kit stylesheet is unlayered and loaded before the section stylesheets, so a section rule wins a tie.
+
+- **`Sticker`** (`id`: `ball`, `note`, `brezel`, `startnummer`, `wimpel`, `pfeife`; `size`, `rotate`, `collectable`, any span attribute). Markup `span.stk[data-sticker][data-collectable] > span.stk-in > svg`. The size is set inline (`--stk-size`): for a responsive size set `inline-size` on a selector more specific than `.stk`. `data-collected` turns the drawing into a dashed outline in `currentColor`. `rotate` and `scale` on `.stk` belong to the kit; code that moves a sticker uses `translate`. `BALL_PANELS` and `BALL_SEAMS` are exported for drawings that repeat the ball (the doors).
+- **`TextSticker`** (`span.tstk[data-tone]`, tones gelb, blau, rot, gruen, tinte, parkett): a pill with the white border and real text (13 px, `--stk-fs`). Used for the launch signal, «Beispieldaten», «4 von 4», the album counter.
+- **`Icon`** (`svg.icn`, names in `ICON_NAMES`): line icons for the statement points, match card chips, buttons and badges.
+- **`CourtLines`** (`svg.cl`, variants `hero`, `page`, `band`, `door-sport`, `door-firma`; `draw="load" | "scroll"`): absolutely positioned in a `position: relative` parent. `data-line` picks the colour (blau, rot, gruen, gelb, hell). `BALL_PATH` (the yellow line of `door-sport`) is exported. Hidden under forced colours.
+- **`.lg-badge`** (`legal.css`): the round sticker-style badge of the static pages (green check = decided, dashed slot = open, kit icons for kinds).
+
+## Layout and section order
+
+Container 1200 px (`--container`), gutter `clamp(1rem, 4vw, 2.5rem)`, section padding `--section-pad` `clamp(4.5rem, 3rem + 6vw, 8.5rem)`. No horizontal overflow from 320 to 2560 px.
+
+**Landing page**, seven short blocks:
+
+| # | Block | Ground | What it is |
+| --- | --- | --- | --- |
+| 1 | Header (`Header.tsx`) | transparent, parquet or ink | Wordmark, nav (So funktioniert es, Kosten, Fragen, Über uns), waitlist pill. Transparent on the hero; solid parquet with a hairline after 80 px; solid ink with the parquet wordmark and a yellow pill while an ink band (`data-header-dark`: word band, footer) crosses the bar's lower edge. Over blue, red and yellow it stays the parquet bar. Without JS always the solid parquet bar. |
+| 2 | Hero (`#top`) | parquet | One screen, centred. Launch signal as a yellow text sticker, the H1 as large as the width allows (`clamp(1.5rem, min(8.6vw, 14svh), 12.5rem)`, two lines at every width, it breaks out of the container) with the accent word in blue, one lead sentence, two pill buttons. Behind: hall lines drawn once on load, hung so the red base line sits 56 px above the hero's lower edge. Six draggable, collectable stickers on and around the headline (phones: four, in a band of their own above the badge). A round arrow on the base line leads to the statement. |
+| 3 | Statement (`#idee`) | parquet | Three sentences in Schibsted 600 (26 px phones, 44 px desktop), one per line, words filling from grey to ink; two round signs (ball on blue, shop on red: the colours of the two doors) in front of the first words. Then three points with a line icon in a 48 px ring (blue, red, green). |
+| 4 | Word band (`.wb`) | ink | A small label and two rows of giant words that slide in opposite directions. At rest the rows are a lockup flush from gutter to gutter («Sport Kultur» over «Triathlon Chor Turnverein»; phones «Sport» over «Turnverein»); row two alternates parquet fill and outline. Three stickers sit on letters. Lane lines with yellow ticks at the upper and lower edge. The words are drawn by CSS from `data-word`; screen readers get the label and one plain list of all words. |
+| 5 | So funktioniert es (`#ablauf`) | parquet 2 | H2, three steps, each a sticker scene (220 × 196 px, 1.2 × from 1100 px), a small number, a title and one sentence. Under them the match card («Beispieldaten»): two vector avatars and a green result panel with the criteria as chips; from 861 px its three columns equal the steps' columns. |
+| 6 | Zwei Türen (`#fuer-wen`) | blue, red | Two full-height tiles side by side (stacked below 861 px): label, title in the display face, one sentence, parquet pill button with an arrow that sets the waitlist role. Each has one large white line drawing bottom right (a court whose ball rolls into the goal; a shop whose sign lights up) and one collectable sticker. |
+| 7 | Warteliste (`#warteliste`) + Footer | yellow, then ink | Giant H2 in ink on yellow with a start-number sticker on its end, the form in an ink card, a whistle sticker on a parquet court line. Footer: link columns, the sticker album (landing page only), the giant loop wordmark in parquet, copyright. |
+
+Two layers lie over and under the blocks: the **page tape line** (one yellow court line behind the content that comes out under the hero, crosses the page below it and runs down the margin beside the statement; only from 1240 px wide, where the margin is at least 60 px, and only with CSS anchor positioning) and the **Easter eggs** (see below).
+
+Phones: a floating ink pill (`StickyCta`, white sticker edge, the closing line and the yellow button) appears once the hero has scrolled away and hides near the waitlist and the footer.
+
+**Static pages** (`/kosten/`, `/fragen/`, `/ueber-uns/`, legal pages, 404, confirmation): ink header (`PageHeader`, not fixed) running into the ink **page head band** (`PageBand`): the H1 in the display face, the intro, and the hall motif: a centre circle rising from the lower edge, a yellow halfway line and one sticker on the centre spot, half over the edge (ball on `/kosten/`, whistle on `/fragen/`, pennant on `/ueber-uns/`, pretzel on `/impressum/`, note on `/datenschutz/`, start number with a green check on the confirmation page; the 404 page shows only the ball's dashed album slot: the sticker is missing). Text never crosses a line. Below it the parquet page surface. Topic pages end on the same yellow band as the landing page («Früh dabei sein.», ink button, one sticker on the upper edge). `/kosten/`: four cost cards two by two with round badges, the first card ink with «Keine» in the display face. `/fragen/`: full-width question cards with a yellow plus disc. `/ueber-uns/`: portraits cut like stickers, blue monograms, an ink status card. 404 and confirmation: links as large display rows with a round arrow button. Legal pages: one reading column (42rem), section and contents numbers in the display face.
 
 ## Motion
 
-Plan agreed on 2026-11-03 (replaces the old "one signature moment" budget). CSS scroll-driven animations (`animation-timeline: view()`) as progressive enhancement; no animation or scroll library, no scroll hijacking, no smooth-scroll override, no JS per scroll frame.
+CSS only: scroll-driven animations (`animation-timeline: view()` / `scroll()`) as progressive enhancement, one IntersectionObserver for reveals, CSS transitions for hover and press. No animation or scroll library, no scroll hijacking, no smooth-scroll override, no canvas, no JavaScript per scroll frame.
 
-**Gate.** `index.html` sets `html.motion` unless the visitor prefers reduced motion, and `html.scroll-fx` when motion is on and the browser supports `animation-timeline: view()` (Chrome, Edge, Safari 26). The primitives in `site.css` are additionally wrapped in `@supports` and `prefers-reduced-motion: no-preference`. Section-specific scroll rules are written under `.scroll-fx`. The parked topic page `/ki-manager/` (no app, no `.motion`; not built) sets only `.scroll-fx`, with an inline script in its head under the same conditions; the other topic pages, guides and legal pages get neither.
-- Without `.scroll-fx` but with `.motion` (Firefox): elements keep the `data-reveal` fade (IntersectionObserver, opacity + 12 px, 0.6 s, once). Frames, photos and lines are simply static.
-- Reduced motion, no JS, prerendered HTML: final state, nothing moves. Reduced motion switched on mid-visit also drops all `.scroll-fx` animations.
+**Gate.** `index.html` sets `html.motion` unless the visitor prefers reduced motion, and `html.scroll-fx` on top where the browser supports `animation-timeline: view()`. Static pages ship no script and get neither (their band draws once on load with plain CSS, guarded by `prefers-reduced-motion`).
 
-**Rules.** Animate only `opacity`, `translate`, `scale` (individual transform properties) and `clip-path`; no colour, size, blur or filter animation. Scroll-linked progress is linear; time-based motion uses `--ease-out`. UI scales at most 0.92 → 1 (icons and portraits down to 0.86, the KI device frame 0.8 on desktop); photos 1.18 → 1 inside their frame. Dark surfaces (the KI device) and things inside a block that already fades (icons, portraits) scale without their own fade (`sfx-scale`): stacked or partial opacity turns graphit into grey. Opacity reaches 1 at 60 % of an element's range, the motion ends after `--scroll-dist` (40 vh, 32 vh on phones) of scroll from the moment its top enters, i.e. when its top sits at about 60 % of the viewport. Nothing above the fold at scroll 0 is hidden (the hero only recedes on the way out, the proof line is static). Pinned budget: at most two, each at most one extra viewport, none below 600 px. Used: none while `/ki-manager/` is parked; its KI-Manager bento was the one (≥ 961 px wide, 700–1999 px tall, 50 vh hold, see Per section); the sticky story stage is plain sticky layout beside (or above) flowing text, not a hold (see Story). No layout shift: only transforms, opacity and clips change. `will-change` only on the two signature elements if profiling asks for it.
+**Fallbacks, the same for every effect.** The static style of an element is its final state; keyframes only describe where it starts.
 
-**One exception: `stroke-dashoffset` on drawn SVG hairlines.** A short brass segment may travel along a thin SVG path by animating `stroke-dashoffset` (with `pathLength="100"` and a dash pattern longer than the path, so exactly one segment shows): the pulses on the hero wires (nothing else on the page animates stroke properties). They run only while the hero is on screen and not paused; the cost is a steady style recalculation on the main thread while they run (about 60 per second, no layout, no paint of anything else), which is accepted for this one picture. The pulse on the hairline into the hero window is a `translate`. No other paint-heavy property is animated.
-
-**Details that keep it honest.**
-- Timelines are measured against the real viewport: the default is `view(block 0px)` and every named `view-timeline` sets `view-timeline-inset: 0px` (the `auto` inset would take `scroll-padding`, i.e. the header on top and the sticky bar on phones, and shift every range; on viewports taller than the 940 px hero cap the hero would load already receded).
-- Focus guard (`site.css`): `.scroll-fx [data-scroll]:focus-within { animation-name: none }`. A block holding focus shows its final state at once, so keyboard focus never lands on half-faded text or a faded focus ring.
-- Tall viewports: where a section can be in view at scroll 0 (portrait tablets and monitors), its scroll animations are switched off by `min-height` media queries (`audience.css` 1140/1340/1700 px), so nothing visible at load starts hidden.
-- Forced colours: the drawn hairlines (`::before` in Nicht nur Geld, Team) are hidden, the real border shows; the story graphic is hidden and the steps read as a normal section.
-- Compositing: `opacity`, `translate` and `scale` run on the compositor; never put them on an SVG element (Chrome does not composite individual transforms on SVG), wrap it in a `span` (support icons, price markers). `clip-path` animations (photo frames, the waitlist surface, the check-mark wipe) repaint on the main thread by design; they are few and short (profiled smooth at 4× CPU throttling).
-
-### Primitives (`site.css`, tokens in `tokens.css`)
-
-Put `data-scroll="…"` on an element; keep `data-reveal=""` next to it where a fallback fade is wanted. One value per element, never on an element with its own CSS animation (wrap it). All primitive selectors have zero specificity, so a section class overrides them.
-
-| `data-scroll` | Does | Default range | Tune with |
-| --- | --- | --- | --- |
-| `rise` | opacity 0 → 1, `translate` from (`--scroll-x`, `--scroll-y`) to 0 | `cover 0` → `cover --scroll-dist` | `--scroll-x` (0), `--scroll-y` (40 px, 24 px on phones) |
-| `fade` | opacity 0 → 1 | same | |
-| `zoom-in` | opacity 0 → 1, `scale` `--scroll-zoom-from` → 1, `translate` `--scroll-zoom-y` → 0, origin 50 % 60 % | same | `--scroll-zoom-from` (.92), `--scroll-zoom-y` (16 px) |
-| `draw-x` / `draw-y` | a line grows: `scale` 0 → 1 from the left / top | same | |
-| `photo` | on the frame around an `img`/`picture`/`video` (a `picture` needs `display: block`, as `.aud-picture`): frame clip `inset(--scroll-photo-inset round r)` → `inset(0 round r)`, image `scale` `--scroll-photo-from` → 1; sets `overflow: clip` and the radius | `cover 0` → `cover --scroll-dist-long` | `--scroll-photo-from` (1.18, 1.12 on phones), `--scroll-photo-inset` (4 %; any `inset()` offsets, e.g. `6% 8%`), `--scroll-photo-radius` (16 px) |
-| `frame` | a surface opens: `clip-path: inset(--scroll-frame-inset round --scroll-frame-radius)` → `inset(0 round --scroll-frame-radius-end)` | `entry 0%` → `entry min(100%, --scroll-dist-long)` (final once fully in view) | `--scroll-frame-inset` (`0 clamp(.5rem, 3vw, 3rem)`, always smaller than the gutter), `--scroll-frame-radius` (28 px, 20 px on phones), `--scroll-frame-radius-end` (0) |
-| `recede` | to opacity `--scroll-recede-opacity`, `translate` `--scroll-recede-y`, `scale` `--scroll-recede-scale` while scrolling out; rest state = start | `exit 0%` → `exit 100%` | `--scroll-recede-y` (−6 vh), `--scroll-recede-scale` (1), `--scroll-recede-opacity` (.4) |
-| `group` | no animation; under `.scroll-fx` its `data-reveal` fade is switched off because its children animate | – | |
-
-Shared knobs: `--scroll-timeline` (default `view()`; set it to a named `view-timeline` such as `--hero` to drive children from a section), `--scroll-range-start` / `--scroll-range-end` (any `animation-range` value; they inherit, so set them on the element unless the whole container should share them), `--scroll-i` (stagger index; each step adds `--scroll-stagger`, 4 vh, 0 on phones). `data-scroll-stagger` on a parent numbers its children 0–5. Keyframes `sfx-rise`, `sfx-fade`, `sfx-zoom`, `sfx-scale` (zoom without the fade, same knobs), `sfx-photo`, `sfx-photo-frame`, `sfx-frame`, `sfx-draw-x`, `sfx-draw-y`, `sfx-recede` may be reused in section CSS with own timelines (for pseudo-elements: name a `view-timeline` on the element and point the pseudo-element at it).
-
-### Per section
-
-| Section | Motion |
+| Situation | What the visitor gets |
 | --- | --- |
-| Hero | Copy fades up once on load (time-based; the H1 and the lead only rise, no opacity start, so the LCP paints at once). Start frame: the tiles fade in, the wires draw (clip-path, left to right), the node sets, the hairline into the window draws and the window rises 12 px, once. Then a calm loop, CSS only, one beat every 3.6 s (beat phases in brackets): a short brass pulse runs from one tile (in turn) along its wire into the node (0–.28, `stroke-dashoffset`, the documented exception), the node's dot ticks (scale 1 → 1.5 → 1, peak .3), a brass pulse runs along the hairline into the window (.29–.41, `translate`), a new pair slides in at the top of the window list (translate from under the bar + fade, .36–.52), the others move down one row, the bottom one fades out under the list edge, and the new pair's criteria dots tick in about 50 ms apart (all on by .54; a dot that is still to come leaves an empty slot, never a ring, which would read as "teilweise"). The five pairs cycle every five beats; all delays are multiples of the beat from one start, so the loop point looks like any other beat. Beat phase .55 at load, so the first frame equals the still frame. Paused while the picture is off screen (`data-off` from one IntersectionObserver) and by the pause toggle under the window (`data-paused`; every animation in the picture pauses, so all parts stay in step). Reduced motion and no JS: the still frame, no toggle. On scroll-out (≥ 961 px): the copy recedes (−8 vh, opacity .4), the start frame drifts less (−3 vh, scale .98) and fades out fully (opacity 0), handing over to the story stage, which fades in on its own `view()` (entry 10–60 %); all on the hero's `--hero` timeline. Phones and tablets: no recede. |
-| Story | See Story below: sticky stage, one state per text step, CSS transitions between states. |
-| Header | Solid bar after 80 px (class toggle from an IntersectionObserver sentinel, no scroll handler). |
-| Proof line | Static (sits at the fold at load). |
-| Für wen | Head rises; tiles rise with stagger (2 vh steps and 32 px on four columns); each photo opens from an inset (6 % / 8 % on four columns, 4 % below) and settles from 1.18 to 1 inside its frame. |
-| Ablauf | Head rises; steps rise; the Messing line between the numerals fills with scroll, segment by segment, and each numeral lights up (Messing tint disc) as its step reaches the reading line. |
-| KI-Manager (parked: on the static page `/ki-manager/`, the only topic page with `.scroll-fx`; signature 1, "into the product", pinned moment 1 of 2) | The graphit device frame zooms from .8 to 1 without fading (a translucent graphit frame reads as a grey slab); the draft sheet rises inside it (`cover 20vh` → `45vh`); the two light cards slide in from the right (24 px, 2 vh stagger) and are final before the device. From 961 px wide and 700 px tall the bento sticks below the header for 50 vh of extra scroll (`.ai-pin`: sticky bento plus an empty hold block, under `.scroll-fx` and no-preference only); the device runs on the pin's timeline and settles at 60 % of the hold, before the pin releases. On the static page the bento already sits in the first screen (its top at 505–560 px from 961 px wide, whatever the height) and the header is not fixed, so only the pinned device moves: the bento sticks 2rem from the top, the device waits at a still .86 at load, scaled from its top edge so its top lines up with the cards, and zooms only once the bento's top has risen to 2rem + 12rem (224 px) from the top, a fixed line above its load position, so it never loads part-way through its zoom on any height; it settles at 60 % of the hold. The draft sheet, the two cards and the caption are still at every width (they sit in or near the first screen and would load half-risen or half-faded, the caption on portrait tablets); so is the footer (as on the other topic pages). Without the pin the device is still on the static page too: short desktops (< 700 px tall), screens 2000 px tall or more (the page would end before the device settles) and phones and tablets (≤ 960 px), where it sits in the first screen. Landing page variant (not used since the section moved; kept in `ai.css`): short desktops device .8 → 1 over 60 vh; phones and tablets device .92 → 1 with a 16 px lift, cards rise. |
-| Nicht nur Geld (dormant, static page `/kosten/`) | Messing rule draws; head rises; the three kinds rise with stagger, their hairlines draw, icons scale in (.86 → 1, no own fade; the zoom sits on a `span` around the SVG). |
-| Kosten (dormant, static page `/kosten/`, as is Nicht nur Geld) | The card zooms in (.96); the rows stay still; check marks wipe in from the left (clip-path), the open circle scales and fades in from its centre (.6 → 1); each marker is final once its top sits at about 75 % of the viewport (`cover 4vh` → `cover 0.6 × --scroll-dist`); the note fades. |
-| FAQ (dormant, static page `/fragen/`) | Rows rise one by one. Opening a row keeps its native height animation. |
-| Team (dormant, static page `/ueber-uns/`) | Founders rise with stagger (also on phones, two columns); hairlines draw; portraits scale in (.86 → 1, no own fade). The project status head and its steps rise (plain `rise`); its hairline and markers are static. |
-| Warteliste (signature 2, "the page opens") | The graphit surface opens from an inset rounded card to full bleed as it enters (Kalk behind it, continuous with the team band); from 961 px the inset is `clamp(1.5rem, 4vw, 3.5rem)` on top and `clamp(2rem, 6vw, 6.5rem)` at the sides with 36 px corners, below that `clamp(.75rem, 2vw, 1.5rem)` / `clamp(.5rem, 3vw, 3rem)` with 28 px (20 px on phones). It is full bleed before the footer comes into view. Head and form rise. |
-| Footer | Top rises; the wordmark rises and scales from .9 to 1; both end at `entry min(100%, --scroll-dist)`, final once fully in view or earlier (they sit at the end of the page). Static on every other page, the parked `/ki-manager/` included (`page.css` stills it under `.scroll-fx .pg ~ .ft`). |
-| Sticky bar (phones) | Slides in once the hero and the scroll story have scrolled away (IntersectionObserver), hidden again near the waitlist and footer. |
-| Hover | Colour and underline changes only. |
+| Scroll timelines (`.scroll-fx`) | scroll-linked motion |
+| Motion, no scroll timelines (Firefox, older Safari) | the `data-reveal` fade (opacity + 12 px, once) and time-based draws when a block comes into view; rows untranslated, words in their final colour |
+| Reduced motion | final state, nothing moves (checked in CI: zero running animations) |
+| No JavaScript | final state, everything visible (checked in CI) |
 
-## Story (scroll story under the hero)
+**Rules.**
+- Allowed properties: `opacity`, `translate`, `scale`, `rotate`, `clip-path`; for the three effects below also `color` and `background-color` (fill-words), `stroke-dashoffset` / `stroke-dasharray` (draw) and `offset-distance` (the ball on its path). Nothing else: no size, blur or filter animation, no layout shift.
+- Scroll-linked progress is linear; time-based motion uses `--ease-out`.
+- Nothing visible at scroll 0 starts hidden or half-animated. Where a block can be in view at load (tall screens), its effect starts whole (the statement is evenly grey and fills over the first 44 vh of scroll) or is switched off by a `min-height` query.
+- Every element is final once it is comfortably in view (about 50 to 60 % down the viewport).
+- Nothing starts by itself and runs longer than 5 s (WCAG 2.2.2). Load motion is over after about 1.5 s.
+- Named `view-timeline`s set `view-timeline-inset: 0px`. Set `animation-timeline` and `animation-range` after any `animation` shorthand.
+- Focus guard (`site.css`, `kit.css`): a `data-scroll` block that holds keyboard focus shows its final state at once.
+- Never put `scale` or `translate` animations on an SVG element (wrap it in a `span`); `rotate` and `offset-distance` on SVG groups are used for the door ball only.
 
-Replaces the Problem section (`Story.tsx`, `StoryArt.tsx`, `lib/storyLayout.ts`, `story.css`, `story-art.css`). Visual reference: Harvey "Contract Intelligence" (messy documents pass a thin vertical light line and come out neat). No toggle: scrolling is the only control.
+**Kit primitives** (`kit.css`):
 
-- **Hero start frame** (`Hero.tsx`, `hero.css`, in the container): one picture in one visual language, after the Dovetail "From noise to knowledge" hero (Mobbin): uniform input tiles, right-angled hairlines that merge in one node, a hairline into one framed product window. Inputs: four tiles (three on phones), all the same size, never tilted (`.in-tile`, shared with the story stage): graphit-2, 1 px `--card-dark-line` border, radius 8, a 16 px line icon drawn inline (`InputIcon.tsx`: e-mail, PDF, question, phone) and the label in steel, 13 px semibold, from the hero's own inputs (`story.heroInputs`: "Re: Sponsoringanfrage", "Vereinsmappe.pdf", "Wen könnten wir fragen?" (desktop only), "Rückruf: offen"), never the ones on the story stage. Wires: one inline SVG per layout, 1 px `--card-dark-line`, every corner radius 8, drawn 1:1 in px in a fixed column (96 px desktop, 56 px phones; the tile and gap sizes in `hero.css` must match the paths in `Hero.tsx`), each branch starting at the tiles' edge, so the whole run (and its pulse) is in view at every width; the inner branches turn first, the outer ones join the shared line further on, so nothing crosses. Node: a 20 px brass ring with an 8 px brass dot (no glow). From the node a 1 px `--card-dark-line` hairline runs into the window, touching both; it takes the spare width. Window: Kalk, 1 px `--rule` border, radius 16, no shadow, the style of the product preview's "Passende Partner": a 40 px bar (two-ring icon in Messing dunkel, the title, a "Vorschläge" tab on Kalk dunkel), then three rows (two on phones) from `story.pairs`: seeker disc (graphit) and company disc (Messing, a 2 px Kalk ring where it overlaps), "Seeker · Firma" in graphit on the first line, the region in ink, four criteria dots in Messing dunkel (a ring for "teilweise") and "4 von 4" on the second. Desktop (≥ 700 px): one row across the container, centred on one line: tiles (13.5rem; 12.5rem below 961 px), wires, node, the hairline (the flexible column, at least 2rem), window in the lead column of the copy (30rem, its left edge under the lead from 1200 px). Phones (< 700 px, max 26rem wide): tiles and node on top, the hairline drops from the node onto the window's "Vorschläge" tab. Under the window: the caption "Beispieldaten" once (right-aligned on desktop) and, with motion only, a 24 px round pause toggle (44 px target, `aria-pressed`, label "Animation anhalten"; the loop runs longer than 5 s, WCAG 2.2.2). The picture is about 200 px tall on desktop and 255 px on phones, so 1280 × 720 and 390 × 844 show it with its caption in the first screen. On short phones (under about 760 px tall: 360 × 740, 320 × 640) the copy alone fills most of the screen: the picture starts at the bottom of the first screen (360 × 740: the tiles and the window's bar) and continues below the fold; accepted, the copy comes first. On scroll the picture recedes and fades out fully while the story stage fades in (CSS `view()`, entry 10–60 %), so the two never stand as two similar pictures. The still layout (all wires drawn, node lit, the first three pairs) is the reduced-motion and no-JS picture; motion: see Motion → Per section → Hero.
-- **Steps** (real text, in order): H2 `problem.title` with `problem.intro` (in `.st-head`, before the stage in the source: on phones and tablets the story opens with its heading, unpinned, and the sticky picture follows) → the three findings as a list (label "Heute", Schibsted 700 H3) → "Beide Seiten an einem Ort" → "Vorschläge statt kalter Anfragen" → "Ein Match, bei dem beide wissen, warum" → "Und danach: der KI-Manager" (one sentence of its own; no link while `/ki-manager/` is parked). The solution steps, the KI step included, carry the label "Mit Sponsuno". Labels sit after a 24 px Messing rule.
-- **Stage states** (`data-step` on the live `.st-art`): `heute` (seven input tiles and two seeker cards in one loose column left of the line at 52 %, one per row, each nudged left or right, no text overlapping; the tiles are the hero's `.in-tile`, one width (16.5rem, the longest label fits; 12.5rem on phones, where only four of them show), never tilted, each with its line icon; line and three pair cards dimmed to .2/.25 on the right, the faint pairs without their score, so they read as dimmed cards; order never visibly undoes itself) → `kontakte` / `aufwand` / `erwartungen` (spotlight: the matching tiles at 1, the rest at .26; "erwartungen" lights "Hat es sich gelohnt?", "Gegenleistung: ?" and the Musikgesellschaft card) → `linie` (line at full strength; most tiles slide behind it, three wait at the line, faint, small and half fed into it, above and below the seeker queue; seekers queue on the left, companies enter from the right edge; column heads "Sucht Unterstützung" / "Möchte sponsern") → `sortiert` (tiles and seekers go behind the line, pair cards come out of it and lock: left edge on the line, lock disc, dots tick, score; the criteria legend names the four criteria, as a column against the line beside the lead pair on desktop, as a row under the pairs on phones; its dots tick with the lead pair's dots) → `match` (the match card grows out of the lead pair: it starts at pair-0's centre and size; the other pairs leave first; its criteria dots tick and the result appears; no stage caption, the card carries its own label) → `danach` (match card at .9 without its label, KI draft beside it overlapping only its empty corner, "Gegenleistungen im Blick", caption "Beispielansicht. Der KI-Manager ist in Entwicklung.").
-- **Pair card**: one graphit-2 surface (1 px `--card-dark-line`, radius 16, no nested cards, no light strip, no connector): the seeker row and the company row on the same grid (32 px monogram discs, graphit for the seeker, Messing for the company; names in Kalk), then under a hairline the footer in the order of the hero window's second line: the region in steel (once), the four criteria as 6 px dots (Messing; a Messing ring for "teilweise" on Budget) and the score as plain text ("4 von 4" / "3 von 4"), 8 px apart. The same language as the rows of the hero window. The criteria legend uses the same dot. On short desktop stages the pairs, the legend and the match card scale down (container queries on the stage height: .88 below 600 px, .72 below 500 px). On phones and tablets they stay at full size (.86 only on stages under 330 px tall) and fill the window right of the line (compact: 28 px discs), so names stay at 14 px and the footer at 11 px. Narrow desktop stages (under 720 px wide, i.e. 961–1200 px screens) scale the tiles, the seeker and company cards to .9, the KI pieces to .88 and the match card in "danach" to .78; short desktop stages (under 500 px) the KI pieces to .8.
-- **Match card** (`MatchCard.tsx`): one graphit-2 surface in the pair card's language at a larger size: the label "Beispieldaten", then both parties on the same grid (48 px photo disc and 48 px Messing disc; role in Messing hell, name in Kalk, region and need in steel), then under a hairline the four criteria as Messing dots with their names and "Passt in 4 von 4 Kriterien" as plain Kalk text. No light strip, no connector line, no check chips, no pill. On phones it stays at full size (40 px discs).
-- **Layout**: desktop (≥ 961 px) text left (`clamp(19rem, 29vw, 27rem)`), sticky stage right, bleeding to the viewport edge, height `clamp(420px, 100svh − header − 2rem, 640px)`, centred vertically; steps at least 44 svh; reading line at 50 %. Phones and tablets: the heading scrolls normally, then the stage sticks under the header (45 svh, 290–420 px; tablets cap the composition at 640 px, centred; tablets at least 960 px tall get 52 svh, 420–540 px, for more room between the pieces), the steps scroll up beneath it (2.5 rem graphit fade under the stage edge, ending above the reading line at 66 %); the caption is a bar on the stage's bottom edge. Seeker and company cards are 240 px × 52 px (200 px at .74 / .8 on phones; seekers and tiles .7 on stages under 360 px wide and .62 under 340 px, so their text stays left of the line). On phones the column heads wrap to two lines ("Sucht / Unterstützung"), so they stay left of the line.
-- **Technique**: two IntersectionObservers (a 2 % band at the reading line; the steps and the section entering or leaving the screen) trigger one position check: the current step is the last one whose top has passed the reading line, else the first. So a reload, Back, a Home/End or logo jump never leaves a stale picture, and nothing runs per scroll frame. A focused link inside a step forces its state. Item positions per state and layout come from the table in `lib/storyLayout.ts`, rendered as a `<style>` in the prerendered HTML (CLS 0). Only `translate`, `opacity`, `scale` change, with CSS transitions under `.motion` (.8 s translate, .45 s opacity, staggered 60–120 ms); a fast flick lands on the last state. Nothing is tilted; the seeker cards' raw face (with the role) and clean face (with the region) cross-fade. Two clip windows meet at the line, so things vanish into it and come out of it (the scan). No scroll handler, no hijacking, no library.
-- **Inactive steps**: only their headings dim (opacity .6) and the label rule (.35), with motion only; body text and labels keep full contrast (WCAG 1.4.3); `:focus-within` restores everything. On phones and tablets the links in the steps get a scroll margin of the stage height plus its soft edge, so a link reached with Tab scrolls in below the sticky stage, not behind it (WCAG 2.4.11).
-- **Fallbacks**: no JS, screens up to 560 px tall, and phones with reduced motion get the snapshot sequence: each step shows its own static picture beside (desktop) or above (phones) its text (`clamp(340px, 100svh − header − 3rem, 600px)` on desktop, 390 px on phones; `content-visibility: auto`), nothing hidden, full contrast. The pinned layout is gated on `.js` alone (set before first paint), so the 4 s reveal failsafe never flips the layout; if the app never starts, the stage stays on `heute` beside fully readable text. Reduced motion on larger screens: the stage switches states without transitions. Forced colours and print: the picture is hidden. The snapshots are always in the prerendered HTML; once the page has hydrated, they are removed while the stage is pinned (they are `display: none` there, so nothing moves) and rendered again if the screen changes to a snapshot layout (rotation, reduced motion switched on).
-- **Fonts and CLS**: metric-matched fallback faces (`Schibsted Fallback` on Arial, `Schibsted 700 Fallback` on Times New Roman, `tokens.css`) keep the font swap from moving anything; Schibsted 400/600 and Schibsted 700 600 (their core subsets, 35 KB together) are preloaded, so on a slow phone the swap mostly happens with or shortly after the first paint; the hero badge reserves two lines on phones. The H1 and the lead only rise on load (no opacity start), so the LCP paints at once.
-- **Honesty**: every name is generic and fictional (regions are real). One discreet "Beispieldaten" caption per stage state (`story.captions`; none in the match state, where the match card carries its own "Beispieldaten" label, which also covers its stock photo). No status tags on the stage (the KI draft card has no "Geplant" tag any more). The graphic is `aria-hidden`; its text alternative (`story.artAlt`) is given once, in the hero.
+| `data-scroll` | Does | Tune with | Still fallback |
+| --- | --- | --- | --- |
+| `draw` (on a container, or `draw="scroll"` on `CourtLines`) | its `.cl-path` lines draw with the scroll, each further path 5 vh later | `--draw-start`, `--draw-end`, `--draw-stagger` | lines fully drawn (no dash pattern is ever left) |
+| `fill-words` (on a paragraph with `span.w` words, `--i` per word, `--n` on the block) | words go from grey to their own colour one after another | `--fill-from`, `--fill-to`, `--fill-soft` | final colour |
+| `slide-x` (on a row; `data-dir="right"` reverses) | the row slides sideways across its pass through the viewport | `--slide`, `--slide-start`, `--slide-end`, `--scroll-timeline` | untranslated |
+
+`data-draw="load"` draws court lines once on load (1 s each, 0.1 s stagger). Keyframes that may be reused in section CSS: `stk-settle`, `stk-wiggle`, `stk-pop`, `kit-draw`, `kit-fill`, `kit-slide-left`, `kit-slide-right`, `cl-roll`.
+
+**Base primitives** (`site.css`, unchanged from v1.0): `data-reveal` (fade once), and `data-scroll="rise | fade | zoom-in | draw-x | draw-y | photo | frame | recede | group"` with the `--scroll-*` knobs. The landing page uses `rise` and `zoom-in` in the footer; the others remain for the parked pages.
+
+**Stickers.** A small settle when they first appear (scale 0.9 to 1, rotating into place, 360 ms, once; inside a `data-reveal` block when it comes in), a wiggle on hover (fine pointers), a lift on press, a pop when collected.
+
+**Per block.**
+- Hero: lines draw on load, stickers are stuck on one after another (0.45 to about 1.3 s), then drift up at different speeds while the first screen scrolls away (`scroll(root)`; the pennant sways around its foot).
+- Statement: `st-fill`, its own keyframe on the kit's timeline, starts from a **solid grey** (`rgb(132,133,135)`, 3.4:1 on parquet; the type is at least 26 px, large text) instead of the kit's 35 % alpha, so the unfilled words pass contrast. Final when the paragraph's top is at half height. The round signs fill with their word. The point rings draw once.
+- Word band: both rows on the band's own view timeline, opposite directions; the lockup is hit when the band is mid-viewport. Lane lines draw with the scroll.
+- Steps: each step reveals with a 90 ms stagger; inside, the line draws, the stickers settle one by one, the check pops (about 1 s). Match card: avatars, check and chips pop in turn.
+- Doors: the drawing draws with the scroll (`--kit-draw`), the ball rides the tip of the yellow line and spins, the shop sign turns yellow at the end. On hover or keyboard focus the ball rolls in again and the sign flickers once.
+- Waitlist: the parquet court line draws with the scroll (from 961 px). Footer: columns rise, the wordmark zooms in.
+- Page tape line: drawn about 2.8 times as fast as the scroll, on the timeline of `<main>`.
+- Static page band: lines draw once on load and the sticker settles (all done by 1.1 s); stickers wiggle on hover.
+
+## Easter eggs
+
+Optional layers on top of `aria-hidden` decoration (`src/lib/eggs.ts` with `src/styles/eggs.css`, a lazy chunk fetched when the browser is idle; the album store and markup are in `Album.tsx`).
+
+1. **Stickeralbum.** A click or tap on any `[data-sticker][data-collectable]` collects it: the sticker leaves its dashed outline, its id counts once (copies of the same sticker in other blocks do not count again). A yellow counter chip (star, «2/6») appears in the header and the album in the footer fills its six slots. All six: a 1.5 s burst of little loop signs (none with reduced motion) and the line «Album voll. Sie haben ein Auge für Details.» Every id can be found on phones too (hero: ball, note, brezel, wimpel; steps and waitlist: startnummer; waitlist: pfeife).
+2. **Drag.** Hero stickers (`data-draggable`) follow the pointer after a 6 px threshold, stay inside the hero and stay where they are dropped. A drag never collects.
+3. **«tor».** Typing t, o, r outside a form field shows a sticker-style scoreboard («TOR! 1:0», counting up) bottom centre for 2 s.
+4. **Loop.** A click on the loop of the giant footer wordmark makes its last «o» bounce twice (0.9 s; a clipped second copy of the same image moves, the logo's geometry is untouched).
+
+Rules (also in AGENTS.md):
+- **State in memory only.** No cookie, no `localStorage`, no `sessionStorage`, no IndexedDB: the Datenschutzerklärung says nothing is stored. A reload starts again at 0/6. CI checks this.
+- **Never needed to use the page.** Nothing an egg shows is content; the page is complete without the chunk and without JavaScript (the album is prerendered empty with its hint).
+- **Hidden from assistive technology and the keyboard.** Album, counter chip, scoreboard and stickers are `aria-hidden`; nothing is focusable (the chip has `tabindex="-1"`), nothing is announced, focus never moves.
+- No listener per scroll frame; `touch-action: none` only on the draggable stickers themselves.
 
 ## Logo
 
-The wordmark **«sponsuno»** in lowercase, Schibsted Grotesk 700, where u and n share one stem and become a loop (design system: "Im Wort teilen sich u und n einen Stamm und werden zur Schlaufe, so wie aus Verein und Firma eine Partnerschaft"). It is never set as text: no font has the loop. Files: `src/assets/wordmark-dark.svg` (Graphit, on light), `wordmark-light.svg` (Kalk, on graphit), `Sponsuno_Logo_dunkel.svg` / `_hell.svg` (the same, used by the demo). The loop alone (`src/assets/loop.svg`, `currentColor`) is the small mark: favicon and app icons (`public/favicon.svg`, and the PNG/ICO sizes generated from `src/assets/Sponsuno_Icon.svg`, a Graphit tile with a Kalk loop, by `scripts/icons.mjs`). Clear space: the x-height of the wordmark all round. Minimum size: 16 px high on screen, 6 mm in print; below that the loop alone. Never: stretch, rotate, recolour, add shadows or outlines, put the Messing loop on light ground (2.2:1), type «sponsuno» with a normal u and n, or set the loop next to the word.
+Unchanged from v1.0. The wordmark **«sponsuno»** in lowercase, Schibsted Grotesk 700 outlines, where u and n share one stem and become a loop («so wie aus Verein und Firma eine Partnerschaft»). It is never set as text: no font has the loop. Files: `src/assets/wordmark-dark.svg` (ink, on light), `wordmark-light.svg` (parquet, on ink), `Sponsuno_Logo_dunkel.svg` / `_hell.svg` (the same, used by the parked demo). The loop alone (`src/assets/loop.svg`, `currentColor`) is the small mark: favicon and app icons (`public/favicon.svg`, and the PNG/ICO sizes generated from `src/assets/Sponsuno_Icon.svg`, a flat ink tile with a parquet loop, by `scripts/icons.mjs`). Clear space: the x-height of the wordmark all round. Minimum size: 16 px high on screen, 6 mm in print; below that the loop alone.
 
-Share image (`public/og-image.png`, 1200 × 630, source `scripts/og/og-image.html`): the 135° graphit gradient, the Kalk wordmark, one Messing hairline, the headline in Schibsted Grotesk 700 Kalk, one line in Grau hell with the launch signal ("Bald verfügbar in der Deutschschweiz"), the domain in Messing. No photos, faces or numbers.
+Never: stretch, rotate, recolour (single colour only: ink or parquet), add shadows or outlines, type «sponsuno» with a normal u and n, set the loop next to the word, or stick a sticker on the wordmark. The footer's bounce (Easter egg 4) moves a clipped copy for under a second and leaves the image as it was.
 
-Open (design system, "Offene Punkte"): test the loop's legibility with three to five people who do not know Sponsuno; trademark check of name and logo (IGE, DACH) before the launch; CMYK and Pantone for Graphit and Messing with the printer.
+Share image (`public/og-image.png`, 1200 × 630, source `scripts/og/og-image.html`, rendered with Chromium): parquet ground, «Sponsoring, das zusammenpasst.» in Archivo Wide with the last word in blue, the ink loop wordmark, a blue circle and a red line, ball and note stickers, the launch signal as a yellow text sticker, the domain. No photos, faces or numbers. The sticker drawings in that file are copies: refresh them when `Sticker.tsx` changes.
 
-## Demo app
-
-Parked since 2026-11-16 (not built, `/demo/` redirects to the homepage; AGENTS.md → "Parked (not built)"). The rules below hold when it comes back.
-
-The demo (`/demo/`) uses the same light design system in an app layout (its stylesheets write the few radii directly):
-
-- Shell: Graphit sidebar (268 px, full height, the Kalk loop wordmark) with the role switch and navigation; a Graphit top bar with the banner ("Vorschau mit Beispieldaten", a small Messing dot) above the Kalk content column (max 1180 px). Below 900 px the sidebar becomes a Graphit bottom tab bar and the role switch moves into a row above the view.
-- Way back to the waitlist: in the sidebar a short note and a full-width Messing pill ("Auf die Warteliste") above the account card; below 900 px a closing row under every view (hairline, note, graphit pill).
-- Active navigation: Kalk text on a faint Kalk pill, Messing icon.
-- Cards: 16 px radius, 1 px border, no shadow. Headings Schibsted Grotesk 700 (-0.025em), body 400 at 1 rem, figures tabular.
-- Match criteria always appear in the same order with the same marks: Messing check (passt), half circle (teilweise), muted cross (passt nicht), each with a text equivalent.
-- Status badges (pills): Anfrage and Im Gespräch Messing tint with Messing dunkel text, Vereinbart Graphit, Aktiv green (`#E3EDE4` / `#2E5A36`, demo only), Abgeschlossen and Abgesagt muted.
-- Avatars: sponsors a Messing disc with Graphit initials, athletes and clubs a Graphit disc with Kalk initials (Schibsted 700). The AI-generated persona photo appears only where it is labelled "KI-generiertes Symbolbild".
-- Selected tabs are Graphit pills with Kalk text; form fields have a Graphit focus border plus the standard focus outline.
-- Kit classes are prefixed `ui-`; each view prefixes its own classes (`ov-`, `mt-`, `ps-`, `as-`, `pf-`, `sp-`). Each view's stylesheet loads with the view, after `demo.css`: to change a kit element inside a view, use a selector with one class more than the kit rule (AGENTS.md → The demo).
-- Loading: the shell and the first view paint together; if a view is not loaded yet when someone switches to it, its area stays empty for that moment (no spinner, no skeleton).
-- Without JavaScript: one Graphit line on the Kalk body (`demo-noscript`) with an underlined link to the landing page.
+Open: test the loop's legibility with three to five people who do not know Sponsuno; trademark check of name and logo (IGE, DACH) before the launch; CMYK and Pantone values for the palette with the printer.
 
 ## Imagery
 
-- Landing page: free stock photos (Pexels licence or Unsplash licence only), in `src/assets/photos/`: the athlete avatar in the match card of the scroll story and the four tiles of "Für wen Sponsuno gemacht ist". They are named as Symbolbilder in the landing page footer ("Fotos: Symbolbilder, Bildnachweise") and in the Impressum, the match card photo is covered by the card's "Beispieldaten" label, and they are never presented as Sponsuno users, partners or customers. Every one has an entry in `photoCredits` (content.ts), which the Impressum lists.
-- Choosing stock photos: real people in a Swiss, Alpine or plainly European setting, natural light, not posed-corporate. No legible brand logos or sponsor prints, no recognisable celebrities, no children as main subject. Prefer views where the people are not the point (backs, side views, hands at work).
-- One grade for the set: after cropping, the audience tiles get one shared grade (saturation evened out, levels 3–98 %, a slight warm tint in the highlights and a graphit tint in the shadows) so the four read as one series. Keep the grade when a tile is replaced.
-- Preparing them: crop and resize with `sips` to at most twice the display size (tiles 640 × 480, match avatar 104 × 104 for its 52 px circle), JPEG quality about 58–78, strip metadata (`jpegtran -copy none -optimize -progressive`), aim for under 100 KB each. Originals stay outside the repo (`../photo-originals/`). The graded JPEG is the master: `npm run photos` encodes AVIF versions from it (tiles 480 and 640 px wide at quality 55, the avatar at 104 px and quality 60; visually equal at display size, checked at 1×, 2× and 3×), served through `<picture>` with the JPEG as fallback, so crop and grade stay the same. Every `<img>` gets `width`/`height`, a German `alt` that describes the picture, `decoding="async"` and `loading="lazy"` below the fold.
-- Demo: the AI-generated persona portrait (`src/assets/symbolbild-mtb-192.jpg`) stays there, always labelled "KI-generiertes Symbolbild".
-- Founders: no photos yet, monograms instead (see Layout → Team). Only real, consented photos of the four founders may replace them; never stock or generated faces.
-- Next step: a consented photo day (athletes, a sport club, a culture club, a local business owner, the founders, two or three places in the region), graded consistently (warm highlights, graphit-leaning shadows). Those photos then replace the stock Symbolbilder.
-- Logo files come from the CD (`src/assets`). Do not recolour, stretch or add effects.
+- **No stock photos.** The landing page is built from vectors only (CI checks that it requests no raster image). Illustrations are stickers, line icons and court lines from the kit; all drawings are original and use only the palette.
+- The only photos on the site are the founders' portraits on `/ueber-uns/` (real, consented, square JPEGs in `src/assets/photos/team-*.jpg`, cut like stickers with a white edge); a founder without a photo gets a blue monogram. Never stock or generated faces for the founders.
+- Example people and firms appear only as vector avatars inside an illustration labelled «Beispieldaten» (the match card).
+- Parked: the stock photos of the old audience section and match card stay in `src/assets/photos/` with their credits in `parkedPhotoCredits`; a photo that comes back needs its credit in `photoCredits` and the Symbolbild note (AGENTS.md).
+
+## Parked
+
+Not imported, not built; sources stay in the repo (list and how to bring one back: AGENTS.md → «Parked (not built)»).
+
+- From the old landing page: the conveyor hero picture, the scroll story (`Story.tsx`, `StoryArt.tsx`, `lib/storyLayout.ts`, `story.css`, `story-art.css`), the proof line (`ProofLine.tsx`), the audience photo cards (`Audience.tsx`), the two-track «So funktioniert es» (`HowItWorks.tsx`), `InputIcon.tsx`. Their stylesheets were only renamed to the new tokens mechanically and have not been looked at in the new look. `Statement` and the parked story both use the class prefix `st-`: rename one before the story could ever come back.
+- Pages: the product preview `/demo/` (`src/demo/`), `/fuer-firmen/`, `/ki-manager/`, the four guides (their block styles are in `guide-parked.css`). They compile with the new tokens but keep their v1.0 layouts; each needs a design pass before it is published again.
+- Out of scope of v2 so far: the waitlist e-mails (live in Brevo in the v1.0 look), the README screenshots, the earlier logo kit in `brand/`.
 
 ## References
 
-Redesign research (November 2026), what each one lends:
-
-- Attio, Plane, incident.io, Railway (Mobbin): three-layer hero (headline, one sentence, two CTAs) next to a product visual.
-- SchoolAI, Later, Sweatpals (Mobbin): audience-named CTAs for a two-sided marketplace ("Ich suche Sponsoren" / "Ich möchte sponsern").
-- Copilot Money (Mobbin): dark hero with one soft glow instead of a moving background.
-- Klaviyo, Calendly, Mintlify (Mobbin): one framed product card as the hero visual.
-- Dovetail "From noise to knowledge", Customer.io, Clay (Mobbin): uniform input tiles joined by thin right-angled hairlines that merge in one node and feed one product window or list (the hero start frame since November 2026).
-- Oyster (Mobbin): two-track "how it works" (one track per side of the market).
-- Sana, Claude (Mobbin): bento with one dark product card and small light cards.
-- Fresha (Mobbin): fee rows instead of plan cards.
-- Hims (Mobbin): two-column FAQ with a sticky title (until November 2026; the title now sits in the page head band).
-- Telescope (Mobbin): minimal waitlist block.
-- Oryzo, Justin Jefferson (Awwwards): one signature idea, strict two-colour discipline, Messing that reads as sport when it stays rare.
+- soda.today (owner's reference for the feeling, 2026-11-17): full-colour bands, one giant word per screen, stickers on letters, a word that slides with the scroll, text that fills in, lots of space. A reference for feeling only: no asset, word or layout is copied.
+- Sticker albums of sport clubs and the taped lines of a Swiss Mehrzweckhalle (the idea).
+- Earlier research (v1.0, Mobbin): audience-named CTAs for a two-sided marketplace (SchoolAI, Later, Sweatpals); fee rows instead of plan cards (Fresha); a minimal waitlist block (Telescope).

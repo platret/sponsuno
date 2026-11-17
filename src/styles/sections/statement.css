@@ -1,36 +1,118 @@
-/* Statement (Statement.tsx): parquet. Three sentences in large Schibsted 600 (about 40 px on desktop, 26 px on
-   phones), ink, then three points under a hairline, each with an icon slot. Prefix st-. */
+/* Statement (Statement.tsx): parquet. Three sentences in large Schibsted 600 (about 44 px on desktop, 26 px on
+   phones), one sentence per line where the width allows; a round sign in front of the first two. The words fill from
+   grey to ink along the scroll. Under it three points, each with a line icon in a drawn ring. Prefix st-. */
 
-.st { padding-block: clamp(3.5rem, 2.5rem + 5vw, 7.5rem); }
+.st { padding-block: clamp(4rem, 2.5rem + 6vw, 8.5rem); }
 
 .st-text {
-  max-width: 58rem;
-  font: 600 clamp(1.625rem, 1.15rem + 2.1vw, 2.5rem)/1.2 var(--sans);
-  letter-spacing: -0.02em;
+  /* Colour of a word the fill has not reached yet: 3.3:1 on parquet. The type is never below 26 px, so it is large
+     text (WCAG 1.4.3: 3:1) in every state, also when the block is looked at or checked before it has filled. */
+  --st-grey: color-mix(in srgb, var(--grau) 71%, var(--parkett));
+  font: 600 clamp(1.625rem, 1.15rem + 2.1vw, 2.75rem)/1.2 var(--sans);
+  letter-spacing: -0.022em;
   color: var(--heading);
-  text-wrap: pretty;
 }
+/* One sentence per line; a sentence that is longer than the line wraps and hangs under its first word */
+.st-sentence { display: block; text-wrap: balance; }
+.st-sentence + .st-sentence { margin-top: .16em; }
+/* Sign and first word stay together at a line break */
+.st-nb { white-space: nowrap; }
+
+/* Round sign: a flat disc with a white die-cut edge and a hairline, as on the stickers, a little tilted */
+.st-sign {
+  display: inline-grid; place-items: center;
+  inline-size: 1.08em; block-size: 1.08em;
+  margin-block: -.2em; margin-inline-end: .24em;
+  /* centred on the capitals: middle is half an x-height above the baseline, the rest is the nudge */
+  position: relative; inset-block-start: -.075em;
+  vertical-align: middle;
+  border: max(2px, .07em) solid var(--weiss);
+  border-radius: 50%;
+  background: var(--st-sign, var(--blau));
+  background-clip: padding-box;
+  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
+  color: var(--weiss);
+  rotate: var(--st-tilt, -8deg);
+}
+.st-sign-rot { --st-sign: var(--rot); --st-tilt: 7deg; }
+.st-sign .icn { inline-size: .56em; block-size: .56em; stroke-width: 2.4; }
+
+/* ---------- The three points ---------- */
 
 .st-points {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem clamp(1.5rem, 1rem + 3vw, 4rem);
-  margin-top: clamp(2.5rem, 2rem + 3vw, 5rem);
-  padding-top: clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
-  border-top: 1px solid var(--line);
+  margin-top: clamp(3rem, 2rem + 4.5vw, 6rem);
 }
 .st-point {
-  display: flex; align-items: flex-start; gap: .875rem;
-  font-size: 1rem; line-height: 1.45; font-weight: 600; color: var(--heading);
-  text-wrap: balance;
+  --st-ring: var(--blau);
+  display: flex; align-items: flex-start; gap: 1rem;
+  font-size: 1.0625rem; line-height: 1.4; font-weight: 600; color: var(--heading);
 }
-/* Icon slot (24 px, the kit's line icon in blue); until the icon is there, a small blue dot holds the place */
+.st-point:nth-child(2) { --st-ring: var(--rot); }
+.st-point:nth-child(3) { --st-ring: var(--gruen); }
+/* Line icon in an outlined circle (48 px, the ring in a line colour, 2 px like the icon's stroke) */
 .st-icon {
-  flex: none; display: grid; place-items: center;
-  width: 24px; height: 24px; margin-top: -.05rem;
-  color: var(--blau);
+  position: relative; flex: none; display: grid; place-items: center;
+  width: 3rem; height: 3rem;
+  color: var(--heading);
 }
-.st-icon:empty::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.st-ring {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; overflow: visible;
+  fill: none; stroke: var(--st-ring); stroke-width: 2; stroke-linecap: round;
+}
+/* The first line of the text sits on the middle of the ring */
+.st-point-text { max-width: 19em; padding-top: calc((3rem - 1.4em) / 2); text-wrap: balance; }
 
-@media (max-width: 760px) {
-  .st-points { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+@media (max-width: 860px) {
+  .st-points { grid-template-columns: minmax(0, 1fr); gap: 1.125rem; }
+  .st-point-text { max-width: 26em; }
+}
+
+/* ---------- Motion ---------- */
+
+/* Points: one after another (data-reveal, site.css), and each ring draws once when its point comes in */
+.motion .st-point[data-reveal] { transition-delay: calc(var(--st-i, 0) * .12s); }
+html.motion .st-point.is-in .st-ring circle {
+  animation: kit-draw .7s var(--ease-out) calc(var(--st-i, 0) * .12s + .12s) backwards;
+}
+
+@keyframes st-fill { from { color: var(--st-grey); } }
+@keyframes st-sign { from { background-color: var(--st-grey); scale: .84; } }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The kit's fill-words with a start colour that passes contrast (st-fill instead of the kit's 35 % grey) and
+       lengths as range: the first word starts when the paragraph's top edge is 10 vh inside the viewport, the last
+       one is ink when that edge is at half height. The signs fill with their word. */
+    .scroll-fx .st-text[data-scroll="fill-words"] { --fill-from: 10vh; --fill-to: 50vh; --fill-soft: 4; }
+    .scroll-fx .st-text[data-scroll="fill-words"] .w { animation-name: st-fill; }
+    .scroll-fx .st-text[data-scroll="fill-words"] .st-sign { animation-name: st-sign; }
+
+    /* Screens taller than the hero (its height stops at 60rem): the statement can be in view when the page loads.
+       There the fill follows the page scroll itself, from the first pixels to 44 vh, so it is whole grey at
+       scroll 0 and never loads half filled. */
+    @media (min-height: 60.0625rem) {
+      .scroll-fx .st-text[data-scroll="fill-words"] .w {
+        animation-timeline: scroll(root block);
+        animation-range:
+          calc(4vh + 40vh * var(--i, 0) / (var(--n, 1) + var(--fill-soft) - 1))
+          calc(4vh + 40vh * (var(--i, 0) + var(--fill-soft)) / (var(--n, 1) + var(--fill-soft) - 1));
+      }
+    }
+    /* Very low screens: the hero gives up its full height, so the block is simply ink */
+    @media (max-height: 35rem) {
+      .scroll-fx .st-text[data-scroll="fill-words"] .w { animation-name: none; }
+    }
+  }
+}
+
+/* Tall screens where the block is in view at load: nothing starts hidden (no reveal for the paragraph where the
+   scroll fill is missing, none for the points from 80rem) */
+@media (min-height: 60.0625rem) {
+  .motion .st-text[data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+@media (min-height: 80rem) {
+  .motion .st-point[data-reveal] { opacity: 1; transform: none; transition: none; }
+  html.motion .st-point.is-in .st-ring circle { animation: none; }
 }

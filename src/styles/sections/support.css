@@ -1,5 +1,6 @@
-/* Support (Sachleistungen): parquet, after the cost card. The title starts in column 1, the three kinds sit below as
-   three cards (radius 20, 1 px border, 40 px inner margin, no shadow), each with a line icon in blue. */
+/* Support (Sachleistungen): parquet, after the cost cards. The title starts in column 1, the three kinds sit below as
+   three cards (radius 20, 1 px border, 40 px inner margin, no shadow) on parkett-2, each with a sticker-style badge
+   (.lg-badge, legal.css: blue, red, green). No motion. */
 
 /* Head as a split row: the title in columns 1-7, the intro beside it on the baseline (stacked below 961 px) */
 .sup-head {
@@ -17,46 +18,18 @@
 
 .sup-kind {
   padding: var(--card-pad);
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
-}
-
-.sup-icon {
-  width: 40px; height: 40px;
-  fill: none; stroke: var(--accent-text); stroke-width: 1.6;
-  stroke-linecap: round; stroke-linejoin: round;
-}
-.sup-icon * { vector-effect: non-scaling-stroke; }
-/* Wrapper for the scroll zoom (data-scroll="zoom-in" in Support.tsx). Block box of the icon's width; the SVG
-   stays inline inside it. Icons grow a little more than UI, from their centre, without the lift, and scale only:
-   the kind around them already fades in, and a second fade would multiply into a late, washed-out icon. */
-.sup-icon-wrap {
-  display: block; width: 40px;
-  --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%;
+  background: var(--bg-alt);
 }
 
 .sup-kind-title { margin-top: 2rem; }
 .sup-kind-text { margin-top: .75rem; max-width: 22rem; color: var(--text); }
-
-/* Quiet stagger for the reveal (only applies while motion is on) */
-.motion .sup-kind[data-reveal]:nth-child(2) { transition-delay: .08s; }
-.motion .sup-kind[data-reveal]:nth-child(3) { transition-delay: .16s; }
-
-/* Scroll-driven motion (DESIGN.md -> Motion; dormant: /kosten/ has no html.scroll-fx). Head and kinds rise with
-   stagger, icons zoom in (attributes in Support.tsx). */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .scroll-fx .sup-icon-wrap { animation-name: sfx-scale; }
-  }
-}
 
 @media (max-width: 960px) {
   .sup-head { grid-template-columns: minmax(0, 1fr); max-width: 44rem; }
 }
 
 @media (max-width: 760px) {
-  .sup-kinds { grid-template-columns: minmax(0, 1fr); gap: 1rem; --scroll-stagger: 0px; }
+  .sup-kinds { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .sup-kind-title { margin-top: 1.5rem; }
-  .motion .sup-kind[data-reveal]:nth-child(n) { transition-delay: 0s; }
 }
