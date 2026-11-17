@@ -2,33 +2,19 @@ import { resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { htmlFile, pages } from './src/pages.ts';
-import { THEME_MARKER, THEME_SCRIPT } from './src/lib/theme.ts';
 import { VIEW_FILES } from './src/demo/viewFiles.ts';
 
 // One HTML entry per page in src/pages.ts (`${path}index.html`, or 404.html for the not-found page; prerendered by
-// scripts/prerender.mjs),
-// plus the clickable demo (/demo/, client-only, noindex, not in pages.ts).
+// scripts/prerender.mjs). The parked pages (pages.ts → parkedPages) and the parked product preview (demo/index.html,
+// src/demo/) are not inputs, so they are not built. To build the demo again: add
+// `input.demo = resolve(import.meta.dirname, 'demo/index.html');` (AGENTS.md → "Parked (not built)").
 const input: Record<string, string> = Object.fromEntries(
   pages.map((page) => [page.id === 'home' ? 'main' : page.id, resolve(import.meta.dirname, htmlFile(page))]),
 );
-input.demo = resolve(import.meta.dirname, 'demo/index.html');
-
-// The theme script (src/lib/theme.ts) goes in place of the <!--theme--> marker at the top of the <head> of every page
-// entry, in dev and in the build, so it runs before the stylesheets and the first paint. The demo has no marker: it
-// stays light (data-theme="light" on its <html>, DESIGN.md -> Theme). A page entry without the marker fails the build.
-const themeScript: Plugin = {
-  name: 'sponsuno-theme-script',
-  transformIndexHtml(html, ctx) {
-    if (html.includes(THEME_MARKER)) return html.replace(THEME_MARKER, () => THEME_SCRIPT);
-    if (!ctx.filename.replace(/\\/g, '/').endsWith('/demo/index.html')) {
-      throw new Error(`${THEME_MARKER} marker not found in the <head> of ${ctx.filename}`);
-    }
-    return html;
-  },
-};
 
 const DEMO_VIEW_MARKER = '<!--view-preload-->';
 
+// Parked with the demo: while demo/index.html is not an input, no HTML file matches below and the plugin does nothing.
 // The demo loads each view as its own chunk (src/demo/DemoApp.tsx), which the app only requests once it runs: one more
 // round trip before the first view can paint. In the build, a small inline script (in place of the <!--view-preload-->
 // marker near the top of demo/index.html: before the stylesheet, which would hold it back) reads the hash
@@ -61,7 +47,7 @@ const demoViewPreload: Plugin = {
 };
 
 export default defineConfig({
-  plugins: [react(), themeScript, demoViewPreload],
+  plugins: [react(), demoViewPreload],
   build: {
     target: 'es2022',
     // No modulepreload polyfill (browsers without modulepreload simply load modules without the hint). Without it the
@@ -74,7 +60,7 @@ export default defineConfig({
     rolldownOptions: {
       input,
       output: {
-        // React is shared by the landing page and the demo (the static pages ship none): one chunk with a clear name
+        // React is used by the landing page (and the parked demo; the static pages ship none): one chunk with a clear name
         // instead of one borrowed from an asset (Rolldown's codeSplitting groups replace Rollup's manualChunks).
         codeSplitting: {
           groups: [{ name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ }],

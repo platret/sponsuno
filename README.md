@@ -38,7 +38,7 @@
 
 ## Was drin steckt
 
-Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf, Warteliste), fünf Themenseiten, vier Ratgeber, Impressum und Datenschutz, eine klickbare Produktvorschau mit Beispieldaten und eine (noch ruhende) Warteliste mit Double-Opt-in. Helles und dunkles Design, auf allen Seiten.
+Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf, Warteliste), drei Themenseiten (Kosten, Fragen, Über uns), Impressum und Datenschutz und eine (noch ruhende) Warteliste mit Double-Opt-in.
 
 <table>
   <tr>
@@ -46,12 +46,8 @@ Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf
     <td width="50%"><img src="docs/how.jpg" alt="So funktioniert Sponsuno: zwei Karten mit je vier nummerierten Schritten"><br><sub>Ablauf: zwei Spuren mit je vier Schritten</sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/waitlist.jpg" alt="Warteliste im dunklen Design: Titel links, Formular mit Rollenauswahl rechts, darunter der Footer mit der grossen Wortmarke"><br><sub>Warteliste und Footer im dunklen Design</sub></td>
+    <td width="50%"><img src="docs/waitlist.jpg" alt="Warteliste auf Graphit: Titel links, Formular mit Rollenauswahl rechts"><br><sub>Warteliste auf Graphit</sub></td>
     <td width="50%"><img src="docs/kosten.jpg" alt="Themenseite Kosten: grafitfarbener Seitenkopf, darunter die Übersicht der Konditionen"><br><sub>Themenseite «Kosten»</sub></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="docs/guide.jpg" alt="Ratgeber «Sponsoren finden» im dunklen Design mit nummeriertem Inhaltsverzeichnis"><br><sub>Ratgeber mit Inhaltsverzeichnis</sub></td>
-    <td width="50%"><img src="docs/demo.jpg" alt="Produktvorschau: Übersicht der Sportlerin mit Terminen, Profil und KI-Manager"><br><sub>Produktvorschau mit Beispieldaten</sub></td>
   </tr>
 </table>
 
@@ -60,8 +56,8 @@ Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf
 <table>
   <tr>
     <td align="center" width="33%"><img src="docs/m-hero.jpg" alt="Mobile Startansicht" width="100%"><br><sub>Hero mit Produktbild</sub></td>
-    <td align="center" width="33%"><img src="docs/m-guide.jpg" alt="Mobiler Ratgeber" width="100%"><br><sub>Ratgeber</sub></td>
-    <td align="center" width="33%"><img src="docs/m-demo.jpg" alt="Mobiles Sponsor-Cockpit der Vorschau" width="100%"><br><sub>Sponsor-Cockpit</sub></td>
+    <td align="center" width="33%"><img src="docs/m-fragen.jpg" alt="Themenseite Fragen auf dem Handy: grafitfarbener Seitenkopf, darunter die häufigen Fragen" width="100%"><br><sub>Häufige Fragen</sub></td>
+    <td align="center" width="33%"><img src="docs/m-ueber-uns.jpg" alt="Themenseite Über uns auf dem Handy: das Team hinter Sponsuno" width="100%"><br><sub>Über uns</sub></td>
   </tr>
 </table>
 
@@ -69,7 +65,7 @@ Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf
 
 ## Technik
 
-Vite 8, React 19 und TypeScript im Strict-Modus, ohne UI- oder CSS-Framework. Jede Seite wird beim Build vorgerendert; die Themenseiten, Ratgeber und Rechtsseiten laden kein JavaScript. Bewegung läuft über CSS-Scroll-Timelines (`animation-timeline: view()`) mit ruhigem Ersatz bei «Bewegung reduzieren». Alle Texte stehen typisiert in [`src/content.ts`](src/content.ts). Details, Budgets und Regeln: [AGENTS.md](AGENTS.md).
+Vite 8, React 19 und TypeScript im Strict-Modus, ohne UI- oder CSS-Framework. Jede Seite wird beim Build vorgerendert; die Themenseiten und Rechtsseiten laden kein JavaScript. Bewegung läuft über CSS-Scroll-Timelines (`animation-timeline: view()`) mit ruhigem Ersatz bei «Bewegung reduzieren». Alle Texte stehen typisiert in [`src/content.ts`](src/content.ts). Details, Budgets und Regeln: [AGENTS.md](AGENTS.md).
 
 <br>
 
@@ -97,7 +93,7 @@ Die Wortmarke «sponsuno»: u und n teilen sich einen Stamm und werden zur Schla
 
 ## Lokal starten
 
-Node 20.19 oder neuer in der 20er-Reihe, sonst 22.12 oder neuer (wie Vite 8).
+Node 22.18 oder neuer (wie in `package.json`).
 
 ```bash
 git clone https://github.com/platret/sponsuno.git
@@ -111,22 +107,22 @@ Dann http://localhost:5173/ öffnen. Weitere Befehle: `npm run build` (Typprüfu
 ```
 sponsuno/
 ├── index.html              Vite-Einstieg, Schriften, Meta-Tags
-├── demo/index.html         Klickbarer Prototyp (/demo/)
+├── 404.html                Seite für unbekannte Adressen, vorgerendert
 ├── impressum/index.html    Impressum (/impressum/), vorgerendert, ohne JavaScript
 ├── datenschutz/index.html  Datenschutzerklärung (/datenschutz/), vorgerendert, ohne JavaScript
-├── sponsoren-finden/ …     Vier Ratgeber (/sponsoren-finden/, /sponsoring-anfrage/, /sponsoring-dossier/,
-│                           /kultursponsoring/), vorgerendert, ohne JavaScript
-├── fuer-firmen/ …          Themenseiten aus dem Header (/fuer-firmen/, /ki-manager/, /kosten/, /fragen/,
-│                           /ueber-uns/), vorgerendert, ohne JavaScript
+├── kosten/ …               Themenseiten aus dem Header (/kosten/, /fragen/, /ueber-uns/), vorgerendert, ohne JavaScript
+├── warteliste/bestaetigt/  Seite nach der Bestätigung der Warteliste (noindex)
 ├── src/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert
 │   ├── pages.ts            Alle Seiten mit Titel und Beschreibung (Head-Tags, Sitemap)
-│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match, Emblem
-│   ├── hooks/              Scroll-Reveals, Kippen, magnetische Buttons
-│   ├── lib/                motion.ts, links.ts, theme.ts, templates.ts, storyLayout.ts
-│   ├── styles/site.css     Design-Tokens aus dem CD und alle Styles
-│   └── assets/             Logos und Symbolbild
+│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match-Karte
+│   ├── lib/                motion.ts, links.ts, storyLayout.ts; templates.ts nur für die geparkten Ratgeber
+│   ├── styles/             tokens.css (Design-Tokens aus dem CD), site.css, sections/ (ein Stylesheet pro Abschnitt)
+│   └── assets/             Logos, Wortmarken, Schriften, Stockfotos (photos/); symbolbild-mtb-192.jpg nur für die geparkte Vorschau
+├── worker/                 Cloudflare Worker, nur für /api/* (Warteliste)
+├── emails/                 E-Mails der Warteliste (npm run emails, Anleitung im README dort)
+├── public/                 Icons, robots.txt, _headers (Cache und Sicherheit), _redirects (301 der geparkten Seiten)
 ├── scripts/prerender.mjs   Vorrendern beim Build, Head-Tags und sitemap.xml
 ├── scripts/og/, icons.mjs  Quellen für Vorschaubild und Icons in public/
 ├── .github/workflows/      Vorschau bei Pull Requests, Deploy von main (Cloudflare)

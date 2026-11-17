@@ -4,8 +4,8 @@
 // - dist/sitemap.xml (entries with index: true; written by scripts/prerender.mjs)
 // The not-found page (kind 'notfound') is the one exception to `${path}index.html`: its file is dist/404.html, which
 // Cloudflare serves with status 404 for every unknown URL (wrangler.jsonc → assets.not_found_handling).
-// Plain data without asset imports, so vite.config.ts can import it too. The demo (/demo/) is not listed:
-// it is client-only, keeps its static noindex and stays out of the sitemap.
+// Plain data without asset imports, so vite.config.ts can import it too. Pages that are not published right now stay
+// in `parkedPages` below (not built); the product preview (demo/, src/demo/) is parked too and was never listed here.
 // Rule (AGENTS.md → SEO): every new page gets an entry here with its own title and description.
 
 /** Canonical origin. Canonicals, og:url and the sitemap use absolute URLs on the apex with a trailing slash. */
@@ -23,7 +23,7 @@ export const site = {
 };
 
 /** home = landing page (hydrated); legal, guide and info = static pages without JavaScript (info: the topic pages
-    reached from the header: Für Firmen, KI-Manager, Kosten, Fragen, Über uns); notfound = the 404 page (static,
+    reached from the header: Kosten, Fragen, Über uns; guide: the parked Ratgeber pages); notfound = the 404 page (static,
     noindex, no canonical, no share tags); notice = a short static page outside search (noindex, not in the sitemap, no
     canonical or share tags), today /warteliste/bestaetigt/ */
 export type PageKind = 'home' | 'legal' | 'guide' | 'info' | 'notfound' | 'notice';
@@ -57,7 +57,7 @@ export type PageMeta = {
   ogTitle?: string;
   kind: PageKind;
   /** Topic pages only: scroll motion on (html.scroll-fx set by an inline script in the head, see headFor). Only where
-      nothing in the first screen at load starts half-animated; today /ki-manager/ (the pinned bento) */
+      nothing in the first screen at load starts half-animated; only the parked /ki-manager/ (the pinned bento) */
   scrollFx?: true;
   /** false = left out of the sitemap */
   index: boolean;
@@ -70,23 +70,6 @@ export const pages: PageMeta[] = [
     title: 'Sponsuno – Sponsoren finden für Sport und Kultur',
     description: 'Sponsuno bringt Sportlerinnen, Sportler, Sport- und Kulturvereine mit passenden Sponsoren aus ihrer Region zusammen. Bald in der Deutschschweiz.',
     kind: 'home',
-    index: true,
-  },
-  {
-    id: 'fuer-firmen',
-    path: 'fuer-firmen/',
-    title: 'Sponsoring für Firmen aus der Region | Sponsuno',
-    description: 'Für Gewerbe und KMU: Mit Sponsuno finden Firmen Sportlerinnen, Sportler, Sport- und Kulturvereine aus der Region, die passen. Bald in der Deutschschweiz.',
-    kind: 'info',
-    index: true,
-  },
-  {
-    id: 'ki-manager',
-    path: 'ki-manager/',
-    title: 'Der KI-Sponsoringmanager von Sponsuno',
-    description: 'Der KI-Manager von Sponsuno entwirft Anfragen, erinnert an Termine und behält Gegenleistungen im Blick. Bald verfügbar in der Deutschschweiz.',
-    kind: 'info',
-    scrollFx: true,
     index: true,
   },
   {
@@ -111,38 +94,6 @@ export const pages: PageMeta[] = [
     title: 'Über uns: das Team hinter Sponsuno',
     description: 'Das Team hinter Sponsuno: vier Personen, ihre Aufgaben im Team und der aktuelle Stand des Projekts, von den ersten Gesprächen bis zu den nächsten Schritten.',
     kind: 'info',
-    index: true,
-  },
-  {
-    id: 'sponsoren-finden',
-    path: 'sponsoren-finden/',
-    title: 'Sponsoren finden für Vereine, Sportlerinnen und Sportler',
-    description: 'Sponsoren finden in der Schweiz: wie Sportlerinnen, Sportler, Sport- und Kulturvereine Firmen aus ihrer Region auswählen, ansprechen und als Partner behalten.',
-    kind: 'guide',
-    index: true,
-  },
-  {
-    id: 'sponsoring-anfrage',
-    path: 'sponsoring-anfrage/',
-    title: 'Sponsoring-Anfrage schreiben: Muster und Tipps | Sponsuno',
-    description: 'Sponsoring-Anfrage für Verein, Sportlerin oder Sportler: Aufbau, ein Musterbrief zum Anpassen und Tipps für Anfragen an Firmen in der Schweiz.',
-    kind: 'guide',
-    index: true,
-  },
-  {
-    id: 'sponsoring-dossier',
-    path: 'sponsoring-dossier/',
-    title: 'Sponsoring-Dossier erstellen: Aufbau und Inhalt | Sponsuno',
-    description: 'Was in ein Sponsoring-Dossier gehört: Aufbau Seite für Seite, Sponsoringpakete und Gegenleistungen, für Sportlerinnen, Sportler, Sport- und Kulturvereine.',
-    kind: 'guide',
-    index: true,
-  },
-  {
-    id: 'kultursponsoring',
-    path: 'kultursponsoring/',
-    title: 'Kultursponsoring: Sponsoren für Chor, Musikverein, Theater',
-    description: 'Sponsoren finden für Chor, Musikgesellschaft, Theaterverein oder Band: welche Firmen in Frage kommen, mögliche Gegenleistungen und wie Sie anfragen.',
-    kind: 'guide',
     index: true,
   },
   {
@@ -184,14 +135,74 @@ export const pages: PageMeta[] = [
   },
 ];
 
+/**
+ * Parked pages (owner's direction 2026-11-16: a slimmer site): their sources stay in the repo (entry HTML files,
+ * components, content in content.ts), but they are not built, not linked, not in the sitemap, and public/_redirects
+ * sends their old URLs to the homepage with a 301. pageMeta() still resolves them, so the parked content compiles.
+ * To bring one back: move its entry into `pages` above, drop its lines from public/_redirects, link it again (nav,
+ * footer) and follow AGENTS.md → "Parked (not built)".
+ */
+export const parkedPages: PageMeta[] = [
+  {
+    id: 'fuer-firmen',
+    path: 'fuer-firmen/',
+    title: 'Sponsoring für Firmen aus der Region | Sponsuno',
+    description: 'Für Gewerbe und KMU: Mit Sponsuno finden Firmen Sportlerinnen, Sportler, Sport- und Kulturvereine aus der Region, die passen. Bald in der Deutschschweiz.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'ki-manager',
+    path: 'ki-manager/',
+    title: 'Der KI-Sponsoringmanager von Sponsuno',
+    description: 'Der KI-Manager von Sponsuno entwirft Anfragen, erinnert an Termine und behält Gegenleistungen im Blick. Bald verfügbar in der Deutschschweiz.',
+    kind: 'info',
+    scrollFx: true,
+    index: true,
+  },
+  {
+    id: 'sponsoren-finden',
+    path: 'sponsoren-finden/',
+    title: 'Sponsoren finden für Vereine, Sportlerinnen und Sportler',
+    description: 'Sponsoren finden in der Schweiz: wie Sportlerinnen, Sportler, Sport- und Kulturvereine Firmen aus ihrer Region auswählen, ansprechen und als Partner behalten.',
+    kind: 'guide',
+    index: true,
+  },
+  {
+    id: 'sponsoring-anfrage',
+    path: 'sponsoring-anfrage/',
+    title: 'Sponsoring-Anfrage schreiben: Muster und Tipps | Sponsuno',
+    description: 'Sponsoring-Anfrage für Verein, Sportlerin oder Sportler: Aufbau, ein Musterbrief zum Anpassen und Tipps für Anfragen an Firmen in der Schweiz.',
+    kind: 'guide',
+    index: true,
+  },
+  {
+    id: 'sponsoring-dossier',
+    path: 'sponsoring-dossier/',
+    title: 'Sponsoring-Dossier erstellen: Aufbau und Inhalt | Sponsuno',
+    description: 'Was in ein Sponsoring-Dossier gehört: Aufbau Seite für Seite, Sponsoringpakete und Gegenleistungen, für Sportlerinnen, Sportler, Sport- und Kulturvereine.',
+    kind: 'guide',
+    index: true,
+  },
+  {
+    id: 'kultursponsoring',
+    path: 'kultursponsoring/',
+    title: 'Kultursponsoring: Sponsoren für Chor, Musikverein, Theater',
+    description: 'Sponsoren finden für Chor, Musikgesellschaft, Theaterverein oder Band: welche Firmen in Frage kommen, mögliche Gegenleistungen und wie Sie anfragen.',
+    kind: 'guide',
+    index: true,
+  },
+];
+
 /** HTML file of a page, relative to the project root (Vite entry) and to dist/: `${path}index.html`, or 404.html. */
 export const htmlFile = (page: PageMeta): string => (page.kind === 'notfound' ? page.path : `${page.path}index.html`);
 
 /** Absolute canonical URL of a page path ('' → https://sponsuno.ch/). */
 export const absoluteUrl = (path: string): string => `${SITE_URL}${path}`;
 
+/** Meta of a page, published or parked (parked pages have no file in dist/: check-dist fails on a link to one). */
 export function pageMeta(id: PageId): PageMeta {
-  const page = pages.find((p) => p.id === id);
+  const page = pages.find((p) => p.id === id) ?? parkedPages.find((p) => p.id === id);
   if (!page) throw new Error(`Unknown page id: ${id}`);
   return page;
 }

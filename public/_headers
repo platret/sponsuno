@@ -29,16 +29,9 @@
 /sitemap.xml
   Cache-Control: public, max-age=3600
 
-# Clickable demo with fictional data: keep it out of search results (backup for its meta robots noindex).
-# Not blocked in robots.txt on purpose: crawlers must fetch it to see the noindex.
-/demo/*
-  X-Robots-Tag: noindex
-
-# Word versions of the guide templates (written by scripts/prerender.mjs). Same URL after a text change, so cache
-# briefly; noindex keeps the files out of search results (the guide pages are what should be found).
-/vorlagen/*
-  Cache-Control: public, max-age=3600
-  X-Robots-Tag: noindex
+# The parked demo (/demo/*) and guide templates (/vorlagen/*) have no rules here: public/_redirects sends their URLs
+# to the homepage, and redirects run before headers. When one comes back, restore its rule (git history, AGENTS.md →
+# "Parked (not built)"): /demo/* X-Robots-Tag noindex; /vorlagen/* one-hour cache plus noindex.
 
 # Waitlist confirmation page (Brevo redirects here after the double opt-in click): out of search results, backup for
 # its meta robots noindex

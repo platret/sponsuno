@@ -1,0 +1,25 @@
+# Redirects for Cloudflare Workers static assets (copied to dist/_redirects, not served as a file). A redirect wins over
+# an asset with the same path. Format: <source> <destination> <status>; the first matching line applies, and static
+# lines come before the ones with a splat (*). `npm run check:dist` checks every line (scripts/check-dist.mjs).
+
+# Parked pages (owner's direction 2026-11-16, AGENTS.md → "Parked (not built)"): the topic pages Für Firmen and
+# KI-Manager, the four guides (Ratgeber) with their Word templates, and the product preview. Their old URLs lead to the
+# homepage. Bringing a page back: drop its lines here first, or the redirect hides the page.
+/fuer-firmen / 301
+/fuer-firmen/ / 301
+/ki-manager / 301
+/ki-manager/ / 301
+/sponsoren-finden / 301
+/sponsoren-finden/ / 301
+/sponsoring-anfrage / 301
+/sponsoring-anfrage/ / 301
+/sponsoring-dossier / 301
+/sponsoring-dossier/ / 301
+/kultursponsoring / 301
+/kultursponsoring/ / 301
+/demo / 301
+/demo/ / 301
+/vorlagen / 301
+/vorlagen/ / 301
+/demo/* / 301
+/vorlagen/* / 301

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { demo, hero, match, story, type Role } from '../content';
+import { hero, match, story, type Role } from '../content';
 import { InputIcon } from './InputIcon';
 import '../styles/sections/hero.css';
 
@@ -64,7 +64,7 @@ function Row({ i }: { i: number }) {
 }
 
 /** Graphit hero, left-aligned on the grid: launch label, H1 with the brass accent word, lead, the two audience pills,
-    the demo link, then the start frame of the scroll story inside the first viewport. The story itself follows in
+    then the start frame of the scroll story inside the first viewport. The story itself follows in
     Story.tsx. */
 export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
   // The loop pauses while the picture is off screen (one observer, no per-frame script) and on request (the toggle)
@@ -92,12 +92,6 @@ export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
             <a className="btn btn-brass" href="#warteliste" onClick={() => onChooseRole(hero.ctaSeeker.role)}>{hero.ctaSeeker.label}</a>
             <a className="btn btn-ghost" href="#warteliste" onClick={() => onChooseRole(hero.ctaSponsor.role)}>{hero.ctaSponsor.label}</a>
           </div>
-          <p className="hero-demo">
-            <a className="link-arrow" href={demo.href}>
-              {demo.link}
-              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
-            </a>
-          </p>
         </div>
       </div>
 

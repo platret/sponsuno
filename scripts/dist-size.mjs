@@ -3,8 +3,9 @@
 // a table on every run and returns a problem for every budget that is exceeded:
 // - landing page JS: its module script, the modulepreloads and everything they import statically (not the lazy chunks)
 // - landing page CSS: its stylesheets plus its inline <style> blocks (each counted by its own gzip size)
-// - demo JS: its module script, the modulepreloads, their static imports, plus the largest first view (the view chunks
-//   the inline preload script in demo/index.html loads for a deep link, `<!--view-preload-->` in vite.config.ts)
+// - demo JS (only while the parked demo is built): its module script, the modulepreloads, their static imports, plus
+//   the largest first view (the view chunks the inline preload script in demo/index.html loads for a deep link,
+//   `<!--view-preload-->` in vite.config.ts)
 // - each static page's CSS (every page except / and /demo/): stylesheets plus inline <style> blocks
 // Budgets sit about 10% above the sizes measured on 2026-11-10 (AGENTS.md → Performance budget). Raise one only with a
 // reason in the commit message, and update the numbers in AGENTS.md in the same change.
@@ -134,7 +135,7 @@ export async function checkSizes(dist, pages) {
     const viewCss = (views?.[worst.view] ?? []).filter((f) => f.endsWith('.css'));
     const css = sum(await Promise.all([...stylesheets(demo.tags), ...viewCss].map(size)));
     row(`/demo/ CSS (same view)`, css, undefined, [...stylesheets(demo.tags), ...viewCss].map((f) => path.posix.basename(f)));
-  } else problems.push('dist/demo/index.html: missing, cannot measure the demo');
+  }
 
   // Static pages: one row per distinct set of stylesheets (most pages share one), the budget applies to each page
   const groups = new Map();

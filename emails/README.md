@@ -5,7 +5,7 @@ Zwei fertige E-Mails für die Warteliste, gestaltet wie die Website (Design-Syst
 | Datei | Wozu | Betreff | Vorschautext (Preheader) |
 |---|---|---|---|
 | `dist/doi-bestaetigung.html` (+ `.txt`) | Bestätigungs-E-Mail (Double Opt-in) direkt nach dem Eintrag | Bitte bestätigen Sie Ihre Anmeldung | Ein Klick auf den Button, dann stehen Sie auf der Warteliste von Sponsuno. |
-| `dist/willkommen.html` (+ `.txt`) | Willkommens-E-Mail nach dem Klick auf den Bestätigungslink | Danke, Sie stehen auf der Warteliste | Ihre Anmeldung ist bestätigt. Bis zum Start: Ratgeber und Produktvorschau. |
+| `dist/willkommen.html` (+ `.txt`) | Willkommens-E-Mail nach dem Klick auf den Bestätigungslink | Danke, Sie stehen auf der Warteliste | Ihre Anmeldung ist bestätigt. Wir schreiben Ihnen zum Start. |
 
 Absender beider E-Mails: **Sponsuno &lt;hello@sponsuno.ch&gt;**, Antwortadresse ebenfalls hello@sponsuno.ch. Erst nach Schritt 4 und 5 der Checkliste (Domain mit DKIM authentisiert, Absender bestätigt), sonst weisen Empfänger die E-Mails wegen DMARC `p=reject` ab.
 
@@ -64,7 +64,7 @@ Zuerst in Brevo **Send a test** (an eigene Adressen), danach einmal den ganzen A
 - [ ] **Outlook** (Windows-App, falls vorhanden, sonst Outlook im Browser): Button als dunkle Pille mit Text, Schrift Arial, Breite höchstens 600 px.
 - [ ] **Handy schmal** (z. B. iPhone SE): nichts abgeschnitten, Button über die ganze Breite.
 - [ ] Inbox-Vorschau zeigt den Vorschautext aus der Tabelle, nicht «Warteliste» oder Fragmente.
-- [ ] Alle Links: Bestätigungslink (eine Adresse von Brevo, führt danach zur Bestätigungsseite), Datenschutz, beide Ratgeber (Sponsoren finden, Kultursponsoring), Produktvorschau, Für Firmen, Abmelden (Abmeldeseite von Brevo erscheint, Kontakt ist danach abgemeldet).
+- [ ] Alle Links: Bestätigungslink (eine Adresse von Brevo, führt danach zur Bestätigungsseite), Datenschutz, die vier Link-Karten der Willkommens-E-Mail (So funktioniert es, Kosten, Fragen, Über uns), Abmelden (Abmeldeseite von Brevo erscheint, Kontakt ist danach abgemeldet).
 - [ ] In der empfangenen E-Mail «Original anzeigen»: `dkim=pass` mit `header.d=sponsuno.ch` und `dmarc=pass`.
 - [ ] Bilder blockiert (Outlook, manche Firmenkonten): Statt des Logos ist der Alternativtext «Sponsuno» sichtbar. (Farbe und Grösse gelten nicht überall; das klassische Outlook für Windows zeigt ihn in seiner eigenen Schrift.)
 - [ ] Outlook für Windows: Die Link-Karten der Willkommens-E-Mail haben innen Abstand zum Rahmen (Text und Pfeil kleben nicht am Rand).

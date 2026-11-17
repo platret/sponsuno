@@ -121,27 +121,12 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 /* Secondary on graphit */
 .btn-ghost { border-color: rgba(245, 243, 238, .4); color: var(--kalk); background: transparent; }
 .btn-ghost:hover { border-color: var(--kalk); background: rgba(245, 243, 238, .06); }
-/* Primary on the page surface: graphit with a kalk label (light theme), messing with a graphit label (dark theme) */
+/* Primary on the page surface: graphit with a kalk label */
 .btn-graphit { background: var(--btn-bg); color: var(--btn-fg); }
 .btn-graphit:hover { background: var(--btn-bg-hover); }
 /* Secondary on the page surface */
 .btn-outline { border-color: color-mix(in srgb, var(--heading) 25%, transparent); color: var(--heading); background: transparent; }
 .btn-outline:hover { border-color: var(--heading); }
-
-/* Theme switch (ThemeToggle.tsx) in every header: hidden until the head script (THEME_SCRIPT) has set data-theme,
-   because without JavaScript it could not work (the page then follows the system setting). The moon shows in the
-   light theme, the sun in the dark one; the label stays "Dunkles Design" and aria-pressed carries the state. */
-.theme-toggle {
-  display: none; place-items: center; flex: none;
-  width: 44px; height: 44px; padding: 0;
-  border: 0; border-radius: var(--radius-sm); background: transparent; color: inherit; cursor: pointer;
-  transition: background-color .2s ease;
-}
-html[data-theme] .theme-toggle { display: grid; }
-.theme-toggle:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
-.theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.theme-icon-sun, [data-theme="dark"] .theme-icon-moon { display: none; }
-[data-theme="dark"] .theme-icon-sun { display: block; }
 
 .link-arrow {
   display: inline-flex; align-items: center; gap: .4rem;
@@ -263,10 +248,6 @@ html[data-theme] .theme-toggle { display: grid; }
     .scroll-fx [data-scroll]:focus-within { animation-name: none; }
   }
 }
-
-/* Theme switch (THEME_SCRIPT in lib/theme.ts): for the one frame of a switch nothing transitions, so the header and
-   the buttons change together with the page surface (DESIGN.md -> Theme). */
-.theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

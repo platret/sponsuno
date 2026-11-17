@@ -1,20 +1,7 @@
-/* FAQ (/fragen/): title, intro and the guide links in the graphit page head band (FaqIntro), the questions below on
-   the kalk band as a stack of cards (radius 16, 1 px border, no shadow) built from native <details>. The toggle is a
-   round outline button shape with a plus that turns into an x. */
+/* FAQ (/fragen/): title and intro in the graphit page head band (FaqIntro), the questions below on the kalk band as a
+   stack of cards (radius 16, 1 px border, no shadow) built from native <details>. The toggle is a round outline button
+   shape with a plus that turns into an x. */
 .faq-intro { max-width: 40rem; text-wrap: pretty; }
-/* Links into the guides (Ratgeber) under the intro, in the band (links: kalk with a brass underline, legal.css) */
-.faq-guides { margin-top: 1rem; max-width: 40rem; font-size: var(--fs-small); line-height: 1.9; color: var(--text); }
-.lg-band .faq-guides { color: var(--steel); }
-.faq-guides a, .faq-more a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }
-.faq-guides a { white-space: nowrap; }
-.faq-guides-label {
-  margin-right: .5rem;
-  font-size: var(--fs-label); font-weight: 600;
-  letter-spacing: var(--label-tracking); text-transform: uppercase;
-  color: var(--accent-text);
-}
-.lg-band .faq-guides-label { color: var(--brass); }
-.faq-guides a:hover, .faq-more a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Rows ---------- */
 
@@ -65,7 +52,6 @@
 
 .faq-a { padding: 0 clamp(1.25rem, .75rem + 1.4vw, 2.5rem) clamp(1.5rem, 1rem + 1vw, 2.25rem); }
 .faq-a p { max-width: 42rem; text-wrap: pretty; font-size: var(--fs-body); line-height: 1.65; color: var(--text); }
-.faq-a .faq-more { margin-top: .75rem; }
 
 /* Gentle height animation where the browser supports it natively; others simply open instantly. */
 @supports (interpolate-size: allow-keywords) {

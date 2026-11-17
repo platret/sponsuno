@@ -18,7 +18,7 @@
   gap: 1.5rem;
 }
 
-/* Card: Papier on the Kalk band (graphit-700 on the dark band), 1 px rule, radius 16, no shadow.
+/* Card: Papier on the Kalk band, 1 px rule, radius 16, no shadow.
    It clips the photo's top corners, so the frame itself only rounds while it opens. */
 .aud-item {
   display: flex; flex-direction: column;
@@ -54,13 +54,9 @@
 .aud-text {
   flex: 1;
   display: flex; flex-direction: column; align-items: flex-start;
-  padding: var(--aud-pad) var(--aud-pad) calc(var(--aud-pad) - .75rem);
+  padding: var(--aud-pad);
 }
-.aud-desc { margin-top: .5rem; margin-bottom: 1rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
-/* Where this side goes next (a guide, or the page for companies): heading-colour label, accent arrow, 44 px tall,
-   pinned to the foot of the card */
-.aud-link { min-height: 44px; margin-top: auto; font-size: var(--fs-small); color: var(--heading); }
-.aud-link svg { color: var(--accent-text); }
+.aud-desc { margin-top: .5rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); }
 
 
 /* Quiet stagger for the reveal (only applies while motion is on) */

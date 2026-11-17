@@ -104,8 +104,12 @@ function Credits() {
           ))}
         </ul>
       )}
-      <h3>{c.aiLabel}</h3>
-      <ul className="lg-list">{c.aiImages.map((text) => <li key={text}>{text}</li>)}</ul>
+      {c.aiImages.length > 0 && (
+        <>
+          <h3>{c.aiLabel}</h3>
+          <ul className="lg-list">{c.aiImages.map((text) => <li key={text}>{text}</li>)}</ul>
+        </>
+      )}
       <p>{c.fonts}</p>
     </>
   );

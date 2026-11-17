@@ -4,23 +4,23 @@ Ihre Anmeldung ist bestätigt. Sponsuno bringt Sportlerinnen, Sportler, Sport- u
 
 So geht es weiter
 
-Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start. Bis dahin finden Sie auf sponsuno.ch schon einiges zum Lesen und Ausprobieren:
+Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start. Bis dahin erfahren Sie auf sponsuno.ch mehr über Sponsuno:
 
-Ratgeber: Sponsoren finden
-Wie Sie Firmen aus Ihrer Region auswählen, ansprechen und als Partner behalten.
-https://sponsuno.ch/sponsoren-finden/
+So funktioniert es: So funktioniert Sponsuno
+Ein Ablauf für beide Seiten: vom ersten Profil bis zur Bilanz nach der Saison.
+https://sponsuno.ch/#ablauf
 
-Ratgeber: Kultursponsoring
-Sponsoren für Chor, Musikverein oder Theater: welche Firmen in Frage kommen und wie Sie anfragen.
-https://sponsuno.ch/kultursponsoring/
+Kosten: Provision statt Abo
+Kein Abo, keine Grundgebühr: was feststeht und was wir vor dem Start bekannt geben.
+https://sponsuno.ch/kosten/
 
-Produktvorschau: Sponsuno ausprobieren
-Klicken Sie sich mit Beispieldaten durch Sponsuno, aus Sicht einer Sportlerin oder eines Sponsors.
-https://sponsuno.ch/demo/
+Fragen: Häufige Fragen
+Antworten auf häufige Fragen, von der Provision bis zum Start.
+https://sponsuno.ch/fragen/
 
-Für Firmen: Sponsoring für Firmen aus der Region
-Wie Firmen mit Sponsuno Sportlerinnen, Sportler und Vereine finden, die passen.
-https://sponsuno.ch/fuer-firmen/
+Über uns: Wer hinter Sponsuno steht
+Das Team hinter Sponsuno und der aktuelle Stand des Projekts.
+https://sponsuno.ch/ueber-uns/
 
 Fragen? Schreiben Sie uns an %%CONTACT_EMAIL%%.
 

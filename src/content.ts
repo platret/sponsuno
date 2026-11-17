@@ -2,17 +2,18 @@
 // formal "Sie", nothing presented as decided or working that the team has not decided or built).
 
 import { pageMeta } from './pages';
+import photoAlex from './assets/photos/team-alex-platret.jpg';
+import photoAurel from './assets/photos/team-aurel-eugster.jpg';
+import photoMaurice from './assets/photos/team-maurice-straessle.jpg';
 
 // Main navigation: one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
-// Page paths relative to the site root (resolved with the base path by pageHref() in lib/links.ts). "Ratgeber" opens
-// the first guide; on the other guides it is marked as the current section. "Fragen" sits in the footer.
-export const nav: { href: string; label: string }[] = [
-  { href: pageMeta('fuer-firmen').path, label: 'Für Firmen' },
-  { href: pageMeta('ki-manager').path, label: 'KI-Manager' },
+// '#ablauf' is the landing page section (siteHref() in lib/links.ts: a plain anchor on the landing page, /#ablauf on the
+// other pages); the rest are page paths relative to the site root. The current page is marked by navCurrent().
+export const nav: FooterLink[] = [
+  { href: '#ablauf', label: 'So funktioniert es' },
   { href: pageMeta('kosten').path, label: 'Kosten' },
-  { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber' },
+  { href: pageMeta('fragen').path, label: 'Fragen' },
   { href: pageMeta('ueber-uns').path, label: 'Über uns' },
-  { href: 'demo/', label: 'Vorschau' },
 ];
 
 export const cta = {
@@ -20,15 +21,16 @@ export const cta = {
   waitlistShort: 'Warteliste',
 };
 
-// Clickable product preview with example data (second Vite entry, /demo/). The preview itself says "Beispieldaten" in
-// its banner, so links to it carry no extra note (owner's direction 2026-11-10: no meta-text next to every link).
+// Parked (not built, AGENTS.md → "Parked (not built)"): the clickable product preview (demo/, src/demo/) and the page
+// for companies. These links are used only by parked pages (guides, /fuer-firmen/, /ki-manager/); never link them from
+// a published page (check-dist fails on a link to a file that is not in dist/).
+// The preview itself says "Beispieldaten" in its banner, so links to it carry no extra note.
 export const demo = {
   href: 'demo/',
   link: 'Produktvorschau ansehen',
 };
 
-// The sponsor's side of the demo and the page for companies, linked from several places (audience tile, Firmen track
-// in #ablauf, /fuer-firmen/, the waitlist's next step). One definition, so the labels stay the same everywhere.
+// The sponsor's side of the demo and the page for companies (parked, see above).
 export const cockpitLink: FooterLink = { href: 'demo/#/sponsor', label: 'Sponsor-Cockpit ansehen' };
 export const firmsLink: FooterLink = { href: pageMeta('fuer-firmen').path, label: 'Sponsuno für Firmen' };
 
@@ -76,7 +78,6 @@ export const proof = {
 // Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits): the people
 // shown have nothing to do with Sponsuno. They illustrate the target groups only (no names, never shown as users);
 // the note saying so sits in the landing page footer (footer.photoNote) and in the Impressum.
-// Each tile links to where its side goes next ("two doors"): seekers to a guide, companies to /fuer-firmen/.
 export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
 
 export const audience = {
@@ -88,30 +89,26 @@ export const audience = {
       label: 'Sportlerinnen und Sportler',
       text: 'Sie trainieren neben Ausbildung oder Beruf und suchen Unterstützung für Material, Startgelder oder Reisen.',
       alt: 'Eine Person läuft auf einem schmalen Bergweg durch grüne Hänge mit blühenden Alpenrosen.',
-      link: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber: Sponsoren finden' },
     },
     {
       image: 'sportverein',
       label: 'Sportvereine',
       text: 'Ehrenamtliche Vorstände, die Partner für Trikots, Trainingslager oder Turniere suchen.',
       alt: 'Ein Ruderboot mit drei Personen von oben auf einem Fluss in der Abendsonne.',
-      link: { href: pageMeta('sponsoren-finden').path, label: 'Ratgeber: Sponsoren finden' },
     },
     {
       image: 'kulturverein',
       label: 'Kulturvereine',
       text: 'Musikgesellschaften, Chöre und Theatervereine, die Instrumente, Kostüme oder Aufführungen finanzieren müssen.',
       alt: 'Musikanten in Tracht und Filzhut spielen Posaune, vorne ein Notenhalter.',
-      link: { href: pageMeta('kultursponsoring').path, label: 'Ratgeber: Kultursponsoring' },
     },
     {
       image: 'firma',
       label: 'Firmen aus der Region',
       text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
       alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
-      link: firmsLink,
     },
-  ] satisfies { image: AudienceImage; label: string; text: string; alt: string; link: FooterLink }[],
+  ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
 };
 
 export const problem = {
@@ -135,7 +132,8 @@ export const problem = {
 
 // Scroll story right under the hero (Story.tsx). It replaces the old Problem section: problem.title is the
 // story's H2, problem.intro and the three points are its first steps, word for word. The solution steps reuse
-// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf and /ki-manager/).
+// single sentences from howItWorks and aiManager, never the full step lists (those stay in #ablauf and on the parked
+// /ki-manager/).
 // Everything on the stage is a fictional example: generic names, real regions, no companies, no amounts.
 export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
 
@@ -165,8 +163,6 @@ export const story = {
     state: 'danach' as StoryState,
     title: 'Und danach: der KI-Manager',
     text: 'Der KI-Manager bereitet Anfragen vor und erinnert an vereinbarte Gegenleistungen. Sie prüfen jeden Entwurf selbst.',
-    link: 'Mehr zum KI-Manager',
-    href: pageMeta('ki-manager').path,
   },
   // Text alternative for the decorative graphic (given once, in the hero)
   artAlt: 'Grafik: Anfragen, Unterlagen, offene Fragen und Rückrufe laufen über feine Linien in einem Punkt zusammen. Daraus entsteht die Liste «Passende Partner»: Paare aus einer Sportlerin, einem Verein oder einem Kulturverein und einer Firma aus derselben Region, jeweils mit der Übereinstimmung in den vier Kriterien.',
@@ -221,7 +217,7 @@ export type Track = 'seeker' | 'sponsor';
 // (resolved with the base path by siteHref() in lib/links.ts, so they work from every page).
 export type FooterLink = { href: string; label: string };
 
-/** The four guide pages (/sponsoren-finden/ …), linked from the FAQ intro and the footer column "Ratgeber". */
+/** The four guide pages (/sponsoren-finden/ …; parked, linked only from the parked pages). */
 // Paths come from src/pages.ts, so a changed path updates canonicals, the sitemap and every internal link together.
 export const guideLinks: FooterLink[] = [
   { href: pageMeta('sponsoren-finden').path, label: 'Sponsoren finden' },
@@ -255,8 +251,6 @@ export const howItWorks = {
       ],
     },
   },
-  // Quiet links under the Firmen track, above its button: the demo cockpit and the page for companies
-  sponsorLinks: [cockpitLink, firmsLink],
 };
 
 export const aiManager = {
@@ -313,8 +307,8 @@ export const pricing = {
   openLabel: '',
 };
 
-/** One FAQ row. `link` (page path or '#id') is shown after the answer. FAQ answers also feed the FAQPage JSON-LD. */
-export type FaqItem = { q: string; a: string; link?: FooterLink };
+/** One FAQ row. FAQ answers also feed the FAQPage JSON-LD. */
+export type FaqItem = { q: string; a: string };
 
 export const faq = {
   title: 'Häufige Fragen',
@@ -325,9 +319,6 @@ export const faq = {
   // waitlist.previewIntro): the address contact.email is the link. Without a contact address no intro is shown.
   previewIntroBefore: 'Ihre Frage fehlt? Schreiben Sie uns an ',
   previewIntroAfter: '.',
-  // Links from the landing page into the guides (shown under the intro)
-  guidesLabel: 'Ratgeber:',
-  guides: guideLinks,
   items: [
     {
       q: 'Bleibt nach der Provision genug übrig?',
@@ -351,8 +342,7 @@ export const faq = {
     },
     {
       q: 'Wie finde ich heute schon Sponsoren?',
-      a: 'Bis Sponsuno startet: über Ihr Umfeld, Firmen aus der Region und eine gut vorbereitete Anfrage. In unseren Gesprächen mit Sportlerinnen, Sportlern und einem Trainer haben mehrere Befragte ihre Sponsoren vor allem über den Bekanntenkreis gefunden. Wie Sie vorgehen können, beschreiben wir in einem Ratgeber.',
-      link: { href: pageMeta('sponsoren-finden').path, label: 'Zum Ratgeber «Sponsoren finden»' },
+      a: 'Bis Sponsuno startet: über Ihr Umfeld, Firmen aus der Region und eine gut vorbereitete Anfrage. In unseren Gesprächen mit Sportlerinnen, Sportlern und einem Trainer haben mehrere Befragte ihre Sponsoren vor allem über den Bekanntenkreis gefunden.',
     },
     {
       q: 'Wann geht es los?',
@@ -374,9 +364,9 @@ export type TeamMember = {
 };
 
 const teamMembers: TeamMember[] = [
-  { name: 'Aurel Eugster', focus: 'Medien und Content' },
-  { name: 'Alex Platret', focus: 'Technik' },
-  { name: 'Maurice Strässle', focus: 'Branding, Marketing, Sales und Partnerschaften' },
+  { name: 'Aurel Eugster', focus: 'Medien und Content', photo: { src: photoAurel, alt: 'Porträt von Aurel Eugster' } },
+  { name: 'Alex Platret', focus: 'Technik', photo: { src: photoAlex, alt: 'Porträt von Alex Platret' } },
+  { name: 'Maurice Strässle', focus: 'Branding, Marketing, Sales und Partnerschaften', photo: { src: photoMaurice, alt: 'Porträt von Maurice Strässle' } },
   { name: 'Dozie Ilunga', focus: 'Organisation und Prozesse' },
 ];
 
@@ -408,7 +398,7 @@ export const projectStatus = {
   plannedLabel: 'Geplant',
   steps: [
     { when: 'Herbst 2026', text: 'Gespräche mit vier Sportlerinnen und Sportlern und einem Tennistrainer.', done: true },
-    { when: 'November 2026', text: 'Website und klickbare Produktvorschau mit Beispieldaten sind online.', done: true },
+    { when: 'November 2026', text: 'Die Website ist online.', done: true },
     { when: 'Als Nächstes', text: 'Gespräche mit Firmen und Kulturvereinen in der Region Winterthur.', done: false },
     { when: 'Später', text: 'Anmeldungen zur Warteliste direkt speichern, dann der Start der Plattform. Den Termin nennen wir, sobald er feststeht.', done: false },
   ] satisfies StatusStep[],
@@ -461,8 +451,6 @@ export const waitlist = {
     '',
     'Freundliche Grüsse',
   ].join('\r\n'),
-  // After a (preview or real) sign-up: one fitting next step per role (waitlistNext, after the guides)
-  nextLabel: 'Bis zum Start:',
 };
 
 export const footer = {
@@ -472,24 +460,17 @@ export const footer = {
       title: 'Plattform',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
-        { href: pageMeta('fuer-firmen').path, label: 'Für Firmen' },
-        { href: pageMeta('ki-manager').path, label: 'KI-Manager' },
         { href: pageMeta('kosten').path, label: 'Kosten' },
-        { href: 'demo/', label: 'Produktvorschau' },
+        { href: pageMeta('fragen').path, label: 'Fragen' },
       ],
     },
     {
       title: 'Mehr',
       links: [
-        { href: pageMeta('fragen').path, label: 'Fragen' },
         { href: pageMeta('ueber-uns').path, label: 'Über uns' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
-    },
-    {
-      title: 'Ratgeber',
-      links: guideLinks,
     },
     {
       title: 'Rechtliches',
@@ -518,15 +499,10 @@ export const menu = {
   label: 'Menü',
 };
 
-/** Light/dark switch in every header (ThemeToggle.tsx): one fixed label, aria-pressed says whether it is on */
-export const theme = {
-  toggle: 'Dunkles Design',
-};
-
-// ---------- Topic pages reached from the header: /fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/ ----------
+// ---------- Topic pages reached from the header: /kosten/, /fragen/, /ueber-uns/ (parked: /fuer-firmen/, /ki-manager/) ----------
 // Rendered by src/components/InfoPage.tsx, prerendered, shipped without JavaScript. Title and description in src/pages.ts.
-// KI-Manager, Kosten (with "Nicht nur Geld"), Fragen and Über uns show the former landing page sections
-// (aiManager, pricing, support, faq, team, projectStatus); Für Firmen is built from the sponsor copy below.
+// Kosten (with "Nicht nur Geld"), Fragen and Über uns (and the parked KI-Manager) show the former landing page sections
+// (pricing, support, faq, team, projectStatus, aiManager); the parked Für Firmen is built from the sponsor copy below.
 export type InfoPageId = 'fuer-firmen' | 'ki-manager' | 'kosten' | 'fragen' | 'ueber-uns';
 
 /** Closing block of every topic page: back to the waitlist on the landing page */
@@ -538,8 +514,6 @@ export const infoPage = {
   // waitlist.previewIntro and the FAQ intro); without a contact address the line is left out.
   previewEndText: 'Sponsuno startet bald in der Deutschschweiz. Schreiben Sie uns, dann melden wir uns zum Start.',
   endButton: cta.waitlist,
-  demoLabel: demo.link,
-  demoHref: demo.href,
   /** Extra line in the closing block, per page */
   more: {
     kosten: [
@@ -561,7 +535,7 @@ export const infoPage = {
 //   Nothing else personal about them (no ages, schools, home addresses, private e-mails, social handles).
 // - Update `legal.updated` and the Datenschutz text before the waitlist endpoint is switched on.
 
-/** A link inside legal text. `href` is either absolute (https://…) or a page path relative to the site root ('demo/'). */
+/** A link inside legal text. `href` is either absolute (https://…) or a page path relative to the site root ('kosten/'). */
 export type LegalLink = { label: string; href: string };
 /** Plain text, or text with inline links. */
 export type LegalText = string | (string | LegalLink)[];
@@ -672,7 +646,10 @@ export const legal = {
     photosNone: 'Derzeit verwendet diese Website keine Fotos von Dritten.',
     photoBy: 'Foto',
     aiLabel: 'KI-generierte Bilder',
-    aiImages: ['Porträt der Mountainbikerin in der Produktvorschau (Profil und Sponsor-Cockpit): KI-generiert, Symbolbild ohne reale Person.'],
+    // AI-generated images on the published site; none since the product preview is parked. When it comes back, list its
+    // persona portrait again: 'Porträt der Mountainbikerin in der Produktvorschau (Profil und Sponsor-Cockpit):
+    // KI-generiert, Symbolbild ohne reale Person.' (the block is left out while the list is empty)
+    aiImages: [] as string[],
     fonts: 'Schrift: Schibsted Grotesk, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
   },
 
@@ -709,7 +686,6 @@ export const legal = {
           // Legally relevant (no misleading claims): the site describes the product before its launch. Keep this
           // section factual even though the rest of the site uses product voice (AGENTS.md, copy rules).
           { type: 'p', text: 'Sponsuno ist noch nicht gestartet. Vermittlung, KI-Sponsoringmanager und Zahlungen sind bis zum Start nicht verfügbar. Angaben zu Funktionen, Kosten und Abläufen geben den aktuellen Planungsstand wieder und können sich ändern.' },
-          { type: 'p', text: ['Die ', { label: 'Produktvorschau', href: 'demo/' }, ' ist ein klickbarer Prototyp mit Beispieldaten. Personen, Firmen, Vereine und Beträge darin sind erfunden. Ähnlichkeiten mit realen Personen oder Firmen sind nicht beabsichtigt.'] },
           { type: 'p', text: 'Die Fotos von Personen auf der Startseite sind Symbolbilder. Die abgebildeten Personen haben keinen Bezug zu Sponsuno.' },
         ],
       },
@@ -750,7 +726,6 @@ export const legal = {
               'Diese Website setzt keine Cookies und verwendet keine Analyse- oder Trackingdienste.',
               'Es sind keine Inhalte Dritter eingebettet. Schriften und Bilder kommen vom selben Server wie die Website.',
               'Beim Aufruf bearbeitet unser Hoster Cloudflare technische Zugriffsdaten, darunter Ihre IP-Adresse.',
-              'Ihre Wahl zwischen hellem und dunklem Design und Ihre Änderungen in der Produktvorschau speichert nur Ihr Browser. Nichts davon verlässt Ihr Gerät.',
               'Die Warteliste ist noch nicht freigeschaltet. Das Formular übermittelt nichts.',
               'Wenn Sie uns eine E-Mail schreiben, liegt sie bei unserem E-Mail-Anbieter Infomaniak in der Schweiz.',
             ],
@@ -801,22 +776,6 @@ export const legal = {
         title: 'Keine Cookies, kein Tracking, keine Einbettungen',
         blocks: [
           { type: 'p', text: 'Diese Website setzt keine Cookies und verwendet weder Analyse- noch Tracking- oder Werbedienste. Funktionen von Cloudflare, die Cookies setzen (etwa Bot Fight Mode oder Challenges), haben wir nicht aktiviert. Es sind keine Inhalte Dritter eingebettet, etwa Videos, Karten oder Social-Media-Schaltflächen. Schriften und Bilder werden vom selben Server ausgeliefert wie die Website; beim Laden werden keine Daten an Google oder andere Anbieter übermittelt.' },
-        ],
-      },
-      {
-        id: 'darstellung',
-        title: 'Helles und dunkles Design',
-        blocks: [
-          { type: 'p', text: 'Mit dem Schalter in der Kopfzeile wählen Sie zwischen hellem und dunklem Design. Treffen Sie eine Wahl, speichert Ihr Browser sie im lokalen Speicher (localStorage, Schlüssel «sponsuno-theme», Wert «light» oder «dark»), damit sie auf allen Seiten und beim nächsten Besuch gilt. Dieser Eintrag bleibt auf Ihrem Gerät, wird weder an uns noch an Dritte übermittelt und dient nicht dazu, Sie wiederzuerkennen oder Ihr Verhalten zu verfolgen. Ohne Ihre Wahl richtet sich die Darstellung nach der Einstellung Ihres Geräts, und es wird nichts gespeichert.' },
-          { type: 'p', text: 'Löschen können Sie den Eintrag jederzeit, indem Sie in Ihrem Browser die Websitedaten dieser Seite löschen. Die Website folgt danach wieder der Einstellung Ihres Geräts.' },
-        ],
-      },
-      {
-        id: 'demo',
-        title: 'Produktvorschau',
-        blocks: [
-          { type: 'p', text: ['Die ', { label: 'Produktvorschau', href: 'demo/' }, ' ist ein Prototyp mit Beispieldaten. Damit Ihre Änderungen (zum Beispiel ein bearbeitetes Profil oder ein Entwurf) beim nächsten Besuch noch da sind, speichert die Vorschau sie im lokalen Speicher Ihres Browsers (localStorage, Schlüssel «sponsuno-demo-v2»). Diese Daten bleiben auf Ihrem Gerät und werden weder an uns noch an Dritte übermittelt.'] },
-          { type: 'p', text: 'Löschen können Sie die Daten jederzeit, indem Sie in Ihrem Browser die Websitedaten dieser Seite löschen. Die Vorschau zeigt danach wieder den Ausgangszustand.' },
         ],
       },
       {
@@ -879,7 +838,7 @@ export const legal = {
 
 export type LegalPageId = 'impressum' | 'datenschutz';
 
-// ---------- Guide pages (Ratgeber): /sponsoren-finden/, /sponsoring-anfrage/, /sponsoring-dossier/, /kultursponsoring/ ----------
+// ---------- Guide pages (Ratgeber, parked, not built): /sponsoren-finden/, /sponsoring-anfrage/, /sponsoring-dossier/, /kultursponsoring/ ----------
 // Rendered by src/components/GuidePage.tsx, prerendered at build time, shipped without JavaScript.
 // Title and meta description of each page live in src/pages.ts. Rules on top of AGENTS.md (copy rules 1–9):
 // - General, practical advice written by the team. No numbers, amounts, success rates, CHF figures, named
@@ -895,8 +854,8 @@ export type LegalPageId = 'impressum' | 'datenschutz';
 export type GuideId = 'sponsoren-finden' | 'sponsoring-anfrage' | 'sponsoring-dossier' | 'kultursponsoring';
 
 /**
- * H1 of each guide (guides[id].title). On their own, so the waitlist's next step (waitlistNext) can name a guide
- * without pulling all guide text into the landing page bundle.
+ * H1 of each guide (guides[id].title). On their own, so a link can name a guide without pulling all guide text into
+ * the landing page bundle.
  */
 export const guideTitles: Record<GuideId, string> = {
   'sponsoren-finden': 'Sponsoren finden in der Region',
@@ -1449,17 +1408,7 @@ export const guides: Record<GuideId, GuideContent> = {
   },
 };
 
-// Next step shown after a waitlist sign-up (Waitlist.tsx), one per role. Guide labels follow the guide titles
-// (guideTitles, never guides[id]: a dynamic lookup would ship every guide's text in the landing page bundle).
-const guideStep = (id: GuideId): FooterLink => ({ href: pageMeta(id).path, label: `Ratgeber «${guideTitles[id]}»` });
-export const waitlistNext: Record<Role, FooterLink> = {
-  athlete: guideStep('sponsoring-dossier'),
-  sportverein: guideStep('sponsoren-finden'),
-  kulturverein: guideStep('kultursponsoring'),
-  sponsor: cockpitLink,
-};
-
-// ---------- /fuer-firmen/: the page for companies (InfoPage.tsx → FirmsPage, reading column of the guides) ----------
+// ---------- /fuer-firmen/ (parked, not built): the page for companies (InfoPage.tsx → FirmsPage, reading column of the guides) ----------
 // Built from copy that already exists on the site: the audience tile "Firmen aus der Region", howItWorks.tracks.sponsor,
 // support, pricing, the offer lists of the guides "Sponsoren finden" and "Kultursponsoring" and the next step in
 // projectStatus (talks with companies, region Winterthur). Product voice with one launch signal (the note); open points
@@ -1551,6 +1500,12 @@ export const forFirms = {
   },
 };
 
+// One line per page for the link boxes of the 404 page and /warteliste/bestaetigt/ (and the welcome e-mail), taken from
+// the pages' own intros (pricing.intro, the FAQ, team and projectStatus)
+const kostenText = 'Kein Abo, keine Grundgebühr: was feststeht und was wir vor dem Start bekannt geben.';
+const fragenText = 'Antworten auf häufige Fragen, von der Provision bis zum Start.';
+const ueberUnsText = 'Das Team hinter Sponsuno und der aktuelle Stand des Projekts.';
+
 // ---------- 404 page (dist/404.html, NoticePage.tsx): served by Cloudflare for every unknown URL ----------
 // Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
 // page waitlist); they resolve to absolute URLs, because the page is shown under any address.
@@ -1562,13 +1517,9 @@ export const notFound = {
   linksTitle: 'Weiter zu',
   links: [
     { href: '', label: 'Startseite', text: 'Worum es bei Sponsuno geht und wie es funktioniert.' },
-    {
-      href: pageMeta('sponsoren-finden').path,
-      label: 'Ratgeber',
-      text: 'Praktische Tipps für Sportlerinnen, Sportler, Sport- und Kulturvereine: Sponsoren finden, anfragen und behalten.',
-    },
-    { href: firmsLink.href, label: 'Für Firmen', text: 'Wie Firmen aus der Region mit Sponsuno unterstützen.' },
-    { href: demo.href, label: 'Produktvorschau', text: 'Sponsuno mit Beispieldaten ausprobieren.' },
+    { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
+    { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
+    { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },
     { href: '#warteliste', label: 'Warteliste', text: 'Sponsuno startet bald. Melden Sie hier Ihr Interesse an.' },
   ] satisfies (FooterLink & { text: string })[],
   /** Only shown while a contact address exists */
@@ -1591,18 +1542,10 @@ export const waitlistConfirmed = {
   intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start.',
   linksTitle: 'Bis dahin',
   links: [
-    {
-      href: pageMeta('sponsoren-finden').path,
-      label: 'Ratgeber: Sponsoren finden',
-      text: 'Wie Sie Firmen aus Ihrer Region auswählen, ansprechen und als Partner behalten.',
-    },
-    {
-      href: pageMeta('kultursponsoring').path,
-      label: 'Ratgeber: Kultursponsoring',
-      text: 'Sponsoren für Chor, Musikverein oder Theater: welche Firmen in Frage kommen und wie Sie anfragen.',
-    },
-    { href: demo.href, label: 'Produktvorschau', text: 'Klicken Sie sich mit Beispieldaten durch Sponsuno, aus Sicht einer Sportlerin oder eines Sponsors.' },
-    { href: firmsLink.href, label: 'Für Firmen', text: 'Wie Firmen mit Sponsuno Sportlerinnen, Sportler und Vereine finden, die passen.' },
+    { href: '#ablauf', label: 'So funktioniert es', text: howItWorks.intro },
+    { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
+    { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
+    { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },
   ] satisfies (FooterLink & { text: string })[],
   /** Only shown while a contact address exists */
   contact: confirmedMail

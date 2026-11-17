@@ -2,14 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import wordmarkLight from '../assets/wordmark-light.svg';
 import wordmarkDark from '../assets/wordmark-dark.svg';
 import { cta, menu, nav } from '../content';
-import { pageHref } from '../lib/links';
+import { siteHref } from '../lib/links';
 import { MobileMenu } from './MobileMenu';
-import { ThemeToggle } from './ThemeToggle';
 import '../styles/sections/header.css';
 
 /** Landing page header. Plain full-width bar: transparent at the top, solid graphit while the hero and the story run
-    under it, solid on the page surface once it reaches it (kalk, or graphit in the dark theme). The theme switch has no
-    React state: the inline head script runs it (ThemeToggle.tsx). The nav links to the topic pages (content.ts → nav, shared
+    under it, solid on the kalk page surface once it reaches it. The nav links to the topic pages (content.ts → nav, shared
     with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -78,18 +76,17 @@ export function Header() {
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
             <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} />
-            {/* Hidden until the bar turns kalk (light theme only): low priority, so React does not preload it with the first screen */}
+            {/* Hidden until the bar turns kalk: low priority, so React does not preload it with the first screen */}
             <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>
               {nav.map((item) => (
-                <li key={item.href}><a href={pageHref(item.href)}>{item.label}</a></li>
+                <li key={item.href}><a href={siteHref(item.href, true)}>{item.label}</a></li>
               ))}
             </ul>
           </nav>
           <div className="header-actions">
-            <ThemeToggle />
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>
               <span className="header-cta-short">{cta.waitlistShort}</span>

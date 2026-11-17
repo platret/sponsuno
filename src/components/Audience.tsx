@@ -1,5 +1,4 @@
 import { audience, type AudienceImage } from '../content';
-import { pageHref } from '../lib/links';
 import athlete from '../assets/photos/audience-athlete.jpg';
 import athlete480 from '../assets/photos/audience-athlete-480w.avif';
 import athlete640 from '../assets/photos/audience-athlete-640w.avif';
@@ -30,8 +29,7 @@ const SIZES = '(min-width: 1024px) 264px, (min-width: 601px) 46vw, 92vw';
 
 /**
  * Kalk band under the proof line: who Sponsuno is meant for. Four photo cards (stock photos, Symbolbilder, named as such
- * in the landing page footer and the Impressum, credited there), each with a short label, one sentence and a link to where
- * that side goes next ("two doors": seekers to a guide, companies to /fuer-firmen/).
+ * in the landing page footer and the Impressum, credited there), each with a short label and one sentence.
  * Scroll motion (DESIGN.md -> Motion): head and cards rise with stagger, each photo opens inside its frame (the frame
  * clips, the <picture> scales).
  */
@@ -64,10 +62,6 @@ export function Audience() {
               <div className="aud-text">
                 <h3 className="aud-label">{item.label}</h3>
                 <p className="aud-desc">{item.text}</p>
-                <a className="link-arrow aud-link" href={pageHref(item.link.href)}>
-                  {item.link.label}
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
-                </a>
               </div>
             </li>
           ))}

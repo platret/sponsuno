@@ -1,6 +1,6 @@
-/* Topic pages reached from the header (InfoPage.tsx: /ki-manager/, /kosten/, /fragen/, /ueber-uns/). They show the
+/* Topic pages reached from the header (InfoPage.tsx: /kosten/, /fragen/, /ueber-uns/, and the parked /ki-manager/). They show the
    former landing page sections with their own stylesheets; this file only adapts them to a page of their own and adds
-   the closing block. No JavaScript module and never html.motion. Only /ki-manager/ gets html.scroll-fx (an inline
+   the closing block. No JavaScript module and never html.motion. Only /ki-manager/ (parked) gets html.scroll-fx (an inline
    script from headFor, `scrollFx` in pages.ts) for the pinned bento in ai.css; the others show their final layout.
    The footer stays static on every topic page, /ki-manager/ included (rule below), so they all end the same way.
    Classes prefixed pg-. Loaded before the section stylesheets (src/static/sections.ts), so section rules win a tie. */
@@ -35,9 +35,3 @@
 }
 .pg-end-more a:hover { text-decoration-thickness: 2px; }
 .pg-end-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 1.75rem; }
-.pg-end-demo {
-  display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
-  font-weight: 600; color: var(--heading); text-decoration: none;
-}
-.pg-end-demo-label { text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px; }
-.pg-end-demo:hover .pg-end-demo-label { text-decoration-thickness: 2px; }

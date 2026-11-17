@@ -34,12 +34,11 @@
   text-wrap: balance;
 }
 
-/* Standalone: no top rule inside; in the dark theme a hairline at the full width sets the graphit footer off the graphit page */
-.ft-standalone { border-top: 1px solid var(--edge); }
+/* Standalone: no top rule inside */
 .ft-standalone .ft-top { border-top: 0; }
 
 .ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2rem, 1rem + 2.5vw, 3.5rem); }
-/* Column heads use the shared .label; on graphit its accent is brass (the footer is graphit in both themes) */
+/* Column heads use the shared .label; on graphit its accent is brass (the footer is graphit by design) */
 .ft .ft-head { margin-bottom: .5rem; color: var(--brass); }
 .ft-link {
   display: inline-flex; align-items: center; min-height: 44px;

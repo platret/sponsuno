@@ -1,5 +1,5 @@
 /* Guide pages (Ratgeber): the legal-page layout (legal.css) plus the blocks only guides use. Classes prefixed gd-.
-   No motion. On the page surface of the theme, so brass text is --accent-text (Messing dunkel / Messing by theme,
+   No motion. On the page surface, so brass text is --accent-text (Messing dunkel,
    DESIGN.md → Colour); boxes are cards: radius 16, 1px border, no shadow. */
 
 /* Launch note (/fuer-firmen/, in the page head band): the same label with a dot as the landing page hero badge */

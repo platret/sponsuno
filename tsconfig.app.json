@@ -19,5 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Finder/iCloud duplicate copies ("x 2.tsx", git-ignored) are not part of the app
+  "exclude": ["src/**/* 2.*"]
 }

@@ -11,7 +11,6 @@ import { absoluteUrl, htmlFile, pageMeta, pages, site, SITE_URL, type PageId } f
 
 export { htmlFile, pages, SITE_URL };
 export { templateFiles } from './lib/templates';
-export { THEME_SCRIPT } from './lib/theme';
 export type { PageId };
 
 export function render(id: PageId = 'home'): string {
@@ -31,7 +30,7 @@ export const titleFor = (id: PageId): string => escapeAttr(pageMeta(id).title);
 /**
  * Head tags of a page, injected at the <!--seo--> marker: description, canonical, Open Graph, Twitter card,
  * on the landing page the robots preview hint, the JSON-LD graph (WebSite, Organization) and the redirect of old
- * section links (movedScript), on /fragen/ the FAQPage JSON-LD, on the topic pages with scrollFx (/ki-manager/) the scroll motion gate (SCROLL_FX_SCRIPT). Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
+ * section links (movedScript), on /fragen/ the FAQPage JSON-LD, on the topic pages with scrollFx (none published; the parked /ki-manager/) the scroll motion gate (SCROLL_FX_SCRIPT). Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
  * unknown URL, so a canonical or og:url would point to the wrong place.
  */
 export function headFor(id: PageId): string {
@@ -66,12 +65,12 @@ export function headFor(id: PageId): string {
 }
 
 /**
- * Scroll motion on a topic page with `scrollFx` in pages.ts (today /ki-manager/: the pinned bento). These pages ship no
+ * Scroll motion on a topic page with `scrollFx` in pages.ts (only the parked /ki-manager/: the pinned bento). These pages ship no
  * JavaScript module, so this inline script in the head sets only html.scroll-fx before the first paint, under the
  * same conditions as index.html (motion allowed, scroll timelines supported). Never html.motion: its data-reveal start states wait for the IntersectionObserver of the
  * landing page app, which these pages do not load. Everything that moves is pure CSS (data-scroll primitives in
  * site.css, the section rules under .scroll-fx); without the class every section shows its final layout.
- * /kosten/, /fragen/, /ueber-uns/ (and /fuer-firmen/) stay without it: their sections start right under the header, so rows, cards and
+ * /kosten/, /fragen/, /ueber-uns/ (and the parked /fuer-firmen/) stay without it: their sections start right under the header, so rows, cards and
  * markers in the lower part of the first screen would load half-risen at many viewport sizes (DESIGN.md -> Motion).
  */
 const SCROLL_FX_SCRIPT =

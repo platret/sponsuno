@@ -51,8 +51,6 @@
   gap: 1rem 1.75rem; margin-top: clamp(1.5rem, 1.1rem + 1vw, 2rem);
 }
 .hero-buttons { display: flex; flex-wrap: wrap; gap: .75rem; }
-.hero-demo { display: flex; line-height: 1.3; }
-.hero-demo .link-arrow { min-height: 44px; color: var(--brass-light); }
 
 /* Wide screens: the headline takes the left column, lead and actions the right one, starting at the H1's top */
 @media (min-width: 1200px) {

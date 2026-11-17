@@ -44,7 +44,7 @@
 .motion .team-member[data-reveal]:nth-child(3) { transition-delay: .12s; }
 .motion .team-member[data-reveal]:nth-child(4) { transition-delay: .18s; }
 
-/* Stand des Projekts: one graphit card under the founders (graphit by design in both themes). Head in the first
+/* Stand des Projekts: one graphit card under the founders (graphit by design). Head in the first
    column, the steps beside it: a hairline runs through the markers (filled = done, ring = planned, dashed line
    after planned steps). The state is also written out; the markers are decorative. */
 .team-status {
