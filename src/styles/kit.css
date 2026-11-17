@@ -1,0 +1,270 @@
+/* Sponsuno kit («Turnhalle», design system v2): stickers (.stk, .tstk), line icons (.icn), court lines (.cl) and three
+   scroll primitives (data-scroll="draw | fill-words | slide-x"). Imported by the components in components/kit/.
+   Every var() carries the hex of the brief as a fallback, so the kit also renders without tokens.css.
+   Motion follows the gate of site.css: html.motion (no reduced motion), html.scroll-fx (scroll timelines); the static
+   styles are always the final state. */
+
+/* ---------- Sticker ---------- */
+
+.stk {
+  display: inline-block;
+  flex: none;
+  inline-size: var(--stk-size, 96px);
+  aspect-ratio: 1;
+  rotate: var(--stk-rot, 0deg);
+  line-height: 0;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.stk-in { display: block; inline-size: 100%; block-size: 100%; }
+.stk svg { display: block; inline-size: 100%; block-size: 100%; max-width: none; overflow: visible; }
+
+/* Die-cut border: the silhouette once as a hairline (1 px on screen at any size) and once in white on top of it,
+   6.25 units (5 px at 96 px) wider than the artwork all round. --w: width of the artwork's own ink pass. */
+.stk-edge, .stk-cut { stroke-linejoin: round; stroke-linecap: round; transition: opacity .25s ease; }
+.stk-edge { fill: none; stroke: #1A1C20; opacity: .12; }
+.stk-edge path { stroke-width: calc(12.5px + var(--w, 0px) + 240px / var(--stk-n, 96)); }
+.stk-cut { fill: #FFFFFF; stroke: #FFFFFF; }
+.stk-cut path { stroke-width: calc(12.5px + var(--w, 0px)); }
+.stk-cut path[data-open] { fill: none; }
+
+/* Artwork: one ink weight (3.5 units), round joins, flat fills from the palette */
+.stk-art { fill: none; stroke: none; stroke-linejoin: round; stroke-linecap: round; transition: opacity .25s ease; }
+.stk-o { fill: var(--tinte, #1A1C20); stroke: var(--tinte, #1A1C20); stroke-width: 7px; }
+.stk-l { stroke: var(--tinte, #1A1C20); stroke-width: 3.5px; }
+.stk-h { stroke: #FFFFFF; stroke-width: 3px; }
+.stk-loop { stroke: #FFFFFF; stroke-width: 3.5px; }
+.stk-gelb { fill: var(--gelb, #EDBE3A); }
+.stk-blau { fill: var(--blau, #1F4E9C); }
+.stk-rot { fill: var(--rot, #C23B24); }
+.stk-gruen { fill: var(--gruen, #1A7552); }
+.stk-tinte { fill: var(--tinte, #1A1C20); }
+.stk-parkett { fill: var(--parkett, #F8F4EA); }
+.stk-parkett2 { fill: var(--parkett-2, #EFE8D8); }
+/* Thick lines with an outline: the pretzel strand (19 / 12) and the whistle cord (10 / 4) */
+.stk-ko { stroke: var(--tinte, #1A1C20); stroke-width: 19px; }
+.stk-kf { stroke: var(--gelb, #EDBE3A); stroke-width: 12px; }
+.stk-co { stroke: var(--tinte, #1A1C20); stroke-width: 10px; }
+.stk-cf { stroke: var(--gelb, #EDBE3A); stroke-width: 4px; }
+.stk-salt { stroke: #FFFFFF; stroke-width: 3.6px; }
+.stk-pin { stroke: var(--parkett, #F8F4EA); stroke-width: 5px; }
+.stk-num { stroke: var(--tinte, #1A1C20); stroke-width: 6px; }
+
+/* Collected (sticker album): the sticker leaves a dashed empty outline in place. The outline takes the text colour
+   of its surroundings, so it reads on parquet, ink and the colour bands. */
+.stk-slot {
+  fill: none; stroke: currentColor; stroke-width: 2.5px; stroke-dasharray: 5 7; stroke-linecap: round; stroke-linejoin: round;
+  opacity: 0; transition: opacity .25s ease;
+}
+.stk[data-collected] .stk-edge,
+.stk[data-collected] .stk-cut,
+.stk[data-collected] .stk-art { opacity: 0; }
+.stk[data-collected] .stk-slot { opacity: .5; }
+
+.stk[data-collectable] { cursor: pointer; }
+.stk[data-draggable] { cursor: grab; }
+.stk[data-draggable]:active { cursor: grabbing; }
+.stk[data-collected] { cursor: default; }
+
+/* ---------- Text sticker ---------- */
+
+.tstk {
+  --tstk-bg: var(--gelb, #EDBE3A);
+  --tstk-fg: var(--tinte, #1A1C20);
+  display: inline-block;
+  max-inline-size: 100%;
+  padding: .5em 1.05em;
+  border: max(3px, .3em) solid #FFFFFF;
+  border-radius: 1.7em;
+  background: var(--tstk-bg);
+  background-clip: padding-box;
+  /* the hairline around the white, as on the drawn stickers (a 1 px ring, not a drop shadow) */
+  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
+  color: var(--tstk-fg);
+  font: 600 var(--stk-fs, 13px)/1.25 var(--sans, "Schibsted Grotesk", "Schibsted Fallback", "Helvetica Neue", Arial, system-ui, sans-serif);
+  letter-spacing: .01em;
+  text-align: center;
+  text-decoration: none;
+  rotate: var(--stk-rot, 0deg);
+}
+/* Text colours: gelb/tinte 9.8:1, blau/white 8.0:1, rot/white 5.3:1, gruen/white 5.7:1, tinte/parkett 15.5:1,
+   parkett/tinte 15.5:1 (brief, measured WCAG ratios) */
+.tstk[data-tone="blau"] { --tstk-bg: var(--blau, #1F4E9C); --tstk-fg: #FFFFFF; }
+.tstk[data-tone="rot"] { --tstk-bg: var(--rot, #C23B24); --tstk-fg: #FFFFFF; }
+.tstk[data-tone="gruen"] { --tstk-bg: var(--gruen, #1A7552); --tstk-fg: #FFFFFF; }
+.tstk[data-tone="tinte"] { --tstk-bg: var(--tinte, #1A1C20); --tstk-fg: var(--parkett, #F8F4EA); }
+.tstk[data-tone="parkett"] { --tstk-bg: var(--parkett, #F8F4EA); --tstk-fg: var(--tinte, #1A1C20); }
+
+/* ---------- Sticker motion (only under html.motion; static styles are the final state) ---------- */
+
+@keyframes stk-settle {
+  from { scale: .9; rotate: calc(var(--stk-rot, 0deg) - 7deg); }
+  to { scale: 1; rotate: var(--stk-rot, 0deg); }
+}
+@keyframes stk-wiggle {
+  0%, 100% { rotate: 0deg; }
+  22% { rotate: -7deg; }
+  55% { rotate: 5deg; }
+  80% { rotate: -2deg; }
+}
+@keyframes stk-pop {
+  0% { scale: 1; }
+  40% { scale: 1.14; }
+  100% { scale: 1; }
+}
+
+/* First appearance: at load, or when the sticker (or a block around it) is revealed by data-reveal (.is-in from
+   observeReveals). Under 400 ms, once. */
+html.motion .stk,
+html.motion .tstk { animation: stk-settle .36s var(--ease-out, cubic-bezier(.16, 1, .3, 1)) both; }
+html.motion [data-reveal]:not(.is-in) .stk,
+html.motion [data-reveal]:not(.is-in) .tstk,
+html.motion .stk[data-reveal]:not(.is-in),
+html.motion .tstk[data-reveal]:not(.is-in) { animation: none; }
+/* A sticker that carries data-reveal itself pops in instead of the slow fade and rise of site.css */
+html.motion .stk[data-reveal],
+html.motion .tstk[data-reveal] { transform: none; transition: opacity .15s ease; }
+
+html.motion .stk-in { transition: scale .16s var(--ease-out, cubic-bezier(.16, 1, .3, 1)), rotate .16s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); transform-origin: 50% 70%; }
+@media (hover: hover) and (pointer: fine) {
+  html.motion .stk:hover .stk-in { animation: stk-wiggle .5s ease-in-out; }
+}
+/* Press: the sticker lifts a little (no shadow: it grows and tilts) */
+html.motion .stk:active .stk-in { scale: 1.07; rotate: -4deg; }
+html.motion .stk[data-collected] .stk-in { animation: stk-pop .32s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); scale: 1; rotate: 0deg; }
+
+/* ---------- Icon ---------- */
+
+.icn { display: inline-block; flex: none; vertical-align: middle; max-width: none; }
+
+/* ---------- Court lines ---------- */
+
+.cl {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  max-width: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cl-path {
+  fill: none;
+  stroke: currentColor;
+  /* 6 px at 1440 px wide, 4 px at 390 px; the lines keep this weight however the drawing is scaled */
+  stroke-width: var(--cl-w, clamp(4px, 3.26px + .19vw, 6px));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.cl-path[data-line="blau"] { stroke: var(--blau, #1F4E9C); }
+.cl-path[data-line="rot"] { stroke: var(--rot, #C23B24); }
+.cl-path[data-line="gruen"] { stroke: var(--gruen, #1A7552); }
+.cl-path[data-line="gelb"] { stroke: var(--gelb, #EDBE3A); }
+.cl-path[data-line="hell"] { stroke: var(--cl-hell, #FFFFFF); }
+.cl-soft { opacity: .55; }
+/* Stagger index of the paths of one drawing (load draw and scroll draw) */
+.cl-path:nth-child(2) { --cl-i: 1; }
+.cl-path:nth-child(3) { --cl-i: 2; }
+.cl-path:nth-child(4) { --cl-i: 3; }
+.cl-path:nth-child(5) { --cl-i: 4; }
+.cl-path:nth-child(n+6) { --cl-i: 5; }
+
+/* hero and page are drawn twice, for wide screens and for phones (one nested svg each) */
+.cl-narrow { display: none; }
+@media (max-width: 760px) {
+  .cl-wide { display: none; }
+  .cl-narrow { display: block; }
+}
+
+/* Parts of the door drawings that light up when the tile is live (see "Door drawings" below) */
+.cl-ball { fill: var(--gelb, #EDBE3A); stroke: none; }
+.cl-glow { fill: var(--gelb, #EDBE3A); stroke: none; opacity: 0; transition: opacity .3s ease; }
+.cl-rays { opacity: 0; transition: opacity .3s ease; }
+
+@media (forced-colors: active) { .cl { display: none; } }
+
+/* ---------- Motion primitives ----------
+   draw: the .cl-path children of a [data-scroll="draw"] container draw themselves with the scroll.
+   fill-words: the span.w children of a [data-scroll="fill-words"] block turn from grey to the text colour one after
+     another. Each word carries --i (its index, from 0), the block --n (the number of words).
+   slide-x: a [data-scroll="slide-x"] row slides sideways while it crosses the viewport.
+   All three: final state without scroll timelines, with reduced motion and without JS (site.css drops every
+   animation under .scroll-fx when reduced motion is switched on mid-visit). */
+
+/* The dash pattern exists only while the animation runs, so a path can never stay half drawn: the last keyframe
+   and the static style have no dashes. "1 2": one dash as long as the path (pathLength="1"), then a gap twice as
+   long, so no second dash (or its round cap) shows at either end. */
+@keyframes kit-draw {
+  from { stroke-dasharray: 1 2; stroke-dashoffset: 1; }
+  99.9% { stroke-dasharray: 1 2; stroke-dashoffset: 0; }
+  to { stroke-dasharray: none; stroke-dashoffset: 0; }
+}
+@keyframes kit-fill { from { color: color-mix(in srgb, var(--grau, #55585E) 35%, transparent); } }
+@keyframes kit-slide-left { from { translate: 0 0; } to { translate: var(--slide, -20%) 0; } }
+@keyframes kit-slide-right { from { translate: var(--slide, -20%) 0; } to { translate: 0 0; } }
+@keyframes cl-roll { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+/* Draw once on load (hero): data-draw="load" on the svg (prop draw="load") or on a container. Under 1.5 s. */
+html.motion [data-draw="load"] .cl-path {
+  animation: kit-draw var(--draw-time, 1s) cubic-bezier(.65, 0, .35, 1) backwards;
+  animation-delay: calc(var(--draw-delay, 0s) + var(--cl-i, 0) * .1s);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx [data-scroll="draw"] { view-timeline: --kit-draw block; view-timeline-inset: 0px; }
+    .scroll-fx [data-scroll="draw"] .cl-path {
+      animation: kit-draw linear both;
+      animation-duration: auto;
+      animation-timeline: --kit-draw;
+      /* Default: starts when the container's top edge enters, done 60 vh of scroll later; each further path of a
+         drawing starts 5 vh later. --draw-start / --draw-end take any animation-range value. */
+      animation-range:
+        var(--draw-start, cover calc(var(--cl-i, 0) * var(--draw-stagger, 5vh)))
+        var(--draw-end, cover calc(var(--scroll-dist-long, 60vh) + var(--cl-i, 0) * var(--draw-stagger, 5vh)));
+    }
+    /* The page line belongs to a container as tall as the page: its tip stays at about 60% of the viewport height
+       and reaches the end when the container's bottom edge does. */
+    .scroll-fx [data-scroll="draw"] .cl-page,
+    .scroll-fx .cl-page[data-scroll="draw"] { --draw-start: cover 40vh; --draw-end: contain 100%; }
+
+    .scroll-fx [data-scroll="fill-words"] { view-timeline: --kit-words block; view-timeline-inset: 0px; }
+    .scroll-fx [data-scroll="fill-words"] .w {
+      animation: kit-fill linear both;
+      animation-duration: auto;
+      animation-timeline: --kit-words;
+      /* The block fills between --fill-from and --fill-to of its way through the viewport (cover range); a word
+         takes --fill-soft word slots to fill, so the edge of the fill is soft. */
+      animation-range:
+        cover calc(var(--fill-from, 14%) + (var(--fill-to, 48%) - var(--fill-from, 14%)) * var(--i, 0) / (var(--n, 1) + var(--fill-soft, 3) - 1))
+        cover calc(var(--fill-from, 14%) + (var(--fill-to, 48%) - var(--fill-from, 14%)) * (var(--i, 0) + var(--fill-soft, 3)) / (var(--n, 1) + var(--fill-soft, 3) - 1));
+    }
+    /* Focus guard, as in site.css: a block that holds keyboard focus shows its final state */
+    .scroll-fx [data-scroll="fill-words"]:focus-within .w { animation-name: none; }
+
+    /* The row itself moves: give it its natural width (inline-size: max-content) and clip the parent.
+       Left (default): from its place to --slide. data-dir="right": from --slide back to its place. */
+    .scroll-fx [data-scroll="slide-x"] {
+      animation: kit-slide-left linear both;
+      animation-duration: auto;
+      animation-timeline: var(--scroll-timeline, view(block 0px));
+      animation-range: var(--slide-start, cover 0%) var(--slide-end, cover 100%);
+    }
+    .scroll-fx [data-scroll="slide-x"][data-dir="right"] { animation-name: kit-slide-right; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stk-edge, .stk-cut, .stk-art, .stk-slot, .cl-glow, .cl-rays { transition: none; }
+}
+
+/* Door drawings: the ball rolls along its path into the goal, the shop sign lights up. Live when an ancestor is
+   hovered (give it data-cl-hover) or carries .is-live (set it from an IntersectionObserver, or use .is-in). */
+.cl-ball { offset-rotate: 0deg; }
+.is-live .cl-glow, [data-cl-hover]:hover .cl-glow,
+.is-live .cl-rays, [data-cl-hover]:hover .cl-rays { opacity: 1; }
+html.motion .is-live .cl-ball,
+html.motion [data-cl-hover]:hover .cl-ball { animation: cl-roll 1.1s cubic-bezier(.3, .6, .3, 1) both; }

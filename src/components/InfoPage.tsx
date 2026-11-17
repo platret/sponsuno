@@ -28,7 +28,7 @@ const closingLine = (live: string, preview: string): string | null =>
  * prerendered at build time, shipped without a JavaScript module (CSS from src/static/sections.ts; Für Firmen only
  * needs the guide styles of src/static/main.ts). No motion, except /ki-manager/: its pinned bento runs on CSS scroll
  * timelines once an inline head script sets html.scroll-fx (`scrollFx` in pages.ts).
- * Every page opens with the graphit page head band (PageBand: the H1 and its intro), as the guides and legal pages do.
+ * Every page opens with the ink page head band (PageBand: the H1 and its intro), as the guides and legal pages do.
  * KI-Manager, Kosten, Fragen and Über uns then show the sections that used to be on the landing page (the band holds
  * the first section's title and intro). Für Firmen uses the reading column of the guides. Every page ends with a
  * way back to the waitlist on the landing page.
@@ -78,13 +78,13 @@ function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
   const text = closingLine(infoPage.endText, infoPage.previewEndText);
   return (
-    <section className="section surface-paper pg-end" aria-labelledby="pg-end-title">
+    <section className="section surface-parkett pg-end" aria-labelledby="pg-end-title">
       <div className="container">
         <h2 id="pg-end-title">{infoPage.endTitle}</h2>
         {text && <p className="pg-end-text">{text}</p>}
         {more && <p className="pg-end-more">{rich(more)}</p>}
         <div className="pg-end-actions">
-          <a className="btn btn-graphit" href={waitlistHref(role)}>{infoPage.endButton}</a>
+          <a className="btn btn-tinte" href={waitlistHref(role)}>{infoPage.endButton}</a>
         </div>
       </div>
     </section>
@@ -148,7 +148,7 @@ function FirmsPage() {
             <h2 id={end.id}>{end.title}</h2>
             {endText && <p>{endText}</p>}
             <div className="gd-cta">
-              <a className="btn btn-graphit" href={waitlistHref('sponsor')}>{end.button}</a>
+              <a className="btn btn-tinte" href={waitlistHref('sponsor')}>{end.button}</a>
               <a className="gd-cta-demo" href={pageHref(end.demoHref)}>
                 <span className="gd-cta-demo-label">{end.demoLabel}</span>
               </a>

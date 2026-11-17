@@ -35,7 +35,7 @@
 .how-step:not(:last-child)::before {
   content: ""; position: absolute;
   left: calc(var(--how-num) / 2 - .5px); top: var(--how-num); bottom: calc(-1 * var(--how-row));
-  width: 1px; background: var(--brass);
+  width: 1px; background: var(--gelb);
   transform-origin: top;
 }
 
@@ -43,7 +43,7 @@
   position: relative; z-index: 1;
   display: grid; place-items: center;
   width: var(--how-num); height: var(--how-num);
-  border: 1px solid var(--brass); border-radius: 50%;
+  border: 1px solid var(--gelb); border-radius: 50%;
   background: var(--bg-alt);
   font: 700 1rem/1 var(--display); color: var(--heading);
   font-variant-numeric: tabular-nums lining-nums;
@@ -88,7 +88,7 @@
       inset: -1px;
       z-index: -1;
       border-radius: 50%;
-      background: rgba(201, 161, 91, .16);
+      background: rgba(237, 190, 58, .16);
       pointer-events: none;
       animation: how-light linear both;
       animation-duration: auto;

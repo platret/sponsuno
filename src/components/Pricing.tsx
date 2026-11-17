@@ -1,12 +1,12 @@
 import { pricing } from '../content';
 import '../styles/sections/pricing.css';
 
-/** Kalk section, the first of /kosten/ (its title and intro are the page head band: InfoPage → PageBand): the cost
+/** Parkett-2 section, the first of /kosten/ (its title and intro are the page head band: InfoPage → PageBand): the cost
     model as one overview card. Decided points get a check, open ones a ring (plus pricing.openLabel as a tag when it
     is set). */
 export function Pricing() {
   return (
-    <section className="section surface-kalk price" id="kosten" aria-labelledby="price-title">
+    <section className="section surface-parkett-2 price" id="kosten" aria-labelledby="price-title">
       <div className="container">
         <div className="price-main" data-reveal="" data-scroll="zoom-in">
           <dl className="price-card">

@@ -35,7 +35,7 @@ const SIZES = '(min-width: 1024px) 264px, (min-width: 601px) 46vw, 92vw';
  */
 export function Audience() {
   return (
-    <section className="section surface-kalk aud" id="fuer-wen" aria-labelledby="aud-title">
+    <section className="section surface-parkett-2 aud" id="fuer-wen" aria-labelledby="aud-title">
       <div className="container">
         <div className="section-head aud-head" data-reveal="" data-scroll="rise">
           <h2 id="aud-title">{audience.title}</h2>

@@ -1,13 +1,13 @@
 /* Guide pages (Ratgeber): the legal-page layout (legal.css) plus the blocks only guides use. Classes prefixed gd-.
-   No motion. On the page surface, so brass text is --accent-text (Messing dunkel,
-   DESIGN.md → Colour); boxes are cards: radius 16, 1px border, no shadow. */
+   No motion. Accent text and underlines use --accent-text (blue on parquet, yellow in the ink band,
+   DESIGN.md → Colour); boxes are cards: radius 20, 1px border, no shadow. */
 
 /* Launch note (/fuer-firmen/, in the page head band): the same label with a dot as the landing page hero badge */
 .gd-note {
   display: flex; align-items: center; gap: .6rem;
   margin-top: 1.5rem; max-width: 42rem;
   font: 600 var(--fs-label)/1.4 var(--sans); letter-spacing: var(--label-tracking); text-transform: uppercase;
-  color: var(--brass);
+  color: var(--accent-text);
 }
 .gd-note::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
@@ -62,7 +62,7 @@
 .gd-template-download svg { flex: none; color: var(--accent-text); }
 /* Label and size wrap inside their own box, so on phones the size lines up under the label, not under the icon */
 .gd-template-download-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .5rem; }
-.gd-template-download-label { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px; }
+.gd-template-download-label { text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px; }
 .gd-template-download a:hover .gd-template-download-label { text-decoration-thickness: 2px; }
 .gd-template-download-info { font-size: var(--fs-small); font-weight: 400; color: var(--text); }
 
@@ -76,7 +76,7 @@
   display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px;
   text-decoration: none;
 }
-.gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px; }
+.gd-cta-demo-label { text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px; }
 .gd-cta-demo:hover .gd-cta-demo-label { text-decoration-thickness: 2px; }
 
 /* "Weiterlesen" (guides) and the link list of the 404 and notice pages: a card with a label, one row per page */
@@ -97,7 +97,7 @@
 .gd-related-name {
   font-size: var(--fs-h3); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; color: var(--heading);
 }
-.gd-related a:hover .gd-related-name { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.gd-related a:hover .gd-related-name { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .gd-related-desc { grid-column: 1; margin-top: .375rem; font-size: var(--fs-small); line-height: 1.5; }
 .gd-related-arrow {
   grid-column: 2; grid-row: 1 / span 2;

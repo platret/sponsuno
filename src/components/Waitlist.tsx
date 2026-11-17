@@ -26,8 +26,9 @@ interface WaitlistProps {
   onRoleChange: (role: Role) => void;
 }
 
-/** Graphit closing block, part one: title and intro in the left column, the form in a card on the right (stacked on
- * phones). Continues seamlessly into the footer. */
+/** Closing block (#warteliste): a yellow band with the giant H2 in ink across the full width, under it the intro on
+ * the left and the form in an ink card (.surface-tinte) on the right (stacked on phones). The ink footer follows.
+ * Static surface: no reveal, so the form is never hidden while it waits for a script. */
 export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
@@ -108,18 +109,16 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const invalid = error !== null;
 
   return (
-    <section className="wl section surface-graphit" id="warteliste" aria-labelledby="warteliste-title">
-      {/* Signature 2 ("the page opens"): the graphit surface as its own layer, so the scroll-driven clip
-          (data-scroll="frame") never touches the content or its focus outlines. Hidden without .scroll-fx. */}
-      <div className="wl-surface" data-scroll="frame" aria-hidden="true" />
+    <section className="wl section surface-gelb" id="warteliste" aria-labelledby="warteliste-title">
+      {/* TODO(kit): <CourtLines variant="band" /> and one or two stickers may sit on this band (aria-hidden layers) */}
       <div className="container">
+        <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
         <div className="wl-inner">
-          <div className="wl-head" data-reveal="" data-scroll="rise">
-            <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
+          <div className="wl-head">
             {intro && <p className="wl-intro">{intro}</p>}
           </div>
 
-          <div className="wl-card" data-reveal="" data-scroll="rise">
+          <div className="wl-card surface-tinte">
           {status !== 'done' ? (
             <form
               className="wl-form"
@@ -167,7 +166,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                   aria-invalid={invalid || undefined}
                   aria-describedby={invalid ? 'wl-error wl-hint' : 'wl-hint'}
                 />
-                <button className="btn btn-brass wl-submit" type="submit" disabled={status === 'sending' || !hydrated}>
+                <button className="btn btn-gelb wl-submit" type="submit" disabled={status === 'sending' || !hydrated}>
                   {waitlist.submit}
                 </button>
               </div>
@@ -204,7 +203,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                     <>
                       <p>{waitlist.previewMailIntro}</p>
                       <p className="wl-mail">
-                        <a className="btn btn-brass" href={mailHref(role)}>{waitlist.previewMailButton}</a>
+                        <a className="btn btn-gelb" href={mailHref(role)}>{waitlist.previewMailButton}</a>
                         <span className="wl-mail-address">{CONTACT}</span>
                       </p>
                     </>

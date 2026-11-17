@@ -1,5 +1,5 @@
-/* FAQ (/fragen/): title and intro in the graphit page head band (FaqIntro), the questions below on the kalk band as a
-   stack of cards (radius 16, 1 px border, no shadow) built from native <details>. The toggle is a round outline button
+/* FAQ (/fragen/): title and intro in the ink page head band (FaqIntro), the questions below on the parkett-2 band as a
+   stack of cards (radius 20, 1 px border, no shadow) built from native <details>. The toggle is a round outline button
    shape with a plus that turns into an x. */
 .faq-intro { max-width: 40rem; text-wrap: pretty; }
 

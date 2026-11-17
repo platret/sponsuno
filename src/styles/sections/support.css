@@ -1,5 +1,5 @@
-/* Support (Sachleistungen): paper, after the cost card. The title starts in column 1, the three kinds sit below as
-   three cards (radius 16, 1 px border, 40 px inner margin, no shadow), each with a line icon in brass dark. */
+/* Support (Sachleistungen): parquet, after the cost card. The title starts in column 1, the three kinds sit below as
+   three cards (radius 20, 1 px border, 40 px inner margin, no shadow), each with a line icon in blue. */
 
 /* Head as a split row: the title in columns 1-7, the intro beside it on the baseline (stacked below 961 px) */
 .sup-head {

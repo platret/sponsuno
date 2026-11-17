@@ -16,18 +16,18 @@
   position: relative;
   --st-read: 50;  /* reading line in % of the viewport height (Story.tsx reads it) */
   padding-block: clamp(3rem, 2rem + 4vw, 6rem) clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
-  background: var(--graphit);
-  color: var(--steel);
-  --focus: var(--brass);
+  background: var(--tinte);
+  color: var(--grau-hell);
+  --focus: var(--gelb);
 }
-.story h2, .story h3 { color: var(--kalk); }
+.story h2, .story h3 { color: var(--parkett); }
 
 /* ---------- Text steps ---------- */
 
 .st-step h2 { font-size: var(--fs-h2); line-height: 1.08; max-width: 13em; }
 .st-intro { margin-top: 1.5rem; max-width: 30rem; font-size: var(--fs-lead); line-height: 1.55; }
 /* Step labels ("Heute", "Mit Sponsuno"): the design-system .label, in brass on graphit */
-.story .st-label { color: var(--brass); }
+.story .st-label { color: var(--gelb); }
 /* Step headings: titles of the system (700, title tracking), one step below the section title */
 .st-step h3 {
   margin-top: 1rem;
@@ -53,7 +53,7 @@
   content: ""; position: absolute; top: 6%; bottom: 6%; right: 0; width: 34%; pointer-events: none;
   -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
   mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
-  background: linear-gradient(90deg, rgba(46, 52, 58, 0), rgba(46, 52, 58, .36));
+  background: linear-gradient(90deg, rgba(42, 45, 51, 0), rgba(42, 45, 51, .36));
   opacity: 0;
 }
 .st-art:is([data-step="linie"], [data-step="sortiert"]) .st-win-l::after { opacity: 1; }
@@ -72,15 +72,15 @@
 .face-clean { opacity: var(--f); }
 
 .it-line { width: 12px; height: 90cqh; }
-.ln { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--brass); }
-.ln::before, .ln::after { content: ""; position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--brass); }
+.ln { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--gelb); }
+.ln::before, .ln::after { content: ""; position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--gelb); }
 .ln::before { top: -3px; }
 .ln::after { bottom: -3px; }
 /* Column heads: labels of the system */
 .head-t {
   display: block; white-space: nowrap;
   font: 600 var(--fs-label)/1.4 var(--sans); letter-spacing: var(--label-tracking); text-transform: uppercase;
-  color: var(--brass);
+  color: var(--gelb);
 }
 .it-match { width: min(27rem, 72cqw); }
 
@@ -89,7 +89,7 @@
   position: absolute; left: 0; right: 0; bottom: 0;
   display: grid; justify-items: center;
   padding: .5rem 1rem;
-  font-size: .8125rem; line-height: 1.4; color: var(--steel); text-align: center;
+  font-size: .8125rem; line-height: 1.4; color: var(--grau-hell); text-align: center;
 }
 .cap { grid-area: 1 / 1; }
 .st-cap:empty { display: none; }  /* the "match" snapshot has no caption (the card carries its own label) */
@@ -167,12 +167,12 @@
   gap: clamp(2rem, 1rem + 4vw, 5rem); align-items: center;
   padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem);
 }
-.st-text > *, .st-step + .st-step, .st-findings > .st-step + .st-step { border-top: 1px solid var(--card-dark-line); }
+.st-text > *, .st-step + .st-step, .st-findings > .st-step + .st-step { border-top: 1px solid var(--linie-dunkel); }
 .st-snap { order: 2; }
 /* Each snapshot is a card of the system: radius 16, 1 px line, the dark 135° gradient, no shadow */
 .st-snap .st-art {
   --st-h: clamp(340px, 100svh - var(--header-h) - 3rem, 600px);
-  border-radius: var(--radius-lg); border: 1px solid var(--card-dark-line); background: var(--grad-dark);
+  border-radius: var(--radius-lg); border: 1px solid var(--linie-dunkel); background: var(--tinte);
 }
 /* Hidden or off-screen snapshots skip style and layout work */
 .st-snap { content-visibility: auto; contain-intrinsic-size: auto 600px; }
@@ -228,13 +228,13 @@
   .js .st-head > .st-step { padding-block: 0 1.75rem; }
   .js .st-stage {
     position: sticky; top: var(--header-h); z-index: 2;
-    background: var(--graphit);
+    background: var(--tinte);
   }
   /* Soft lower edge: text slides under the stage without a hard cut and never shows through. It ends above
      the reading line, so a step that becomes current is already at full contrast. */
   .js .st-stage::after {
     content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 2.5rem; pointer-events: none;
-    background: linear-gradient(var(--graphit) 30%, rgba(29, 33, 37, 0));
+    background: linear-gradient(var(--tinte) 30%, rgba(26, 28, 32, 0));
   }
   .js .st-text { position: relative; z-index: 1; padding-inline: var(--gutter); }
   /* A link reached with Tab scrolls in below the stage and its soft edge, not behind them (WCAG 2.4.11) */
@@ -280,7 +280,7 @@
   .st-art .match-score { font-size: .875rem; }
   .ki-draft { width: min(300px, 84cqw); }
   /* Caption as a bar on the bottom edge */
-  .st-art .st-cap { padding-block: .4rem; background: var(--graphit); border-top: 1px solid var(--card-dark-line); font-size: .75rem; }
+  .st-art .st-cap { padding-block: .4rem; background: var(--tinte); border-top: 1px solid var(--linie-dunkel); font-size: .75rem; }
 }
 
 @media (max-width: 960px) {

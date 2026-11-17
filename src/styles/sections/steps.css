@@ -1,0 +1,55 @@
+/* "So funktioniert es" (#ablauf, Steps.tsx): parkett-2 band. H2, three steps side by side (one column on phones),
+   each with an illustration slot, an H3 and one sentence; then the match card: one wide card on the same three
+   columns on desktop, a normal card after the list on phones. Prefix steps-. */
+
+.steps-title { max-width: 14em; }
+
+.steps-list {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 1.5rem + 2vw, 3.5rem) clamp(1.5rem, 1rem + 3vw, 4rem);
+  margin-top: clamp(2.5rem, 2rem + 3vw, 5rem);
+}
+.steps-item { display: grid; align-content: start; justify-items: start; }
+
+/* Illustration slot: 96 px, home of the kit's sticker-style illustration. Until then the step number on a disc. */
+.steps-art {
+  display: grid; place-items: center;
+  width: 96px; height: 96px; margin-bottom: 1.5rem;
+  border-radius: 50%;
+  color: var(--weiss);
+}
+.steps-art-blau { background: var(--blau); rotate: -6deg; }
+.steps-art-rot { background: var(--rot); rotate: 4deg; }
+.steps-art-gruen { background: var(--gruen); rotate: -3deg; }
+.steps-num { font-size: 2.75rem; line-height: 1; color: inherit; }
+
+.steps-item-title { font-size: clamp(1.25rem, 1.15rem + .4vw, 1.5rem); line-height: 1.2; text-wrap: balance; }
+.steps-item-text { margin-top: .75rem; max-width: 26rem; font-size: 1.0625rem; line-height: 1.55; }
+
+/* Match card: the result under the three steps. On desktop one wide card on the steps' own three columns (the seeker
+   under step one, the firm under step two, criteria and result under step three); stacked as a normal card below. */
+.steps-match { margin-top: clamp(2.5rem, 2rem + 2.5vw, 4.5rem); }
+
+@media (min-width: 861px) {
+  .steps-match .match {
+    --steps-gap: clamp(1.5rem, 1rem + 3vw, 4rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--steps-gap); row-gap: 1.25rem;
+    align-items: center;
+    padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  }
+  .steps-match .match-label { grid-column: 1 / -1; }
+  .steps-match .match-foot {
+    align-self: stretch; align-content: center;
+    padding-top: 0; border-top: 0;
+    padding-left: var(--steps-gap); margin-left: calc(var(--steps-gap) * -1);
+    border-left: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 860px) {
+  .steps-list { grid-template-columns: minmax(0, 1fr); }
+  .steps-art { width: 80px; height: 80px; margin-bottom: 1.25rem; }
+  .steps-num { font-size: 2.25rem; }
+  .steps-match .match { max-width: 30rem; }
+}

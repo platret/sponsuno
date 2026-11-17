@@ -13,9 +13,9 @@ type PageHeaderProps = {
 };
 
 /**
- * Skip link and slim graphit header of the static pages (topic pages, guides, legal pages, 404): wordmark, the same nav
- * as the landing page header (content.ts → nav) and the waitlist button. Graphit by design, so every page opens like
- * the landing page; PageBand continues it with the H1. No JavaScript: below 961 px the nav sits in a native <details>
+ * Skip link and slim ink header of the static pages (topic pages, guides, legal pages, 404): the parquet wordmark, the
+ * same nav as the landing page header (content.ts → nav) and the yellow waitlist button. Ink (.surface-tinte);
+ * PageBand continues it with the H1. No JavaScript: below 961 px the nav sits in a native <details>
  * menu that drops down under the bar.
  */
 export function PageHeader({ current, role }: PageHeaderProps) {
@@ -28,7 +28,7 @@ export function PageHeader({ current, role }: PageHeaderProps) {
   return (
     <>
       <a className="skip-link" href="#inhalt">{legal.skipLink}</a>
-      <header className="lg-header" id="top">
+      <header className="lg-header surface-tinte" id="top">
         <div className="container lg-header-inner">
           <a className="lg-brand" href={pageHref('')} aria-label={legal.homeLabel}>
             <img src={wordmarkLight} alt="" width={141} height={24} />
@@ -37,7 +37,7 @@ export function PageHeader({ current, role }: PageHeaderProps) {
             <ul>{links}</ul>
           </nav>
           <div className="lg-actions">
-            <a className="btn btn-sm btn-brass lg-cta" href={waitlistHref(role)}>
+            <a className="btn btn-sm btn-gelb lg-cta" href={waitlistHref(role)}>
               <span className="lg-cta-long">{cta.waitlist}</span>
               <span className="lg-cta-short">{cta.waitlistShort}</span>
             </a>
@@ -70,12 +70,13 @@ type PageBandProps = {
 };
 
 /**
- * Page head band of the static pages, the first child of <main>: the H1 and its intro on graphit, right under the graphit
+ * Page head band of the static pages, the first child of <main>: the H1 and its intro on ink, right under the ink
  * header (legal.css → .lg-band). Starts in column 1 like every title; calm: no picture, no motion.
  */
 export function PageBand({ titleId, title, narrow = false, eyebrow, children }: PageBandProps) {
   return (
-    <div className="lg-band">
+    <div className="lg-band surface-tinte">
+      {/* TODO(kit): <CourtLines variant="page" /> here (decorative, behind the container) */}
       <div className="container">
         <div className={narrow ? 'lg-band-inner lg-band-narrow' : 'lg-band-inner'}>
           {eyebrow && <p className="label lg-band-label">{eyebrow}</p>}

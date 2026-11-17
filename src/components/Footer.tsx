@@ -16,12 +16,14 @@ type FooterProps = {
 };
 
 /**
- * Graphit closing block. On the landing page it continues the waitlist without a seam; on sub-pages it
- * stands alone (ft-standalone). Ends on the kalk loop wordmark and the legal row.
+ * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album slot, the giant
+ * loop wordmark in parquet and the copyright row. On the landing page it follows the yellow waitlist band; on
+ * sub-pages it stands alone (ft-standalone). `data-header-dark` turns the landing header ink while the footer runs
+ * under it.
  */
 export function Footer({ onLanding = true, current }: FooterProps) {
   return (
-    <footer className={`ft${onLanding ? '' : ' ft-standalone'}`}>
+    <footer className={`ft surface-tinte${onLanding ? '' : ' ft-standalone'}`} data-header-dark="">
       <div className="container">
         <div className="ft-top" data-reveal="" data-scroll="rise">
           <p className="ft-sub">{footer.sub}</p>
@@ -59,17 +61,14 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
+        {/* Slot of the sticker album (Easter egg, filled by its lazy chunk; copy in content.ts -> album). Empty and
+            without height until then. */}
+        <div className="ft-album" data-album="" />
+
         <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>
-          {/* The audience photos are on the landing page only, so only its footer names them */}
-          {onLanding && (
-            <p>
-              {footer.photoNote.before}
-              <a href={siteHref(footer.photoNote.href, onLanding)}>{footer.photoNote.link}</a>
-            </p>
-          )}
         </div>
       </div>
     </footer>

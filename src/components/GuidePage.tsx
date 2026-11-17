@@ -100,7 +100,7 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
     case 'cta':
       return (
         <div className="gd-cta">
-          <a className="btn btn-graphit" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
+          <a className="btn btn-tinte" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
           </a>

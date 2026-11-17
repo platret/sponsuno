@@ -1,0 +1,35 @@
+/* The two doors (#fuer-wen, Doors.tsx): two full-bleed colour tiles side by side, blue (sport and culture) and red
+   (companies), stacked on phones. The copy sits at the bottom left of each tile; the space above it is the slot of
+   the tile's line illustration (.door-art, filled by the kit). White text on both (8.0:1 on blue, 5.3:1 on red).
+   Prefix door-. */
+
+.door-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.door {
+  position: relative; isolation: isolate; overflow: clip;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  min-height: min(92svh, 46rem);
+  /* The outer edge lines up with the page container; the inner edge keeps a comfortable gutter */
+  padding: clamp(2rem, 1.5rem + 3vw, 4.5rem);
+}
+.door-sport { padding-left: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter))); }
+.door-firma { padding-right: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter))); }
+
+/* Illustration slot: the free upper part of the tile */
+.door-art { position: relative; z-index: -1; min-height: clamp(8rem, 24vh, 16rem); }
+
+.door-body { display: grid; justify-items: start; max-width: 30rem; }
+.door-label { margin-bottom: 1rem; }
+.door-title {
+  font-size: clamp(2rem, 1.3rem + 3vw, 4rem);
+  line-height: 1;
+  color: var(--heading);
+}
+.door-text { margin-top: 1.25rem; max-width: 26rem; font-size: var(--fs-lead); line-height: 1.5; }
+.door-btn { margin-top: 2rem; }
+
+@media (max-width: 860px) {
+  .door-grid { grid-template-columns: minmax(0, 1fr); }
+  .door { min-height: min(78svh, 34rem); padding: clamp(2rem, 1.5rem + 3vw, 3rem) var(--gutter); }
+  .door-sport, .door-firma { padding-inline: var(--gutter); }
+}

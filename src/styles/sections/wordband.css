@@ -1,0 +1,37 @@
+/* Word band (WordBand.tsx): ink, full width. A small yellow label, then two rows of giant Archivo words that run out
+   of the screen on both sides; every second word is an outline. Static here: row two is shifted against row one.
+   Prefix wb-. */
+
+.wb {
+  overflow: clip;
+  padding-block: clamp(3rem, 2rem + 5vw, 6.5rem);
+}
+.wb-label { margin-bottom: clamp(1.25rem, 1rem + 1.5vw, 2.5rem); }
+
+.wb-rows { display: grid; gap: clamp(.25rem, 1vw, 1rem); }
+.wb-row {
+  display: flex; width: max-content;
+  /* Rest position of the row (the kit's slide-x moves it from here) */
+  translate: var(--wb-shift, -4vw) 0;
+}
+.wb-row-2 { --wb-shift: -38vw; }
+.wb-set { display: flex; flex: none; }
+.wb-word {
+  flex: none;
+  padding-right: .32em;
+  font-size: clamp(3.25rem, 1.5rem + 10.5vw, 11rem);
+  line-height: 1.02;
+  white-space: nowrap;
+  color: var(--parkett);
+}
+/* The word itself comes from data-word (WordBand.tsx): decoration, the readable lists are separate */
+.wb-word::before { content: attr(data-word); }
+.wb-row-2 .wb-word { font-size: clamp(2.5rem, 1.25rem + 7vw, 7.5rem); line-height: 1.08; }
+/* Outline words: stroke in parquet, no fill. Where text-stroke is missing the word stays filled in light grey. */
+.wb-outline { color: var(--grau-hell); }
+@supports (-webkit-text-stroke: 1px black) {
+  .wb-outline { color: transparent; -webkit-text-stroke: clamp(1.5px, .16vw, 2.5px) var(--parkett); }
+}
+@media (forced-colors: active) {
+  .wb-outline { color: CanvasText; -webkit-text-stroke: 0; }
+}

@@ -30,10 +30,10 @@ function Portrait({ member }: { member: TeamMember }) {
 }
 
 /** "Stand des Projekts": the programme with a link, then the steps so far and the planned ones as a short
-    vertical sequence, in a graphit card. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
+    vertical sequence, in an ink card. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
 function ProjectStatus() {
   return (
-    <div className="team-status">
+    <div className="team-status surface-tinte">
       <div className="team-status-head" data-reveal="" data-scroll="rise">
         <h2 className="pg-h3" id="team-status-title">{projectStatus.title}</h2>
         <p className="team-status-intro">{rich(projectStatus.intro)}</p>
@@ -54,12 +54,12 @@ function ProjectStatus() {
   );
 }
 
-/** Kalk section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
+/** Parkett-2 section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
     and "Stand des Projekts" are H2, styled as H3): the four founders with their provisional focus, then the project
     status. */
 export function Team() {
   return (
-    <section className="section surface-kalk team" id="team" aria-labelledby="team-title">
+    <section className="section surface-parkett-2 team" id="team" aria-labelledby="team-title">
       <div className="container">
         <ul className="team-grid" role="list" data-scroll-stagger="">
           {team.members.map((member) => (

@@ -1,3 +1,7 @@
+// All visible copy of the site lives here. Homepage blocks since the «Turnhalle» redesign (November 2026): hero,
+// statement, wordband, steps, doors, waitlist, footer. Content of parked sections (story, problem, audience,
+// howItWorks, proof.items as a section of its own) stays below because their sources still type-check; the bundler
+// drops what the landing page does not read.
 // All visible copy of the landing page lives here. Rules for writing it are in AGENTS.md (Swiss spelling,
 // formal "Sie", nothing presented as decided or working that the team has not decided or built).
 
@@ -45,13 +49,10 @@ export const hero = {
   lead: 'Sponsuno bringt Sportlerinnen, Sportler und Vereine aus Sport und Kultur mit Firmen aus ihrer Region zusammen.',
   ctaSeeker: { label: 'Ich suche Sponsoren', role: 'athlete' as Role },
   ctaSponsor: { label: 'Ich möchte sponsern', role: 'sponsor' as Role },
-  // Toggle under the start frame (aria-pressed): the loop runs longer than 5 s, so it can be stopped (WCAG 2.2.2)
-  pauseLabel: 'Animation anhalten',
 };
 
-// Fictional example for the match card on the story stage ("Ein Match" step). Keep the label whenever this changes:
-// it is the card's one "Beispieldaten" label. The photo is a stock photo (Pexels, see photoCredits), not the person
-// described; the label covers it, the credit is in the Impressum.
+// Fictional example for the match card in "So funktioniert es" (Steps.tsx, MatchCard.tsx). Keep the label whenever
+// this changes: it is the card's one "Beispieldaten" label. Vector avatars, no photo.
 export const match = {
   label: 'Beispieldaten',
   athlete: {
@@ -65,6 +66,7 @@ export const match = {
   result: 'Passt in 4 von 4 Kriterien',
 };
 
+// The three points under the statement (Statement.tsx) and the discipline words of the word band (WordBand.tsx).
 export const proof = {
   items: [
     'Für Sport und Kultur in der Deutschschweiz',
@@ -75,13 +77,39 @@ export const proof = {
   disciplines: ['Mountainbike', 'Unihockey', 'Musikgesellschaft', 'Beachvolleyball', 'Theaterverein', 'Triathlon', 'Chor', 'Turnverein'],
 };
 
+// Statement under the hero (Statement.tsx): three short sentences in large type (at most 20 words each), then the
+// three proof points word for word. `icon` names the kit icon of each point (src/components/kit/Icon.tsx).
+export const statement = {
+  sentences: [
+    'Vereine suchen Unterstützung.',
+    'Firmen suchen Nähe zu ihrer Region.',
+    'Sponsuno schlägt vor, wer zusammenpasst.',
+  ],
+  points: [
+    { icon: 'region', text: proof.items[0] },
+    { icon: 'handschlag', text: proof.items[1] },
+    { icon: 'check', text: proof.items[2] },
+  ],
+};
+
+// Word band (WordBand.tsx): two rows of giant words on ink. Decorative for the eye; screen readers get the label and
+// both rows as plain lists.
+export const wordband = {
+  label: proof.disciplinesLabel,
+  rows: [['Sport', 'Kultur', 'Gewerbe'], proof.disciplines],
+};
+
 // Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits): the people
 // shown have nothing to do with Sponsuno. They illustrate the target groups only (no names, never shown as users);
 // the note saying so sits in the landing page footer (footer.photoNote) and in the Impressum.
 export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
 
+// Shared by the parked audience section and the two doors (doors.title), its own constant so the landing page bundle
+// does not carry the parked tiles.
+const AUDIENCE_TITLE = 'Für wen Sponsuno gemacht ist';
+
 export const audience = {
-  title: 'Für wen Sponsuno gemacht ist',
+  title: AUDIENCE_TITLE,
   intro: 'Für alle, die in ihrer Region Sponsoren finden oder selbst sponsern möchten, im Sport wie in der Kultur.',
   items: [
     {
@@ -137,6 +165,59 @@ export const problem = {
 // Everything on the stage is a fictional example: generic names, real regions, no companies, no amounts.
 export type StoryState = 'heute' | 'kontakte' | 'aufwand' | 'erwartungen' | 'linie' | 'sortiert' | 'match' | 'danach';
 
+// The three solution steps. `lead` is the one sentence shown in "So funktioniert es" (steps below); the parked scroll
+// story shows lead and rest together (story.steps), word for word as before.
+const STEP_PLACE = {
+  title: 'Beide Seiten an einem Ort',
+  lead: 'Sportlerinnen, Sportler und Vereine zeigen, was sie brauchen und was sie als Gegenleistung bieten.',
+  rest: 'Firmen zeigen, wie sie unterstützen möchten: mit Geld, Material oder Dienstleistungen.',
+};
+const STEP_SUGGEST = {
+  title: 'Vorschläge statt kalter Anfragen',
+  lead: 'Sponsuno schlägt Firmen vor, die nach Region, Budget, Branche und Art der Unterstützung zu Ihnen passen.',
+  rest: 'Firmen sehen umgekehrt Sportlerinnen, Sportler und Vereine aus ihrer Region.',
+};
+const STEP_MATCH = {
+  title: 'Ein Match, bei dem beide wissen, warum',
+  lead: 'Bevor jemand schreibt, sehen beide Seiten, worin sie zusammenpassen.',
+  rest: 'Gegenleistungen werden vor Beginn festgehalten.',
+};
+
+// "So funktioniert es" (#ablauf, Steps.tsx): three steps, a title and one sentence each, then the match card.
+// `art` names the sticker-style illustration of each step (for the kit).
+export const steps = {
+  title: 'So funktioniert es',
+  items: [
+    { art: 'profil', title: STEP_PLACE.title, text: STEP_PLACE.lead },
+    { art: 'liste', title: STEP_SUGGEST.title, text: STEP_SUGGEST.lead },
+    { art: 'handschlag', title: STEP_MATCH.title, text: STEP_MATCH.lead },
+  ],
+};
+
+// The two doors (#fuer-wen, Doors.tsx): one colour tile per side of the market. Titles are the hero's button labels;
+// the sentences are cut from the first two solution steps. The button sets the waitlist role and leads to #warteliste.
+export const doors = {
+  title: AUDIENCE_TITLE,
+  tiles: [
+    {
+      id: 'sport',
+      label: 'Für Sport und Kultur',
+      title: 'Ich suche Sponsoren',
+      text: 'Zeigen Sie, was Sie brauchen und was Sie als Gegenleistung bieten.',
+      role: 'athlete',
+    },
+    {
+      id: 'firma',
+      label: 'Für Firmen',
+      title: 'Ich möchte sponsern',
+      text: 'Sehen Sie Vereine, Sportlerinnen und Sportler aus Ihrer Region.',
+      role: 'sponsor',
+    },
+  ] satisfies { id: 'sport' | 'firma'; label: string; title: string; text: string; role: Role }[],
+  button: 'Auf die Warteliste',
+};
+
+// Parked scroll story (Story.tsx, not on the homepage since the «Turnhalle» redesign).
 export const story = {
   // Labels before the step headings (design-system .label)
   labels: { heute: 'Heute', solution: 'Mit Sponsuno', planned: 'Mit Sponsuno' },
@@ -145,18 +226,18 @@ export const story = {
   steps: [
     {
       state: 'linie' as StoryState,
-      title: 'Beide Seiten an einem Ort',
-      text: 'Sportlerinnen, Sportler und Vereine zeigen, was sie brauchen und was sie als Gegenleistung bieten. Firmen zeigen, wie sie unterstützen möchten: mit Geld, Material oder Dienstleistungen.',
+      title: STEP_PLACE.title,
+      text: `${STEP_PLACE.lead} ${STEP_PLACE.rest}`,
     },
     {
       state: 'sortiert' as StoryState,
-      title: 'Vorschläge statt kalter Anfragen',
-      text: 'Sponsuno schlägt Firmen vor, die nach Region, Budget, Branche und Art der Unterstützung zu Ihnen passen. Firmen sehen umgekehrt Sportlerinnen, Sportler und Vereine aus ihrer Region.',
+      title: STEP_SUGGEST.title,
+      text: `${STEP_SUGGEST.lead} ${STEP_SUGGEST.rest}`,
     },
     {
       state: 'match' as StoryState,
-      title: 'Ein Match, bei dem beide wissen, warum',
-      text: 'Bevor jemand schreibt, sehen beide Seiten, worin sie zusammenpassen. Gegenleistungen werden vor Beginn festgehalten.',
+      title: STEP_MATCH.title,
+      text: `${STEP_MATCH.lead} ${STEP_MATCH.rest}`,
     },
   ],
   after: {
@@ -405,7 +486,8 @@ export const projectStatus = {
 };
 
 export const waitlist = {
-  title: 'Von Anfang an dabei sein.',
+  // The giant closing H2 on the yellow band; also the title of the topic pages' closing block and the sticky bar
+  title: 'Früh dabei sein.',
   intro: 'Tragen Sie sich ein. Wir melden uns, sobald Sponsuno startet.',
   // Replaces intro while the form stores nothing (no VITE_WAITLIST_ENDPOINT); without a contact address no intro is shown
   previewIntro: 'Schreiben Sie uns eine kurze E-Mail. Wir melden uns, sobald Sponsuno startet.',
@@ -484,12 +566,17 @@ export const footer = {
   // mailto link and the town of the postal address. Not shown while both are missing.
   contactTitle: 'Kontakt',
   copyright: '© 2026 Team Sponsuno',
-  // Landing page only (the audience photos): the stock photos are named as such once, outside the content flow.
-  photoNote: { before: 'Fotos: Symbolbilder, ', link: 'Bildnachweise', href: 'impressum/#urheberrecht' },
+};
+
+// Sticker album in the footer (Easter egg, an optional layer hidden from assistive technology): its title and the
+// line shown once all six stickers are collected.
+export const album = {
+  title: 'Stickeralbum',
+  full: 'Album voll. Sie haben ein Auge für Details.',
 };
 
 export const stickyCta = {
-  text: 'Von Anfang an dabei sein.',
+  text: waitlist.title,
   button: 'Auf die Warteliste',
 };
 
@@ -573,8 +660,14 @@ export type PhotoCredit = {
   licenceUrl?: string;
 };
 
-/** Every third-party photo on the site, in page order. Listed in the Impressum. Originals stay outside the repo. */
-export const photoCredits: PhotoCredit[] = [
+/** Every third-party photo on the site, in page order. Listed in the Impressum. Originals stay outside the repo.
+    None since the «Turnhalle» redesign: the homepage shows vector graphics only, and the team portraits on
+    /ueber-uns/ are the founders' own photos. */
+export const photoCredits: PhotoCredit[] = [];
+
+/** Credits of the parked stock photos (match card avatar of the scroll story, audience tiles; src/assets/photos/):
+    move an entry back into photoCredits together with its photo. */
+export const parkedPhotoCredits: PhotoCredit[] = [
   {
     subject: 'Mountainbikerin in der Beispielkarte (Startseite), Symbolbild',
     photographer: 'Corneliu Stefan Esanu',
@@ -650,7 +743,7 @@ export const legal = {
     // persona portrait again: 'Porträt der Mountainbikerin in der Produktvorschau (Profil und Sponsor-Cockpit):
     // KI-generiert, Symbolbild ohne reale Person.' (the block is left out while the list is empty)
     aiImages: [] as string[],
-    fonts: 'Schrift: Schibsted Grotesk, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
+    fonts: 'Schriften: Archivo und Schibsted Grotesk, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
   },
 
   impressum: {
@@ -686,7 +779,6 @@ export const legal = {
           // Legally relevant (no misleading claims): the site describes the product before its launch. Keep this
           // section factual even though the rest of the site uses product voice (AGENTS.md, copy rules).
           { type: 'p', text: 'Sponsuno ist noch nicht gestartet. Vermittlung, KI-Sponsoringmanager und Zahlungen sind bis zum Start nicht verfügbar. Angaben zu Funktionen, Kosten und Abläufen geben den aktuellen Planungsstand wieder und können sich ändern.' },
-          { type: 'p', text: 'Die Fotos von Personen auf der Startseite sind Symbolbilder. Die abgebildeten Personen haben keinen Bezug zu Sponsuno.' },
         ],
       },
       {

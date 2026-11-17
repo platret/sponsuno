@@ -1,0 +1,36 @@
+/* Statement (Statement.tsx): parquet. Three sentences in large Schibsted 600 (about 40 px on desktop, 26 px on
+   phones), ink, then three points under a hairline, each with an icon slot. Prefix st-. */
+
+.st { padding-block: clamp(3.5rem, 2.5rem + 5vw, 7.5rem); }
+
+.st-text {
+  max-width: 58rem;
+  font: 600 clamp(1.625rem, 1.15rem + 2.1vw, 2.5rem)/1.2 var(--sans);
+  letter-spacing: -0.02em;
+  color: var(--heading);
+  text-wrap: pretty;
+}
+
+.st-points {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem clamp(1.5rem, 1rem + 3vw, 4rem);
+  margin-top: clamp(2.5rem, 2rem + 3vw, 5rem);
+  padding-top: clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
+  border-top: 1px solid var(--line);
+}
+.st-point {
+  display: flex; align-items: flex-start; gap: .875rem;
+  font-size: 1rem; line-height: 1.45; font-weight: 600; color: var(--heading);
+  text-wrap: balance;
+}
+/* Icon slot (24 px, the kit's line icon in blue); until the icon is there, a small blue dot holds the place */
+.st-icon {
+  flex: none; display: grid; place-items: center;
+  width: 24px; height: 24px; margin-top: -.05rem;
+  color: var(--blau);
+}
+.st-icon:empty::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+
+@media (max-width: 760px) {
+  .st-points { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+}

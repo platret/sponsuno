@@ -1,0 +1,33 @@
+/* Match card (MatchCard.tsx): one card on the page surface (parquet, 1 px line, radius 20), used in "So funktioniert
+   es". Label, two parties with vector avatars, then the four criteria as dots in the four line colours and the
+   result. Prefix match-. (The parked scroll story styled the same markup on ink in story-art.css.) */
+
+.match {
+  display: grid; gap: 1.1rem;
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--parkett);
+  color: var(--text);
+}
+.match-label { font-size: .75rem; line-height: 1.4; color: var(--text); }
+.match-party { display: flex; align-items: center; gap: .9rem; }
+.match-mark {
+  flex: none; display: grid; place-items: center;
+  width: 48px; height: 48px; border-radius: 50%;
+  font: 800 1.375rem/1 var(--display);
+}
+.match-mark-seeker { background: var(--blau); color: var(--weiss); }
+.match-mark-seeker svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.match-mark-firm { background: var(--gelb); color: var(--tinte); }
+.match-party-text { min-width: 0; }
+.match-role { font-size: .75rem; font-weight: 600; color: var(--accent-text); }
+.match-name { margin-top: .1rem; font-weight: 600; font-size: 1.0625rem; line-height: 1.25; color: var(--heading); }
+.match-meta { margin-top: .15rem; font-size: .8125rem; line-height: 1.4; }
+.match-foot { display: grid; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.match-criteria { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; }
+.match-criteria li { display: inline-flex; align-items: center; gap: .45rem; font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--heading); }
+.match-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--blau); }
+.match-criteria li:nth-child(2) .match-dot { background: var(--rot); }
+.match-criteria li:nth-child(3) .match-dot { background: var(--gruen); }
+.match-criteria li:nth-child(4) .match-dot { background: var(--gelb); }
+.match-score { font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--heading); }

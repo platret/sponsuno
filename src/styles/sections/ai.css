@@ -21,9 +21,9 @@
   display: flex; flex-direction: column;
   min-width: 0;
   border-radius: var(--radius);
-  background: var(--grad-dark);
-  border: 1px solid var(--card-dark-line);
-  color: var(--steel);
+  background: var(--tinte);
+  border: 1px solid var(--linie-dunkel);
+  color: var(--grau-hell);
   /* clip, not hidden: hidden makes the frame a scroll container, and the draft sheet's view() timeline
      would then track this frame instead of the page (it would freeze half-faded) */
   overflow: hidden;
@@ -33,10 +33,10 @@
 .ai-device-bar {
   display: flex; align-items: center; gap: .75rem;
   padding: 1rem clamp(1.25rem, .75rem + 1.6vw, 2.5rem);
-  border-bottom: 1px solid var(--card-dark-line);
+  border-bottom: 1px solid var(--linie-dunkel);
 }
-.ai-device-icon { width: 24px; height: 24px; border-radius: 22%; flex: none; outline: 1px solid var(--card-dark-line); }
-.ai-device-app { font-size: var(--fs-small); font-weight: 600; line-height: 1.3; color: var(--kalk); }
+.ai-device-icon { width: 24px; height: 24px; border-radius: 22%; flex: none; outline: 1px solid var(--linie-dunkel); }
+.ai-device-app { font-size: var(--fs-small); font-weight: 600; line-height: 1.3; color: var(--parkett); }
 
 .ai-device-body {
   flex: 1;
@@ -44,7 +44,7 @@
   padding: clamp(1.25rem, .75rem + 1.6vw, 2.5rem);
 }
 
-.ai-draft-label { color: var(--brass); }
+.ai-draft-label { color: var(--gelb); }
 
 .ai-draft-sheet {
   flex: 1;
@@ -53,27 +53,27 @@
   margin-top: 1rem;
   padding: clamp(1.25rem, .9rem + 1vw, 2rem);
   border-radius: var(--radius-sm);
-  background: var(--card-dark-b);
-  border: 1px solid var(--card-dark-line);
+  background: var(--tinte-2);
+  border: 1px solid var(--linie-dunkel);
 }
 .ai-draft-text {
   min-height: 7.5em;
   max-width: 34rem;
   font-size: var(--fs-body); line-height: 1.6;
-  color: var(--kalk);
+  color: var(--parkett);
 }
 
 .ai-draft-foot {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 1rem 1.5rem;
   margin-top: auto; padding-top: 1.25rem;
-  border-top: 1px solid var(--card-dark-line);
+  border-top: 1px solid var(--linie-dunkel);
 }
 .ai-draft-status {
   display: inline-flex; align-items: center; gap: .6rem;
-  font-size: var(--fs-small); line-height: 1.4; color: var(--steel);
+  font-size: var(--fs-small); line-height: 1.4; color: var(--grau-hell);
 }
-.ai-draft-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brass); flex: none; }
+.ai-draft-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gelb); flex: none; }
 
 .ai-draft-actions { display: flex; gap: .5rem; }
 /* Illustrative controls (spans, not buttons): shaped like the small pill buttons, but not interactive */
@@ -84,8 +84,8 @@
   font-size: var(--fs-small); font-weight: 600; line-height: 1.2;
   cursor: default; user-select: none;
 }
-.ai-chip-primary { background: var(--brass); color: var(--graphit); }
-.ai-chip-outline { border-color: var(--card-dark-line); color: var(--kalk); }
+.ai-chip-primary { background: var(--gelb); color: var(--tinte); }
+.ai-chip-outline { border-color: var(--linie-dunkel); color: var(--parkett); }
 
 /* ---------- Small light cards ---------- */
 

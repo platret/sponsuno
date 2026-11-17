@@ -4,17 +4,18 @@ import { observeReveals, scrollToHash } from './lib/motion';
 import { MOVED_SECTIONS, pageHref, ROLE_PARAM } from './lib/links';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Story } from './components/Story';
-import { ProofLine } from './components/ProofLine';
-import { Audience } from './components/Audience';
-import { HowItWorks } from './components/HowItWorks';
+import { Statement } from './components/Statement';
+import { WordBand } from './components/WordBand';
+import { Steps } from './components/Steps';
+import { Doors } from './components/Doors';
 import { Waitlist } from './components/Waitlist';
 import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
 
 /**
- * The landing page: hero, scroll story, proof line, audience ("two doors"), how it works, waitlist. KI-Manager,
- * Kosten, Fragen and Team moved to their own static pages (InfoPage.tsx), reached from the header.
+ * The landing page («Turnhalle», November 2026), seven short blocks: header, hero, statement, word band, how it works
+ * (three steps), the two doors, waitlist + footer. Kosten, Fragen and Team are static pages of their own
+ * (InfoPage.tsx), reached from the header. Parked and not imported: Story, StoryArt, ProofLine, Audience, HowItWorks.
  */
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
@@ -73,10 +74,10 @@ export default function App() {
       <Header />
       <main id="inhalt">
         <Hero onChooseRole={setRole} />
-        <Story />
-        <ProofLine />
-        <Audience />
-        <HowItWorks onChooseRole={setRole} />
+        <Statement />
+        <WordBand />
+        <Steps />
+        <Doors onChooseRole={setRole} />
         <Waitlist role={role} onRoleChange={setRole} />
       </main>
       <Footer />

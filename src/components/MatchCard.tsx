@@ -1,26 +1,24 @@
-import photo from '../assets/photos/mtb-athlete-104.jpg';
-import photoAvif from '../assets/photos/mtb-athlete-104.avif';
 import type { CSSProperties } from 'react';
 import { match } from '../content';
+import '../styles/sections/match.css';
 
 /**
- * The fictional match (mountain biker and bike shop, four criteria, "Passt in 4 von 4 Kriterien"). Shown on the
- * story stage in the "match" step, where it grows out of the lead pair card. One surface in the pair card's
- * language: both parties on the same grid (photo and brass disc the same size), then under a hairline the four
- * criteria as brass dots with their names and the result as plain text. Presentational only: the dots tick and the
- * result appears when the live stage reaches "match" (story.css); snapshots and reduced motion show the final state.
- * Decorative there (the stage is aria-hidden; the step text carries the meaning).
+ * The fictional match (mountain biker and bike shop, four criteria, "Passt in 4 von 4 Kriterien"), shown in "So
+ * funktioniert es" under the three steps. One card on the page surface: the "Beispieldaten" label (the card's one label,
+ * copy rule 6), both parties on the same grid with vector avatars (no photo: a blue disc with a line figure for the
+ * seeker, a yellow disc with the firm's initial), then under a hairline the four criteria as dots in the four line
+ * colours with their names and the result as plain text. A figure with real text; static (the Steps section may
+ * animate the dots via --i). Classes prefixed match-.
  */
 export function MatchCard() {
   const parties = [
     { key: 'athlete', p: match.athlete, mark: (
-      // AVIF with the JPEG as fallback (scripts/photos.mjs)
-      <picture className="match-picture">
-        <source type="image/avif" srcSet={photoAvif} />
-        <img className="match-photo" src={photo} alt="" width={48} height={48} decoding="async" loading="lazy" />
-      </picture>
+      <span className="match-mark match-mark-seeker" aria-hidden="true">
+        {/* TODO(kit): <Icon name="profil" size={24} /> may replace this figure */}
+        <svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="8.5" r="3.5" /><path d="M5 20c.6-3.8 3.4-6 7-6s6.4 2.2 7 6" /></svg>
+      </span>
     ) },
-    { key: 'sponsor', p: match.sponsor, mark: <span className="match-mark">{match.sponsor.mark}</span> },
+    { key: 'sponsor', p: match.sponsor, mark: <span className="match-mark match-mark-firm" aria-hidden="true">{match.sponsor.mark}</span> },
   ];
   return (
     <figure className="match">

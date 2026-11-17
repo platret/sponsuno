@@ -3,7 +3,7 @@ import { waitlistHref, WAITLIST_ENDPOINT } from '../lib/links';
 import '../styles/sections/faq.css';
 
 /** The body of /fragen/: the questions as native <details> rows (no JS, keyboard and screen reader support built
-    in), as a stack of cards on the kalk band under the page head band (title = the page's H1, intro: FaqIntro). The answers
+    in), as a stack of cards on the parkett-2 band under the page head band (title = the page's H1, intro: FaqIntro). The answers
     also feed the FAQPage JSON-LD of that page (entry-server.tsx). */
 // While the waitlist stores nothing, "tell us on the waitlist" would be a promise we cannot keep: offer the e-mail instead
 // (same switch as the waitlist intro). Without a contact address no intro is shown.
@@ -24,7 +24,7 @@ export function FaqIntro() {
 
 export function Faq() {
   return (
-    <section className="section surface-kalk" id="fragen" aria-labelledby="fragen-title">
+    <section className="section surface-parkett-2" id="fragen" aria-labelledby="fragen-title">
       <div className="container">
         <div className="faq-list" data-reveal="" data-scroll="group">
           {faq.items.map((item) => (

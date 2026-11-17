@@ -6,14 +6,15 @@ import { siteHref } from '../lib/links';
 import { MobileMenu } from './MobileMenu';
 import '../styles/sections/header.css';
 
-/** Landing page header. Plain full-width bar: transparent at the top, solid graphit while the hero and the story run
-    under it, solid on the kalk page surface once it reaches it. The nav links to the topic pages (content.ts → nav, shared
-    with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
+/** Landing page header. Plain full-width bar: transparent on the parquet hero with the ink wordmark, solid parquet
+    with a hairline after 80 px, solid ink with the parquet wordmark while an ink band (every element marked
+    `data-header-dark`: the word band, the footer) runs under it. The nav links to the topic pages (content.ts → nav,
+    shared with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLSpanElement>(null);
   const [solid, setSolid] = useState(false);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // No scroll handler: IntersectionObservers only. The bar turns solid once the sentinel (80 px down the
@@ -26,9 +27,9 @@ export function Header() {
     });
     if (sentinel) solidIo.observe(sentinel);
 
-    // While the graphit hero or the graphit story runs under the bar, the solid bar stays graphit (no kalk strip over
-    // the pinned stage); it turns to the page surface once that reaches it. The band is the bar's own height.
-    const darkZones = [document.getElementById('top'), document.getElementById('problem')].filter((el): el is HTMLElement => el !== null);
+    // While an ink band runs under the bar, the solid bar is ink (no parquet strip over the band); it turns back to
+    // the page surface once that reaches it. The observed band is the bar's own height.
+    const darkZones = [...document.querySelectorAll<HTMLElement>('[data-header-dark]')];
     const underBar = new Map<Element, boolean>();
     let darkIo: IntersectionObserver | undefined;
     const buildDark = () => {
@@ -75,9 +76,9 @@ export function Header() {
       <header className={`site-header${isSolid ? ' is-solid' : ''}${isDark ? ' is-dark' : ''}`}>
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
-            <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} />
-            {/* Hidden until the bar turns kalk: low priority, so React does not preload it with the first screen */}
-            <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} fetchPriority="low" />
+            <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} />
+            {/* Hidden until the bar turns ink: low priority, so React does not preload it with the first screen */}
+            <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>
@@ -87,6 +88,7 @@ export function Header() {
             </ul>
           </nav>
           <div className="header-actions">
+            {/* TODO(kit): the sticker album's counter chip ("2/6", Easter egg, aria-hidden) appears here, before the button */}
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>
               <span className="header-cta-short">{cta.waitlistShort}</span>

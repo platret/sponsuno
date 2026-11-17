@@ -1,5 +1,38 @@
 # DESIGN.md – Sponsuno visual system
 
+> **Turnhalle (in progress, 2026-11-17).** The site is being moved to design system v2 «Turnhalle» (owner's direction:
+> alive, less text, stickers, court lines, scroll effects). Tokens, fonts, base layer and the homepage skeleton are
+> done; everything below this note still describes v1.0 («Graphit, Messing, Kalk») and is rewritten when the redesign
+> is finished. Where the two disagree, this note and the code win.
+>
+> - **Raw tokens** (`src/styles/tokens.css`): `--tinte` #1A1C20, `--tinte-2` #2A2D33, `--parkett` #F8F4EA, `--parkett-2`
+>   #EFE8D8, `--grau` #55585E, `--grau-hell` #B9BBBF, `--blau` #1F4E9C, `--rot` #C23B24, `--gruen` #1A7552, `--gelb`
+>   #EDBE3A, `--linie` #E2DAC6, `--linie-dunkel` #3A3E45, `--weiss` #FFFFFF (sticker borders, text on blue/red/green),
+>   `--error-on-dark` #F2C5B5. Gone: graphit, kalk, paper, brass, steel, ink, rule, card-dark, every `--grad-*` (flat
+>   colours only). Card radius `--radius` 20 px, pills 999 px.
+> - **Role tokens** stay (`--bg`, `--bg-alt`, `--surface`, `--heading`, `--text`, `--line`, `--accent-text`, `--btn-*`,
+>   `--focus`): `:root` holds the parquet values (accent and focus blue). Surface classes in `site.css` set them again
+>   for their ground: `.surface-tinte` (ink: headings parquet, text light grey, accent and focus yellow, cards tinte-2;
+>   used by the static header, the page head band, the footer, the waitlist card, the word band), `.surface-blau`,
+>   `.surface-rot` (white text), `.surface-gelb` (ink text), `.surface-parkett`, `.surface-parkett-2`.
+> - **Buttons** (pills): `.btn-tinte` (primary on parquet and yellow), `.btn-gelb` (primary on ink), `.btn-parkett`
+>   (primary on blue or red), `.btn-outline` (secondary on any ground; `.btn-ghost` is its old name).
+> - **Fonts**: display `--display` = "Archivo Wide" 800 (one static instance of Archivo, wdth 125 / wght 800, cut by
+>   `npm run fonts`; fallback "Archivo Wide Fallback" on Arial Bold) for H1, H2, giant words, big numerals and anything
+>   with the class `.display`; tracking -0.02em, line-height 0.98 to 1.04, `hyphens: manual` plus soft hyphens in
+>   `content.ts`. Text and UI `--sans` = Schibsted Grotesk 400 and 600 (700 is gone). Every page preloads exactly three
+>   files: Archivo Wide 800, Schibsted 400, Schibsted 600 (core subsets).
+> - **Cascade**: the base rules of `site.css` sit in `@layer base`; section stylesheets and the kit are unlayered and
+>   always win. The reveal and scroll primitives stay unlayered.
+> - **Homepage order**: Header, Hero (`#top`, parquet), Statement (parquet), WordBand (ink), Steps (`#ablauf`,
+>   parkett-2), Doors (`#fuer-wen`, blue and red tiles), Waitlist (`#warteliste`, yellow band, form in an ink card),
+>   Footer (ink, sticker album slot `.ft-album[data-album]`). Parked: Story, StoryArt, storyLayout, Audience, ProofLine,
+>   HowItWorks (sources stay, not imported).
+> - **theme-color**: `#F8F4EA` on the homepage (opens on the parquet hero), `#1A1C20` on every static page (opens on
+>   the ink header and page band).
+> - **Kit** (`src/components/kit/`, `src/styles/kit.css`): `Sticker`, `TextSticker`, `Icon`, `CourtLines` and the scroll
+>   primitives `draw`, `fill-words`, `slide-x`.
+
 The source of truth for colours, type, shapes and the logo is the **Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk")**, Alex's design-system artifact. It replaced the navy/gold/Cormorant look of the CD manual on 2026-11-16 (PR #23). This file translates it into how the website uses it. If the code and this file disagree, fix one of them in the same change.
 
 Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.css); the landing page base layer is [`src/styles/site.css`](src/styles/site.css); each section has its own stylesheet in `src/styles/sections/`.

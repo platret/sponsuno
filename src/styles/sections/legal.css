@@ -1,7 +1,7 @@
-/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on graphit: the
-   slim header with the site nav, then the page head band (PageBand: label, H1, intro). Below it the light page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
+/* Static pages (topic pages, guides, legal pages, 404): every page opens on ink: the slim header with the site nav,
+   then the page head band (PageBand: label, H1, intro), both .surface-tinte. Below it the parquet page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
    the table of contents in a sticky rail beside one readable column (~42rem) from 1100 px; narrower, and on the other
-   reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone graphit footer.
+   reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone ink footer.
    No motion, no script. Classes prefixed lg-.
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
@@ -10,14 +10,13 @@
 html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 
 /* ---------- Header (PageHeader.tsx): wordmark, nav, waitlist button; below 961 px a native <details> menu.
-   Flat graphit, closed off from the page head band by one dark hairline. ---------- */
+   Ink (.surface-tinte in PageHeader.tsx sets ground and roles), closed off from the page head band by one dark
+   hairline. ---------- */
 .lg-header {
   position: relative; z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
-  background: var(--graphit);
-  color: var(--kalk);
-  border-bottom: 1px solid var(--card-dark-line);
-  --focus: var(--brass-light);
+  color: var(--heading);
+  border-bottom: 1px solid var(--line);
 }
 /* Gaps match .header-inner (header.css), so the nav and the button sit in the same place on every page */
 .lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
@@ -28,10 +27,10 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-nav ul { display: flex; gap: .25rem; }
 .lg-nav a {
   display: flex; align-items: center; min-height: 44px; padding: 0 .8rem; border-radius: var(--radius-pill);
-  font-size: var(--fs-small); color: var(--steel); text-decoration: none;
+  font-size: var(--fs-small); font-weight: 600; color: var(--text); text-decoration: none;
 }
-.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--kalk); background: rgba(245, 243, 238, .07); }
-.lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 8px; }
+.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--heading); background: color-mix(in srgb, var(--heading) 8%, transparent); }
+.lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 .lg-cta-short { display: none; }
 
 .lg-menu { display: none; }
@@ -50,23 +49,22 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-menu[open] .lg-menu-bars { background: transparent; }
 .lg-menu[open] .lg-menu-bars::before { transform: translateY(6px) rotate(45deg); }
 .lg-menu[open] .lg-menu-bars::after { transform: translateY(-6px) rotate(-45deg); }
-/* The open menu drops down under the bar, full width, over the page, on the page surface */
+/* The open menu drops down under the bar, full width, over the page: ink like the bar (the roles come from the header) */
 .lg-menu-sheet {
   position: absolute; top: 100%; left: 0; right: 0;
   padding: .5rem var(--gutter) 1.5rem;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
-  --focus: var(--accent-text);
 }
 .lg-menu-sheet li { border-bottom: 1px solid var(--line); }
 .lg-menu-sheet a {
   display: block; padding: .8rem 0;
-  font: 700 clamp(1.5rem, 5.5vw, 2rem)/1.15 var(--display); letter-spacing: var(--display-tracking);
+  font: 800 clamp(1.375rem, 6vw, 1.875rem)/1.15 var(--display); letter-spacing: var(--display-tracking);
   color: var(--heading); text-decoration: none;
 }
-.lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
-/* Six nav items plus the button: tighter between 961 and 1140 px, the menu below */
+/* Four nav items plus the button: tighter between 961 and 1140 px, the menu below */
 @media (max-width: 1140px) {
   .lg-header-inner { gap: 1.25rem; }
   .lg-nav a { padding-inline: .55rem; }
@@ -82,41 +80,33 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
   .lg-cta-short { display: inline; }
 }
 
-/* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on graphit, right under the header ----------
-   verlauf-dunkel, like the landing page hero, so every page opens the same way. The band is a graphit surface, so it
-   sets the dark roles locally. From 1200 px a large, faint loop sits in the empty right half (the only graphic on these pages). */
+/* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on ink, right under the header ----------
+   .surface-tinte (set in PageBand) paints the ground and sets the ink roles: parquet H1, light grey intro, yellow label
+   and link underline. The H1 may run wider than the intro (the display face is wide). From 1200 px a large, faint loop
+   sits in the empty right half; the kit may lay court lines over the band. */
 .lg-band {
   position: relative; overflow: hidden;
-  background: var(--grad-dark);
-  color: var(--steel);
   padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) clamp(3rem, 2rem + 4vw, 6rem);
-  --heading: var(--kalk);
-  --text: var(--steel);
-  --line: var(--card-dark-line);
-  --accent-text: var(--brass);
-  --focus: var(--brass-light);
 }
 .lg-band > .container { position: relative; z-index: 1; }
-.lg-band-inner { max-width: 46rem; }
-.lg-band-narrow { max-width: 42rem; }
+.lg-band h1 { max-width: 14em; }
 .lg-band-label { margin-bottom: 1.25rem; }
-.lg-band h1 { color: var(--kalk); }
-.lg-band .lg-intro, .lg-band .section-intro { color: var(--steel); max-width: 42rem; }
+.lg-band .lg-intro, .lg-band .section-intro, .lg-band .gd-note { max-width: 42rem; }
 .lg-band::after {
   content: ""; display: none;
   position: absolute; top: 50%; right: max(var(--gutter), calc((100% - 1200px) / 2 + var(--gutter)));
   width: clamp(16rem, 24vw, 22rem); aspect-ratio: 90 / 58.8;
   translate: 0 -50%;
-  background: var(--kalk); opacity: .035;
+  background: var(--parkett); opacity: .04;
   -webkit-mask: url("../../assets/loop.svg") center / contain no-repeat;
   mask: url("../../assets/loop.svg") center / contain no-repeat;
   pointer-events: none;
 }
 @media (min-width: 1200px) { .lg-band::after { display: block; } }
-/* Links on graphit: kalk with a Messing hell underline (as in the waitlist) */
+/* Links on ink: parquet with a yellow underline (as in the waitlist card) */
 .lg-band a:not(.btn) {
-  color: var(--kalk); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--brass-light); text-underline-offset: 3px;
+  color: var(--heading); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-band a:not(.btn):hover { text-decoration-thickness: 2px; }
@@ -151,7 +141,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
   color: var(--accent-text);
 }
 .lg-toc a:hover { color: var(--heading); }
-.lg-toc a:hover span { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--brass); }
+.lg-toc a:hover span { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--accent-text); }
 
 .lg-section { margin-top: clamp(3rem, 2.25rem + 2.5vw, 4.5rem); padding-top: clamp(1.75rem, 1.5rem + 1vw, 2.5rem); border-top: 1px solid var(--line); }
 .lg-doc { counter-reset: lg-section; }
@@ -171,7 +161,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 
 .lg-intro a, .lg-section a, .nf-contact a {
   color: var(--heading); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px;
+  text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-intro a:hover, .lg-section a:hover, .nf-contact a:hover { text-decoration-thickness: 2px; }
@@ -196,7 +186,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-contact div:last-child { border-bottom: 0; }
 .lg-contact dt { font-weight: 600; color: var(--heading); }
 .lg-contact dd { margin: 0; }
-/* Missing contact data is marked, not hidden: brass text (Messing dunkel) with a short brass rule in front */
+/* Missing contact data is marked, not hidden: accent text (blue) with a short rule in front */
 .lg-pending { color: var(--accent-text); font-weight: 600; }
 .lg-pending::before { content: ""; display: inline-block; width: .9rem; height: 2px; margin-right: .5rem; vertical-align: middle; background: currentColor; }
 
