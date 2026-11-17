@@ -24,7 +24,7 @@ const closingLine = (live: string, preview: string): string | null =>
   WAITLIST_ENDPOINT ? live : contact.email ? preview : null;
 
 /**
- * Topic pages reached from the header (/fuer-firmen/, /ki-manager/, /kosten/, /fragen/, /ueber-uns/). Static:
+ * Topic pages reached from the header (/kosten/, /fragen/, /ueber-uns/; parked, not built: /fuer-firmen/, /ki-manager/). Static:
  * prerendered at build time, shipped without a JavaScript module (CSS from src/static/sections.ts; Für Firmen only
  * needs the guide styles of src/static/main.ts). No motion, except /ki-manager/: its pinned bento runs on CSS scroll
  * timelines once an inline head script sets html.scroll-fx (`scrollFx` in pages.ts).
@@ -73,7 +73,7 @@ function TopicBand({ id }: { id: InfoPageId }) {
   }
 }
 
-/** Closing block: the waitlist (on the landing page) as the primary button, the demo as a quiet link. */
+/** Closing block: the waitlist (on the landing page) as the button. */
 function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
   const text = closingLine(infoPage.endText, infoPage.previewEndText);
@@ -85,9 +85,6 @@ function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
         {more && <p className="pg-end-more">{rich(more)}</p>}
         <div className="pg-end-actions">
           <a className="btn btn-graphit" href={waitlistHref(role)}>{infoPage.endButton}</a>
-          <a className="pg-end-demo" href={pageHref(infoPage.demoHref)}>
-            <span className="pg-end-demo-label">{infoPage.demoLabel}</span>
-          </a>
         </div>
       </div>
     </section>
@@ -95,7 +92,7 @@ function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
 }
 
 /**
- * /fuer-firmen/: the page for companies, in the reading column of the guides (legal.css, guide.css, plus the cockpit
+ * /fuer-firmen/ (parked, not built): the page for companies, in the reading column of the guides (legal.css, guide.css, plus the cockpit
  * box from page.css). Copy in content.ts → forFirms, built from sponsor copy that already exists on the site.
  */
 function FirmsPage() {

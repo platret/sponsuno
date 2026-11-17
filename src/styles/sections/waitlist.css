@@ -4,8 +4,6 @@
    pills (real radios), one e-mail row with the brass pill button, the hint; after sending, the success box. */
 
 .wl.surface-graphit { background: var(--graphit); }
-/* Dark theme: a hairline marks where the graphit block meets the graphit page (--edge is transparent in the light theme) */
-.wl { border-top: 1px solid var(--edge); }
 .wl.section { padding-bottom: clamp(4rem, 3rem + 4vw, 6.5rem); }
 
 /* ---------- Signature 2: "the page opens" (DESIGN.md -> Motion) ----------
@@ -134,14 +132,14 @@
   font-size: var(--fs-small); line-height: 1.55; color: var(--steel);
 }
 
-/* Links in the hint and the success box: kalk, underlined in brass (hover: thicker) */
-.wl-hint a, .wl-next a {
+/* Links in the hint: kalk, underlined in brass (hover: thicker) */
+.wl-hint a {
   color: var(--kalk); font-weight: 600;
   text-decoration: underline; text-decoration-color: var(--brass);
   text-underline-offset: 3px; text-decoration-thickness: 1px;
   overflow-wrap: anywhere;
 }
-.wl-hint a:hover, .wl-next a:hover { text-decoration-thickness: 2px; }
+.wl-hint a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Success (inside the card) ---------- */
 
@@ -160,12 +158,6 @@
   margin-top: 1.25rem;
 }
 .wl-mail-address { font-size: var(--fs-small); color: var(--steel); overflow-wrap: anywhere; }
-/* One next step per role, under a hairline */
-.wl-next {
-  margin-top: 1.5rem; padding-top: 1.25rem;
-  border-top: 1px solid var(--card-dark-line);
-  font-size: var(--fs-small); color: var(--steel);
-}
 .motion .wl-success { animation: wl-in .5s var(--ease-out) both; }
 @keyframes wl-in { from { opacity: 0; transform: translateY(8px); } }
 

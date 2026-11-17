@@ -1,22 +1,25 @@
 // Checks the built site in dist/ (run after `npm run build`): `npm run check:dist`. Plain Node, no dependencies.
 // Fails with a list of problems when
 // - an indexable page lacks exactly one <h1>, a <title>, a meta description or a canonical matching its path on
-//   https://sponsuno.ch/ (404.html, the client-only demo and the waitlist confirmation are exempt), or carries noindex
+//   https://sponsuno.ch/ (404.html and the waitlist confirmation are exempt; so is the client-only demo when it is
+//   built again), or carries noindex
 // - one of those noindex pages lacks <meta name="robots" content="noindex">, or is missing
 // - a URL in dist/sitemap.xml has no page in dist/ or is a noindex page, or an indexable page is missing from the sitemap
 // - an internal href/src (links, assets, srcset, og:image) does not resolve to a file in dist/, or an #anchor does
-//   not exist in the target page (pages rendered only in the browser, like the demo's hash routes, are skipped)
+//   not exist in the target page (pages rendered only in the browser, like the parked demo's hash routes, are skipped)
 // - a JSON-LD block is not valid JSON
-// - a page other than the landing page and the demo loads a script file (the static pages ship no JavaScript by
+// - a page other than the landing page (and the parked demo) loads a script file (the static pages ship no JavaScript by
 //   design: scripts/prerender.mjs drops their empty module; inline scripts in the head are fine)
 // - a script the landing page loads (module script, modulepreloads and their static imports) contains text of the legal
-//   pages, the guides, /fuer-firmen/ or the 404 page
+//   pages or the 404 page
 // - 404.html, which is served under any URL, uses a relative URL
 // - the text of a page or a script uses a character outside the core font subset (scripts/font-glyphs.mjs): it would
 //   load an extra font file the page does not preload, or render in a system font
 // - dist/_headers misses the immutable rule of a file in dist/assets/, gives a splat rule a long cache (it would cover
 //   the 404 page too), names a file that does not exist, makes an unhashed file immutable, or has over 100 rules
-// - the landing page's initial JS or CSS, the demo's initial JS or a static page's CSS exceeds its size budget
+// - dist/_redirects (the old URLs of the parked pages) is missing, has a malformed line, redirects a path that exists in
+//   dist/ (it would hide a published page or file), points to a page that does not exist, or breaks Cloudflare's limits
+// - the landing page's initial JS or CSS, the demo's initial JS (when built) or a static page's CSS exceeds its size budget
 //   (scripts/dist-size.mjs; a size table is printed on every run)
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -29,10 +32,11 @@ const SITE_ORIGIN = new URL(SITE_URL).origin;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 
-/** Pages that may load JavaScript files (relative to dist/). */
-const SCRIPT_PAGES = new Set(['index.html', 'demo/index.html']);
-/** Pages exempt from the SEO head checks; they must carry noindex instead (pages.ts: index: false, plus the demo). */
-const NOINDEX_PAGES = new Set(['404.html', 'demo/index.html', 'warteliste/bestaetigt/index.html']);
+/** Pages that may load JavaScript files (relative to dist/). The demo is parked (not built); add
+    'demo/index.html' here and to NOINDEX_PAGES again when it comes back. */
+const SCRIPT_PAGES = new Set(['index.html']);
+/** Pages exempt from the SEO head checks; they must carry noindex instead (pages.ts: index: false). */
+const NOINDEX_PAGES = new Set(['404.html', 'warteliste/bestaetigt/index.html']);
 
 const problems = [];
 const fail = (file, message) => problems.push(`dist/${file}: ${message}`);
@@ -171,16 +175,14 @@ for (const [file, { tags, title, scripts }] of pages) {
 // --- Landing page JavaScript carries no text of other pages ---
 // The landing page bundle imports content.ts; a dynamic lookup (guides[id]) or a read of `legal` makes the bundler keep
 // whole objects, which ships guide or legal text to every visitor (fixed 2026-11-10: guideTitles, contact). Each
-// marker must stay on its page (else pick a new one) and must not appear in a script the landing page loads.
+// marker must stay on its page (else pick a new one) and must not appear in a script the landing page loads. The parked
+// guides and /fuer-firmen/ had markers here too ('Sponsoring ist ein Austausch', 'Klären Sie vor dem ersten Satz drei
+// Dinge', 'Wozu ein Dossier, und wann eine kurze Mail reicht', 'Instrumente, Kostüme und Technik als Sachleistung',
+// 'Was Vereine, Sportlerinnen und Sportler bieten'): add a page's line again when it is built again.
 
 const FOREIGN_TEXT = [
   ['datenschutz/index.html', 'Rechtsgrundlage'],
   ['impressum/index.html', 'SIL Open Font'],
-  ['sponsoren-finden/index.html', 'Sponsoring ist ein Austausch'],
-  ['sponsoring-anfrage/index.html', 'Klären Sie vor dem ersten Satz drei Dinge'],
-  ['sponsoring-dossier/index.html', 'Wozu ein Dossier, und wann eine kurze Mail reicht'],
-  ['kultursponsoring/index.html', 'Instrumente, Kostüme und Technik als Sachleistung'],
-  ['fuer-firmen/index.html', 'Was Vereine, Sportlerinnen und Sportler bieten'],
   ['404.html', 'Diese Seite gibt es nicht'],
 ];
 const home = pages.get('index.html');
@@ -343,6 +345,55 @@ if (!(await exists(headersFile))) {
   }
 }
 
+// --- Redirects (dist/_redirects, copied from public/) ---
+// Old URLs of the parked pages go to the homepage (301). A redirect wins over an asset on Cloudflare, so a source that
+// exists in dist/ would hide a published page or file: that fails here (drop the line when a page comes back).
+
+const redirectsFile = path.join(dist, '_redirects');
+if (!(await exists(redirectsFile))) {
+  problems.push('dist/_redirects: missing (public/_redirects)');
+} else {
+  let statics = 0;
+  let dynamics = 0;
+  const sources = new Set();
+  for (const [i, raw] of (await readFile(redirectsFile, 'utf8')).split('\n').entries()) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const where = `dist/_redirects line ${i + 1}`;
+    const [source, target, status, ...rest] = line.split(/\s+/);
+    if (rest.length || !status || !source.startsWith('/') || !['301', '302', '303', '307', '308'].includes(status)) {
+      problems.push(`${where}: expected "<source> <destination> <301|302|303|307|308>", got "${line}"`);
+      continue;
+    }
+    if (sources.has(source)) problems.push(`${where}: ${source} is redirected twice (only the first line applies)`);
+    sources.add(source);
+    const dynamic = source.includes('*') || source.includes('/:');
+    if (dynamic) dynamics++;
+    else if (dynamics) problems.push(`${where}: static redirect ${source} after a splat rule (static rules go first)`);
+    else statics++;
+    if (line.length > 1000) problems.push(`${where}: longer than 1000 characters`);
+    // The source must not exist in dist/
+    const prefix = source.replace(/\*.*$/, '').slice(1);
+    if (dynamic) {
+      if (await isDir(path.join(dist, prefix))) problems.push(`${where}: ${source} covers dist/${prefix}, which exists`);
+    } else {
+      const file = prefix === '' || prefix.endsWith('/') ? `${prefix}index.html` : prefix;
+      if ((await exists(path.join(dist, file))) || (await exists(path.join(dist, file, 'index.html')))) {
+        problems.push(`${where}: ${source} would hide dist/${file}, which exists`);
+      }
+    }
+    // The destination must be a page of the site
+    if (!target.startsWith('/') || target.includes(':')) {
+      problems.push(`${where}: destination ${target} is not a path on the site`);
+    } else {
+      const dest = new URL(target, SITE_URL).pathname.slice(1);
+      const file = dest === '' || dest.endsWith('/') ? `${dest}index.html` : dest;
+      if (!(await exists(path.join(dist, file)))) problems.push(`${where}: destination ${target} has no file in dist/`);
+    }
+  }
+  if (statics > 2000 || dynamics > 100) problems.push(`dist/_redirects: ${statics} static and ${dynamics} splat rules, Cloudflare allows 2000 and 100`);
+}
+
 // --- Size budget (scripts/dist-size.mjs) ---
 
 const sizes = await checkSizes(dist, pages);
@@ -357,4 +408,4 @@ if (problems.length) {
   console.error('');
   process.exit(1);
 }
-console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS, all text in the core font subset, cache rules, size budget)`);
+console.log(`check-dist: ${files.length} HTML pages OK (head tags, sitemap, internal links and anchors, JSON-LD, no scripts on static pages, no other pages' text in the landing page JS, all text in the core font subset, cache rules, redirects, size budget)`);

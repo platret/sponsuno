@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { contact, waitlist, waitlistNext, type Role } from '../content';
-import { siteHref, WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
+import { contact, waitlist, type Role } from '../content';
+import { WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import '../styles/sections/waitlist.css';
 
@@ -211,9 +211,6 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                   )}
                 </div>
               </div>
-              <p className="wl-next">
-                {waitlist.nextLabel} <a href={siteHref(waitlistNext[role].href, true)}>{waitlistNext[role].label}</a>
-              </p>
             </div>
           )}
           </div>

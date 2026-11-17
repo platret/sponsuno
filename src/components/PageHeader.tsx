@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 import { cta, legal, menu, nav, type Role } from '../content';
 import type { PageKind } from '../pages';
-import { navCurrent, pageHref, waitlistHref } from '../lib/links';
+import { navCurrent, pageHref, siteHref, waitlistHref } from '../lib/links';
 import wordmarkLight from '../assets/wordmark-light.svg';
-import { ThemeToggle } from './ThemeToggle';
 import '../styles/sections/legal.css';
 
 type PageHeaderProps = {
@@ -15,14 +14,14 @@ type PageHeaderProps = {
 
 /**
  * Skip link and slim graphit header of the static pages (topic pages, guides, legal pages, 404): wordmark, the same nav
- * as the landing page header (content.ts → nav), the theme switch and the waitlist button. Graphit in both themes, so
- * every page opens like the landing page; PageBand continues it with the H1. No JavaScript module: below 961 px the
- * nav sits in a native <details> menu that drops down under the bar; the theme switch runs on the inline head script.
+ * as the landing page header (content.ts → nav) and the waitlist button. Graphit by design, so every page opens like
+ * the landing page; PageBand continues it with the H1. No JavaScript: below 961 px the nav sits in a native <details>
+ * menu that drops down under the bar.
  */
 export function PageHeader({ current, role }: PageHeaderProps) {
   const links = nav.map((item) => (
     <li key={item.href}>
-      <a href={pageHref(item.href)} aria-current={navCurrent(item.href, current)}>{item.label}</a>
+      <a href={siteHref(item.href, false)} aria-current={navCurrent(item.href, current)}>{item.label}</a>
     </li>
   ));
 
@@ -38,7 +37,6 @@ export function PageHeader({ current, role }: PageHeaderProps) {
             <ul>{links}</ul>
           </nav>
           <div className="lg-actions">
-            <ThemeToggle />
             <a className="btn btn-sm btn-brass lg-cta" href={waitlistHref(role)}>
               <span className="lg-cta-long">{cta.waitlist}</span>
               <span className="lg-cta-short">{cta.waitlistShort}</span>
@@ -73,7 +71,7 @@ type PageBandProps = {
 
 /**
  * Page head band of the static pages, the first child of <main>: the H1 and its intro on graphit, right under the graphit
- * header, in both themes (legal.css → .lg-band). Starts in column 1 like every title; calm: no picture, no motion.
+ * header (legal.css → .lg-band). Starts in column 1 like every title; calm: no picture, no motion.
  */
 export function PageBand({ titleId, title, narrow = false, eyebrow, children }: PageBandProps) {
   return (

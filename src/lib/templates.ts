@@ -5,6 +5,7 @@
 // same text always gives the same bytes (reproducible builds, stable size label). Runs at build time only (and in dev).
 
 import { guidePage, guides, type GuideBlock, type GuideId } from '../content';
+import { pages } from '../pages';
 
 export type TemplateBlock = Extract<GuideBlock, { type: 'template' }>;
 
@@ -20,9 +21,9 @@ export function templateFile(id: GuideId, block: TemplateBlock): { path: string;
   };
 }
 
-/** Every template of every guide as a Word file (scripts/prerender.mjs) */
+/** Every template of every published guide as a Word file (scripts/prerender.mjs); parked guides get none */
 export function templateFiles(): { path: string; bytes: Uint8Array }[] {
-  return (Object.keys(guides) as GuideId[]).flatMap((id) =>
+  return (Object.keys(guides) as GuideId[]).filter((id) => pages.some((page) => page.id === id)).flatMap((id) =>
     guides[id].sections
       .flatMap((section) => section.blocks)
       .filter((block): block is TemplateBlock => block.type === 'template')

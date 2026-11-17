@@ -5,7 +5,6 @@
 
 .proof {
   padding-block: clamp(2.5rem, 2rem + 1.6vw, 3.5rem);
-  border-top: 1px solid var(--edge); /* dark theme: the seam under the graphit story */
   border-bottom: 1px solid var(--line);
 }
 

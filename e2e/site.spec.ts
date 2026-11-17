@@ -40,7 +40,7 @@ test('every header nav link leads to a page with an H1', async ({ page }) => {
       if (i > 0) await page.goto('/');
       const errors = trackErrors(page);
       await links.nth(i).click();
-      // Compare the path only: the demo adds its hash route (#/uebersicht) once it runs
+      // Compare the path only ('So funktioniert es' is an in-page link, #ablauf)
       const expected = new URL(href, page.url()).pathname;
       await expect(page).toHaveURL((url) => url.pathname === expected);
       await expect(page.locator('h1')).toHaveCount(1);
@@ -50,26 +50,10 @@ test('every header nav link leads to a page with an H1', async ({ page }) => {
   }
 });
 
-test('demo: a deep link opens its view, and every nav item loads its view (one chunk per view)', async ({ page }) => {
-  const errors = trackErrors(page);
-  await page.goto('/demo/#/sponsor');
-  await expect(page.locator('#demo-main h1')).toBeVisible();
-  await expect(page.locator('.demo-sidebar .demo-nav a[aria-current="page"]')).toHaveAttribute('href', '#/sponsor');
-  await page.goto('/demo/#/uebersicht');
-  const links = page.locator('.demo-sidebar .demo-nav a');
-  for (const href of await links.evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))) {
-    await page.locator(`.demo-sidebar .demo-nav a[href="${href}"]`).click();
-    await expect(page.locator(`.demo-sidebar .demo-nav a[href="${href}"]`)).toHaveAttribute('aria-current', 'page');
-    await expect(page.locator('#demo-main h1')).toBeVisible();
-    await expect(page.locator('.demo-view-pending')).toHaveCount(0);
-  }
-  expect(errors).toEqual([]);
-});
-
 test('pages download only their preloaded font files (the core subsets)', async ({ page }) => {
   // src/styles/fonts.css: each face has a core file (preloaded) and an extra file for characters the site's own text
   // does not use; scripts/check-dist.mjs checks the text, this checks what the browser actually fetches.
-  for (const path of ['/', '/impressum/', '/demo/']) {
+  for (const path of ['/', '/kosten/', '/impressum/']) {
     await test.step(path, async () => {
       const fonts: string[] = [];
       const onRequest = (request: { resourceType(): string; url(): string }) => {
@@ -148,10 +132,25 @@ test('an old section link (/#kosten) redirects to its topic page', async ({ page
   await expect(page.locator('h1')).toBeVisible();
 });
 
+test('a dark system setting still shows the one light theme', async ({ page }) => {
+  const look = () => page.evaluate(() => {
+    const root = getComputedStyle(document.documentElement);
+    return { scheme: root.colorScheme, bg: root.getPropertyValue('--bg').trim(), body: getComputedStyle(document.body).backgroundColor };
+  });
+  for (const path of ['/', '/impressum/']) {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto(path);
+    const light = await look();
+    await page.emulateMedia({ colorScheme: 'dark' });
+    expect(await look(), path).toEqual(light);
+    expect(light.scheme, path).toBe('light');
+  }
+});
+
 test.describe('phone viewport (390 × 844)', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
-  for (const path of ['/', '/sponsoren-finden/']) {
+  for (const path of ['/', '/kosten/', '/impressum/']) {
     test(`${path} has no horizontal overflow`, async ({ page }) => {
       await page.goto(path);
       await expect(page.locator('h1')).toBeVisible();

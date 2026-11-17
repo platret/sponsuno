@@ -59,11 +59,10 @@
   --scroll-recede-scale: 1;
   --scroll-recede-opacity: .4;
 
-  /* Theme tokens (DESIGN.md -> Colour, Theme). Light is the default; :root[data-theme="dark"] (set before the first
-     paint by the inline head script, THEME_SCRIPT in src/lib/theme.ts) and, without JavaScript, the visitor's system
-     setting switch to dark. Section CSS uses these for everything that follows the theme (page surfaces, text, lines,
-     the primary button on the page surface); surfaces that are graphit by design (hero, story, KI device, waitlist,
-     footer, the page head band of the static pages) keep the raw CD tokens above in both themes. */
+  /* Role tokens (DESIGN.md -> Colour, Theme): one light theme. Section CSS uses these for the page surface (page
+     surfaces, text, lines, the primary button on the page surface); surfaces that are graphit by design (hero, story,
+     KI device, waitlist, footer, the page head band of the static pages) use the raw CD tokens above, or set these
+     roles locally (.lg-band). */
   --bg: var(--paper);                  /* page surface (paper sections, reading column, scrolled header) */
   --bg-alt: var(--kalk-2);            /* alternate band, boxes on the page surface (table of contents) */
   --surface: var(--paper);             /* cards on either band (with a 1 px --line border) */
@@ -74,54 +73,11 @@
   --btn-bg: var(--graphit);               /* primary button on the page surface (.btn-graphit) */
   --btn-fg: var(--kalk);
   --btn-bg-hover: var(--graphit-2);
-  --edge: transparent;                 /* where a graphit-by-design block meets the page surface (visible in dark only) */
-  --wordmark-ink: block;               /* landing header once solid: graphit wordmark (light) or kalk wordmark (dark) */
-  --wordmark-light: none;
   --focus: var(--brass-dark);
 
-  /* The color-scheme meta of every page says "light dark": Safari's Adaptive Dark Mode and dark-mode extensions (Noir,
-     Dark Reader; plus the darkreader-lock meta) then leave the CD colours alone, because the page handles dark mode
-     itself. The per-theme value here pins the UA defaults (form controls, scrollbars) to the theme shown. */
+  /* Light only: the color-scheme meta of every page says "light" too, so form controls and scrollbars stay light
+     whatever the system setting. The darkreader-lock meta keeps dark-mode extensions (Dark Reader) off the CD colours. */
   color-scheme: light;
-}
-
-/* Dark: the graphit brand world on every page. The same block twice: once for the visitor's explicit choice (or the
-   system setting read by the head script), once for the system setting without JavaScript. Keep them identical. */
-:root[data-theme="dark"] {
-  --bg: var(--graphit);
-  --bg-alt: #262B30;
-  --surface: #2E343A;
-  --heading: var(--kalk);
-  --text: var(--steel);
-  --line: var(--card-dark-line);
-  --accent-text: var(--brass);
-  --btn-bg: var(--brass);
-  --btn-fg: var(--graphit);
-  --btn-bg-hover: var(--brass-light);
-  --edge: var(--card-dark-line);
-  --wordmark-ink: none;
-  --wordmark-light: block;
-  --focus: var(--brass);
-  color-scheme: dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: var(--graphit);
-    --bg-alt: #262B30;
-    --surface: #2E343A;
-    --heading: var(--kalk);
-    --text: var(--steel);
-    --line: var(--card-dark-line);
-    --accent-text: var(--brass);
-    --btn-bg: var(--brass);
-    --btn-fg: var(--graphit);
-    --btn-bg-hover: var(--brass-light);
-    --edge: var(--card-dark-line);
-    --wordmark-ink: none;
-    --wordmark-light: block;
-    --focus: var(--brass);
-    color-scheme: dark;
-  }
 }
 
 @media (max-width: 600px) {

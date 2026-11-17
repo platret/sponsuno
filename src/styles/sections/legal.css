@@ -1,17 +1,16 @@
-/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on graphit in
-   both themes: the slim header with the site nav, then the page head band (PageBand: label, H1, intro). Below it the page
-   follows the theme (DESIGN.md -> Theme). Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
+/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on graphit: the
+   slim header with the site nav, then the page head band (PageBand: label, H1, intro). Below it the light page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
    the table of contents in a sticky rail beside one readable column (~42rem) from 1100 px; narrower, and on the other
    reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone graphit footer.
-   No motion; one inline head script (theme). Classes prefixed lg-.
+   No motion, no script. Classes prefixed lg-.
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
 /* The static header scrolls away with the page (not fixed like the landing page header), so anchor jumps (table of
    contents, /kosten/#sachleistungen) need only a small margin, not the landing page's header offset (site.css). */
 html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 
-/* ---------- Header (PageHeader.tsx): wordmark, nav, theme switch, waitlist button; below 961 px a native <details> menu.
-   Flat graphit in both themes, closed off from the page head band by one dark hairline. ---------- */
+/* ---------- Header (PageHeader.tsx): wordmark, nav, waitlist button; below 961 px a native <details> menu.
+   Flat graphit, closed off from the page head band by one dark hairline. ---------- */
 .lg-header {
   position: relative; z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
@@ -51,7 +50,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-menu[open] .lg-menu-bars { background: transparent; }
 .lg-menu[open] .lg-menu-bars::before { transform: translateY(6px) rotate(45deg); }
 .lg-menu[open] .lg-menu-bars::after { transform: translateY(-6px) rotate(-45deg); }
-/* The open menu drops down under the bar, full width, over the page, on the page surface of the theme */
+/* The open menu drops down under the bar, full width, over the page, on the page surface */
 .lg-menu-sheet {
   position: absolute; top: 100%; left: 0; right: 0;
   padding: .5rem var(--gutter) 1.5rem;
@@ -84,14 +83,12 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 }
 
 /* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on graphit, right under the header ----------
-   verlauf-dunkel in both themes, like the landing page hero, so every page opens the same way. The band is a graphit
-   surface in either theme, so it sets the dark roles locally; in the dark theme a hairline (--edge) sets it off the
-   graphit page below. From 1200 px a large, faint loop sits in the empty right half (the only graphic on these pages). */
+   verlauf-dunkel, like the landing page hero, so every page opens the same way. The band is a graphit surface, so it
+   sets the dark roles locally. From 1200 px a large, faint loop sits in the empty right half (the only graphic on these pages). */
 .lg-band {
   position: relative; overflow: hidden;
   background: var(--grad-dark);
   color: var(--steel);
-  border-bottom: 1px solid var(--edge);
   padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) clamp(3rem, 2rem + 4vw, 6rem);
   --heading: var(--kalk);
   --text: var(--steel);
@@ -199,7 +196,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-contact div:last-child { border-bottom: 0; }
 .lg-contact dt { font-weight: 600; color: var(--heading); }
 .lg-contact dd { margin: 0; }
-/* Missing contact data is marked, not hidden: brass text (Messing dunkel / Messing by theme) with a short brass rule in front */
+/* Missing contact data is marked, not hidden: brass text (Messing dunkel) with a short brass rule in front */
 .lg-pending { color: var(--accent-text); font-weight: 600; }
 .lg-pending::before { content: ""; display: inline-block; width: .9rem; height: 2px; margin-right: .5rem; vertical-align: middle; background: currentColor; }
 

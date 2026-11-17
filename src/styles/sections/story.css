@@ -36,8 +36,6 @@
   text-wrap: balance; max-width: 20ch;
 }
 .st-copy > p:not(.st-label):not(.st-intro) { margin-top: 1rem; max-width: 30rem; }
-.st-more { margin-top: 1.5rem; }
-.st-more .link-arrow { min-height: 44px; color: var(--brass); }
 
 /* ---------- Stage (shared by the live stage and the snapshots) ---------- */
 

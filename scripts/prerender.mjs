@@ -1,9 +1,9 @@
 // Injects the server-rendered pages into their dist HTML files, writes dist/sitemap.xml, the Word
-// versions of the guide templates (dist/vorlagen/*.docx) and the cache rules of dist/assets/ into dist/_headers, then
-// removes the temporary SSR build.
+// versions of the templates of published guides (dist/vorlagen/*.docx; none while the guides are parked) and the cache
+// rules of dist/assets/ into dist/_headers, then removes the temporary SSR build.
 // Pages come from src/pages.ts (re-exported by entry-server.tsx). For each page:
-// - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor); the theme script
-//   must already be in the head (vite.config.ts puts it in place of <!--theme-->)
+// - <title> is replaced with the page title and the <!--seo--> marker with its head tags (headFor); the entry must say
+//   color-scheme "light" (one light theme, DESIGN.md -> Theme)
 // - the empty <div id="root"> gets the server render
 // - stylesheets under 4 KB are inlined, and the font preloads move behind the stylesheets
 // Landing page: hydrated by src/main.tsx. Topic pages, guides, legal pages and the 404 page (dist/404.html): static,
@@ -15,7 +15,7 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const { render, headFor, titleFor, pages, htmlFile, SITE_URL, missingLegalContact, templateFiles, THEME_SCRIPT } =
+const { render, headFor, titleFor, pages, htmlFile, SITE_URL, missingLegalContact, templateFiles } =
   await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
 // Matches <div id="root"></div> and <div id="root" data-page="…"></div>
@@ -64,8 +64,10 @@ for (const page of pages) {
   if (!rootMarker.test(html)) throw new Error(`Empty <div id="root"> not found in dist/${file}`);
   if (!titleMarker.test(html)) throw new Error(`<title> not found in dist/${file}`);
   if (!html.includes(seoMarker)) throw new Error(`${seoMarker} marker not found in the <head> of dist/${file}`);
-  // The theme script (src/lib/theme.ts, put in by vite.config.ts) must run before the first paint on every page
-  if (!html.includes(THEME_SCRIPT)) throw new Error(`Theme script missing in the <head> of dist/${file} (<!--theme--> marker)`);
+  // One light theme (DESIGN.md -> Theme): "light dark" here would turn form controls and scrollbars dark on a light page
+  if (!html.includes('<meta name="color-scheme" content="light">')) {
+    throw new Error(`dist/${file} needs <meta name="color-scheme" content="light"> in its <head> (one light theme)`);
+  }
   if (/<meta name="description"|<link rel="canonical"|<meta property="og:|<meta name="twitter:|application\/ld\+json/.test(html)) {
     throw new Error(`dist/${file} has its own description, canonical, Open Graph/Twitter tags or JSON-LD: remove them, they come from headFor() and src/pages.ts`);
   }
@@ -78,10 +80,12 @@ for (const page of pages) {
   console.log(`Prerendered dist/${file}`);
 }
 
-// The demo is not prerendered (it renders in the browser), but its font preloads go behind the stylesheet and the
-// scripts too: the app paints nothing before its JavaScript has run.
+// The demo (parked: built only when demo/index.html is a Vite input again) is not prerendered (it renders in the
+// browser), but its font preloads go behind the stylesheet and the scripts too: the app paints nothing before its
+// JavaScript has run.
 const demoFile = path.join(root, 'dist', 'demo', 'index.html');
-await writeFile(demoFile, fontPreloadsLast(await readFile(demoFile, 'utf8')));
+const demoHtml = await readFile(demoFile, 'utf8').catch(() => null);
+if (demoHtml !== null) await writeFile(demoFile, fontPreloadsLast(demoHtml));
 
 // Sitemap: every page with index: true, absolute apex URLs with a trailing slash. No lastmod (nobody would keep it accurate).
 const urls = pages.filter((page) => page.index).map((page) => `  <url><loc>${SITE_URL}${page.path}</loc></url>`);
@@ -91,8 +95,9 @@ await writeFile(
 );
 console.log(`Wrote dist/sitemap.xml (${urls.length} URLs)`);
 
-// Guide templates as Word files (src/lib/templates.ts, from the same text as the pages). Linked from the guides only:
-// not in the sitemap, noindex in public/_headers.
+// Guide templates as Word files (src/lib/templates.ts, from the same text as the pages), for published guides only
+// (none while the guides are parked). Linked from the guides only: not in the sitemap; give /vorlagen/* its noindex
+// and one-hour cache rule in public/_headers again when a guide comes back.
 const templates = templateFiles();
 if (new Set(templates.map((t) => t.path)).size !== templates.length) {
   throw new Error('Two templates share a file name: give each template its own file name in src/content.ts');

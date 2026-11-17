@@ -1,6 +1,6 @@
 import { useEffect, useRef, type MouseEvent } from 'react';
 import { cta, menu, nav } from '../content';
-import { pageHref } from '../lib/links';
+import { siteHref } from '../lib/links';
 import { scrollToHash } from '../lib/motion';
 
 /** Landing page only: full-height sheet on the page surface under the header for narrow layouts. Modal: the page behind is inert.
@@ -34,7 +34,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
     <div className="menu-sheet" id="menu" ref={ref} role="dialog" aria-modal="true" aria-label={menu.label} hidden={!open}>
       <nav aria-label={menu.label}>
         <ul className="menu-links">
-          {nav.map((item) => <li key={item.href}><a href={pageHref(item.href)} onClick={go}>{item.label}</a></li>)}
+          {nav.map((item) => <li key={item.href}><a href={siteHref(item.href, true)} onClick={go}>{item.label}</a></li>)}
         </ul>
         <a className="btn btn-graphit menu-cta" href="#warteliste" onClick={go}>{cta.waitlist}</a>
       </nav>

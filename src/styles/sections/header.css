@@ -1,7 +1,6 @@
 /* Header: transparent at the top, solid graphit over the hero and the story, solid page-surface bar once the page
-   surface reaches it (kalk in the light theme, graphit in the dark one). Without JS it is always solid graphit (nothing
-   runs under it). Nav links get a quiet pill on hover; the CTA is a brass pill on graphit, the theme's primary pill
-   on the page surface. Mobile: sheet menu on the page surface. */
+   surface (kalk) reaches it. Without JS it is always solid graphit (nothing runs under it). Nav links get a quiet pill
+   on hover; the CTA is a brass pill on graphit, the graphit primary pill on the page surface. Mobile: sheet menu on the page surface. */
 
 .site-header {
   position: fixed; inset: 0 0 auto; z-index: 50;
@@ -28,9 +27,9 @@ html:not(.js) .site-header {
 .brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
 .brand img { width: 132px; height: auto; }
 .brand-on-light { display: none; }
-/* Solid bar: the graphit wordmark on kalk (light theme), the kalk one on graphit (dark theme) */
-.is-solid .brand-on-dark { display: var(--wordmark-light); }
-.is-solid .brand-on-light { display: var(--wordmark-ink); }
+/* Solid bar on kalk: the graphit wordmark */
+.is-solid .brand-on-dark { display: none; }
+.is-solid .brand-on-light { display: block; }
 
 .main-nav ul { display: flex; gap: .25rem; }
 .main-nav a {

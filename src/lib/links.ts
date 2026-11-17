@@ -1,11 +1,11 @@
 // Base-aware links: links between pages are built from import.meta.env.BASE_URL instead of hardcoded paths.
 
 import type { Role } from '../content';
-import { pageMeta, type PageKind } from '../pages';
+import { pageMeta } from '../pages';
 
 const BASE = import.meta.env.BASE_URL;
 
-/** Absolute href for a page path relative to the site root: '' = landing page, 'demo/', 'impressum/'. */
+/** Absolute href for a page path relative to the site root: '' = landing page, 'kosten/', 'impressum/'. */
 export const pageHref = (path: string): string => `${BASE}${path}`;
 
 /**
@@ -36,23 +36,17 @@ export const waitlistHref = (role?: Role): string => `${BASE}${role ? `?${ROLE_P
 
 /**
  * Sections that moved from the landing page to their own page (November 2026). App.tsx sends an old link such as
- * /#kosten there with location.replace, so shared links keep working. Keys are the old section ids.
+ * /#kosten there with location.replace, so shared links keep working. Keys are the old section ids. /#ki-manager is no
+ * longer listed: its page is parked (pages.ts → parkedPages), so the old link simply opens the top of the homepage.
  */
 export const MOVED_SECTIONS: Record<string, string> = {
-  'ki-manager': pageMeta('ki-manager').path,
   kosten: pageMeta('kosten').path,
   sachleistungen: `${pageMeta('kosten').path}#sachleistungen`,
   fragen: pageMeta('fragen').path,
   team: pageMeta('ueber-uns').path,
 };
 
-/**
- * aria-current for a main navigation item (content.ts → nav): 'page' on the page it links to; 'true' for
- * "Ratgeber" (the first guide) on the other guides, so the section stays marked.
- */
-export function navCurrent(href: string, current?: { path: string; kind: PageKind }): 'page' | 'true' | undefined {
-  if (!current) return undefined;
-  if (href === current.path) return 'page';
-  if (current.kind === 'guide' && href === pageMeta('sponsoren-finden').path) return 'true';
-  return undefined;
+/** aria-current for a main navigation item (content.ts → nav): 'page' on the page it links to. */
+export function navCurrent(href: string, current?: { path: string }): 'page' | undefined {
+  return current && href === current.path ? 'page' : undefined;
 }
