@@ -398,9 +398,9 @@ export const projectStatus = {
   plannedLabel: 'Geplant',
   steps: [
     { when: 'Herbst 2026', text: 'Gespräche mit vier Sportlerinnen und Sportlern und einem Tennistrainer.', done: true },
-    { when: 'November 2026', text: 'Die Website ist online.', done: true },
+    { when: 'November 2026', text: 'Die Website ist online, und die Warteliste ist offen.', done: true },
     { when: 'Als Nächstes', text: 'Gespräche mit Firmen und Kulturvereinen in der Region Winterthur.', done: false },
-    { when: 'Später', text: 'Anmeldungen zur Warteliste direkt speichern, dann der Start der Plattform. Den Termin nennen wir, sobald er feststeht.', done: false },
+    { when: 'Später', text: 'Der Start der Plattform. Den Termin nennen wir, sobald er feststeht.', done: false },
   ] satisfies StatusStep[],
 };
 
@@ -726,7 +726,7 @@ export const legal = {
               'Diese Website setzt keine Cookies und verwendet keine Analyse- oder Trackingdienste.',
               'Es sind keine Inhalte Dritter eingebettet. Schriften und Bilder kommen vom selben Server wie die Website.',
               'Beim Aufruf bearbeitet unser Hoster Cloudflare technische Zugriffsdaten, darunter Ihre IP-Adresse.',
-              'Die Warteliste ist noch nicht freigeschaltet. Das Formular übermittelt nichts.',
+              'Wenn Sie sich auf die Warteliste eintragen, speichert unser E-Mail-Dienstleister Brevo Ihre Adresse und Ihre Auswahl, erst nachdem Sie die Anmeldung per E-Mail bestätigt haben.',
               'Wenn Sie uns eine E-Mail schreiben, liegt sie bei unserem E-Mail-Anbieter Infomaniak in der Schweiz.',
             ],
           },
@@ -759,6 +759,7 @@ export const legal = {
           },
           { type: 'p', text: 'Zweck: Ohne diese Daten kann die Website nicht ausgeliefert werden. Sie dienen ausserdem dem sicheren Betrieb und der Abwehr von Angriffen und Missbrauch.' },
           { type: 'p', text: ['Cloudflare bearbeitet diese Daten in unserem Auftrag. Für Daten, die Cloudflare zum Schutz seines Netzwerks verwendet, ist Cloudflare nach eigenen Angaben selbst verantwortlich (', { label: 'Datenschutzerklärung von Cloudflare', href: 'https://www.cloudflare.com/privacypolicy/' }, '). Mit Cloudflare besteht eine Vereinbarung zur Auftragsbearbeitung (', { label: 'Cloudflare Data Processing Addendum', href: 'https://www.cloudflare.com/cloudflare-customer-dpa/' }, ').'] },
+          { type: 'p', text: 'Wenn Sie sich auf die Warteliste eintragen, gehen Ihre E-Mail-Adresse und Ihre Auswahl über Cloudflare an unseren E-Mail-Dienstleister Brevo (siehe «Warteliste»). Dabei wird nichts protokolliert.' },
           { type: 'p', text: 'Wir haben keine Protokollierung einzelner Zugriffe eingerichtet und werten keine Zugriffsdaten aus. In unserem Cloudflare-Konto sehen wir zusammengefasste Zugriffsstatistiken und, falls eine Sicherheitsfunktion eingreift, eine Stichprobe dieser Ereignisse der letzten 31\u00A0Tage. Wie lange Cloudflare die Daten darüber hinaus aufbewahrt, legt Cloudflare fest; eine konkrete Frist nennt Cloudflare nicht.' },
           { type: 'p', text: 'Rechtsgrundlage für Besucherinnen und Besucher aus der EU und dem EWR: unser berechtigtes Interesse an einer sicheren und funktionsfähigen Website (Art. 6 Abs. 1 lit. f DSGVO).' },
         ],
@@ -782,9 +783,37 @@ export const legal = {
         id: 'warteliste',
         title: 'Warteliste',
         blocks: [
-          { type: 'p', text: 'Die Warteliste ist noch nicht freigeschaltet. Das Formular speichert und übermittelt nichts: Ihre E-Mail-Adresse und Ihre Auswahl verlassen Ihren Browser nicht.' },
-          { type: 'p', text: 'Stattdessen bietet das Formular einen Link an, mit dem Sie uns eine E-Mail schreiben können. Der Link öffnet Ihr E-Mail-Programm mit vorausgefülltem Betreff und Text: darin Ihre Auswahl (zum Beispiel «Sportverein») und höchstens drei freiwillige Zeilen, etwa zu Region und Sportart oder zu Ihrer Firma und ob Sie für ein kurzes Gespräch offen sind. Diese Zeilen sind nur Text in Ihrer eigenen E-Mail: Sie können sie ausfüllen, ändern oder löschen. Gesendet wird erst, wenn Sie die E-Mail selbst abschicken; dafür gilt der Abschnitt «Kontakt per E-Mail».' },
-          { type: 'p', text: 'Bevor wir die Warteliste freischalten, ergänzen wir diese Datenschutzerklärung: welche Daten wir dann speichern, bei welchem Anbieter, wie lange und wie Sie sich wieder austragen können.' },
+          { type: 'p', text: 'Auf der Startseite können Sie sich auf die Warteliste von Sponsuno eintragen. Wir verwenden das Double-Opt-in-Verfahren: Sie stehen erst auf der Warteliste, wenn Sie den Link in unserer Bestätigungs-E-Mail angeklickt haben.' },
+          { type: 'h3', text: 'Welche Daten wir bearbeiten' },
+          {
+            type: 'list',
+            items: [
+              'Ihre E-Mail-Adresse',
+              'Ihre Auswahl im Formular («Sportlerin oder Sportler», «Sportverein», «Kulturverein» oder «Firma oder Sponsor»)',
+              'wann Sie sich angemeldet und wann Sie die Anmeldung bestätigt haben; Brevo hält das als Nachweis Ihrer Einwilligung fest',
+            ],
+          },
+          { type: 'h3', text: 'Wozu' },
+          { type: 'p', text: 'Wir schreiben Ihnen zum Start von Sponsuno. Ihre Auswahl hilft uns, Ihnen die passende Nachricht zu schicken. Für anderes verwenden wir Ihre Adresse nicht, und wir geben sie nicht weiter, ausser an die hier genannten Dienstleister, die sie in unserem Auftrag bearbeiten.' },
+          { type: 'h3', text: 'Wie die Anmeldung abläuft' },
+          {
+            type: 'list',
+            items: [
+              'Sie senden das Formular ab. Ihre E-Mail-Adresse und Ihre Auswahl gehen an unsere Website bei Cloudflare (siehe «Hosting bei Cloudflare») und von dort an unseren E-Mail-Dienstleister Brevo. Die Website speichert dabei nichts und protokolliert keine E-Mail-Adressen.',
+              'Brevo schickt Ihnen eine E-Mail mit einem Bestätigungslink.',
+              'Erst wenn Sie den Link anklicken, nimmt Brevo Ihre Adresse in die Warteliste auf. Ohne Klick kommen Sie nicht auf die Liste.',
+              'Nach der Bestätigung schicken wir Ihnen eine kurze Willkommens-E-Mail.',
+            ],
+          },
+          { type: 'p', text: 'Zum Schutz vor Missbrauch zählt unsere Website, wie oft von derselben IP-Adresse und für dieselbe E-Mail-Adresse Anmeldungen eingehen, und begrenzt die Zahl der Bestätigungs-E-Mails pro Tag. Die E-Mail-Adresse wird dafür nur in unkenntlicher Form (als Prüfsumme) verwendet. Diese Zähler liegen bei Cloudflare: Die Zähler pro Minute verfallen nach etwa einer Minute, die Tageszähler werden am folgenden Tag gelöscht. Wir sehen sie nicht und werten sie nicht aus.' },
+          { type: 'h3', text: 'E-Mail-Dienstleister Brevo' },
+          { type: 'p', text: ['Die Warteliste und der Versand der E-Mails laufen über Brevo. Unser Vertragspartner ist die Brevo GmbH, Köpenicker Str. 126, 10179 Berlin, Deutschland. Brevo bearbeitet Ihre Daten in unserem Auftrag; die Vereinbarung zur Auftragsbearbeitung ist Teil der ', { label: 'Nutzungsbedingungen von Brevo', href: 'https://www.brevo.com/legal/termsofuse/' }, ' (Anhang 3, dort auch die Liste der Unterauftragsverarbeiter). Brevo speichert die Daten nach eigenen Angaben auf Servern in Frankreich und Belgien. Für einzelne Dienstleister ausserhalb der EU, etwa Cloudflare in den USA, stützt sich Brevo nach eigenen Angaben auf das EU-U.S. Data Privacy Framework und die Standardvertragsklauseln der EU-Kommission.'] },
+          { type: 'h3', text: 'Wie lange' },
+          { type: 'p', text: 'Wir speichern Ihre Adresse, bis Sie sich abmelden. Endet das Projekt Sponsuno, löschen wir die Warteliste.' },
+          { type: 'h3', text: 'Abmelden' },
+          { type: 'p', text: 'Jede E-Mail, die wir Ihnen nach der Bestätigung schicken, enthält einen Link zum Abmelden. Sie können sich auch jederzeit mit einer kurzen E-Mail an hello@sponsuno.ch abmelden; dann löschen wir Ihre Adresse.' },
+          { type: 'p', text: 'Rechtsgrundlage für Besucherinnen und Besucher aus der EU und dem EWR: Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), die Sie jederzeit mit Wirkung für die Zukunft widerrufen können, zum Beispiel über den Abmeldelink.' },
+          { type: 'p', text: 'Wenn Sie sich lieber per E-Mail melden, finden Sie unsere Adresse unter dem Formular. Dafür gilt der Abschnitt «Kontakt per E-Mail».' },
         ],
       },
       {
@@ -829,7 +858,7 @@ export const legal = {
         id: 'aenderungen',
         title: 'Änderungen',
         blocks: [
-          { type: 'p', text: 'Wir passen diese Datenschutzerklärung an, wenn sich die Website oder die Rechtslage ändert, spätestens bevor die Warteliste freigeschaltet wird. Es gilt die hier veröffentlichte Fassung.' },
+          { type: 'p', text: 'Wir passen diese Datenschutzerklärung an, wenn sich die Website oder die Rechtslage ändert. Es gilt die hier veröffentlichte Fassung.' },
         ],
       },
     ],
