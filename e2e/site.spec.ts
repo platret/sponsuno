@@ -467,24 +467,36 @@ test.describe('phone viewport (390 × 844)', () => {
     await fillAlbum(page, true);
   });
 
-  test('a swipe that starts on a hero sticker scrolls the page', async ({ page }) => {
+  test('a finger on a hero sticker neither drags it nor blocks scrolling', async ({ page }) => {
     await page.goto('/');
     await eggsReady(page);
     const sticker = page.locator('#top .stk[data-sticker="ball"][data-draggable]');
     await page.waitForFunction(() =>
       document.getAnimations().every((a) => a.timeline !== document.timeline || a.playState !== 'running'));
+    // The browser keeps the scroll gesture: no touch-action override on the sticker
     expect(await sticker.evaluate((el) => getComputedStyle(el).touchAction)).toBe('auto');
-    const box = await sticker.boundingBox();
-    if (!box) throw new Error('hero sticker has no box');
-    // A real touch scroll gesture (Chromium's own, through the DevTools protocol), 300 px upwards
-    const client = await page.context().newCDPSession(page);
-    await client.send('Input.synthesizeScrollGesture', {
-      x: Math.round(box.x + box.width / 2), y: Math.round(box.y + box.height / 2),
-      yDistance: -300, gestureSourceType: 'touch', speed: 1200,
+    // A touch pointer that moves 150 px across the sticker (what a swipe sends before the browser takes over):
+    // the page must not cancel any of these events and must not start a drag. Synthesised pointer events, because
+    // Chromium's own touch scroll gesture (Input.synthesizeScrollGesture) does not scroll in headless Linux (CI).
+    const result = await sticker.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      const x = r.left + r.width / 2;
+      const y = r.top + r.height / 2;
+      const fire = (type: string, dy: number) => {
+        const ev = new PointerEvent(type, {
+          bubbles: true, cancelable: true, composed: true, pointerId: 7, pointerType: 'touch', isPrimary: true,
+          button: type === 'pointermove' ? -1 : 0, buttons: type === 'pointerup' ? 0 : 1, clientX: x, clientY: y + dy,
+        });
+        el.dispatchEvent(ev);
+        return ev.defaultPrevented;
+      };
+      const prevented = [fire('pointerdown', 0), fire('pointermove', -50), fire('pointermove', -100),
+        fire('pointermove', -150), fire('pointerup', -150)];
+      return { prevented, translate: (el as HTMLElement).style.translate, dragging: el.classList.contains('is-dragging') };
     });
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
-    // The finger did not drag the sticker or collect it
-    expect(await sticker.evaluate((el) => el.style.translate)).toBe('');
+    expect(result.prevented).toEqual([false, false, false, false, false]);
+    expect(result.translate).toBe('');
+    expect(result.dragging).toBe(false);
     await expect(sticker).not.toHaveAttribute('data-collected');
   });
 
