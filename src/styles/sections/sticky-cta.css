@@ -1,21 +1,32 @@
-/* Sticky waitlist bar: phones only, after the hero has scrolled out. A flat page-surface bar with a hairline on top
-   (no shadow) and the primary pill. */
+/* Sticky waitlist bar (StickyCta.tsx): phones only, after the hero has scrolled out; gone again from the two doors
+   on (both tiles carry their own waitlist button, and the ink pill has no body on the ink firm tile), so it is seen
+   over the statement, the word band and the steps. A floating flat ink pill (no white sticker edge, no shadow; a
+   parquet hairline at 40 %, 3.6:1 on ink like the form pills of the waitlist card, keeps its shape on the ink word
+   band): the closing line in the display face and the yellow pill button. */
 .sticky-cta { display: none; }
 
 @media (max-width: 760px) {
   .sticky-cta {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    padding: .65rem var(--gutter) calc(.65rem + env(safe-area-inset-bottom, 0px));
-    background: var(--bg);
-    border-top: 1px solid var(--line);
-    font-size: .875rem; color: var(--text);
-    transform: translateY(110%);
+    position: fixed; left: .75rem; right: .75rem; bottom: calc(.75rem + env(safe-area-inset-bottom, 0px)); z-index: 40;
+    display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+    padding: .3125rem .3125rem .3125rem 1.125rem;
+    border: 1px solid rgba(248, 244, 234, .4); border-radius: 2.25rem;
+    background: var(--tinte);
+    color: var(--parkett);
+    /* the yellow button's focus ring on ink */
+    --focus: var(--gelb);
+    transform: translateY(calc(100% + 1.5rem));
     visibility: hidden;
-    transition: transform .3s var(--ease-out), visibility 0s linear .3s;
+    transition: transform .35s var(--ease-out), visibility 0s linear .35s;
   }
-  .sticky-cta.is-shown { transform: none; visibility: visible; transition: transform .3s var(--ease-out); }
+  .sticky-cta.is-shown { transform: none; visibility: visible; transition: transform .35s var(--ease-out); }
+  .sticky-cta p {
+    font: var(--display-weight) .9375rem/1.1 var(--display); letter-spacing: var(--display-tracking);
+    color: var(--parkett);
+  }
   .sticky-cta .btn { flex: none; }
+  /* The narrowest phones: the line takes two rows, never three */
+  @media (max-width: 359px) { .sticky-cta p { font-size: .8125rem; } }
   /* Keep focused elements and the page end clear of the bar */
-  html { scroll-padding-bottom: 5rem; }
+  html { scroll-padding-bottom: 5.5rem; }
 }

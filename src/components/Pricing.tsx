@@ -1,48 +1,37 @@
 import { pricing } from '../content';
+import { Icon } from './kit/Icon';
 import '../styles/sections/pricing.css';
 
-/** Kalk section, the first of /kosten/ (its title and intro are the page head band: InfoPage → PageBand): the cost
-    model as one overview card. Decided points get a check, open ones a ring (plus pricing.openLabel as a tag when it
-    is set). */
+/** Parkett-2 section, the first of /kosten/ (its title and intro are the page head band: InfoPage → PageBand): the cost
+    model as four cards, two by two. Each card: a round badge (decided: green with a check; open: an empty dashed
+    slot, plus pricing.openLabel as a tag when it is set), the item as a label and the answer in large type. The first
+    card (no subscription, no base fee: the page's promise) is the ink one, its answer set in the display face. */
 export function Pricing() {
   return (
-    <section className="section surface-kalk price" id="kosten" aria-labelledby="price-title">
+    <section className="section surface-parkett-2 price" id="kosten" aria-labelledby="price-title">
       <div className="container">
-        <div className="price-main" data-reveal="" data-scroll="zoom-in">
-          <dl className="price-card">
-            {pricing.rows.map((row) => (
-              <div className={`price-row price-row-${row.state}`} key={row.label}>
-                <dt className="price-label">{row.label}</dt>
-                <dd className="price-value">
-                  {/* The span carries the scroll animation (an SVG with scale/translate is not composited) */}
-                  {row.state === 'open' ? (
-                    <span className="price-mark price-mark-open" aria-hidden="true">
-                      <svg className="price-marker price-marker-open" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
-                        <circle cx="8" cy="8" r="5" />
-                      </svg>
-                    </span>
-                  ) : (
-                    <span className="price-mark price-mark-check" aria-hidden="true">
-                      <svg className="price-marker price-check" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
-                        <path d="M3.5 8.5l3 3 6-7" />
-                      </svg>
-                    </span>
-                  )}
-                  <span className="price-value-text">
-                    {row.value}
-                    {row.state === 'open' && pricing.openLabel && (
-                      <>
-                        {' '}
-                        <span className="price-tag">{pricing.openLabel}</span>
-                      </>
-                    )}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="price-note" data-scroll="fade">{pricing.note}</p>
-        </div>
+        <dl className="price-grid">
+          {pricing.rows.map((row, i) => (
+            <div className={`price-row${i === 0 ? ' surface-tinte' : ''}`} key={row.label}>
+              <dt className="price-label">
+                <span className={`lg-badge price-mark ${row.state === 'open' ? 'lg-badge-offen' : 'lg-badge-gruen'}`} aria-hidden="true">
+                  {row.state !== 'open' && <Icon name="check" />}
+                </span>
+                {row.label}
+              </dt>
+              <dd className={i === 0 ? 'price-value display' : 'price-value'}>
+                {row.value}
+                {row.state === 'open' && pricing.openLabel && (
+                  <>
+                    {' '}
+                    <span className="price-tag">{pricing.openLabel}</span>
+                  </>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p className="price-note">{pricing.note}</p>
       </div>
     </section>
   );

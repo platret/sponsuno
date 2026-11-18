@@ -28,7 +28,7 @@ const closingLine = (live: string, preview: string): string | null =>
  * prerendered at build time, shipped without a JavaScript module (CSS from src/static/sections.ts; Für Firmen only
  * needs the guide styles of src/static/main.ts). No motion, except /ki-manager/: its pinned bento runs on CSS scroll
  * timelines once an inline head script sets html.scroll-fx (`scrollFx` in pages.ts).
- * Every page opens with the graphit page head band (PageBand: the H1 and its intro), as the guides and legal pages do.
+ * Every page opens with the ink page head band (PageBand: the H1 and its intro), as the guides and legal pages do.
  * KI-Manager, Kosten, Fragen and Über uns then show the sections that used to be on the landing page (the band holds
  * the first section's title and intro). Für Firmen uses the reading column of the guides. Every page ends with a
  * way back to the waitlist on the landing page.
@@ -63,28 +63,31 @@ function TopicBand({ id }: { id: InfoPageId }) {
     case 'ki-manager':
       return <PageBand titleId="ki-title" title={aiManager.title}><p className="section-intro">{aiManager.intro}</p></PageBand>;
     case 'kosten':
-      return <PageBand titleId="price-title" title={pricing.title}><p className="section-intro">{pricing.intro}</p></PageBand>;
+      return <PageBand titleId="price-title" title={pricing.title} sticker="ball"><p className="section-intro">{pricing.intro}</p></PageBand>;
     case 'fragen':
-      return <PageBand titleId="fragen-title" title={faq.title}><FaqIntro /></PageBand>;
+      return <PageBand titleId="fragen-title" title={faq.title} sticker="pfeife"><FaqIntro /></PageBand>;
     case 'ueber-uns':
-      return <PageBand titleId="team-title" title={team.title}><p className="section-intro">{team.intro}</p></PageBand>;
+      return <PageBand titleId="team-title" title={team.title} sticker="wimpel"><p className="section-intro">{team.intro}</p></PageBand>;
     default:
       return null;
   }
 }
 
-/** Closing block: the waitlist (on the landing page) as the button. */
+/** Closing block, a blue band (the one brand colour; a topic page has no other colour surface): the giant title, the
+    launch line and one parquet button to the waitlist on the landing page. Blue, because it must stand apart from the
+    parquet section before it and from the ink footer after it on every topic page. No sticker: the page head band
+    holds the page's only one. */
 function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
   const text = closingLine(infoPage.endText, infoPage.previewEndText);
   return (
-    <section className="section surface-paper pg-end" aria-labelledby="pg-end-title">
+    <section className="section surface-blau pg-end" aria-labelledby="pg-end-title">
       <div className="container">
         <h2 id="pg-end-title">{infoPage.endTitle}</h2>
         {text && <p className="pg-end-text">{text}</p>}
         {more && <p className="pg-end-more">{rich(more)}</p>}
         <div className="pg-end-actions">
-          <a className="btn btn-graphit" href={waitlistHref(role)}>{infoPage.endButton}</a>
+          <a className="btn btn-parkett" href={waitlistHref(role)}>{infoPage.endButton}</a>
         </div>
       </div>
     </section>
@@ -148,7 +151,7 @@ function FirmsPage() {
             <h2 id={end.id}>{end.title}</h2>
             {endText && <p>{endText}</p>}
             <div className="gd-cta">
-              <a className="btn btn-graphit" href={waitlistHref('sponsor')}>{end.button}</a>
+              <a className="btn btn-tinte" href={waitlistHref('sponsor')}>{end.button}</a>
               <a className="gd-cta-demo" href={pageHref(end.demoHref)}>
                 <span className="gd-cta-demo-label">{end.demoLabel}</span>
               </a>

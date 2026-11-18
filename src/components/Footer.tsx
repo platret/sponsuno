@@ -1,6 +1,8 @@
 import { contact, footer } from '../content';
 import { siteHref } from '../lib/links';
 import wordmark from '../assets/wordmark-light.svg';
+import { Album } from './Album';
+import { Sticker } from './kit/Sticker';
 import '../styles/sections/footer.css';
 
 // Kontakt column: the e-mail address as visible text (a mailto link) and the town of the postal address
@@ -16,12 +18,14 @@ type FooterProps = {
 };
 
 /**
- * Graphit closing block. On the landing page it continues the waitlist without a seam; on sub-pages it
- * stands alone (ft-standalone). Ends on the kalk loop wordmark and the legal row.
+ * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album with the whistle
+ * sticker beside it (landing page only), the giant loop wordmark in parquet and the copyright row. On the landing page it follows the parquet waitlist band; on
+ * sub-pages it stands alone (ft-standalone). `data-header-dark` turns the landing header ink while the footer runs
+ * under it.
  */
 export function Footer({ onLanding = true, current }: FooterProps) {
   return (
-    <footer className={`ft${onLanding ? '' : ' ft-standalone'}`}>
+    <footer className={`ft surface-tinte${onLanding ? '' : ' ft-standalone'}`} data-header-dark="">
       <div className="container">
         <div className="ft-top" data-reveal="" data-scroll="rise">
           <p className="ft-sub">{footer.sub}</p>
@@ -59,17 +63,25 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
+        {/* Sticker album (Easter egg, landing page only: the stickers are there). One quiet row under a hairline:
+            the album, prerendered with six empty slots (the lazy chunk lib/eggs.ts fills it), and beside it the one
+            sticker of the footer, the whistle: it counts for the album, so the row shows how the album works.
+            Decoration: both are aria-hidden and hold nothing focusable. */}
+        {onLanding && (
+          <div className="ft-album">
+            <Album />
+            <Sticker id="pfeife" size={72} rotate={-8} className="ft-stk" data-reveal="" />
+          </div>
+        )}
+
+        {/* The wrapper carries the scroll motion and is the frame the Easter-egg chunk works in (a click on the loop
+            makes the last «o» bounce); the image and its geometry stay untouched. */}
+        <div className="ft-wordmark" data-wordmark="" data-reveal="" data-scroll="zoom-in">
+          <img src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" />
+        </div>
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>
-          {/* The audience photos are on the landing page only, so only its footer names them */}
-          {onLanding && (
-            <p>
-              {footer.photoNote.before}
-              <a href={siteHref(footer.photoNote.href, onLanding)}>{footer.photoNote.link}</a>
-            </p>
-          )}
         </div>
       </div>
     </footer>

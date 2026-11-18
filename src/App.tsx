@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
-import { waitlist, type Role } from './content';
+import { album, waitlist, type Role } from './content';
 import { observeReveals, scrollToHash } from './lib/motion';
 import { MOVED_SECTIONS, pageHref, ROLE_PARAM } from './lib/links';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Story } from './components/Story';
-import { ProofLine } from './components/ProofLine';
-import { Audience } from './components/Audience';
-import { HowItWorks } from './components/HowItWorks';
+import { Statement } from './components/Statement';
+import { WordBand } from './components/WordBand';
+import { Steps } from './components/Steps';
+import { Doors } from './components/Doors';
 import { Waitlist } from './components/Waitlist';
 import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
 
 /**
- * The landing page: hero, scroll story, proof line, audience ("two doors"), how it works, waitlist. KI-Manager,
- * Kosten, Fragen and Team moved to their own static pages (InfoPage.tsx), reached from the header.
+ * The landing page («Turnhalle», November 2026), seven short blocks: header, hero, statement, word band, how it works
+ * (three steps), the two doors, waitlist + footer. Kosten, Fragen and Team are static pages of their own
+ * (InfoPage.tsx), reached from the header. Parked and not imported: Story, StoryArt, ProofLine, Audience, HowItWorks.
+ * One optional layer lies over the blocks: the Easter eggs (lib/eggs.ts, loaded when idle). The page tape line (a
+ * court line behind the content from the hero down) went with the clean-up pass: every hall line now belongs to a block.
  */
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
@@ -67,16 +70,35 @@ export default function App() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
+  // Easter eggs (sticker album, dragging, «tor», the loop): their own chunk, fetched once the browser is idle, so
+  // they never compete with the first screen. The page is complete without them.
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    let cancelled = false;
+    const load = () => {
+      import('./lib/eggs')
+        .then((eggs) => { if (!cancelled) cleanup = eggs.initEggs(album.goal); })
+        .catch(() => { /* optional layer: a failed fetch changes nothing on the page */ });
+    };
+    const idle = typeof window.requestIdleCallback === 'function';
+    const handle = idle ? window.requestIdleCallback(load, { timeout: 4000 }) : window.setTimeout(load, 1500);
+    return () => {
+      cancelled = true;
+      if (idle) window.cancelIdleCallback(handle); else window.clearTimeout(handle);
+      cleanup?.();
+    };
+  }, []);
+
   return (
     <>
       <a className="skip-link" href="#inhalt">Zum Inhalt springen</a>
       <Header />
       <main id="inhalt">
         <Hero onChooseRole={setRole} />
-        <Story />
-        <ProofLine />
-        <Audience />
-        <HowItWorks onChooseRole={setRole} />
+        <Statement />
+        <WordBand />
+        <Steps />
+        <Doors onChooseRole={setRole} />
         <Waitlist role={role} onRoleChange={setRole} />
       </main>
       <Footer />

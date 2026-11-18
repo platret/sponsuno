@@ -17,7 +17,7 @@ const { draft, reminder, deliverables } = aiManager;
  */
 export function AiManager() {
   return (
-    <section className="section surface-kalk" id="ki-manager" aria-labelledby="ki-title">
+    <section className="section surface-parkett-2" id="ki-manager" aria-labelledby="ki-title">
       <div className="container">
         <figure className="ai-figure" aria-labelledby="ai-caption">
           {/* .ai-pin: plain block; under .scroll-fx on large screens it holds the bento in place for a short

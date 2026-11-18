@@ -1,0 +1,155 @@
+/* The two doors (#fuer-wen, Doors.tsx): two full-bleed tiles side by side, blue (sport and culture, .surface-blau)
+   and ink (companies, .surface-tinte), stacked on phones. The copy stands at the top left of each tile, the tile's
+   white line drawing (.door-art, a square box holding the kit's court lines) in the lower right corner.
+   Blue tile: white label, title and sentence (8.0:1), white focus ring. Ink tile: parquet label, title and sentence
+   (15.5:1; the label is not the ink surface's yellow accent: the tiles are a pair with one light label each, and
+   yellow stays with the drawing), yellow focus ring (9.8:1); white lines (17.1:1). Both: the parquet pill button with an ink
+   label (15.5:1; the pill stands 7.3:1 off blue and 15.5:1 off ink). Two line colours per tile: white and one yellow
+   accent. One small sticker per tile, nothing else is tilted. Prefix door-.
+
+   Grid: the copy starts on the page container's left edge (blue) or one inner gutter right of the page's middle
+   (ink); the shop's ground line ends on the container's right edge. The tiles' top padding is the section padding of
+   every other block.
+
+   Space: the tile reserves the drawing's height below the copy (padding-bottom), so the drawing's box starts where
+   the copy ends: copy and lines can never collide, whatever the width or the length of the sentence. Only where the
+   tiles are stacked but wide (600 to 860 px) the copy keeps to the left and the box may rise beside it (--door-lap). */
+
+.door-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.door {
+  --door-art: min(27vw, 26rem, 44svh);   /* side of the drawing's box */
+  --door-lap: 0px;                        /* how far the box may rise beside the copy (stacked wide tiles only) */
+  --door-edge: clamp(.5rem, 1.4vw, 1.25rem); /* distance of the box from the tile's right and bottom edge */
+  --door-pad: clamp(2rem, 1.5rem + 3vw, 4.5rem); /* inner gutter, at the middle of the page */
+  --door-out: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter))); /* the page container's edge */
+  --door-line: .78%;                      /* weight of every line, as a share of the box: 3 px for a box of 390 px (see below) */
+  position: relative; isolation: isolate; overflow: clip;
+  min-height: min(92svh, 48rem);
+  padding: var(--section-pad) var(--door-pad) calc(var(--door-art) - var(--door-lap) + var(--door-edge));
+}
+.door-sport { padding-left: var(--door-out); }
+.door-firma { padding-right: var(--door-out); }
+
+/* Where the copy's box and the drawing's box share space, only the copy's own parts catch the pointer, so a sticker
+   under an empty part of it stays clickable. */
+.door-body { position: relative; z-index: 1; display: grid; justify-items: start; max-width: 30rem; pointer-events: none; }
+.door-body > * { pointer-events: auto; }
+.door-label { margin-bottom: 1rem; }
+.door-firma .door-label { color: var(--parkett); }
+.door-title {
+  font-size: clamp(2rem, 1.3rem + 3vw, 4rem);
+  line-height: 1;
+  color: var(--heading);
+}
+.door-text { margin-top: 1.25rem; max-width: 26rem; font-size: var(--fs-lead); line-height: 1.5; }
+/* The ink tile's sentence is parquet, not the light grey of body text on ink: the two tiles are a pair, and the
+   sentence beside it on blue is white */
+.door-firma .door-text { color: var(--parkett); }
+.door-btn { margin-top: 2rem; }
+.door-btn-icon { margin-right: -.2rem; }
+
+/* ---------- Drawing ----------
+   A square box in the lower right corner; the kit's .cl fills it (600 x 600 drawing, so 1 % of the box = 6 units).
+   `color` is what a collected sticker's dashed outline takes. The draw is tuned to end when the box's top edge is
+   a good 40 % up the viewport, that is when the tile is comfortably in view. */
+.door-art {
+  position: absolute; right: var(--door-edge); bottom: var(--door-edge);
+  inline-size: var(--door-art); aspect-ratio: 1;
+  color: var(--weiss);
+  --scroll-dist-long: 28vh;
+  --draw-stagger: 2.5vh;
+}
+/* The shop's ground line ends at x 560 of 600: that end lies on the container's right edge */
+.door-firma .door-art { right: calc(var(--door-out) - var(--door-art) / 15); }
+
+/* Every line is measured in the drawing's own units, so all of them have one weight at any size of the box (and no
+   non-scaling stroke: with it Chromium lays the dash out in screen px, so the drawn tip of the yellow line would run
+   ahead of the path position and the ball would trail behind its line). --door-line is set per range of widths so
+   that this weight is the kit's hall-line weight on screen (--cl-w: 3 px at 1440 px wide, 2 px on phones), within
+   about half a pixel: .78 % from 1200 px, .95 % from 861 px, .68 % from 600 px, .85 % below. */
+.door-art .cl-path { vector-effect: none; stroke-width: var(--door-line); }
+
+/* The stickers, at most 72 px. The pennant's foot (25 107 of its 120 box) stands on the start of the yellow line
+   (30 548); the pretzel lies in the middle of the shop window (228 412). */
+.door-art .door-stk { position: absolute; inline-size: var(--door-stk); }
+.door-sport .door-stk {
+  --door-stk: clamp(48px, 16%, 72px);
+  left: calc(5% - var(--door-stk) * .208); top: calc(91.33% - var(--door-stk) * .892);
+}
+.door-firma .door-stk {
+  /* never below 44 px (a finger's target), also where the window is small */
+  --door-stk: clamp(44px, 17%, 72px);
+  left: calc(38% - var(--door-stk) / 2); top: calc(68.67% - var(--door-stk) / 2);
+}
+
+/* The ball: a yellow disc drawn in Doors.tsx, on the yellow line's path in the same box */
+.door-ball { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; max-width: none; overflow: visible; pointer-events: none; }
+.door-ball-move { fill: var(--gelb); offset-rotate: 0deg; }
+@media (forced-colors: active) { .door-ball { display: none; } }
+
+/* The shop sign is lit at rest (the drawing's one yellow, like the ball on the blue tile) */
+.door-firma .cl-glow { opacity: 1; }
+
+/* ---------- Motion ---------- */
+@keyframes door-roll { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@keyframes door-roll-again { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@keyframes door-light { from { opacity: 0; } to { opacity: 1; } }
+@keyframes door-flicker { 0% { opacity: 1; } 12% { opacity: .15; } 26% { opacity: 1; } 40% { opacity: .4; } 58%, 100% { opacity: 1; } }
+
+/* With the scroll (kit primitive "draw" on .door-art): the white lines draw first; the yellow line follows with the
+   ball on its tip; the sign switches on last. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .door-sport .cl-path[data-line="gelb"] { --draw-start: cover 10vh; --draw-end: cover 41vh; }
+    .scroll-fx .door-ball-move {
+      animation: door-roll linear both;
+      animation-duration: auto;
+      animation-timeline: --kit-draw;
+      animation-range: cover 10vh cover 41vh;
+    }
+    .scroll-fx .door-firma .cl-glow {
+      animation: door-light linear both;
+      animation-duration: auto;
+      animation-timeline: --kit-draw;
+      animation-range: cover 38vh cover 43vh;
+    }
+  }
+}
+
+/* Without scroll timelines: the lines draw once when the box scrolls into view (data-reveal sets .is-in) */
+html.motion:not(.scroll-fx) .door-art.is-in .cl-path {
+  animation: kit-draw .9s cubic-bezier(.65, 0, .35, 1) calc(var(--cl-i, 0) * 80ms + .15s) backwards;
+}
+
+/* Hover or keyboard focus, one reaction per tile: the ball rolls in again; the sign flickers like a tube switching on.
+   (Own keyframe names, so the reaction starts whatever ran before; the animation shorthand puts it back on the
+   clock, and when it ends the scroll-linked state above takes over again.) */
+html.motion .door-sport:is(:hover, :focus-within) .door-ball-move { animation: door-roll-again 1.2s cubic-bezier(.3, .6, .3, 1) both; }
+html.motion .door-firma:is(:hover, :focus-within) .cl-glow { animation: door-flicker .7s linear both; }
+
+html.motion .door-btn-icon { transition: translate .25s var(--ease-out); }
+html.motion .door-btn:is(:hover, :focus-visible) .door-btn-icon { translate: 4px 0; }
+
+@media (min-width: 861px) and (max-width: 1199px) { .door { --door-line: .95%; } }
+
+@media (max-width: 860px) {
+  .door-grid { grid-template-columns: minmax(0, 1fr); }
+  .door {
+    --door-art: min(64vw, 16rem, 38svh);
+    --door-line: .85%;
+    min-height: 0;
+  }
+  .door-sport, .door-firma { padding-inline: var(--gutter); }
+  /* Stacked, both drawings end on the container's right edge: the goal's outer edge (x 590 of 600) like the shop's
+     ground line (x 560) */
+  .door-sport .door-art { right: calc(var(--door-out) - var(--door-art) / 60); }
+  .door-title { font-size: clamp(2rem, 9.5vw, 3rem); }
+}
+
+/* Stacked but wide (large phones in landscape, small tablets): the copy keeps to the left, the drawing grows beside it */
+@media (min-width: 600px) and (max-width: 860px) {
+  .door { --door-art: min(46vw, 22rem, 42svh); --door-lap: calc(var(--door-art) * .45); --door-line: .68%; }
+  .door-body { max-width: min(30rem, calc(100% - var(--door-art) * .8)); }
+  .door-title { font-size: clamp(2rem, 7vw, 3rem); }
+}

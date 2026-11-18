@@ -28,3 +28,6 @@ test-results/
 
 # TypeScript build info (incremental tsc -b; kept in node_modules/.tmp by the tsconfigs)
 *.tsbuildinfo
+
+# Scratch screenshots of the redesign agents
+qa-tmp/

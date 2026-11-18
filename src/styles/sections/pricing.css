@@ -1,57 +1,34 @@
-/* Pricing (Kosten): kalk (--bg-alt), under the page head band (title and intro). One overview card like a spec
-   sheet: radius 16, 1 px border, 40 px inner margin, hairline-divided rows with the item as an uppercase label on
-   the left and the answer on the right (below 1100 px the answer sits under the label). Decided answers carry a
-   small check, open ones a ring and the "offen" pill. */
+/* Pricing (Kosten): parkett-2 (--bg-alt), under the page head band (title and intro). Four cards, two by two (one
+   column below 700 px): radius 20, 1 px border, no shadow. In each: a flat round badge (.lg-badge, legal.css: green with a
+   check = decided, empty dashed ring = open), the item as an uppercase label, the answer in large type. The first card
+   is ink (.surface-tinte in Pricing.tsx) and sets its one-word answer in the display face. No motion. */
 
-.price-main { max-width: 56rem; }
-
-.price-card {
+.price-grid {
   margin: 0;
-  padding: clamp(.5rem, .25rem + .8vw, 1rem) clamp(1.5rem, 1rem + 1.4vw, 2.5rem);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, .5rem + 1.4vw, 2rem);
+}
+
+.price-row {
+  padding: var(--card-pad);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
-
-.price-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-  gap: .5rem 2rem;
-  align-items: baseline;
-  padding-block: 1.5rem;
-}
-.price-row + .price-row { border-top: 1px solid var(--line); }
 
 .price-label {
   font-size: var(--fs-label); font-weight: 600; line-height: 1.5;
   letter-spacing: var(--label-tracking); text-transform: uppercase;
   color: var(--accent-text);
 }
+.price-mark { margin-bottom: clamp(1.75rem, 1rem + 3vw, 3.5rem); }
 
-/* Value column reads as one aligned column: marker first, text with a hanging indent */
 .price-value {
-  margin: 0;
-  display: flex; align-items: flex-start; gap: .75rem;
-  font-size: var(--fs-body); line-height: 1.45; color: var(--heading);
+  margin: .5rem 0 0; max-width: 24ch;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); font-weight: 600; line-height: 1.2; letter-spacing: -.01em;
+  color: var(--heading); text-wrap: balance;
 }
-.price-value-text { min-width: 0; }
-
-/* Every row has the same 16px marker slot, so all value texts start on one line. The slot (.price-mark)
-   carries the scroll animation; the SVG inside only draws. */
-.price-mark {
-  flex: none;
-  display: block;
-  width: 16px; height: 16px; margin-top: .2em;
-}
-.price-marker {
-  display: block;
-  width: 16px; height: 16px;
-  fill: none; stroke: var(--accent-text);
-  stroke-linecap: round; stroke-linejoin: round;
-}
-.price-check { stroke-width: 2; }
-.price-marker-open { stroke-width: 1.6; }
-.price-row-open .price-value { color: var(--text); }
+.price-value.display { font-size: clamp(2.25rem, 1.5rem + 3.2vw, 4rem); line-height: 1; }
 
 /* "offen" pill after the value text */
 .price-tag {
@@ -71,43 +48,6 @@
   font-size: var(--fs-small); line-height: 1.55; color: var(--text);
 }
 
-/* Scroll-driven motion (DESIGN.md -> Motion; dormant: /kosten/ has no html.scroll-fx). The card zooms in gently, the note fades
-   (attributes in Pricing.tsx). The rows themselves do not move. Each check wipes in from the left (clip-path,
-   so it draws like a stroke); an open circle would read as a broken "C" mid-wipe, so it scales and fades in
-   from its centre instead (composited). Both are final once the marker's top sits at ~75% of the viewport:
-   cover 4vh -> cover 24vh on desktop (~19vh on phones). */
-.price-main { --scroll-zoom-from: .96; }
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .scroll-fx .price-mark {
-      animation: price-wipe linear both;
-      animation-duration: auto;
-      animation-timeline: view(block 0px);
-      animation-range: cover 4vh cover calc(var(--scroll-dist) * .6);
-    }
-    .scroll-fx .price-mark-open {
-      animation-name: price-open;
-      transform-origin: 50% 50%;
-    }
-  }
-}
-@keyframes price-wipe {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0); }
-}
-@keyframes price-open {
-  from { opacity: 0; scale: .6; }
-  to   { opacity: 1; scale: 1; }
-}
-
-/* Below 1100px each row stacks label over value,
-   so the narrow two-column row never appears */
-@media (max-width: 1100px) {
-  .price-main { max-width: 44rem; }
-  .price-row { grid-template-columns: minmax(0, 1fr); }
-}
-
-@media (max-width: 600px) {
-  .price-row { padding-block: 1.25rem; }
+@media (max-width: 700px) {
+  .price-grid { grid-template-columns: minmax(0, 1fr); }
 }

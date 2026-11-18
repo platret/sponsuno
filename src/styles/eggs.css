@@ -1,0 +1,124 @@
+/* Easter eggs (lib/eggs.ts): loaded with that lazy chunk only, so nothing here may be needed before it runs.
+   The album's own layout is in sections/footer.css (it is prerendered). Here: the counter chip in the header, the
+   small motion of a new sticker in the album and of the full album, the cursors for collecting and dragging, the
+   «TOR!» scoreboard, and the bounce of the last «o» of the footer wordmark. Everything is flat and upright (nothing
+   here is tilted) and short. All of it is aria-hidden decoration; motion only under html.motion (static styles are
+   the final state). */
+
+/* ---------- Counter chip in the header (Header.tsx renders it after the first find) ---------- */
+
+/* A small flat yellow tag (kit: .tag) with the star and the count, worn as a badge on the upper right corner of the
+   waitlist button. It always lies inside the header bar (never on the page's content, whatever scrolls under the
+   bar) and it is out of the flow at every width: appearing must never move the nav or the button. Positioned
+   against .header-actions (header.css), whose first child is the waitlist button. A 2 px ring in the bar's own
+   colour cuts it out of the button. A plain span, a pointer extra. */
+.album-chip {
+  --tag-fs: 12px;
+  position: absolute; z-index: 1;
+  /* The bar is 72 px with a 44 px button (64 px on phones): the badge starts 3 px (1 px) below the bar's upper edge
+     and ends above the button's label */
+  top: -.6875rem; right: -.5rem;
+  gap: .3em;
+  padding: .15em .6em .15em .5em;
+  border: 2px solid var(--parkett);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+/* On the ink bar (over the word band and the footer) the button is yellow like the badge: the ring is ink */
+.is-dark .album-chip { border-color: var(--tinte); }
+.album-chip .icn { fill: currentColor; }
+.album-chip-n { display: inline-block; }
+html.motion .album-chip-n { animation: egg-count .25s var(--ease-out) both; }
+@keyframes egg-count { from { opacity: 0; translate: 0 .4em; } }
+@media (max-width: 760px) {
+  .album-chip { top: -.5625rem; }
+}
+/* Below 961 px the menu button (44 px, after a gap of .25rem) stands right of the waitlist button */
+@media (max-width: 960px) {
+  .album-chip { right: calc(44px + .25rem - .5rem); }
+}
+/* Fingers: a little more to hit, upwards and sideways only, so the waitlist button under it keeps its own area */
+@media (pointer: coarse) {
+  .album-chip::after { content: ""; position: absolute; inset: -.375rem -.5rem -.25rem; }
+}
+/* Album full: the chip swells once, where the visitor found the sixth sticker */
+html.motion .album-chip.is-full { animation: egg-chip-full .4s var(--ease-out) both; }
+@keyframes egg-chip-full { 50% { scale: 1.12; } }
+
+/* ---------- Album (footer): a sticker lands in its slot, the count ticks, the full album hops once ---------- */
+
+html.motion .alb-slot.is-found .stk-in { animation: egg-land .3s var(--ease-out) both; }
+@keyframes egg-land { from { scale: 1.2; opacity: 0; } }
+html.motion .alb-num { animation: egg-count .25s var(--ease-out) both; }
+
+/* The finale waits for the full album to be on screen (.is-seen, Album.tsx): the six stickers hop once, one after
+   another (--k: the slot). Once, 0.7 s with the stagger, CSS only. Without motion nothing moves (the line beside
+   the count says it instead). */
+html.motion .alb.is-seen .alb-slot .stk-in { animation: egg-hop .4s var(--ease-out) calc(var(--k, 0) * 60ms) both; }
+@keyframes egg-hop { 45% { translate: 0 -16%; } }
+
+/* ---------- Collecting and dragging ---------- */
+
+/* The cursors live here, not in the kit: a sticker looks clickable only once this chunk has made it so. A sticker
+   that counts for the album shows the pointer. The hero ball can also be dragged (mouse only, eggs.ts: touch keeps
+   scrolling and zooming, so there is no touch-action here): it shows the pointer until it has been collected, then
+   the grab hand. */
+.stk[data-draggable] { cursor: grab; }
+.stk[data-collectable] { cursor: pointer; }
+.stk[data-collected] { cursor: default; }
+.stk[data-draggable][data-collected] { cursor: grab; }
+.stk.is-dragging { position: relative; z-index: 5; cursor: grabbing; }
+html.motion .stk.is-dragging .stk-in { scale: 1.05; rotate: 0deg; animation: none; }
+
+/* ---------- «TOR!» scoreboard ---------- */
+
+/* Bottom centre: a small flat ink pill with the word and the score on yellow; a faint parquet hairline keeps it
+   readable on the ink bands. Never focusable, never in the way of a click. Removed by the script after 1.6 s. */
+.egg-toast {
+  position: fixed; left: 50%; bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); z-index: 60;
+  translate: -50% 0;
+  display: flex; align-items: center; gap: .5rem;
+  padding: .3rem .35rem .3rem .85rem;
+  border: 1px solid rgba(248, 244, 234, .4); border-radius: var(--radius-pill);
+  background: var(--tinte);
+  color: var(--parkett);
+  font: var(--display-weight) .8125rem/1 var(--display); letter-spacing: var(--display-tracking);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.egg-toast-score {
+  padding: .3rem .55rem .25rem;
+  border-radius: var(--radius-pill);
+  background: var(--gelb); color: var(--tinte);
+  font-variant-numeric: tabular-nums;
+}
+/* Phones: above the sticky waitlist bar */
+@media (max-width: 760px) { .egg-toast { bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); } }
+html.motion .egg-toast { animation: egg-toast-in .2s var(--ease-out) both, egg-toast-out .2s ease-in 1.4s forwards; }
+@keyframes egg-toast-in { from { opacity: 0; translate: -50% .5rem; } }
+@keyframes egg-toast-out { to { opacity: 0; } }
+
+/* ---------- Loop: the last «o» of the footer wordmark bounces twice ---------- */
+
+/* .ft-wordmark holds the image; eggs.ts adds a second copy of it (.egg-o) and the click area over the loop
+   (.egg-loop). At rest only the first image shows. While bouncing, the first is clipped to everything before the
+   «o» and the copy to the «o», and the copy moves. --egg-o: where the cut lies, set by eggs.ts next to the click
+   area's numbers (86.7 % of the width). */
+/* (img.egg-o under .ft-wordmark: footer.css shows every image of the wordmark as a block) */
+.ft-wordmark img.egg-o { display: none; position: absolute; inset: 0; pointer-events: none; }
+.egg-loop { position: absolute; top: 0; bottom: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+html.motion .is-bouncing > img:first-child { clip-path: inset(-60% calc(100% - var(--egg-o, 86.7%)) -60% 0); }
+html.motion .ft-wordmark.is-bouncing > img.egg-o {
+  display: block;
+  clip-path: inset(-60% 0 -60% var(--egg-o, 86.7%));
+  animation: egg-bounce .9s linear both;
+}
+/* Two hops, the second lower: up eased out, down eased in, like a ball */
+@keyframes egg-bounce {
+  0% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .7, .4, 1); }
+  26% { translate: 0 -34%; animation-timing-function: cubic-bezier(.6, 0, .8, .3); }
+  52% { translate: 0 0; animation-timing-function: cubic-bezier(.2, .7, .4, 1); }
+  70% { translate: 0 -13%; animation-timing-function: cubic-bezier(.6, 0, .8, .3); }
+  88%, 100% { translate: 0 0; }
+}

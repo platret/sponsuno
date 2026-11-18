@@ -1,17 +1,27 @@
-/* Sponsuno landing page: base layer. Tokens in tokens.css, one stylesheet per section in styles/sections/.
-   Colour proportions (DESIGN.md): light surfaces carry the page, graphit frames it, brass is a flat accent. */
+/* Sponsuno: base layer of every page. Tokens in tokens.css, one stylesheet per section in styles/sections/.
+   Design system v2 "Turnhalle" (DESIGN.md): ink type on a light parquet ground. Large surfaces are parquet, ink and
+   one brand colour, blue; red, yellow and green come only as accents (thin lines, small signs, tags, stickers).
+   Flat colours only: no gradients, no shadows. */
 @import './tokens.css';
+
+/* Cascade: everything up to the reveal rules sits in the cascade layer `base`. Section stylesheets (and the kit) are
+   unlayered, so any of their rules beats a base rule whatever the specificity or the order of the built stylesheets
+   (the build links this shared file after the page's own, the dev server before it). The reveal and scroll primitives
+   below stay unlayered on purpose: they are zero-specificity selectors, and the focus guard and the reduced-motion
+   rules must beat section rules. */
+
+@layer base {
 
 :root {
   --header-h: 72px;
   --container: 1200px;
   --section-pad: clamp(4.5rem, 3rem + 6vw, 8.5rem);
 
-  /* Type scale of the design system (web): titel 64, untertitel 40, zwischentitel 28, fliesstext 18, klein 14,
-     label 12 px; fluid below the desktop size. */
-  --fs-h1: clamp(2.5rem, 1.55rem + 3.6vw, 4rem);
-  --fs-h2: clamp(1.875rem, 1.45rem + 1.7vw, 2.5rem);
-  --fs-sub: clamp(1.375rem, 1.15rem + .9vw, 1.75rem);
+  /* Type scale. The display face (Archivo Wide 800) is about a quarter wider than Schibsted, so its sizes start small
+     enough for the longest word of a title to fit a 360 px screen (longer words carry soft hyphens in content.ts). */
+  --fs-h1: clamp(1.875rem, 1.1rem + 3.4vw, 3.75rem);           /* page titles */
+  --fs-h2: clamp(1.75rem, 1.2rem + 2.3vw, 3rem);               /* section titles */
+  --fs-sub: clamp(1.25rem, 1.1rem + .6vw, 1.625rem);           /* titles inside a reading column */
   --fs-h3: 1.25rem;
   --fs-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   --fs-body: 1.125rem;
@@ -26,6 +36,8 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Room for the fixed header plus 16 px, so a control the browser scrolls to (Tab) shows its whole focus ring.
+     The landing page's bands take the 16 px back (scroll-margin-top, end of header.css) and land flush. */
   scroll-padding-top: calc(var(--header-h) + 16px);
   overflow-x: clip;
 }
@@ -49,20 +61,26 @@ a { color: inherit; }
 img, svg { display: block; max-width: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
 
-/* One family, Schibsted Grotesk: titles 700 with -0.025em tracking, text 400, UI 600. */
-h1, h2 {
+/* Display: Archivo Wide 800 for H1, H2, giant words and big numerals (class .display puts any other element in the
+   display face; it sets no colour and no size).
+   Text, UI, labels and buttons: Schibsted Grotesk 400 and 600. Long words break only at the soft hyphens set in the
+   copy (hyphens: manual); overflow-wrap is the last resort, so a title can never push the page wider than the screen. */
+h1, h2, .display {
   font-family: var(--display);
-  font-weight: 700;
-  color: var(--heading);
+  font-weight: var(--display-weight);
   letter-spacing: var(--display-tracking);
   text-wrap: balance;
+  hyphens: manual;
+  overflow-wrap: break-word;
   font-variant-numeric: lining-nums;
 }
-h1 { font-size: var(--fs-h1); line-height: 1.02; }
-h2 { font-size: var(--fs-h2); line-height: 1.08; }
+h1, h2 { color: var(--heading); }
+h1 { font-size: var(--fs-h1); line-height: 1; }
+h2 { font-size: var(--fs-h2); line-height: 1.04; }
 h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-height: 1.3; letter-spacing: -0.01em; color: var(--heading); }
+strong, b { font-weight: 600; }
 
-/* Label (design system): small caps line in the accent colour above a title or a group. */
+/* Label: small uppercase line in the accent colour above a title or a group (blue on parquet, yellow on ink). */
 .label {
   display: block;
   font: 600 var(--fs-label)/1.4 var(--sans);
@@ -70,7 +88,6 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
   text-transform: uppercase;
   color: var(--accent-text);
 }
-.surface-graphit .label { color: var(--brass); }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
 
@@ -82,51 +99,81 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 .skip-link {
   position: absolute; left: 1rem; top: -4rem; z-index: 100;
   padding: .75rem 1rem; border-radius: var(--radius-sm);
-  background: var(--brass); color: var(--graphit); font-weight: 600; text-decoration: none;
+  background: var(--gelb); color: var(--tinte); font-weight: 600; text-decoration: none;
+  /* The ring lies inside the yellow box (ink on yellow, 9.8:1), so it reads over the parquet hero of the landing
+     page and over the ink header of the static pages alike */
+  --focus: var(--tinte);
 }
+.skip-link:focus-visible { outline-offset: -6px; }
 .skip-link:focus { top: 1rem; }
 
 .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
 
-/* ---------- Surfaces ---------- */
+/* ---------- Surfaces ----------
+   .surface-parkett and .surface-parkett-2 are the two light grounds. .surface-tinte is an ink area: it paints the ground
+   and sets the role tokens for everything inside (headings parquet, text light grey, accent and focus yellow, cards
+   tinte-2), so component CSS written with role tokens works on both grounds. The static header, the page head band
+   and the footer carry it too. .surface-blau is the one colour ground (the sport door tile, the closing band of the
+   topic pages): white text and focus ring. There is no red, yellow or green surface: those three are accent colours
+   (thin lines, small signs and icons, tags, the yellow button on ink, the green match result), never a band or tile. */
 
 .section { padding-block: var(--section-pad); }
-.surface-paper { background: var(--bg); }
-.surface-kalk { background: var(--bg-alt); }
-.surface-graphit {
-  background: var(--grad-dark);
-  color: var(--steel);
-  --focus: var(--brass);
+.surface-parkett { background: var(--parkett); }
+.surface-parkett-2 { background: var(--parkett-2); }
+.surface-tinte {
+  background: var(--tinte);
+  color: var(--grau-hell);
+  --bg: var(--tinte);
+  --bg-alt: var(--tinte-2);
+  --surface: var(--tinte-2);
+  --heading: var(--parkett);
+  --text: var(--grau-hell);
+  --line: var(--linie-dunkel);
+  --accent-text: var(--gelb);
+  --focus: var(--gelb);
 }
-.surface-graphit h1, .surface-graphit h2, .surface-graphit h3 { color: var(--kalk); }
+.surface-blau {
+  background: var(--blau);
+  color: var(--weiss);
+  --bg: var(--blau);
+  --heading: var(--weiss);
+  --text: var(--weiss);
+  --line: rgba(255, 255, 255, .35);
+  --accent-text: var(--weiss);
+  --focus: var(--weiss);
+}
 
 .section-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem); }
 .section-intro { margin-top: 1.1rem; font-size: var(--fs-lead); line-height: 1.55; max-width: 40rem; }
-.surface-graphit .section-intro { color: var(--steel); }
 .section-intro a { color: var(--accent-text); font-weight: 600; text-underline-offset: 3px; }
 
-/* ---------- Buttons and links ---------- */
+/* ---------- Buttons and links ----------
+   Every button is a pill. Fixed colours, picked by the ground the button stands on:
+   .btn-tinte   ink fill, parquet label: primary on parquet and parkett-2
+   .btn-gelb    yellow fill, ink label: primary on ink (the one yellow fill larger than a tag)
+   .btn-parkett parquet fill, ink label: primary on blue, and on the ink door tile beside the blue one
+   .btn-outline outline in the surface's heading colour: secondary on any ground
+   Hover colours only where a pointer can hover: on touch screens :hover sticks after a tap, and the tapped button
+   (the yellow submit button in its error state) would keep looking like a different, weaker one. */
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   min-height: 52px; padding: .8rem 1.6rem;
-  border: 1px solid transparent; border-radius: var(--radius-pill); cursor: pointer;
+  border: 2px solid transparent; border-radius: var(--radius-pill); cursor: pointer;
   font: 600 1rem/1.2 var(--sans); text-decoration: none; white-space: nowrap;
   transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 }
 .btn-sm { min-height: 44px; padding: .6rem 1.1rem; font-size: .9375rem; }
-/* Primary on graphit: messing fill (accent-fill), graphit label (6.7:1) */
-.btn-brass { background: var(--brass); color: var(--graphit); }
-.btn-brass:hover { background: var(--brass-light); }
-/* Secondary on graphit */
-.btn-ghost { border-color: rgba(245, 243, 238, .4); color: var(--kalk); background: transparent; }
-.btn-ghost:hover { border-color: var(--kalk); background: rgba(245, 243, 238, .06); }
-/* Primary on the page surface: graphit with a kalk label */
-.btn-graphit { background: var(--btn-bg); color: var(--btn-fg); }
-.btn-graphit:hover { background: var(--btn-bg-hover); }
-/* Secondary on the page surface */
-.btn-outline { border-color: color-mix(in srgb, var(--heading) 25%, transparent); color: var(--heading); background: transparent; }
-.btn-outline:hover { border-color: var(--heading); }
+.btn-tinte { background: var(--btn-bg); color: var(--btn-fg); }
+.btn-gelb { background: var(--gelb); color: var(--tinte); }
+.btn-parkett { background: var(--parkett); color: var(--tinte); }
+.btn-outline { border-color: var(--heading); color: var(--heading); background: transparent; }
+@media (hover: hover) {
+  .btn-tinte:hover { background: var(--btn-bg-hover); }
+  .btn-gelb:hover { background: var(--parkett); }
+  .btn-parkett:hover { background: var(--weiss); }
+  .btn-outline:hover { background: color-mix(in srgb, var(--heading) 10%, transparent); }
+}
 
 .link-arrow {
   display: inline-flex; align-items: center; gap: .4rem;
@@ -141,6 +188,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 .link-arrow.link-arrow-wrap { display: inline-block; padding-block: .65rem; line-height: 1.5; }
 .link-arrow-end { white-space: nowrap; }
 .link-arrow-wrap svg { display: inline-block; margin-left: .4rem; vertical-align: -.2em; }
+
+} /* @layer base */
 
 /* ---------- Reveal on scroll (see lib/motion.ts) ---------- */
 
@@ -165,9 +214,6 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-h
 @keyframes sfx-rise { from { opacity: 0; translate: var(--scroll-x) var(--scroll-y); } 60% { opacity: 1; } to { opacity: 1; translate: 0 0; } }
 @keyframes sfx-fade { from { opacity: 0; } 60%, to { opacity: 1; } }
 @keyframes sfx-zoom { from { opacity: 0; scale: var(--scroll-zoom-from); translate: 0 var(--scroll-zoom-y); } 60% { opacity: 1; } to { opacity: 1; scale: 1; translate: 0 0; } }
-/* Scale only (no fade): for things inside a parent that already fades (icons, portraits) and for dark surfaces
-   that would turn grey at partial opacity. Same knobs as zoom-in. */
-@keyframes sfx-scale { from { scale: var(--scroll-zoom-from); translate: 0 var(--scroll-zoom-y); } to { scale: 1; translate: 0 0; } }
 @keyframes sfx-photo { from { scale: var(--scroll-photo-from); } to { scale: 1; } }
 @keyframes sfx-photo-frame { from { clip-path: inset(var(--scroll-photo-inset) round var(--scroll-photo-radius)); } to { clip-path: inset(0 round var(--scroll-photo-radius)); } }
 @keyframes sfx-frame { from { clip-path: inset(var(--scroll-frame-inset) round var(--scroll-frame-radius)); } to { clip-path: inset(0 round var(--scroll-frame-radius-end)); } }

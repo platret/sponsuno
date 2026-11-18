@@ -1,37 +1,28 @@
 /* Topic pages reached from the header (InfoPage.tsx: /kosten/, /fragen/, /ueber-uns/, and the parked /ki-manager/). They show the
    former landing page sections with their own stylesheets; this file only adapts them to a page of their own and adds
-   the closing block. No JavaScript module and never html.motion. Only /ki-manager/ (parked) gets html.scroll-fx (an inline
-   script from headFor, `scrollFx` in pages.ts) for the pinned bento in ai.css; the others show their final layout.
-   The footer stays static on every topic page, /ki-manager/ included (rule below), so they all end the same way.
+   the closing block. No JavaScript module, never html.motion or html.scroll-fx: every block shows its final layout.
+   (The parked /ki-manager/ had html.scroll-fx for its pinned bento in ai.css; when it comes back, the footer after it
+   needs `.scroll-fx .pg ~ .ft [data-scroll] { animation-name: none; }` here again.)
    Classes prefixed pg-. Loaded before the section stylesheets (src/static/sections.ts), so section rules win a tie. */
 
-/* The footer after a topic page never moves, even where html.scroll-fx is set for the bento (/ki-manager/) */
-.scroll-fx .pg ~ .ft [data-scroll] { animation-name: none; }
-
 /* The first section sits under the page head band (PageBand, legal.css): the top space of the legal pages, not a
-   full section pad */
-.pg > .lg-band + .section { padding-top: clamp(3rem, 2rem + 4vw, 5.5rem); }
+   full section pad (enough room for the half of the band's sticker that hangs over the edge) */
+.pg > .lg-band + .section { padding-top: clamp(3.5rem, 2.75rem + 3vw, 5.5rem); }
 
-
-/* H2 that looks like an H3 (Schibsted 600): card titles, founder names and "Stand des Projekts" under the page H1 */
+/* H2 that looks like an H3 (Schibsted 600): card titles and founder names under the page H1 */
 .pg-h3 {
-  font-weight: 600; font-size: var(--fs-h3); line-height: 1.3;
+  font-family: var(--sans); font-weight: 600; font-size: var(--fs-h3); line-height: 1.3;
   letter-spacing: -0.01em; text-wrap: wrap;
 }
 
-/* ---------- Closing block: back to the waitlist on the landing page ---------- */
-.pg-end { padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem); }
-/* After another paper section: a hairline at the container width instead of a second band */
-.surface-paper + .pg-end { padding-top: 0; }
-.surface-paper + .pg-end > .container::before {
-  content: ""; display: block; height: 1px; margin-bottom: clamp(3rem, 2rem + 3vw, 4.5rem); background: var(--line);
-}
-.pg-end h2 { max-width: 40rem; }
-.pg-end-text { margin-top: 1rem; max-width: 38rem; font-size: var(--fs-lead); line-height: 1.55; }
+/* ---------- Closing block: back to the waitlist on the landing page ----------
+   A blue band (.surface-blau in InfoPage.tsx: white title, text and link, 8.0:1; parquet button with an ink label,
+   15.5:1, the pill 7.3:1 off the blue; white focus ring), with the giant title. Blue is the one colour surface of a
+   topic page: it stands apart from the parquet section before it and the ink footer after it. Text and one button on
+   the container grid, no decoration. */
+.pg-end h2 { font-size: clamp(2.25rem, 1rem + 5.4vw, 5.5rem); line-height: 1; }
+.pg-end-text { margin-top: 1.5rem; max-width: 38rem; font-size: var(--fs-lead); line-height: 1.55; }
 .pg-end-more { margin-top: .75rem; max-width: 38rem; }
-.pg-end-more a {
-  color: var(--heading); font-weight: 600;
-  text-decoration-color: var(--accent-text); text-underline-offset: 3px;
-}
+.pg-end-more a { font-weight: 600; text-underline-offset: 3px; }
 .pg-end-more a:hover { text-decoration-thickness: 2px; }
-.pg-end-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 1.75rem; }
+.pg-end-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 2rem; }

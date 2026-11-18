@@ -1,17 +1,13 @@
-/* Footer: second half of the graphit closing block (flat graphit, same as .wl). A hairline, the claim in column 1
-   and the link columns under uppercase brass labels, the kalk loop wordmark at full container width (always the SVG,
-   never set as text), then the bottom row.
-   On sub-pages (legal pages, guides, topic pages) it stands alone: .ft-standalone drops the top rule; those pages
-   never get .motion, and the one topic page with .scroll-fx (/ki-manager/) stills the footer (page.css), so the
-   footer is static there.
+/* Footer (Footer.tsx): the ink closing block of every page (.surface-tinte sets ground and roles). The claim in
+   column 1 and the link columns under uppercase yellow labels, the sticker album row (landing page only), the parquet
+   loop wordmark at full container width (always the SVG, never set as text), then the bottom row.
+   On the landing page it follows the parquet waitlist band; on sub-pages (legal pages, topic pages) it stands alone
+   (.ft-standalone); those pages never get .motion, so the footer is static there.
    Motion on the landing page (DESIGN.md -> Motion): the top rises, the wordmark rises and scales .9 -> 1.
    Both sit at the end of the page, so their range ends at entry 100% (final once fully in view), or after
    --scroll-dist when that comes first. */
 
 .ft {
-  --focus: var(--brass);
-  background: var(--graphit);
-  color: var(--steel);
   padding-bottom: calc(clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem) + env(safe-area-inset-bottom, 0px));
 }
 
@@ -21,59 +17,122 @@
   gap: 2.5rem clamp(2rem, 1rem + 5vw, 6rem);
   align-items: start;
   padding-top: clamp(3rem, 2.5rem + 2vw, 4.5rem);
-  border-top: 1px solid var(--card-dark-line);
 }
 
 .ft-top { --scroll-range-end: entry min(100%, var(--scroll-dist)); }
 
-/* The claim: the one line of the footer in kalk, at zwischentitel weight */
+/* The claim: the one line of the footer in parquet, at H3 weight */
 .ft-sub {
   max-width: 20ch;
   font-size: var(--fs-h3); font-weight: 600; line-height: 1.35; letter-spacing: -0.01em;
-  color: var(--kalk);
+  color: var(--parkett);
   text-wrap: balance;
 }
 
-/* Standalone: no top rule inside */
-.ft-standalone .ft-top { border-top: 0; }
-
 .ft-cols { display: flex; flex-wrap: wrap; gap: 1.5rem clamp(2rem, 1rem + 2.5vw, 3.5rem); }
-/* Column heads use the shared .label; on graphit its accent is brass (the footer is graphit by design) */
-.ft .ft-head { margin-bottom: .5rem; color: var(--brass); }
+/* Column heads use the shared .label (yellow on ink) */
+.ft .ft-head { margin-bottom: .5rem; }
 .ft-link {
   display: inline-flex; align-items: center; min-height: 44px;
-  font-size: var(--fs-small); color: var(--steel); text-decoration: none;
+  font-size: var(--fs-small); color: var(--grau-hell); text-decoration: none;
   transition: color .2s ease;
 }
 .ft-link:hover,
-.ft-link[aria-current] { color: var(--kalk); }
-.ft-link[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 4px; }
+.ft-link[aria-current] { color: var(--parkett); }
+.ft-link[aria-current] { text-decoration: underline; text-decoration-color: var(--gelb); text-underline-offset: 4px; }
 /* Kontakt column: the address may break on very narrow screens; the town is plain text at link size */
 .ft-mail { overflow-wrap: anywhere; }
-.ft-text { display: flex; align-items: center; min-height: 44px; font-size: var(--fs-small); color: var(--steel); }
+.ft-text { display: flex; align-items: center; min-height: 44px; font-size: var(--fs-small); color: var(--grau-hell); }
 
+/* Sticker album row (landing page only; Easter egg, aria-hidden): one quiet row under a hairline, no card. Left the
+   album (Album.tsx): label and count on one line, one line of text under them, then six small upright slots. An
+   empty slot is one neutral dashed ring, the same for all six (the stickers' own outlines are unreadable at 48 px);
+   lib/eggs.ts puts the found stickers in. Right of the album the footer's one sticker, the whistle (72 px, phones
+   64 px). Collected, it is simply gone: it now sits in its slot right beside, and a large dashed outline next to a
+   full album would read as a seventh, missing sticker. */
+.ft-album {
+  display: flex; align-items: center; gap: clamp(1rem, .5rem + 2vw, 2.5rem);
+  margin-top: clamp(2.5rem, 2rem + 2.5vw, 4.5rem);
+  padding-top: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  border-top: 1px solid var(--linie-dunkel);
+  color: var(--parkett);
+}
+.stk.ft-stk { inline-size: 72px; }
+.stk.ft-stk[data-collected] .stk-slot { opacity: 0; }
+.alb {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem clamp(1.5rem, 1rem + 3vw, 4rem);
+}
+.alb-text { min-width: 0; }
+.alb-head { display: flex; align-items: baseline; gap: .75rem; }
+.alb-count { font-size: 1.125rem; line-height: 1; font-variant-numeric: tabular-nums; color: var(--parkett); }
+.alb-num { display: inline-block; }
+.alb-of { color: var(--grau-hell); }
+.is-full .alb-num, .is-full .alb-of { color: var(--gelb); }
+.alb-line { margin-top: .4rem; font-size: var(--fs-small); line-height: 1.5; color: var(--grau-hell); text-wrap: balance; }
+.is-full .alb-line { color: var(--parkett); }
+/* Six slots of 48 px in one row at every width; they shrink with the row on narrow phones (about 40 px at 390 px) */
+.alb-slots {
+  flex: none; min-width: 0;
+  display: grid; grid-template-columns: repeat(6, minmax(0, 3rem));
+  gap: clamp(.5rem, .25rem + .8vw, 1rem);
+}
+.alb-slot { position: relative; display: grid; place-items: center; }
+/* The sticker's size is set inline (kit); here it fills its slot. The album is only shown, never clicked. */
+.alb-slot .stk { inline-size: 100%; pointer-events: none; }
+/* Empty slot: a dashed ring a little inside the slot, in place of the sticker's own outline */
+.alb-slot .stk[data-collected] .stk-slot { opacity: 0; }
+.alb-slot::before {
+  content: ""; position: absolute; inset: 6%;
+  border: 2px dashed currentColor; border-radius: 50%;
+  opacity: .45;
+  transition: opacity .25s ease;
+}
+.alb-slot.is-found::before { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .alb-slot::before { transition: none; } }
+
+/* The giant wordmark: always the SVG, never set as text. The wrapper carries the scroll motion (and is where the
+   Easter-egg chunk hangs its click area); the image keeps the SVG's own proportions. */
 .ft-wordmark {
-  display: block; width: 100%; height: auto;
-  aspect-ratio: 612 / 104; /* the SVG's viewBox, explicit for the lazy-loaded image */
-  margin-top: clamp(4rem, 2.5rem + 5vw, 8rem);
+  position: relative;
+  margin-top: clamp(3rem, 2rem + 4vw, 6rem);
   --scroll-zoom-from: .9;
   --scroll-zoom-y: 24px;
   --scroll-range-end: entry min(100%, var(--scroll-dist));
   transform-origin: 50% 100%;
+}
+.ft-wordmark img {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 612 / 104; /* the SVG's viewBox, explicit for the lazy-loaded image */
 }
 
 .ft-bottom {
   display: flex; flex-wrap: wrap; gap: .5rem 2rem;
   margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
   padding-top: 1.5rem;
-  border-top: 1px solid var(--card-dark-line);
-  font-size: var(--fs-small); line-height: 1.5; color: var(--steel);
+  border-top: 1px solid var(--linie-dunkel);
+  font-size: var(--fs-small); line-height: 1.5; color: var(--grau-hell);
 }
-.ft-bottom a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--brass); transition: color .2s ease; }
-.ft-bottom a:hover { color: var(--kalk); }
-/* Below 1200 px the five columns leave the claim too narrow (under 150 px at 1024 px): stack them */
+.ft-bottom a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--gelb); transition: color .2s ease; }
+.ft-bottom a:hover { color: var(--parkett); }
+/* Below 1200 px the link columns leave the claim too narrow (under 150 px at 1024 px): stack them */
 @media (max-width: 1199px) {
   .ft-top { grid-template-columns: minmax(0, 1fr); }
+}
+/* Stacked and wide: the four columns lie on the container, from its left edge to its right one (as a left-aligned
+   cluster they left the right 40 % of the footer head empty) */
+@media (min-width: 700px) and (max-width: 1199px) {
+  .ft-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+/* Album: below 861 px the slots move under the text; the whistle follows right after the slots, on their row */
+@media (max-width: 860px) {
+  .ft-album { align-items: flex-end; }
+  .alb { flex: 0 1 auto; flex-direction: column; align-items: stretch; }
+  .alb-slots { flex: 0 1 auto; }
+}
+@media (max-width: 760px) {
+  .stk.ft-stk { inline-size: 64px; }
 }
 @media (max-width: 520px) {
   /* The five columns as a two-column grid, so the rows line up (Kontakt alone in the last row) */

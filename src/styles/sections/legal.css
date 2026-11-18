@@ -1,23 +1,30 @@
-/* Static pages (topic pages, guides, legal pages, 404): every page opens the same way as the landing page, on graphit: the
-   slim header with the site nav, then the page head band (PageBand: label, H1, intro). Below it the light page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
+/* Static pages (topic pages, guides, legal pages, 404): every page opens on ink: the slim header with the site nav,
+   then the page head band (PageBand: label, H1, intro, two court lines and one small sticker), both .surface-tinte. Below it the parquet page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
    the table of contents in a sticky rail beside one readable column (~42rem) from 1100 px; narrower, and on the other
-   reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone graphit footer.
-   No motion, no script. Classes prefixed lg-.
+   reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone ink footer.
+   No script; the only motion is the band's load draw (CSS). Classes prefixed lg-. Needs kit.css on the page (the
+   band uses the kit's court-line and sticker classes and its keyframes kit-draw and stk-settle).
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
+
+/* The kit (court lines, stickers, icons and their keyframes) for the page head band and the badges. The static pages
+   ship no script, so nothing else brings it, and this file is the one every static page loads. Keep it here and do
+   NOT import kit.css in src/static/main.ts instead (tried 2026-11-18): the bundler then moves the kit into the
+   stylesheet shared with the landing page, which is linked after the landing page's section styles, so kit rules
+   would win ties against section rules in the build but lose them in dev. Must stay the first rule of the file. */
+@import '../kit.css';
 
 /* The static header scrolls away with the page (not fixed like the landing page header), so anchor jumps (table of
    contents, /kosten/#sachleistungen) need only a small margin, not the landing page's header offset (site.css). */
 html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 
 /* ---------- Header (PageHeader.tsx): wordmark, nav, waitlist button; below 961 px a native <details> menu.
-   Flat graphit, closed off from the page head band by one dark hairline. ---------- */
+   Ink (.surface-tinte in PageHeader.tsx sets ground and roles), closed off from the page head band by one dark
+   hairline. ---------- */
 .lg-header {
   position: relative; z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
-  background: var(--graphit);
-  color: var(--kalk);
-  border-bottom: 1px solid var(--card-dark-line);
-  --focus: var(--brass-light);
+  color: var(--heading);
+  border-bottom: 1px solid var(--line);
 }
 /* Gaps match .header-inner (header.css), so the nav and the button sit in the same place on every page */
 .lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
@@ -28,10 +35,10 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-nav ul { display: flex; gap: .25rem; }
 .lg-nav a {
   display: flex; align-items: center; min-height: 44px; padding: 0 .8rem; border-radius: var(--radius-pill);
-  font-size: var(--fs-small); color: var(--steel); text-decoration: none;
+  font-size: var(--fs-small); font-weight: 600; color: var(--text); text-decoration: none;
 }
-.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--kalk); background: rgba(245, 243, 238, .07); }
-.lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 8px; }
+.lg-nav a:hover, .lg-nav a[aria-current] { color: var(--heading); background: color-mix(in srgb, var(--heading) 8%, transparent); }
+.lg-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 2px; text-underline-offset: 8px; }
 .lg-cta-short { display: none; }
 
 .lg-menu { display: none; }
@@ -50,23 +57,22 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-menu[open] .lg-menu-bars { background: transparent; }
 .lg-menu[open] .lg-menu-bars::before { transform: translateY(6px) rotate(45deg); }
 .lg-menu[open] .lg-menu-bars::after { transform: translateY(-6px) rotate(-45deg); }
-/* The open menu drops down under the bar, full width, over the page, on the page surface */
+/* The open menu drops down under the bar, full width, over the page: ink like the bar (the roles come from the header) */
 .lg-menu-sheet {
   position: absolute; top: 100%; left: 0; right: 0;
   padding: .5rem var(--gutter) 1.5rem;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
-  --focus: var(--accent-text);
 }
 .lg-menu-sheet li { border-bottom: 1px solid var(--line); }
 .lg-menu-sheet a {
   display: block; padding: .8rem 0;
-  font: 700 clamp(1.5rem, 5.5vw, 2rem)/1.15 var(--display); letter-spacing: var(--display-tracking);
+  font: 800 clamp(1.375rem, 6vw, 1.875rem)/1.15 var(--display); letter-spacing: var(--display-tracking);
   color: var(--heading); text-decoration: none;
 }
-.lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.lg-menu-sheet a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent-text); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
-/* Six nav items plus the button: tighter between 961 and 1140 px, the menu below */
+/* Four nav items plus the button: tighter between 961 and 1140 px, the menu below */
 @media (max-width: 1140px) {
   .lg-header-inner { gap: 1.25rem; }
   .lg-nav a { padding-inline: .55rem; }
@@ -82,51 +88,82 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
   .lg-cta-short { display: inline; }
 }
 
-/* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on graphit, right under the header ----------
-   verlauf-dunkel, like the landing page hero, so every page opens the same way. The band is a graphit surface, so it
-   sets the dark roles locally. From 1200 px a large, faint loop sits in the empty right half (the only graphic on these pages). */
+/* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on ink, right under the header ----------
+   .surface-tinte (set in PageBand) paints the ground and sets the ink roles: parquet H1, light grey intro, yellow label
+   and link underline. On the right a piece of the hall floor (decoration, aria-hidden): the centre circle rising from
+   the band's lower edge (one parquet line, 15.5:1 on ink, radius --r, its right edge on the container's text edge
+   --edge) and one small sticker on the centre spot (--stk: 56 to 72 px), half on the page below. Nothing else: the
+   band's lower edge is the halfway line. There is no vertical line (until 2026-11-18 a yellow one ran, from 1000 px,
+   up to the header, straight down from the yellow waitlist button, as if the button hung on it; the short parquet
+   line that replaced it stuck out of the circle and ended on the sticker, like a string the sticker hung from).
+   Clear ink lies between the bar and the circle.
+   From 1000 px the text keeps left of the circle; below that the circle gets its own strip under the text
+   (padding-bottom), so the line never runs behind a word.
+   Motion without script (these pages ship none): the line draws once on load (kit-draw of kit.css, under 1.2 s), the
+   sticker settles; with reduced motion nothing moves. The static styles are the final state. */
 .lg-band {
-  position: relative; overflow: hidden;
-  background: var(--grad-dark);
-  color: var(--steel);
-  padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) clamp(3rem, 2rem + 4vw, 6rem);
-  --heading: var(--kalk);
-  --text: var(--steel);
-  --line: var(--card-dark-line);
-  --accent-text: var(--brass);
-  --focus: var(--brass-light);
+  --r: clamp(5.25rem, 11vw, 9rem);
+  --edge: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+  --cl-hell: var(--parkett);
+  --stk: clamp(3.5rem, 2.5rem + 2.6vw, 4.5rem);
+  position: relative;
+  padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) calc(var(--r) + 2.75rem);
 }
 .lg-band > .container { position: relative; z-index: 1; }
-.lg-band-inner { max-width: 46rem; }
-.lg-band-narrow { max-width: 42rem; }
+.lg-band h1 { max-width: 14em; }
 .lg-band-label { margin-bottom: 1.25rem; }
-.lg-band h1 { color: var(--kalk); }
-.lg-band .lg-intro, .lg-band .section-intro { color: var(--steel); max-width: 42rem; }
-.lg-band::after {
-  content: ""; display: none;
-  position: absolute; top: 50%; right: max(var(--gutter), calc((100% - 1200px) / 2 + var(--gutter)));
-  width: clamp(16rem, 24vw, 22rem); aspect-ratio: 90 / 58.8;
-  translate: 0 -50%;
-  background: var(--kalk); opacity: .035;
-  -webkit-mask: url("../../assets/loop.svg") center / contain no-repeat;
-  mask: url("../../assets/loop.svg") center / contain no-repeat;
-  pointer-events: none;
+.lg-band .lg-intro, .lg-band .section-intro, .lg-band .gd-note { max-width: 40rem; }
+.lg-band-art { position: absolute; inset: 0; overflow: hidden; }
+.cl.lg-band-arc { inset: auto var(--edge) 0 auto; inline-size: calc(2 * var(--r)); block-size: var(--r); overflow: visible; }
+.stk.lg-band-stk {
+  position: absolute; z-index: 2; right: calc(var(--edge) + var(--r)); bottom: 0;
+  inline-size: var(--stk);
+  translate: 50% 50%;
 }
-@media (min-width: 1200px) { .lg-band::after { display: block; } }
-/* Links on graphit: kalk with a Messing hell underline (as in the waitlist) */
+/* The 404 page: the sticker is gone, its dashed album slot stays (the kit's "collected" look). Blended with the
+   page, so the outline is light on the ink above the band's edge and dark on the parquet below it (the band makes
+   no stacking context for that reason; the sticker's z-index lifts it over the section that follows). */
+.lg-band-slot { color: var(--weiss); mix-blend-mode: difference; }
+.lg-band-slot .stk-slot { opacity: .8; }
+.lg-band-badge { margin-bottom: 1.5rem; }
+@media (min-width: 1000px) {
+  .lg-band { padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
+  .lg-band-inner { max-width: calc(100% - var(--r) - 2.5rem); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lg-band .cl-path { animation: kit-draw .8s cubic-bezier(.65, 0, .35, 1) .1s backwards; }
+  /* The sticker is stuck on last: hidden until then (no start pose on show), then it settles */
+  .lg-band-stk { animation: stk-settle .36s var(--ease-out) .7s backwards, lg-band-stick .18s ease-out .7s backwards; }
+}
+@keyframes lg-band-stick { from { opacity: 0; } }
+/* Links on ink: parquet with a yellow underline (as in the waitlist card) */
 .lg-band a:not(.btn) {
-  color: var(--kalk); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--brass-light); text-underline-offset: 3px;
+  color: var(--heading); font-weight: 600;
+  text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-band a:not(.btn):hover { text-decoration-thickness: 2px; }
+
+/* ---------- Badge: a flat round sign (48 px) with a line icon (kit Icon) inside. One flat colour, upright, no rim:
+   blue by default, -rot, -gruen, and -offen (an empty dashed ring: "not decided yet"). Decorative, always
+   aria-hidden. Used by the cost cards, the three kinds of support, the project status and the confirmation page.
+   ---------- */
+.lg-badge {
+  display: grid; place-items: center;
+  box-sizing: border-box; inline-size: 3rem; aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--blau); color: var(--weiss);
+}
+.lg-badge-rot { background: var(--rot); }
+.lg-badge-gruen { background: var(--gruen); }
+.lg-badge-offen { border: 2px dashed var(--text); background: none; }
 
 /* ---------- Reading column ---------- */
 .lg {
   background: var(--bg);
   padding-bottom: var(--section-pad);
 }
-.lg-band + .container { padding-top: clamp(2.5rem, 1.75rem + 3vw, 4.5rem); }
+.lg-band + .container { padding-top: clamp(3.5rem, 2.75rem + 3vw, 5rem); }
 .lg-col { max-width: 42rem; }
 .lg-col > :first-child { margin-top: 0; }
 
@@ -146,20 +183,20 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-toc a { display: flex; gap: .75rem; min-height: 44px; padding-block: .6rem; color: var(--text); text-decoration: none; line-height: 1.45; }
 .lg-toc a::before {
   content: counter(lg-toc, decimal-leading-zero) / "";
-  flex: none; min-width: 1.4rem; padding-top: .1em;
-  font-size: var(--fs-label); font-weight: 600; letter-spacing: .05em; font-variant-numeric: tabular-nums;
+  flex: none; min-width: 1.6rem; padding-top: .15em;
+  font: var(--display-weight) var(--fs-label)/1.45 var(--display); font-variant-numeric: tabular-nums;
   color: var(--accent-text);
 }
 .lg-toc a:hover { color: var(--heading); }
-.lg-toc a:hover span { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--brass); }
+.lg-toc a:hover span { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--accent-text); }
 
 .lg-section { margin-top: clamp(3rem, 2.25rem + 2.5vw, 4.5rem); padding-top: clamp(1.75rem, 1.5rem + 1vw, 2.5rem); border-top: 1px solid var(--line); }
 .lg-doc { counter-reset: lg-section; }
 .lg-doc .lg-section { counter-increment: lg-section; }
 .lg-doc .lg-section::before {
   content: counter(lg-section, decimal-leading-zero) / "";
-  display: block; margin-bottom: 1rem;
-  font: 600 var(--fs-label)/1.4 var(--sans); letter-spacing: var(--label-tracking); font-variant-numeric: tabular-nums;
+  display: block; margin-bottom: .75rem;
+  font: var(--display-weight) var(--fs-h3)/1 var(--display); font-variant-numeric: tabular-nums;
   color: var(--accent-text);
 }
 .lg h2 { font-size: var(--fs-sub); line-height: 1.15; }
@@ -171,7 +208,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 
 .lg-intro a, .lg-section a, .nf-contact a {
   color: var(--heading); font-weight: 600;
-  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px;
+  text-decoration: underline; text-decoration-color: var(--accent-text); text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .lg-intro a:hover, .lg-section a:hover, .nf-contact a:hover { text-decoration-thickness: 2px; }
@@ -188,15 +225,17 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 }
 .lg-list li + li { margin-top: .5rem; }
 
-/* Two by two (auto-fill left "Dozie Ilunga" alone on a second row); one column on phones */
+/* Two by two (auto-fill left "Dozie Ilunga" alone on a second row); one column on phones. A person icon in front. */
 .lg-persons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.5rem; font-weight: 600; color: var(--heading); }
+.lg-persons li { display: flex; align-items: center; gap: .6rem; }
+.lg-persons .icn { color: var(--accent-text); }
 
 .lg-contact { display: grid; border-top: 1px solid var(--line); }
 .lg-contact div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; padding-block: .75rem; border-bottom: 1px solid var(--line); }
 .lg-contact div:last-child { border-bottom: 0; }
 .lg-contact dt { font-weight: 600; color: var(--heading); }
 .lg-contact dd { margin: 0; }
-/* Missing contact data is marked, not hidden: brass text (Messing dunkel) with a short brass rule in front */
+/* Missing contact data is marked, not hidden: accent text (blue) with a short rule in front */
 .lg-pending { color: var(--accent-text); font-weight: 600; }
 .lg-pending::before { content: ""; display: inline-block; width: .9rem; height: 2px; margin-right: .5rem; vertical-align: middle; background: currentColor; }
 

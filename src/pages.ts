@@ -17,7 +17,7 @@ export const site = {
   language: 'de-CH',
   /** Share image (public/og-image.png, 1200 × 630, source scripts/og/og-image.html) */
   ogImage: `${SITE_URL}og-image.png`,
-  ogImageAlt: 'Sponsuno: Sponsoren finden für Sport und Kultur. Bald verfügbar in der Deutschschweiz.',
+  ogImageAlt: 'Sponsuno: Sponsoring, das zusammenpasst. Bald verfügbar in der Deutschschweiz.',
   /** Organization logo for structured data (public/icon-512.png) */
   logo: `${SITE_URL}icon-512.png`,
 };

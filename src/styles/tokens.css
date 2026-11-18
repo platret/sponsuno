@@ -1,38 +1,38 @@
-/* Sponsuno design tokens. Source: the Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk").
-   Shared by the landing page and the demo. See DESIGN.md. */
+/* Sponsuno design tokens. Source: design system v2 "Turnhalle" (November 2026): ink type on a light parquet ground.
+   Surfaces: parquet, ink and one brand colour (blue). Red, yellow and green are accent colours only. Shared by the landing page, the static pages and the parked demo. See DESIGN.md. */
 
-/* Metric-matched fallbacks: until the self-hosted Schibsted Grotesk arrives, text is set in Arial scaled to the same
-   width and line box, so the swap (font-display: swap) moves nothing (CLS). Computed from the font tables
-   (advance widths of the hero copy against Arial), November 2026. */
+/* Metric-matched fallbacks: until the self-hosted fonts arrive, text is set in Arial scaled to the same width and line
+   box, so the swap (font-display: swap) moves nothing (CLS). Schibsted: computed from the font tables (advance widths
+   of the hero copy against Arial). Archivo Wide 800 (the display face, wdth 125): measured in Chrome against Arial
+   Bold over the site's headings (advance ratio 1.288; ascent 0.88 em, descent 0.21 em), November 2026. */
 @font-face { font-family: "Schibsted Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 400; size-adjust: 103.7%; ascent-override: 94.1%; descent-override: 24.9%; line-gap-override: 0%; }
 @font-face { font-family: "Schibsted Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 600; size-adjust: 99.5%; ascent-override: 98.2%; descent-override: 25.9%; line-gap-override: 0%; }
-@font-face { font-family: "Schibsted Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 700; size-adjust: 101.5%; ascent-override: 96.2%; descent-override: 25.4%; line-gap-override: 0%; }
+@font-face { font-family: "Archivo Wide Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 800; size-adjust: 128.8%; ascent-override: 68.3%; descent-override: 16.3%; line-gap-override: 0%; }
 
 :root {
-  --graphit: #1D2125;        /* graphit-900: main colour, dark surfaces, text on light */
-  --graphit-2: #2E343A;      /* graphit-700: gradient end, cards on graphit */
-  --kalk: #F5F3EE;           /* kalk-50: page ground, light text on graphit */
-  --kalk-2: #E6E1D6;         /* kalk-200: alternate band, gradient end */
-  --paper: #F5F3EE;          /* the page ground (kalk-50); kept as its own name for surfaces */
-  --rule: #D9D4C8;           /* border on light */
-  --brass: #C9A15B;          /* messing-500: accent on graphit, accent fills with graphit text; never text on kalk */
-  --brass-light: #DCC08A;    /* messing-300: gradient end, lighter accent on graphit */
-  --brass-dark: #74592A;     /* messing-700: brass as text on kalk */
-  --error-on-dark: #F2C5B5;
-  --steel: #B7B9BC;          /* grau-300: body text on graphit */
-  --ink: #5A6068;            /* grau-600: body text on kalk */
-  --card-dark-b: #262B30;
-  --card-dark-line: #3A4148; /* border on dark */
-  --grad-dark: linear-gradient(135deg, #1D2125, #2E343A);   /* verlauf-dunkel */
-  --grad-light: linear-gradient(135deg, #F5F3EE, #E6E1D6);  /* verlauf-hell */
-  --grad-brass: linear-gradient(135deg, #B8904D, #DCC08A);  /* verlauf-messing: at most one area per page */
+  /* Raw palette (German names). Contrast figures: brief "Turnhalle", measured WCAG ratios. */
+  --tinte: #1A1C20;          /* ink: text, logo, primary button on light, ink bands, footer */
+  --tinte-2: #2A2D33;        /* cards and fields inside ink areas */
+  --parkett: #F8F4EA;        /* parquet: page ground, text on ink */
+  --parkett-2: #EFE8D8;      /* alternate band, cards on parquet */
+  --grau: #55585E;           /* body text on parquet (6.5:1; 5.8:1 on parkett-2) */
+  --grau-hell: #B9BBBF;      /* body text on ink (8.9:1) */
+  --blau: #1F4E9C;           /* the one brand colour: blue surfaces with white text (8.0:1); line colour; accent text and links on parquet (7.3:1) */
+  --rot: #C23B24;            /* accent only (never a surface): line colour, small signs with a white icon (5.3:1); small text on parquet only >= 4.5:1 */
+  --gruen: #1A7552;          /* accent only (never a surface): the match result panel and check badges with white text (5.7:1) */
+  --gelb: #EDBE3A;           /* accent only (never a surface): line colour, tags, accent on ink (9.8:1), the button on ink with ink text. Never text on parquet */
+  --linie: #E2DAC6;          /* hairlines and card borders on parquet */
+  --linie-dunkel: #3A3E45;   /* borders inside ink areas */
+  --weiss: #FFFFFF;          /* die-cut border of stickers, text on blue and on the small red / green signs only */
+  --error-on-dark: #F2C5B5;  /* form error text on ink (documented extra) */
 
-  --display: "Schibsted Grotesk", "Schibsted Fallback", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --display: "Archivo Wide", "Archivo Wide Fallback", "Arial Black", "Helvetica Neue", Arial, system-ui, sans-serif;
   --sans: "Schibsted Grotesk", "Schibsted Fallback", "Helvetica Neue", Arial, system-ui, -apple-system, sans-serif;
-  --display-tracking: -0.025em;
+  --display-weight: 800;
+  --display-tracking: -0.02em;
   --label-tracking: 0.15em;
 
-  --radius: 16px;       /* radius-md: cards */
+  --radius: 20px;       /* cards */
   --radius-sm: 8px;     /* small parts, inputs inside cards */
   --radius-pill: 999px; /* buttons, chips */
   --card-pad: clamp(1.5rem, .5rem + 2.5vw, 2.5rem); /* space-10 (40 px) inside cards from 1200 px, 24 px on phones */
@@ -59,24 +59,24 @@
   --scroll-recede-scale: 1;
   --scroll-recede-opacity: .4;
 
-  /* Role tokens (DESIGN.md -> Colour, Theme): one light theme. Section CSS uses these for the page surface (page
-     surfaces, text, lines, the primary button on the page surface); surfaces that are graphit by design (hero, story,
-     KI device, waitlist, footer, the page head band of the static pages) use the raw CD tokens above, or set these
-     roles locally (.lg-band). */
-  --bg: var(--paper);                  /* page surface (paper sections, reading column, scrolled header) */
-  --bg-alt: var(--kalk-2);            /* alternate band, boxes on the page surface (table of contents) */
-  --surface: var(--paper);             /* cards on either band (with a 1 px --line border) */
-  --heading: var(--graphit);              /* H1-H3, strong labels, link text */
-  --text: var(--ink);                  /* body and secondary text */
-  --line: var(--rule);                 /* hairlines, card borders */
-  --accent-text: var(--brass-dark);     /* brass text and icons on the page surface */
-  --btn-bg: var(--graphit);               /* primary button on the page surface (.btn-graphit) */
-  --btn-fg: var(--kalk);
-  --btn-bg-hover: var(--graphit-2);
-  --focus: var(--brass-dark);
+  /* Role tokens (DESIGN.md -> Colour): one light theme. Section CSS uses these for a surface and what stands on it.
+     :root holds the roles of the parquet page surface; an ink area sets them again for itself with the class
+     .surface-tinte (site.css; also used by the page head band, the static header and the footer), so the same
+     component CSS works on both grounds. The blue ground does the same with .surface-blau. */
+  --bg: var(--parkett);                /* page surface (sections, reading column, scrolled header) */
+  --bg-alt: var(--parkett-2);          /* alternate band, boxes on the page surface (table of contents) */
+  --surface: var(--parkett);           /* cards on either band (with a 1 px --line border) */
+  --heading: var(--tinte);             /* H1-H3, strong labels, link text */
+  --text: var(--grau);                 /* body and secondary text */
+  --line: var(--linie);                /* hairlines, card borders */
+  --accent-text: var(--blau);          /* accent text, labels and icons: blue on parquet, yellow on ink */
+  --btn-bg: var(--tinte);              /* primary button on the surface (.btn-tinte, the header button): ink on parquet, yellow on ink */
+  --btn-fg: var(--parkett);
+  --btn-bg-hover: var(--tinte-2);
+  --focus: var(--blau);                /* focus ring: blue on light, yellow on ink */
 
   /* Light only: the color-scheme meta of every page says "light" too, so form controls and scrollbars stay light
-     whatever the system setting. The darkreader-lock meta keeps dark-mode extensions (Dark Reader) off the CD colours. */
+     whatever the system setting. The darkreader-lock meta keeps dark-mode extensions (Dark Reader) off the palette. */
   color-scheme: light;
 }
 

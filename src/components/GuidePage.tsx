@@ -8,6 +8,7 @@ import { Arrow } from './NoticePage';
 import { rich } from './rich';
 import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
+import '../styles/sections/guide-parked.css';
 
 /**
  * Guide pages (Ratgeber: /sponsoren-finden/ …). Same layout as the legal pages (legal.css: graphit header and page
@@ -100,7 +101,7 @@ function Block({ block, id }: { block: GuideBlock; id: GuideId }) {
     case 'cta':
       return (
         <div className="gd-cta">
-          <a className="btn btn-graphit" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
+          <a className="btn btn-tinte" href={waitlistHref(guides[id].waitlistRole)}>{guidePage.ctaWaitlist}</a>
           <a className="gd-cta-demo" href={siteHref(guidePage.ctaDemoHref, false)}>
             <span className="gd-cta-demo-label">{guidePage.ctaDemo}</span>
           </a>

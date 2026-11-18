@@ -5,7 +5,7 @@ import '../styles/sections/proof.css';
     role="list" keeps list semantics in Safari/VoiceOver despite list-style: none. */
 export function ProofLine() {
   return (
-    <div className="proof surface-paper">
+    <div className="proof surface-parkett">
       <div className="container">
         <ul className="proof-items" role="list">
           {proof.items.map((item) => (

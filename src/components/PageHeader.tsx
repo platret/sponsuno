@@ -3,6 +3,8 @@ import { cta, legal, menu, nav, type Role } from '../content';
 import type { PageKind } from '../pages';
 import { navCurrent, pageHref, siteHref, waitlistHref } from '../lib/links';
 import wordmarkLight from '../assets/wordmark-light.svg';
+import { Icon } from './kit/Icon';
+import { Sticker, type StickerId } from './kit/Sticker';
 import '../styles/sections/legal.css';
 
 type PageHeaderProps = {
@@ -13,9 +15,9 @@ type PageHeaderProps = {
 };
 
 /**
- * Skip link and slim graphit header of the static pages (topic pages, guides, legal pages, 404): wordmark, the same nav
- * as the landing page header (content.ts → nav) and the waitlist button. Graphit by design, so every page opens like
- * the landing page; PageBand continues it with the H1. No JavaScript: below 961 px the nav sits in a native <details>
+ * Skip link and slim ink header of the static pages (topic pages, guides, legal pages, 404): the parquet wordmark, the
+ * same nav as the landing page header (content.ts → nav) and the yellow waitlist button. Ink (.surface-tinte);
+ * PageBand continues it with the H1 and the court lines. No JavaScript: below 961 px the nav sits in a native <details>
  * menu that drops down under the bar.
  */
 export function PageHeader({ current, role }: PageHeaderProps) {
@@ -28,7 +30,7 @@ export function PageHeader({ current, role }: PageHeaderProps) {
   return (
     <>
       <a className="skip-link" href="#inhalt">{legal.skipLink}</a>
-      <header className="lg-header" id="top">
+      <header className="lg-header surface-tinte" id="top">
         <div className="container lg-header-inner">
           <a className="lg-brand" href={pageHref('')} aria-label={legal.homeLabel}>
             <img src={wordmarkLight} alt="" width={141} height={24} />
@@ -37,7 +39,7 @@ export function PageHeader({ current, role }: PageHeaderProps) {
             <ul>{links}</ul>
           </nav>
           <div className="lg-actions">
-            <a className="btn btn-sm btn-brass lg-cta" href={waitlistHref(role)}>
+            <a className="btn btn-sm btn-gelb lg-cta" href={waitlistHref(role)}>
               <span className="lg-cta-long">{cta.waitlist}</span>
               <span className="lg-cta-short">{cta.waitlistShort}</span>
             </a>
@@ -65,19 +67,50 @@ type PageBandProps = {
   narrow?: boolean;
   /** Short line above the H1, set as a label (legal pages and guides: the date of the text, the byline) */
   eyebrow?: ReactNode;
+  /** The one small sticker of the page (72 px at most, never collectable): on the centre spot of the band's court
+      lines, half over the band's lower edge. Decorative. Default: the ball (the parked guides and /fuer-firmen/
+      pass none). */
+  sticker?: StickerId;
+  /** The sticker is missing: only its dashed album slot is shown (the 404 page) */
+  missing?: boolean;
+  /** A green check badge above the H1 (the confirmation page). Decorative: the title says it. */
+  done?: boolean;
   /** Intro, note … under the H1 */
   children?: ReactNode;
 };
 
 /**
- * Page head band of the static pages, the first child of <main>: the H1 and its intro on graphit, right under the graphit
- * header (legal.css → .lg-band). Starts in column 1 like every title; calm: no picture, no motion.
+ * Page head band of the static pages, the first child of <main>: the H1 and its intro on ink, right under the ink
+ * header (legal.css → .lg-band). The title starts in column 1. On the right, a piece of the hall floor: the centre
+ * circle rising from the band's lower edge as one thin parquet line, and one small sticker on the centre spot, half
+ * on the page below. The band's lower edge itself is the halfway line: there is no vertical line any more (a yellow
+ * one ran up to the header right under the yellow waitlist button until 2026-11-18, as if the button hung on it; its
+ * short parquet successor read as a string the sticker hung from). It is the only sticker of a static page. All of
+ * it is decoration (aria-hidden). The line draws once on load and the sticker settles, in CSS only (these pages ship
+ * no script); with reduced motion everything stands still.
  */
-export function PageBand({ titleId, title, narrow = false, eyebrow, children }: PageBandProps) {
+export function PageBand({ titleId, title, narrow = false, eyebrow, sticker = 'ball', missing = false, done = false, children }: PageBandProps) {
   return (
-    <div className="lg-band">
+    <div className="lg-band surface-tinte">
+      <div className="lg-band-art" aria-hidden="true">
+        {/* The arc keeps the rule of kit/CourtLines.tsx: with a stroke that does not scale, Chromium sizes the dash
+            of the draw animation in user units but lays it out in px, so a path must never be shorter in units than
+            on screen. It is drawn in 300 units for a box of at most 288 px (legal.css: twice --r, 9rem at most). */}
+        <svg className="cl lg-band-arc" viewBox="-150 -150 300 150" focusable="false">
+          <path className="cl-path" data-line="hell" d="M-146 6V0A146 146 0 0 1 146 0V6" pathLength={1} />
+        </svg>
+      </div>
+      <Sticker
+        id={sticker}
+        size={72}
+        rotate={missing ? 0 : -6}
+        collectable={false}
+        className={missing ? 'lg-band-stk lg-band-slot' : 'lg-band-stk'}
+        data-collected={missing ? '' : undefined}
+      />
       <div className="container">
         <div className={narrow ? 'lg-band-inner lg-band-narrow' : 'lg-band-inner'}>
+          {done && <span className="lg-badge lg-badge-gruen lg-band-badge" aria-hidden="true"><Icon name="check" size={28} /></span>}
           {eyebrow && <p className="label lg-band-label">{eyebrow}</p>}
           <h1 id={titleId}>{title}</h1>
           {children}

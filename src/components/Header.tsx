@@ -3,17 +3,27 @@ import wordmarkLight from '../assets/wordmark-light.svg';
 import wordmarkDark from '../assets/wordmark-dark.svg';
 import { cta, menu, nav } from '../content';
 import { siteHref } from '../lib/links';
+import { motionEnabled } from '../lib/motion';
 import { MobileMenu } from './MobileMenu';
+import { useAlbum } from './Album';
+import { Icon } from './kit/Icon';
+import { STICKER_IDS } from './kit/Sticker';
+import { Tag } from './kit/Tag';
 import '../styles/sections/header.css';
 
-/** Landing page header. Plain full-width bar: transparent at the top, solid graphit while the hero and the story run
-    under it, solid on the kalk page surface once it reaches it. The nav links to the topic pages (content.ts → nav, shared
-    with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
+/** Landing page header. Plain full-width bar: transparent on the parquet hero with the ink wordmark, solid parquet
+    with a hairline after 80 px, solid ink with the parquet wordmark while an ink band (every element marked
+    `data-header-dark`: the word band, the footer) runs under it. Over the two door tiles (blue and ink) it stays the
+    parquet bar (a decision: one calm bar; the ink tile is a tile beside the blue one, not a band). That also holds
+    below 861 px, where the tiles are stacked and the ink tile is as wide as the window: the bar is parquet over the
+    blue tile just before it, and staying parquet avoids a flip between two tiles of one block. The nav links to the
+    topic pages (content.ts → nav, shared with PageHeader on the static pages); the landing page itself is not in it,
+    so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLSpanElement>(null);
   const [solid, setSolid] = useState(false);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // No scroll handler: IntersectionObservers only. The bar turns solid once the sentinel (80 px down the
@@ -26,9 +36,14 @@ export function Header() {
     });
     if (sentinel) solidIo.observe(sentinel);
 
-    // While the graphit hero or the graphit story runs under the bar, the solid bar stays graphit (no kalk strip over
-    // the pinned stage); it turns to the page surface once that reaches it. The band is the bar's own height.
-    const darkZones = [document.getElementById('top'), document.getElementById('problem')].filter((el): el is HTMLElement => el !== null);
+    // The solid bar takes the colour of what lies directly below it: ink while an ink band crosses the bar's lower
+    // edge, the page surface otherwise. So it joins a band the moment the band reaches it and lets go the moment the
+    // band has passed (never an ink bar over parquet, and a parquet bar over ink only over the ink door tile: that
+    // tile belongs to the doors block and is not marked, so the bar stays parquet over both tiles, also below
+    // 861 px where they are stacked and the ink tile fills the window's width). The observed strip is the 1 px line
+    // just below the bar's lower edge (one px lower than the edge itself: a band that ends exactly at the edge, which
+    // is where an in-page link to the block after it lands, would still count as touching it).
+    const darkZones = [...document.querySelectorAll<HTMLElement>('[data-header-dark]')];
     const underBar = new Map<Element, boolean>();
     let darkIo: IntersectionObserver | undefined;
     const buildDark = () => {
@@ -37,7 +52,7 @@ export function Header() {
       darkIo = new IntersectionObserver((entries) => {
         entries.forEach((entry) => underBar.set(entry.target, entry.isIntersecting));
         setDark(darkZones.some((el) => underBar.get(el)));
-      }, { rootMargin: `0px 0px ${-Math.max(0, window.innerHeight - barH)}px 0px` });
+      }, { rootMargin: `${-Math.round(barH) - 1}px 0px ${-Math.max(0, window.innerHeight - Math.round(barH) - 2)}px 0px` });
       darkZones.forEach((el) => darkIo!.observe(el));
     };
     buildDark();
@@ -66,6 +81,18 @@ export function Header() {
     };
   }, [menuOpen]);
 
+  // Sticker album (Easter egg): the chip, a small flat tag, shows how many of the six stickers have been found. It
+  // is worn as a badge on the waitlist button's upper right corner, inside the bar (eggs.css). A pointer extra: a
+  // plain span (no link, no button, nothing focusable) hidden from assistive technology; a click scrolls to the
+  // album without moving focus. With the sixth sticker it swells once (eggs.css), at the place the
+  // visitor is looking at (the album itself is at the end of the page and has its moment when it comes into view,
+  // Album.tsx).
+  const found = useAlbum().length;
+  const full = found === STICKER_IDS.length;
+  const toAlbum = () => {
+    document.getElementById('album')?.scrollIntoView({ behavior: motionEnabled() ? 'smooth' : 'auto', block: 'center' });
+  };
+
   const isSolid = (solid && !dark) || menuOpen;
   const isDark = solid && dark && !menuOpen;
 
@@ -75,9 +102,9 @@ export function Header() {
       <header className={`site-header${isSolid ? ' is-solid' : ''}${isDark ? ' is-dark' : ''}`}>
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
-            <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} />
-            {/* Hidden until the bar turns kalk: low priority, so React does not preload it with the first screen */}
-            <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} fetchPriority="low" />
+            <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} />
+            {/* Hidden until the bar turns ink: low priority, so React does not preload it with the first screen */}
+            <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>
@@ -87,6 +114,12 @@ export function Header() {
             </ul>
           </nav>
           <div className="header-actions">
+            {found > 0 && (
+              <Tag tone="gelb" className={`album-chip${full ? ' is-full' : ''}`} aria-hidden="true" onClick={toAlbum}>
+                <Icon name="stern" size={12} />
+                <span className="album-chip-n" key={found}>{found}/{STICKER_IDS.length}</span>
+              </Tag>
+            )}
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>
               <span className="header-cta-short">{cta.waitlistShort}</span>

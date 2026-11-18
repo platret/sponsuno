@@ -36,7 +36,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         <ul className="menu-links">
           {nav.map((item) => <li key={item.href}><a href={siteHref(item.href, true)} onClick={go}>{item.label}</a></li>)}
         </ul>
-        <a className="btn btn-graphit menu-cta" href="#warteliste" onClick={go}>{cta.waitlist}</a>
+        <a className="btn btn-tinte menu-cta" href="#warteliste" onClick={go}>{cta.waitlist}</a>
       </nav>
     </div>
   );

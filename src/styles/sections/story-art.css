@@ -17,19 +17,19 @@
   width: 32px; height: 32px; border-radius: 50%;
   font: 700 1rem/1 var(--display);
 }
-.disc-seeker { background: var(--graphit); color: var(--kalk); border: 1px solid rgba(245, 243, 238, .3); }
-.disc-firm { background: var(--brass); color: var(--graphit); }
+.disc-seeker { background: var(--tinte); color: var(--parkett); border: 1px solid rgba(248, 244, 234, .3); }
+.disc-firm { background: var(--gelb); color: var(--tinte); }
 
 .chip {
   display: flex; align-items: center; gap: 10px;
   width: var(--cw); height: 52px; padding: 0 12px;
-  border-radius: var(--radius-sm); background: var(--graphit-2); border: 1px solid var(--card-dark-line);
+  border-radius: var(--radius-sm); background: var(--tinte-2); border: 1px solid var(--linie-dunkel);
 }
 .chip-t { display: grid; min-width: 0; line-height: 1.25; }
-.chip-role { font-size: .75rem; font-weight: 600; color: var(--brass-light); white-space: nowrap; }
+.chip-role { font-size: .75rem; font-weight: 600; color: var(--gelb); white-space: nowrap; }
 .it-seeker .chip { width: 100%; height: 100%; }
-.chip-name { font-size: .875rem; font-weight: 600; color: var(--kalk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chip-meta { font-size: .75rem; color: var(--steel); white-space: nowrap; }
+.chip-name { font-size: .875rem; font-weight: 600; color: var(--parkett); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-meta { font-size: .75rem; color: var(--grau-hell); white-space: nowrap; }
 
 /* ---------- Pair card: one surface; seeker and company on one grid, then region, criteria dots and score ---------- */
 
@@ -37,49 +37,49 @@
   display: grid; gap: 8px;
   width: var(--pc-w);
   padding: 12px 16px 12px 22px;  /* room for the lock disc on the line at the left edge */
-  border-radius: var(--radius-lg); background: var(--graphit-2); border: 1px solid var(--card-dark-line);
+  border-radius: var(--radius-lg); background: var(--tinte-2); border: 1px solid var(--linie-dunkel);
 }
 .pc-row { display: flex; align-items: center; gap: 12px; }
-.pc-name { min-width: 0; font-size: .875rem; font-weight: 600; line-height: 1.25; color: var(--kalk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-name { min-width: 0; font-size: .875rem; font-weight: 600; line-height: 1.25; color: var(--parkett); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pc-foot {
   display: flex; align-items: center; gap: 8px;
-  margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--card-dark-line);
+  margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--linie-dunkel);
   font-size: .75rem; line-height: 1.5; white-space: nowrap;
 }
-.pc-meta { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--steel); }
+.pc-meta { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--grau-hell); }
 /* Criteria dots: a brass dot per criterion that fits, a ring for "teilweise" (as in the hero window and the demo) */
 .pc-dots { display: flex; gap: 3px; }
-.pc-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--brass); }
-.pc-dot.is-on { background: var(--brass); }
-.pc-score { font-weight: 600; color: var(--kalk); }
+.pc-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--gelb); }
+.pc-dot.is-on { background: var(--gelb); }
+.pc-score { font-weight: 600; color: var(--parkett); }
 
 /* Criteria legend: the four criteria named once, under the pair column */
 .lg { display: flex; flex-wrap: nowrap; gap: 6px; white-space: nowrap; }
 .lg-chip {
   display: inline-flex; align-items: center; gap: 5px;
   padding: calc(.2rem - 1px) calc(.6rem - 1px) calc(.2rem - 1px) calc(.35rem - 1px); border-radius: var(--radius-pill);
-  background: var(--graphit); border: 1px solid rgba(201, 161, 91, .35);
-  color: var(--kalk); font-size: .75rem; font-weight: 600; line-height: 1.5;
+  background: var(--tinte); border: 1px solid rgba(237, 190, 58, .35);
+  color: var(--parkett); font-size: .75rem; font-weight: 600; line-height: 1.5;
 }
-.lg-chk { width: 7px; height: 7px; margin: 0 2px 0 3px; border-radius: 50%; background: var(--brass); }
+.lg-chk { width: 7px; height: 7px; margin: 0 2px 0 3px; border-radius: 50%; background: var(--gelb); }
 
 /* The lock: a small brass disc with a check, sitting on the line where a pair card meets it */
 .lock {
   display: grid; place-items: center;
   width: 22px; height: 22px; border-radius: 50%;
-  background: var(--brass); box-shadow: 0 0 0 3px var(--graphit);  /* a knockout ring on the line, not a shadow */
+  background: var(--gelb); box-shadow: 0 0 0 3px var(--tinte);  /* a knockout ring on the line, not a shadow */
 }
-.lock svg { width: 13px; height: 13px; fill: none; stroke: var(--graphit); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.lock svg { width: 13px; height: 13px; fill: none; stroke: var(--tinte); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- Match card (MatchCard.tsx): one surface, the pair card's language at a larger size ---------- */
 
 .match {
   display: grid; gap: 1rem;
   width: 100%; padding: 1.25rem;
-  border-radius: var(--radius-lg); background: var(--graphit-2); border: 1px solid var(--card-dark-line);
+  border-radius: var(--radius-lg); background: var(--tinte-2); border: 1px solid var(--linie-dunkel);
   text-align: left;
 }
-.match-label { font-size: .75rem; line-height: 1.4; color: var(--steel); }
+.match-label { font-size: .75rem; line-height: 1.4; color: var(--grau-hell); }
 .match-party { display: flex; align-items: center; gap: .9rem; }
 /* The <picture> around the avatar (AVIF, JPEG fallback) is the flex item; not display: contents, which would make its
    <source> an empty flex item and add a gap */
@@ -88,43 +88,43 @@
 .match-photo { display: block; object-fit: cover; }
 .match-mark {
   display: grid; place-items: center;
-  background: var(--brass); color: var(--graphit);
+  background: var(--gelb); color: var(--tinte);
   font: 700 1.375rem/1 var(--display);
 }
 .match-party-text { min-width: 0; }
-.match-role { font-size: .75rem; font-weight: 600; color: var(--brass-light); }
-.match-name { margin-top: .1rem; font-weight: 600; font-size: 1.0625rem; line-height: 1.25; color: var(--kalk); }
-.match-meta { margin-top: .15rem; font-size: .8125rem; line-height: 1.4; color: var(--steel); }
-.match-foot { display: grid; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--card-dark-line); }
+.match-role { font-size: .75rem; font-weight: 600; color: var(--gelb); }
+.match-name { margin-top: .1rem; font-weight: 600; font-size: 1.0625rem; line-height: 1.25; color: var(--parkett); }
+.match-meta { margin-top: .15rem; font-size: .8125rem; line-height: 1.4; color: var(--grau-hell); }
+.match-foot { display: grid; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--linie-dunkel); }
 .match-criteria { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; }
-.match-criteria li { display: inline-flex; align-items: center; gap: .45rem; font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--kalk); }
-.match-dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--brass); }
-.match-score { font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--kalk); }
+.match-criteria li { display: inline-flex; align-items: center; gap: .45rem; font-size: .8125rem; font-weight: 600; line-height: 1.5; color: var(--parkett); }
+.match-dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--gelb); }
+.match-score { font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--parkett); }
 
 /* ---------- KI-Manager fragments ---------- */
 
 .ki-draft {
   width: 300px; padding: 1rem 1.1rem 1.1rem;
-  border-radius: var(--radius-lg); background: var(--paper); border: 1px solid var(--rule);
+  border-radius: var(--radius-lg); background: var(--parkett); border: 1px solid var(--linie);
   text-align: left;
 }
-.ki-app { display: flex; align-items: center; gap: .45rem; font-size: .75rem; font-weight: 600; color: var(--ink); }
-.ki-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brass); }
-.ki-title { margin-top: .6rem; font-size: .9375rem; font-weight: 600; line-height: 1.35; color: var(--graphit); }
+.ki-app { display: flex; align-items: center; gap: .45rem; font-size: .75rem; font-weight: 600; color: var(--grau); }
+.ki-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gelb); }
+.ki-title { margin-top: .6rem; font-size: .9375rem; font-weight: 600; line-height: 1.35; color: var(--tinte); }
 .ki-status {
   display: inline-block; margin-top: .7rem; padding: .2rem .6rem; border-radius: 999px;
-  background: rgba(201, 161, 91, .16); color: var(--brass-dark); font-size: .75rem; font-weight: 600;
+  background: rgba(237, 190, 58, .16); color: var(--blau); font-size: .75rem; font-weight: 600;
 }
 .ki-deliv {
   width: 280px; padding: .9rem 1.1rem;
-  border-radius: var(--radius-lg); background: var(--graphit-2); border: 1px solid var(--card-dark-line);
+  border-radius: var(--radius-lg); background: var(--tinte-2); border: 1px solid var(--linie-dunkel);
   text-align: left;
 }
-.ki-deliv-title { font-size: .875rem; font-weight: 600; color: var(--kalk); }
-.ki-row { display: flex; align-items: center; gap: .55rem; margin-top: .55rem; font-size: .8125rem; color: var(--kalk); }
-.ki-chk { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(201, 161, 91, .2); }
-.ki-chk svg { width: 11px; height: 11px; fill: none; stroke: var(--brass); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.ki-note { margin-left: auto; font-size: .75rem; color: var(--steel); }
+.ki-deliv-title { font-size: .875rem; font-weight: 600; color: var(--parkett); }
+.ki-row { display: flex; align-items: center; gap: .55rem; margin-top: .55rem; font-size: .8125rem; color: var(--parkett); }
+.ki-chk { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(237, 190, 58, .2); }
+.ki-chk svg { width: 11px; height: 11px; fill: none; stroke: var(--gelb); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ki-note { margin-left: auto; font-size: .75rem; color: var(--grau-hell); }
 
 /* ---------- Phones: smaller pieces ---------- */
 

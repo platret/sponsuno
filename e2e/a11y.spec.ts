@@ -1,61 +1,55 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { BLOCKS, eggsReady } from './helpers.ts';
 
 // Accessibility checks with axe-core (WCAG 2.x A/AA plus axe's best practices) on the landing page, the topic pages
-// /kosten/ and /fragen/, and a legal page (one light theme, DESIGN.md -> Theme). Fails on serious and critical violations only (moderate
-// ones are axe best practices, not WCAG failures).
+// /kosten/ and /fragen/, and a legal page (one light theme, DESIGN.md -> Colour). Fails on serious and critical
+// violations only (moderate ones are axe best practices, not WCAG failures).
+//
+// There is NO exception for any page or element. In particular the landing page's scroll effects must pass in every
+// state axe can meet them in: the statement's words before they fill (their grey is 3.4:1 on parquet, 3.36 exactly, at 26 px and
+// more, i.e. large text), the steps and doors while they draw, the word band while it slides. If an effect fails,
+// fix the effect, not this file.
 //
 // Scanned with reduced motion: every piece is in its final state then (with motion, the reveals below the fold wait
-// at opacity 0 for the scroll and axe would skip them, and the hero copy fades in for about a second). The landing
-// page is scanned once more with motion, as most visitors see it, after its load animations have finished.
+// at opacity 0 for the scroll and axe would skip them). The landing page is scanned again with motion, as most
+// visitors see it: at the top right after its load animations (the statement is still unfilled), and once more after
+// scrolling through every block, so the reveals are in and the scroll effects are in the state a reader stops at.
 
 const PAGES = ['/', '/kosten/', '/fragen/', '/impressum/'];
 type Violation = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'][number];
 
-/**
- * Exception, color-contrast only: text inside the two aria-hidden pictures of the landing page, the hero start frame
- * (.ha-canvas) and the story stage (.st-stage), while an element between the picture and the text is faded
- * (opacity < 1). The fade is the picture: in the hero window a new pair fades in at the top and the bottom one fades
- * out on every beat of the loop (hero.css, ha-row), the "heute" pairs on the story stage are dimmed on purpose
- * (story.css). Such text is part of a picture and has no contrast requirement (WCAG 1.4.3, "incidental"), and in the
- * loop the ratio depends on the moment axe looks. The same text at full opacity is still checked: the rows that stand
- * still here, and the hero rows of the still frame (the first three) and the input tiles in the test below.
- */
-const FADED_ART = '.ha-canvas[aria-hidden="true"], .st-stage[aria-hidden="true"]';
-
-async function open(page: Page, path: string) {
-  await page.goto(path);
-  await expect(page.locator('h1')).toBeVisible();
-  await page.evaluate(() => document.fonts.ready);
-  // Wait for the time-based animations and transitions to end (the hero load, a reveal in view). The hero loop runs
-  // forever and scroll-driven animations follow the scroll, so neither is waited for.
+/** Waits for the time-based animations and transitions to end (the hero load, a reveal in view). Scroll-driven
+    animations follow the scroll and are not waited for. */
+async function settled(page: Page) {
   await page.waitForFunction(() =>
     document.getAnimations().every((a) =>
       a.timeline !== document.timeline || a.playState !== 'running' || a.effect?.getComputedTiming().endTime === Infinity));
 }
 
-/** Serious and critical violations as readable lines, minus the faded-art exception above. */
-async function failures(page: Page, violations: Violation[]): Promise<string[]> {
+async function open(page: Page, path: string) {
+  await page.goto(path);
+  await expect(page.locator('h1')).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  await settled(page);
+}
+
+/** Serious and critical violations as readable lines */
+function failures(violations: Violation[]): string[] {
   const lines: string[] = [];
   for (const v of violations) {
     if (v.impact !== 'serious' && v.impact !== 'critical') continue;
     for (const node of v.nodes) {
       const selector = node.target.map(String).join(' ');
-      if (v.id === 'color-contrast') {
-        const faded = await page.evaluate(([sel, art]) => {
-          const el = document.querySelector(sel);
-          const picture = el?.closest(art);
-          for (let e = el; e && picture && e !== picture; e = e.parentElement) {
-            if (Number(getComputedStyle(e).opacity) < 1) return true;
-          }
-          return false;
-        }, [selector, FADED_ART] as const);
-        if (faded) continue;
-      }
       lines.push(`${v.impact} ${v.id}: ${selector}\n    ${(node.failureSummary ?? v.help).replace(/\s*\n\s*/g, ' ')}`);
     }
   }
   return lines;
+}
+
+async function scan(page: Page): Promise<string[]> {
+  const { violations } = await new AxeBuilder({ page }).analyze();
+  return failures(violations);
 }
 
 test.describe('axe, reduced motion', () => {
@@ -64,32 +58,79 @@ test.describe('axe, reduced motion', () => {
   for (const path of PAGES) {
     test(path, async ({ page }) => {
       await open(page, path);
-      const { violations } = await new AxeBuilder({ page }).analyze();
-      expect(await failures(page, violations)).toEqual([]);
+      expect(await scan(page)).toEqual([]);
     });
   }
 
-  test('hero window rows and input tiles meet 4.5:1 at full opacity', async ({ page }) => {
-    // The loop fades rows in and out by design (see FADED_ART); their text colours must pass whenever a row is
-    // fully visible. Reduced motion shows the still frame; this also lifts any fade, should one be added.
-    await open(page, '/');
-    await page.addStyleTag({ content: '.hero-art :is(.ha-row, .ha-tile, .ha-win) { opacity: 1 !important; }' });
-    const { violations, passes } = await new AxeBuilder({ page }).include('.hero-art').withRules(['color-contrast']).analyze();
-    const checked = passes.flatMap((p) => p.nodes).map((n) => n.html);
-    for (const cls of ['ha-names', 'ha-region', 'ha-score', 'ha-title', 'in-label']) {
-      expect(checked.some((html) => html.includes(`class="${cls}"`)), `axe checked .${cls}`).toBe(true);
-    }
-    expect(await failures(page, violations)).toEqual([]);
+  test.describe('phone (390 × 844)', () => {
+    test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+    test('/', async ({ page }) => {
+      await open(page, '/');
+      expect(await scan(page)).toEqual([]);
+    });
   });
 });
 
 test.describe('axe, with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
-  test('/', async ({ page }) => {
+  test('/ at the top, the statement not yet filled', async ({ page }) => {
     await open(page, '/');
     await expect(page.locator('html')).toHaveClass(/(^|\s)motion(\s|$)/);
-    const { violations } = await new AxeBuilder({ page }).analyze();
-    expect(await failures(page, violations)).toEqual([]);
+    expect(await scan(page)).toEqual([]);
+  });
+
+  test('the unfilled statement is measured by axe and passes', async ({ page }) => {
+    // A word axe cannot measure lands under `incomplete`, which fails nothing and proves nothing (it happened while a
+    // page-wide court line lay under this block; that line is gone, and no hall line may lie behind text). So: every
+    // word must be measured and pass, in its start grey, at the width the page is designed for.
+    await page.setViewportSize({ width: 1440, height: 800 });
+    await open(page, '/');
+    const words = page.locator('#idee .st-text .w:not(.st-sign)');
+    const ink = await page.locator('#idee .st-text').evaluate((el) => getComputedStyle(el).color);
+    await expect(words.first()).not.toHaveCSS('color', ink); // still in the start grey
+    const { passes, incomplete, violations } = await new AxeBuilder({ page }).include('#idee .st-text').withRules(['color-contrast']).analyze();
+    expect(failures(violations)).toEqual([]);
+    expect(incomplete.flatMap((rule) => rule.nodes).map((node) => node.html)).toEqual([]);
+    expect(passes.flatMap((rule) => rule.nodes).length).toBe(await words.count());
+  });
+
+  test('the hero buttons are measured by axe and pass at the design width', async ({ page }) => {
+    // The hero's hall lines are three small boxes (two strips on the base line, a corner box for the arc), so none
+    // of them lies behind the button row: axe must measure both buttons, not park them under `incomplete` (it did
+    // while one svg as wide as the hero lay behind them).
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await open(page, '/');
+    const { passes, incomplete, violations } = await new AxeBuilder({ page }).include('#top .hero-actions').withRules(['color-contrast']).analyze();
+    expect(failures(violations)).toEqual([]);
+    expect(incomplete.flatMap((rule) => rule.nodes).map((node) => node.html)).toEqual([]);
+    expect(passes.flatMap((rule) => rule.nodes).length).toBe(await page.locator('#top .hero-actions a').count());
+  });
+
+  test('/ block by block while scrolling, then the whole page', async ({ page }) => {
+    await open(page, '/');
+    for (const block of BLOCKS) {
+      await test.step(block, async () => {
+        // Bring the block's upper edge into the upper part of the window, as a reader would, and let its reveals run
+        await page.locator(block).evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 120));
+        await settled(page);
+        const { violations } = await new AxeBuilder({ page }).include(block).analyze();
+        expect(failures(violations)).toEqual([]);
+      });
+    }
+    // Everything has been revealed by now: the whole page once more, from the end of the page
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await settled(page);
+    expect(await scan(page)).toEqual([]);
+  });
+
+  test('/ with a collected sticker and the counter in the header', async ({ page }) => {
+    await open(page, '/');
+    await eggsReady(page);
+    await page.locator('#top .stk[data-sticker="ball"][data-collectable]').click();
+    await expect(page.locator('.site-header .album-chip')).toBeVisible();
+    await settled(page);
+    expect(await scan(page)).toEqual([]);
   });
 });

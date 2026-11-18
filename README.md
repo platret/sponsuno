@@ -5,15 +5,15 @@
 </p>
 
 <p align="center">
-  <a href="https://sponsuno.ch"><img src="https://img.shields.io/badge/Live-ansehen-C9A15B?style=for-the-badge&labelColor=1D2125" alt="Live ansehen"></a>
-  <img src="https://img.shields.io/badge/Status-im%20Aufbau-2E343A?style=for-the-badge&labelColor=1D2125" alt="Status: im Aufbau">
-  <img src="https://img.shields.io/badge/Start-Deutschschweiz-C9A15B?style=for-the-badge&labelColor=1D2125" alt="Start: Deutschschweiz">
+  <a href="https://sponsuno.ch"><img src="https://img.shields.io/badge/Live-ansehen-EDBE3A?style=for-the-badge&labelColor=1A1C20" alt="Live ansehen"></a>
+  <img src="https://img.shields.io/badge/Status-im%20Aufbau-2A2D33?style=for-the-badge&labelColor=1A1C20" alt="Status: im Aufbau">
+  <img src="https://img.shields.io/badge/Start-Deutschschweiz-EDBE3A?style=for-the-badge&labelColor=1A1C20" alt="Start: Deutschschweiz">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19-F5F3EE?style=flat-square&labelColor=2E343A" alt="React 19">
-  <img src="https://img.shields.io/badge/TypeScript-strict-F5F3EE?style=flat-square&labelColor=2E343A" alt="TypeScript strict">
-  <img src="https://img.shields.io/badge/Vite-8-F5F3EE?style=flat-square&labelColor=2E343A" alt="Vite 8">
-  <img src="https://img.shields.io/badge/Cloudflare-Workers-F5F3EE?style=flat-square&labelColor=2E343A" alt="Cloudflare Workers">
+  <img src="https://img.shields.io/badge/React-19-F8F4EA?style=flat-square&labelColor=2A2D33" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-strict-F8F4EA?style=flat-square&labelColor=2A2D33" alt="TypeScript strict">
+  <img src="https://img.shields.io/badge/Vite-8-F8F4EA?style=flat-square&labelColor=2A2D33" alt="Vite 8">
+  <img src="https://img.shields.io/badge/Cloudflare-Workers-F8F4EA?style=flat-square&labelColor=2A2D33" alt="Cloudflare Workers">
 </p>
 
 <p align="center">
@@ -38,7 +38,9 @@
 
 ## Was drin steckt
 
-Eine kurze Startseite (Hero mit Produktbild, Scroll-Geschichte, Für wen, Ablauf, Warteliste), drei Themenseiten (Kosten, Fragen, Über uns), Impressum und Datenschutz und eine (noch ruhende) Warteliste mit Double-Opt-in.
+Eine kurze Startseite in sieben Blöcken (Hero, Leitsatz, Wortband, Ablauf in drei Schritten, zwei Türen, Warteliste, Footer mit Stickeralbum), drei Themenseiten (Kosten, Fragen, Über uns), Impressum und Datenschutz und eine Warteliste mit Double-Opt-in.
+
+Die Bilder unten zeigen noch den früheren Stand (Design-System v1.0). Neue folgen, sobald das Design «Turnhalle» freigegeben ist.
 
 <table>
   <tr>
@@ -71,20 +73,20 @@ Vite 8, React 19 und TypeScript im Strict-Modus, ohne UI- oder CSS-Framework. Je
 
 ## Design-System
 
-Alles folgt dem Sponsuno Design-System v1.0 «Graphit, Messing, Kalk»: Graphit trägt, Kalk gibt Raum, Messing setzt Akzente. Laut ist nur die Schlaufe der Wortmarke.
+Alles folgt dem Sponsuno Design-System v2 «Turnhalle»: Tinte auf hellem Parkett, dünne Hallenlinien wie auf dem Boden einer Mehrzweckhalle und sechs kleine Sticker als einzige verspielte Ebene. Grosse Flächen sind Parkett, Tinte und ein Blau; Rot, Gelb und Grün kommen nur als Akzent: dünne Linie, Sticker, kleines Zeichen.
 
 <p>
-  <img src="https://img.shields.io/badge/Graphit-1D2125-1D2125?style=for-the-badge&labelColor=1D2125" alt="Graphit #1D2125">
-  <img src="https://img.shields.io/badge/Graphit%20hell-2E343A-2E343A?style=for-the-badge&labelColor=2E343A" alt="Graphit hell #2E343A">
-  <img src="https://img.shields.io/badge/Messing-C9A15B-C9A15B?style=for-the-badge&labelColor=1D2125" alt="Messing #C9A15B">
-  <img src="https://img.shields.io/badge/Messing%20dunkel-74592A-74592A?style=for-the-badge&labelColor=1D2125" alt="Messing dunkel #74592A">
-  <img src="https://img.shields.io/badge/Kalk-F5F3EE-F5F3EE?style=for-the-badge&labelColor=1D2125" alt="Kalk #F5F3EE">
-  <img src="https://img.shields.io/badge/Kalk%20dunkel-E6E1D6-E6E1D6?style=for-the-badge&labelColor=1D2125" alt="Kalk dunkel #E6E1D6">
+  <img src="https://img.shields.io/badge/Tinte-1A1C20-1A1C20?style=for-the-badge&labelColor=1A1C20" alt="Tinte #1A1C20">
+  <img src="https://img.shields.io/badge/Parkett-F8F4EA-F8F4EA?style=for-the-badge&labelColor=1A1C20" alt="Parkett #F8F4EA">
+  <img src="https://img.shields.io/badge/Blau-1F4E9C-1F4E9C?style=for-the-badge&labelColor=1A1C20" alt="Blau #1F4E9C">
+  <img src="https://img.shields.io/badge/Rot-C23B24-C23B24?style=for-the-badge&labelColor=1A1C20" alt="Rot #C23B24">
+  <img src="https://img.shields.io/badge/Gr%C3%BCn-1A7552-1A7552?style=for-the-badge&labelColor=1A1C20" alt="Grün #1A7552">
+  <img src="https://img.shields.io/badge/Gelb-EDBE3A-EDBE3A?style=for-the-badge&labelColor=1A1C20" alt="Gelb #EDBE3A">
 </p>
 
 | Rolle | Schrift |
 | --- | --- |
-| Titel | **Schibsted Grotesk** 700, Laufweite −0,025 em |
+| Titel und grosse Wörter | **Archivo Wide** 800 (Archivo, Breite 125), Laufweite −0,02 em |
 | Fliesstext, Buttons, Labels | **Schibsted Grotesk** 400 und 600; Labels in Versalien mit 0,15 em |
 
 Die Wortmarke «sponsuno»: u und n teilen sich einen Stamm und werden zur Schlaufe. Die Schlaufe allein ist Favicon und App-Icon. Texte in Hochdeutsch mit Schweizer Schreibweise, sachlich und ohne Werbefloskeln. Was noch nicht entschieden ist, steht als offen da. Einzelheiten: [DESIGN.md](DESIGN.md).
@@ -116,10 +118,10 @@ sponsuno/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert
 │   ├── pages.ts            Alle Seiten mit Titel und Beschreibung (Head-Tags, Sitemap)
-│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match-Karte
-│   ├── lib/                motion.ts, links.ts, storyLayout.ts; templates.ts nur für die geparkten Ratgeber
+│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match-Karte; kit/ mit Stickern, Tags, Icons und Hallenlinien
+│   ├── lib/                motion.ts, links.ts, eggs.ts (Easter Eggs); storyLayout.ts und templates.ts nur für geparkte Teile
 │   ├── styles/             tokens.css (Design-Tokens aus dem CD), site.css, sections/ (ein Stylesheet pro Abschnitt)
-│   └── assets/             Logos, Wortmarken, Schriften, Stockfotos (photos/); symbolbild-mtb-192.jpg nur für die geparkte Vorschau
+│   └── assets/             Logos, Wortmarken, Schriften, Porträts des Teams (photos/; die Stockfotos dort sind geparkt)
 ├── worker/                 Cloudflare Worker, nur für /api/* (Warteliste)
 ├── emails/                 E-Mails der Warteliste (npm run emails, Anleitung im README dort)
 ├── public/                 Icons, robots.txt, _headers (Cache und Sicherheit), _redirects (301 der geparkten Seiten)

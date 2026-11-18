@@ -5,7 +5,7 @@ import '../styles/sections/how.css';
 type TrackKey = 'seeker' | 'sponsor';
 
 const TRACKS: { key: TrackKey; role: Role; cta: string; btn: string }[] = [
-  { key: 'seeker', role: hero.ctaSeeker.role, cta: hero.ctaSeeker.label, btn: 'btn-graphit' },
+  { key: 'seeker', role: hero.ctaSeeker.role, cta: hero.ctaSeeker.label, btn: 'btn-tinte' },
   { key: 'sponsor', role: hero.ctaSponsor.role, cta: hero.ctaSponsor.label, btn: 'btn-outline' },
 ];
 
@@ -50,7 +50,7 @@ export function HowItWorks({ onChooseRole }: { onChooseRole: (role: Role) => voi
   };
 
   return (
-    <section className="how section surface-paper" id="ablauf" aria-labelledby="how-title">
+    <section className="how section surface-parkett" id="ablauf" aria-labelledby="how-title">
       <div className="container">
         <header className="section-head" data-reveal="" data-scroll="rise">
           <h2 id="how-title">{howItWorks.title}</h2>

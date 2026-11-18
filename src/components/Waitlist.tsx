@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { contact, waitlist, type Role } from '../content';
 import { WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
-import { motionEnabled } from '../lib/motion';
+import { headerOffset, motionEnabled } from '../lib/motion';
+import { CourtLines } from './kit/CourtLines';
+import { Sticker, type Vars } from './kit/Sticker';
 import '../styles/sections/waitlist.css';
 
 // Set VITE_WAITLIST_ENDPOINT=/api/warteliste (the Worker route, worker/waitlist.ts: Brevo double opt-in) to store
@@ -26,8 +28,13 @@ interface WaitlistProps {
   onRoleChange: (role: Role) => void;
 }
 
-/** Graphit closing block, part one: title and intro in the left column, the form in a card on the right (stacked on
- * phones). Continues seamlessly into the footer. */
+/** Closing block (#warteliste): a parquet band (the lighter parquet; never a colour band) with the giant H2 in ink
+ * across the full width, under it the intro on the left and the form in an ink card (.surface-tinte, with the yellow
+ * submit button) on the right (stacked on phones). The ink footer follows.
+ * Static surface: no reveal, so the form is never hidden while it waits for a script.
+ * Decoration (aria-hidden, never needed): one thin yellow court line along the band's upper edge, drawn with the scroll,
+ * and on it, above the end of the title, the one sticker of this block: the start number (it counts for the album).
+ * The sticker has a row of its own in the flow, so it can never lie on the title, the intro or a field. */
 export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
@@ -58,10 +65,27 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
     }
   };
 
+  // The card keeps the height the form had (--wl-keep), so the band does not shrink under the visitor when the short
+  // confirmation takes the form's place (on phones the footer would slide up into view, on wide screens the whistle
+  // and its court line, hung from the band's lower edge, would slide onto the intro).
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [keep, setKeep] = useState<number | null>(null);
   const succeed = () => {
+    setKeep(cardRef.current?.getBoundingClientRect().height ?? null);
     setStatus('done');
-    requestAnimationFrame(() => successRef.current?.focus({ preventScroll: true }));
   };
+  // The confirmation takes focus (announced as a status) and is brought into view if any of it is outside the window
+  // or under the header: after an on-screen keyboard the e-mail field, and with it the card, sits high in the window.
+  useLayoutEffect(() => {
+    const box = successRef.current;
+    if (status !== 'done' || !box) return;
+    box.focus({ preventScroll: true });
+    const rect = box.getBoundingClientRect();
+    const view = window.visualViewport?.height ?? window.innerHeight;
+    if (rect.top < headerOffset() + 8 || rect.bottom > view - 8) {
+      box.scrollIntoView({ block: 'center', behavior: motionEnabled() ? 'smooth' : 'auto' });
+    }
+  }, [status]);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -108,18 +132,25 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const invalid = error !== null;
 
   return (
-    <section className="wl section surface-graphit" id="warteliste" aria-labelledby="warteliste-title">
-      {/* Signature 2 ("the page opens"): the graphit surface as its own layer, so the scroll-driven clip
-          (data-scroll="frame") never touches the content or its focus outlines. Hidden without .scroll-fx. */}
-      <div className="wl-surface" data-scroll="frame" aria-hidden="true" />
+    <section className="wl section surface-parkett" id="warteliste" aria-labelledby="warteliste-title">
+      {/* One straight line from edge to edge (the kit's band line, in yellow: all that is left of the yellow band).
+          It is drawn from the left, towards the sticker. */}
+      <CourtLines variant="band" line="gelb" draw="scroll" className="wl-line" />
       <div className="container">
+        <div className="wl-mark" aria-hidden="true">
+          <Sticker id="startnummer" size={96} rotate={6} className="wl-stk" data-reveal="" />
+        </div>
+        <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
         <div className="wl-inner">
-          <div className="wl-head" data-reveal="" data-scroll="rise">
-            <h2 className="wl-title" id="warteliste-title">{waitlist.title}</h2>
+          <div className="wl-head">
             {intro && <p className="wl-intro">{intro}</p>}
           </div>
 
-          <div className="wl-card" data-reveal="" data-scroll="rise">
+          <div
+            className={`wl-card surface-tinte${status === 'done' ? ' is-done' : ''}`}
+            ref={cardRef}
+            style={status === 'done' && keep ? ({ '--wl-keep': `${Math.round(keep)}px` } as Vars) : undefined}
+          >
           {status !== 'done' ? (
             <form
               className="wl-form"
@@ -167,7 +198,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                   aria-invalid={invalid || undefined}
                   aria-describedby={invalid ? 'wl-error wl-hint' : 'wl-hint'}
                 />
-                <button className="btn btn-brass wl-submit" type="submit" disabled={status === 'sending' || !hydrated}>
+                <button className="btn btn-gelb wl-submit" type="submit" disabled={status === 'sending' || !hydrated}>
                   {waitlist.submit}
                 </button>
               </div>
@@ -204,7 +235,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
                     <>
                       <p>{waitlist.previewMailIntro}</p>
                       <p className="wl-mail">
-                        <a className="btn btn-brass" href={mailHref(role)}>{waitlist.previewMailButton}</a>
+                        <a className="btn btn-gelb" href={mailHref(role)}>{waitlist.previewMailButton}</a>
                         <span className="wl-mail-address">{CONTACT}</span>
                       </p>
                     </>
