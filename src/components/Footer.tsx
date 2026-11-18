@@ -2,6 +2,7 @@ import { contact, footer } from '../content';
 import { siteHref } from '../lib/links';
 import wordmark from '../assets/wordmark-light.svg';
 import { Album } from './Album';
+import { Sticker } from './kit/Sticker';
 import '../styles/sections/footer.css';
 
 // Kontakt column: the e-mail address as visible text (a mailto link) and the town of the postal address
@@ -17,8 +18,8 @@ type FooterProps = {
 };
 
 /**
- * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album (landing page
- * only), the giant loop wordmark in parquet and the copyright row. On the landing page it follows the yellow waitlist band; on
+ * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album with the whistle
+ * sticker beside it (landing page only), the giant loop wordmark in parquet and the copyright row. On the landing page it follows the yellow waitlist band; on
  * sub-pages it stands alone (ft-standalone). `data-header-dark` turns the landing header ink while the footer runs
  * under it.
  */
@@ -62,9 +63,16 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        {/* Sticker album (Easter egg, landing page only: the stickers are hidden there). Prerendered with six empty
-            slots; the lazy chunk lib/eggs.ts fills it. */}
-        {onLanding && <Album />}
+        {/* Sticker album (Easter egg, landing page only: the stickers are there). One quiet row under a hairline:
+            the album, prerendered with six empty slots (the lazy chunk lib/eggs.ts fills it), and beside it the one
+            sticker of the footer, the whistle: it counts for the album, so the row shows how the album works.
+            Decoration: both are aria-hidden and hold nothing focusable. */}
+        {onLanding && (
+          <div className="ft-album">
+            <Album />
+            <Sticker id="pfeife" size={72} rotate={-8} className="ft-stk" data-reveal="" />
+          </div>
+        )}
 
         {/* The wrapper carries the scroll motion and is the frame the Easter-egg chunk works in (a click on the loop
             makes the last «o» bounce); the image and its geometry stay untouched. */}

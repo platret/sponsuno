@@ -38,7 +38,7 @@
 
 ## Was drin steckt
 
-Eine kurze Startseite in sieben Blöcken (Hero mit Stickern, Leitsatz, Wortband, Ablauf in drei Schritten, zwei Türen, Warteliste, Footer mit Stickeralbum), drei Themenseiten (Kosten, Fragen, Über uns), Impressum und Datenschutz und eine Warteliste mit Double-Opt-in.
+Eine kurze Startseite in sieben Blöcken (Hero, Leitsatz, Wortband, Ablauf in drei Schritten, zwei Türen, Warteliste, Footer mit Stickeralbum), drei Themenseiten (Kosten, Fragen, Über uns), Impressum und Datenschutz und eine Warteliste mit Double-Opt-in.
 
 Die Bilder unten zeigen noch den früheren Stand (Design-System v1.0). Neue folgen, sobald das Design «Turnhalle» freigegeben ist.
 
@@ -73,7 +73,7 @@ Vite 8, React 19 und TypeScript im Strict-Modus, ohne UI- oder CSS-Framework. Je
 
 ## Design-System
 
-Alles folgt dem Sponsuno Design-System v2 «Turnhalle»: Tinte auf hellem Parkett, vier Linienfarben wie auf dem Boden einer Mehrzweckhalle und Sticker als verspielte Ebene. Farbe kommt als Linie, Sticker und als wenige volle Farbbänder.
+Alles folgt dem Sponsuno Design-System v2 «Turnhalle»: Tinte auf hellem Parkett, vier Linienfarben wie auf dem Boden einer Mehrzweckhalle und sechs kleine Sticker als einzige verspielte Ebene. Farbe kommt als dünne Linie, als Sticker und als wenige volle Farbbänder.
 
 <p>
   <img src="https://img.shields.io/badge/Tinte-1A1C20-1A1C20?style=for-the-badge&labelColor=1A1C20" alt="Tinte #1A1C20">
@@ -118,7 +118,7 @@ sponsuno/
 │   ├── App.tsx             Reihenfolge der Abschnitte, Scrollen, Anker-Links
 │   ├── content.ts          Alle Texte der Seite, typisiert
 │   ├── pages.ts            Alle Seiten mit Titel und Beschreibung (Head-Tags, Sitemap)
-│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match-Karte; kit/ mit Stickern, Icons und Hallenlinien
+│   ├── components/         Ein Bauteil pro Abschnitt, dazu Header, Menü, Match-Karte; kit/ mit Stickern, Tags, Icons und Hallenlinien
 │   ├── lib/                motion.ts, links.ts, eggs.ts (Easter Eggs); storyLayout.ts und templates.ts nur für geparkte Teile
 │   ├── styles/             tokens.css (Design-Tokens aus dem CD), site.css, sections/ (ein Stylesheet pro Abschnitt)
 │   └── assets/             Logos, Wortmarken, Schriften, Porträts des Teams (photos/; die Stockfotos dort sind geparkt)

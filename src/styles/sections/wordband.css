@@ -1,54 +1,44 @@
 /* Word band (WordBand.tsx): ink, full width. A small yellow label, then two rows of giant Archivo words between two
-   lane lines; every second word of row two is an outline. The rows slide against each other with the scroll and are
-   clipped by the band. Prefix wb-.
+   thin yellow lane lines; every second word of row two is an outline. The rows slide against each other with the
+   scroll and are clipped by the band. One small sticker, the note on the corner of «Kultur». Prefix wb-.
 
    The lockup. At rest the rows fill the band exactly from gutter to gutter, so the type is as large as the width
    allows and every crop falls between two words:
      from 641 px   row one "Sport Kultur", row two "Triathlon Chor Turnverein"
-     up to 640 px  three rows, one word each: "Sport", "Kultur" (row one set once more, .wb-track-1b), "Turnverein"
+     up to 640 px  three rows, one word each: "Sport" (a copy of row one, .wb-track-1b), "Kultur" (row one itself,
+                   set back by one word), "Turnverein"
    The font sizes are worked out from the widths of these words in Archivo Wide 800 at -0.02em tracking, measured
    in Chromium (canvas measureText), in em: advance Sport 3.294, Kultur 3.582, Triathlon 5.276, Chor 2.878; ink from
    the origin to the right edge Sport 3.273, Kultur 3.592, Turnverein 6.315; left side bearing S .05, K .085, T .024.
    So it is the ink of the first and the last letter that meets the gutter, not the letter's box.
    The space between two words is the gutter plus a little, so the neighbours of the lockup stay outside the band.
    If the words in content.ts change, measure again and update the divisors below (WordBand.tsx stops the build when
-   a word with a sticker is gone, e2e/site.spec.ts checks which words stand whole in the band at rest); nothing breaks
-   if they are off, the lockup is then only no longer flush. */
+   row one is no longer two words ending in the note's word, e2e/site.spec.ts checks which words stand whole in the
+   band at rest); nothing breaks if they are off, the lockup is then only no longer flush. */
 
 .wb {
   position: relative;
   overflow: clip;
-  /* Height the kit's band drawing (240 units) is set at: 1 px per unit on phones, 1.4 px from 1360 px wide */
-  --wb-lane: clamp(15rem, 12.5rem + 10vw, 21rem);
-  /* A lane line with its ticks reaches this far in from the band's edge (56 of the 240 units) */
-  --wb-edge: calc(var(--wb-lane) * 56 / 240);
-  padding-block: calc(var(--wb-edge) + clamp(1.25rem, 1rem + 1vw, 2rem)) calc(var(--wb-edge) + clamp(.75rem, .5rem + 1vw, 1.5rem));
+  /* How far a lane line lies inside the band's upper and lower edge (32 px on phones, 44 px at 1440 px wide) */
+  --wb-line: clamp(2rem, 1.5rem + 1.4vw, 3rem);
+  /* The vertical rhythm of every block (--section-pad: 72 px on phones, 134 px at 1440 px wide). Label and rows
+     so start and end well inside the lines (at least 40 px between a line and the type) */
+  padding-block: var(--section-pad);
   view-timeline: --wb block;
   view-timeline-inset: 0px;
 }
 
-/* Lane lines (kit: CourtLines variant "band", a line with ticks near each edge), blue with yellow ticks. The
-   drawing is set twice at the fixed height --wb-lane (on desktop a tick is 28 px long and the line sits 50 px from
-   the edge) and each strip shows one of its two lines; the band can then be any height. They draw with the scroll,
-   the upper one when the band comes in, the lower one when its end does. */
-.wb-lane {
-  position: absolute; inset-inline: 0; block-size: calc(var(--wb-lane) * .26);
-  overflow: clip; pointer-events: none;
+/* Lane lines (kit: CourtLines variant "band", one straight line each): thin, yellow, in the band's own padding, so
+   neither passes behind the label or a word. Each is a strip of its own and draws with the scroll, the upper one
+   from the left when the band comes in, the lower one from the right when its end does. */
+.wb-line {
+  inset: calc(var(--wb-line) - .375rem) 0 auto 0;
+  block-size: .75rem;
 }
-.wb-lane-top { inset-block-start: 0; }
-.wb-lane-end { inset-block-end: 0; }
-.wb-lane .wb-lines { --cl-hell: var(--blau); block-size: var(--wb-lane); }
-.wb-lane-end .wb-lines { inset-block: auto 0; }
+.wb-line-end { inset-block: auto calc(var(--wb-line) - .375rem); scale: -1 1; }
 
-.wb-label {
-  position: relative;
-  margin-bottom: clamp(.75rem, .5rem + 1vw, 1.5rem);
-  padding-inline: var(--gutter);
-  /* Its own ink ground (not visible): a contrast checker then measures the label against ink instead of giving up
-     on the lane drawing, whose unclipped box lies behind it */
-  inline-size: fit-content;
-  background: var(--bg);
-}
+/* On the page container (class .container): the label shares the left edge of the header and of the other blocks */
+.wb-label { margin-bottom: clamp(.75rem, .5rem + 1vw, 1.5rem); }
 
 .wb-rows {
   position: relative;
@@ -69,7 +59,7 @@
 .wb-row {
   position: relative; flex: none;
   display: flex; inline-size: max-content;
-  /* slide-x (kit): both rows follow the band's timeline, so they pass the lockup at the same moment */
+  /* slide-x (kit): all rows follow the band's timeline, so they pass the lockup at the same moment */
   --scroll-timeline: --wb;
 }
 .wb-row-1 {
@@ -87,22 +77,28 @@
   line-height: 1.1;
   --slide: var(--wb-t2);
 }
-/* Row one once more for phones, starting with "Kultur" and sliding to the right: hidden from 641 px */
+/* The copy of row one for phones: hidden from 641 px */
 .wb-track-1b { display: none; }
 @media (max-width: 640px) {
   .wb-rows { --wb-t1: calc(var(--wb-w) * 1.1); --wb-t2: calc(var(--wb-w) * 1.3); }
-  .wb-row-1 { font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.223); }    /* 3.273 - .05 */
+  /* First row: the copy, resting on "Sport" and sliding to the left */
   .wb-track-1b { display: flex; }
   .wb-row-1b {
     --wb-gap: calc(var(--gutter) + .12em);
-    margin-inline-start: calc(var(--gutter) - .085em);   /* minus the side bearing of the K */
-    font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.507);    /* 3.592 - .085 */
+    margin-inline-start: calc(var(--gutter) - .05em);   /* minus the side bearing of the S */
+    font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.223);    /* 3.273 - .05 */
     line-height: .98;
+    --slide: calc(-1 * var(--wb-t1));
+  }
+  /* Second row: row one itself (it carries the note), resting on "Kultur" and sliding to the right. It is set back
+     by "Sport" and the gap after it, so the ink of the K meets the gutter:
+     gutter - .085em (side bearing of the K) - 3.294em (Sport) - (gutter + .12em) (the gap) = -3.499em */
+  .wb-row-1 {
+    margin-inline-start: -3.499em;
+    font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.507);    /* 3.592 - .085 */
     --slide: var(--wb-t1);
   }
   .wb-row-2 { font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 6.291); }    /* 6.315 - .024 */
-  /* The note sits on the Kultur of the second row here; the one of row one is outside the band at rest */
-  .wb-row-1 .wb-stk-note { display: none; }
 }
 
 .wb-set { display: flex; flex: none; }
@@ -127,15 +123,23 @@
   .wb-outline { color: CanvasText; -webkit-text-stroke: 0; }
 }
 
-/* ---------- Stickers on the letters (em of their word, so they keep their letter at every size) ---------- */
-
-.wb-word .wb-stk { position: absolute; z-index: 1; color: var(--parkett); }
-/* ball: in the o of Sport */
-.wb-word .wb-stk-ball { left: 1.645em; top: .235em; inline-size: .66em; }
-/* note: on the second u of Kultur */
-.wb-word .wb-stk-note { left: 2.5em; top: -.14em; inline-size: .56em; }
-/* pennant: on the T of Turnverein */
-.wb-word .wb-stk-wimpel { left: -.04em; top: -.84em; inline-size: 1.08em; }
+/* ---------- The note, on the upper right corner of Kultur ----------
+   Small: .42 em of the word, between 48 and 72 px. It is stuck on the shoulder of the r, the word's last letter, like
+   a sticker on the corner of a poster: only its lower edge lies on the top of that shoulder, no letter is hidden (on
+   top of a u it read as an accent). Placed from the word's right ink edge (3.592 em from its left edge, see the
+   lockup above): 86 % of the note lie left of that edge, 14 % stand out into the gutter, where the lockup ends. So
+   the note, tilt included, is whole inside the window at rest at every width (7 px out plus 3 px of tilt in a 16 px
+   gutter on phones; a sticker that is cut by the window's edge cannot be tapped reliably). Its centre is .16 em
+   below the word's upper edge (the r's shoulder is at about .3 em). */
+.wb-word .wb-note {
+  --wb-note: clamp(3rem, .42em, 4.5rem);
+  position: absolute; z-index: 1;
+  left: calc(3.592em - var(--wb-note) * .86);
+  top: calc(.16em - var(--wb-note) / 2);
+  inline-size: var(--wb-note);
+  /* colour of its dashed outline once collected */
+  color: var(--parkett);
+}
 
 /* ---------- Motion ---------- */
 
@@ -144,9 +148,15 @@
     /* slide-x moves a row from its place to --slide. The track sets it back by half of that, so the row passes its
        resting place (the lockup) when the band is in the middle of the viewport. */
     .scroll-fx .wb-track-1 { translate: calc(var(--wb-t1) / 2) 0; }
-    .scroll-fx .wb-track-1b { translate: calc(var(--wb-t1) / -2) 0; }
+    .scroll-fx .wb-track-1b { translate: calc(var(--wb-t1) / 2) 0; }
     .scroll-fx .wb-track-2 { translate: calc(var(--wb-t2) / -2) 0; }
-    /* The lane lines are done when the band's upper edge is at about half height */
-    .scroll-fx .wb-lines { --draw-end: cover 45vh; }
+    /* Phones: row one slides to the right there (its copy above it takes the way to the left) */
+    @media (max-width: 640px) {
+      .scroll-fx .wb-track-1 { translate: calc(var(--wb-t1) / -2) 0; }
+    }
+    /* The upper lane line is done 45 vh after it has come into the window, the lower one after 24 vh: both are
+       whole when the band reaches the middle of the window and the rows stand as the lockup */
+    .scroll-fx .wb-line { --draw-end: cover 45vh; }
+    .scroll-fx .wb-line-end { --draw-end: cover 24vh; }
   }
 }

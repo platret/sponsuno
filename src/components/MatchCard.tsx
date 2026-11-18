@@ -1,5 +1,6 @@
 import { match } from '../content';
-import { TextSticker, type Vars } from './kit/Sticker';
+import type { Vars } from './kit/Sticker';
+import { Tag } from './kit/Tag';
 import { Icon, type IconName } from './kit/Icon';
 import '../styles/sections/match.css';
 
@@ -11,10 +12,11 @@ const CRITERIA_ICONS: IconName[] = ['region', 'unterstuetzung', 'branche', 'budg
 
 /**
  * The fictional match (mountain biker and bike shop, four criteria, "Passt in 4 von 4 Kriterien"), shown in "So
- * funktioniert es" under the three steps. One parquet card: the "Beispieldaten" label as a small text sticker on the
- * card's top edge (the card's one label, copy rule 6), both parties with vector avatars (no photo: a blue disc with a
- * line figure for the seeker, a yellow disc with a shop front for the firm, both cut like stickers), then the green
- * result panel: the result line in the display face and the four criteria as chips with their line icons.
+ * funktioniert es" under the three steps. One parquet card: the "Beispieldaten" label as a flat outlined tag in the
+ * card's top left corner (the card's one label, copy rule 6), both parties with flat vector avatars (no photo: a blue
+ * disc with a person for the seeker, a red disc with a shop front for the firm, the colours of steps one and two and
+ * of the two doors), then the green result panel: the result line in the display face and the four criteria as chips
+ * with their line icons. Nothing is tilted.
  * A figure with real text. Inside a [data-reveal] block the avatars, the chips and the check settle one after another
  * (match.css, only under html.motion). Classes prefixed match-.
  */
@@ -26,7 +28,7 @@ export function MatchCard() {
   return (
     <figure className="match">
       <figcaption className="match-label">
-        <TextSticker tone="parkett" rotate={-3}>{match.label}</TextSticker>
+        <Tag tone="linie">{match.label}</Tag>
       </figcaption>
       {parties.map(({ key, p, mark, icon }) => (
         <div key={key} className={`match-party match-party-${mark}`}>

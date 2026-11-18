@@ -67,8 +67,9 @@ type PageBandProps = {
   narrow?: boolean;
   /** Short line above the H1, set as a label (legal pages and guides: the date of the text, the byline) */
   eyebrow?: ReactNode;
-  /** The sticker on the centre spot of the band's court lines, half over the band's lower edge. Decorative.
-      Default: the ball (the parked guides and /fuer-firmen/ pass none). */
+  /** The one small sticker of the page (72 px at most, never collectable): on the centre spot of the band's court
+      lines, half over the band's lower edge. Decorative. Default: the ball (the parked guides and /fuer-firmen/
+      pass none). */
   sticker?: StickerId;
   /** The sticker is missing: only its dashed album slot is shown (the 404 page) */
   missing?: boolean;
@@ -81,25 +82,30 @@ type PageBandProps = {
 /**
  * Page head band of the static pages, the first child of <main>: the H1 and its intro on ink, right under the ink
  * header (legal.css → .lg-band). The title starts in column 1. On the right, a piece of the hall floor: the centre
- * circle rising from the band's lower edge (parquet line), the halfway line through it (yellow) and one sticker on the
- * centre spot, half on the page below. All of it is decoration (aria-hidden). The lines draw once on load and the
- * sticker settles, in CSS only (these pages ship no script); with reduced motion everything stands still.
+ * circle rising from the band's lower edge (parquet line), the halfway line through it (yellow) and one small sticker
+ * on the centre spot, half on the page below. It is the only sticker of a static page. All of it is decoration
+ * (aria-hidden). The lines draw once on load and the sticker settles, in CSS only (these pages ship no script); with
+ * reduced motion everything stands still.
  */
 export function PageBand({ titleId, title, narrow = false, eyebrow, sticker = 'ball', missing = false, done = false, children }: PageBandProps) {
   return (
     <div className="lg-band surface-tinte">
       <div className="lg-band-art" aria-hidden="true">
-        <svg className="cl lg-band-arc" viewBox="-100 -100 200 100" focusable="false">
-          <path className="cl-path" data-line="hell" d="M-97 4V0A97 97 0 0 1 97 0V4" pathLength={1} />
+        {/* Both lines keep the rule of kit/CourtLines.tsx: with a stroke that does not scale, Chromium sizes the dash
+            of the draw animation in user units but lays it out in px, so a path must never be shorter in units than
+            on screen. The arc is drawn in 300 units for a box of at most 288 px (legal.css: twice --r, 9rem at
+            most); the halfway line is a <line> in an svg without a viewBox (one unit is one px). */}
+        <svg className="cl lg-band-arc" viewBox="-150 -150 300 150" focusable="false">
+          <path className="cl-path" data-line="hell" d="M-146 6V0A146 146 0 0 1 146 0V6" pathLength={1} />
         </svg>
-        <svg className="cl lg-band-line" viewBox="0 0 2 100" preserveAspectRatio="none" focusable="false">
-          <path className="cl-path" data-line="gelb" d="M1 -4V104" pathLength={1} />
+        <svg className="cl lg-band-line" focusable="false">
+          <line className="cl-path" data-line="gelb" x1="50%" y1="-4%" x2="50%" y2="104%" pathLength={1} />
         </svg>
       </div>
       <Sticker
         id={sticker}
-        size={132}
-        rotate={missing ? 0 : -8}
+        size={72}
+        rotate={missing ? 0 : -6}
         collectable={false}
         className={missing ? 'lg-band-stk lg-band-slot' : 'lg-band-stk'}
         data-collected={missing ? '' : undefined}

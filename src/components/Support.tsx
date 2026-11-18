@@ -12,7 +12,7 @@ const BADGES: Record<KindIcon, { icon: IconName; tone: string }> = {
 };
 
 /** Parquet section: support is not only money. Title in column 1, the three kinds below as three cards, each with a
-    sticker-style badge. No motion. */
+    flat round badge. No motion. */
 export function Support() {
   return (
     <section className="section surface-parkett sup" id="sachleistungen" aria-labelledby="sup-title">

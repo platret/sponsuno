@@ -1,9 +1,9 @@
 /* Static pages (topic pages, guides, legal pages, 404): every page opens on ink: the slim header with the site nav,
-   then the page head band (PageBand: label, H1, intro, court lines and one sticker), both .surface-tinte. Below it the parquet page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
+   then the page head band (PageBand: label, H1, intro, two court lines and one small sticker), both .surface-tinte. Below it the parquet page surface. Titles start in column 1 of the container. Legal pages and guides (.lg-doc) put
    the table of contents in a sticky rail beside one readable column (~42rem) from 1100 px; narrower, and on the other
    reading pages (/fuer-firmen/, 404), the column stands alone at the left. Then the standalone ink footer.
    No script; the only motion is the band's load draw (CSS). Classes prefixed lg-. Needs kit.css on the page (the
-   band uses the kit's court-line and sticker classes and its keyframes kit-draw, stk-settle, stk-wiggle).
+   band uses the kit's court-line and sticker classes and its keyframes kit-draw and stk-settle).
    Base layout of LegalPage (Impressum, Datenschutz) and GuidePage (the guides add guide.css, prefix gd-). */
 
 /* The kit (court lines, stickers, icons and their keyframes) for the page head band and the badges. The static pages
@@ -92,16 +92,17 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
    .surface-tinte (set in PageBand) paints the ground and sets the ink roles: parquet H1, light grey intro, yellow label
    and link underline. On the right a piece of the hall floor (decoration, aria-hidden): the centre circle rising from
    the band's lower edge (parquet line, radius --r, its right edge on the container's text edge --edge), the halfway
-   line through its centre (yellow) and one sticker on the centre spot, half on the page below.
+   line through its centre (yellow) and one small sticker on the centre spot (--stk: 56 to 72 px), half on the page
+   below. Two line colours, nothing else.
    From 1000 px the text keeps left of the halfway line and the intro left of the circle; below that the lines get
    their own strip under the text (padding-bottom), so no line ever runs behind a word.
    Motion without script (these pages ship none): the lines draw once on load (kit-draw of kit.css, under 1.2 s), the
    sticker settles; with reduced motion nothing moves. The static styles are the final state. */
 .lg-band {
-  --r: clamp(5.25rem, 13vw, 11.25rem);
+  --r: clamp(5.25rem, 11vw, 9rem);
   --edge: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
   --cl-hell: var(--parkett);
-  --stk: clamp(4.5rem, 9.2vw, 8.25rem);
+  --stk: clamp(3.5rem, 2.5rem + 2.6vw, 4.5rem);
   position: relative;
   padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 5rem) calc(var(--r) + 2.75rem);
 }
@@ -136,11 +137,10 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 @media (prefers-reduced-motion: no-preference) {
   .lg-band .cl-path { animation: kit-draw .6s cubic-bezier(.65, 0, .35, 1) backwards; }
   .lg-band-arc .cl-path { animation-duration: .8s; animation-delay: .3s; }
-  .lg-band-stk { animation: stk-settle .36s var(--ease-out) .7s backwards; }
-  @media (hover: hover) and (pointer: fine) {
-    .stk:hover .stk-in { animation: stk-wiggle .5s ease-in-out; }
-  }
+  /* The sticker is stuck on last: hidden until then (no start pose on show), then it settles */
+  .lg-band-stk { animation: stk-settle .36s var(--ease-out) .7s backwards, lg-band-stick .18s ease-out .7s backwards; }
 }
+@keyframes lg-band-stick { from { opacity: 0; } }
 /* Links on ink: parquet with a yellow underline (as in the waitlist card) */
 .lg-band a:not(.btn) {
   color: var(--heading); font-weight: 600;
@@ -149,21 +149,19 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 }
 .lg-band a:not(.btn):hover { text-decoration-thickness: 2px; }
 
-/* ---------- Badge: a round sticker-style sign with a line icon (kit Icon) inside. White die-cut rim, one hairline
-   around it, a little tilted, flat colour: blue by default, -rot, -gruen, and -offen (an empty dashed slot: "not
-   decided yet"). Decorative, always aria-hidden. Used by the cost cards, the three kinds of support, the project
-   status and the confirmation page. ---------- */
+/* ---------- Badge: a flat round sign (48 px) with a line icon (kit Icon) inside. One flat colour, upright, no rim:
+   blue by default, -rot, -gruen, and -offen (an empty dashed ring: "not decided yet"). Decorative, always
+   aria-hidden. Used by the cost cards, the three kinds of support, the project status and the confirmation page.
+   ---------- */
 .lg-badge {
   display: grid; place-items: center;
-  inline-size: 3.5rem; aspect-ratio: 1;
-  border: 4px solid var(--weiss); border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
+  box-sizing: border-box; inline-size: 3rem; aspect-ratio: 1;
+  border-radius: 50%;
   background: var(--blau); color: var(--weiss);
-  rotate: -6deg;
 }
-.lg-badge-rot { background: var(--rot); rotate: 5deg; }
+.lg-badge-rot { background: var(--rot); }
 .lg-badge-gruen { background: var(--gruen); }
-.lg-badge-offen { border: 2px dashed var(--text); box-shadow: none; background: none; }
+.lg-badge-offen { border: 2px dashed var(--text); background: none; }
 
 /* ---------- Reading column ---------- */
 .lg {

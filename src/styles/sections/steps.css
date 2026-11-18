@@ -1,7 +1,8 @@
 /* "So funktioniert es" (#ablauf, Steps.tsx): parkett-2 band. A large H2, three steps side by side (one column on
-   phones), each a sticker scene of 220 x 196 px, the step number as a small label, an H3 and one sentence; then the
-   match card on the steps' own three columns (its green result panel under step three), a normal card after step
-   three on phones. Motion only under html.motion: static styles are the final state. Prefix steps-. */
+   phones), each a calm line drawing in a 220 x 196 box, the step number as a small label, an H3 and one sentence;
+   then the match card, from 1040 px on the steps' own three columns (its green result panel under step three), a
+   normal card after step three on phones. No stickers, nothing tilted. Motion only under html.motion: static styles are the final
+   state. Prefix steps-. */
 
 .steps { --steps-gap: clamp(1.5rem, 1rem + 3vw, 4rem); }
 .steps-title { max-width: 14em; font-size: clamp(2rem, 1.2rem + 3.6vw, 4.5rem); line-height: 1; }
@@ -17,90 +18,59 @@
 .steps-item-title { font-size: clamp(1.25rem, 1.15rem + .4vw, 1.5rem); line-height: 1.2; text-wrap: balance; }
 .steps-item-text { margin-top: .75rem; max-width: 26rem; font-size: 1.0625rem; line-height: 1.55; }
 
-/* ---------- Scenes ----------
-   One fixed box per step; every piece is placed in px inside it (.steps-p), so the composition is the same at every
-   width. `color` is what a collected sticker's dashed outline takes. */
+/* ---------- Drawings ----------
+   One box per step, the same for all three; two svgs (viewBox 220 x 196) fill it: the ink layer and, in the span
+   .steps-go over it, the accent layer. One style: an ink line of 3 units with round ends, parquet as the paper of
+   closed shapes, and one accent shape per drawing in the step's colour (blue, red, green). What lies on the accent
+   shape is parquet again. `color` is what the kit icons inside take. */
 .steps-art {
   position: relative;
-  inline-size: 220px; block-size: 196px;
+  inline-size: 220px; aspect-ratio: 220 / 196;
   margin-bottom: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
   color: var(--tinte);
-  --cl-w: 5px;
 }
-.steps-line { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; max-width: none; overflow: visible; }
-.steps-p { position: absolute; display: block; line-height: 0; }
-
-/* 1 Both sides in one place: ball and note on the left, the pretzel on the right, overlapping in the circle */
-.steps-s1-note { left: 34px; top: -2px; }
-.steps-s1-ball { left: 2px; top: 74px; }
-.steps-s1-brezel { left: 102px; top: 50px; }
-
-/* 2 Suggestions: a little list card cut like a sticker, the first row marked, the "4 von 4" sticker on its corner */
-.steps-card {
-  left: 10px; top: 20px;
-  display: grid; gap: 5px;
-  inline-size: 152px; padding: 8px;
-  border: 4px solid var(--weiss); border-radius: 22px;
-  background: var(--parkett);
-  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
-  rotate: -4deg;
-}
-.steps-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 7px;
-  border: 2px solid transparent; border-radius: 12px;
-}
-.steps-row-on { border-color: var(--tinte); background: var(--weiss); }
-.steps-dot { flex: none; display: grid; place-items: center; inline-size: 24px; block-size: 24px; border-radius: 50%; color: var(--weiss); }
-.steps-dot-gelb { background: var(--gelb); color: var(--tinte); }
-.steps-dot-blau { background: var(--blau); }
-.steps-dot-gruen { background: var(--gruen); }
-.steps-bars { flex: 1; display: grid; gap: 5px; }
-.steps-bars i { display: block; block-size: 5px; border-radius: 3px; background: var(--tinte); }
-.steps-bars i + i { inline-size: 58%; background: rgba(26, 28, 32, .22); }
-.steps-row:not(.steps-row-on) .steps-bars i:first-child { inline-size: 82%; background: rgba(26, 28, 32, .55); }
-.steps-score { left: 122px; top: 6px; --stk-fs: 14px; white-space: nowrap; }
-
-/* 3 The match: the start number with a green check cut like a sticker */
-.steps-s3-bib { left: 16px; top: 18px; }
-.steps-check {
-  left: 134px; top: 4px;
-  display: grid; place-items: center;
-  inline-size: 60px; block-size: 60px;
-  border: 5px solid var(--weiss); border-radius: 50%;
-  background: var(--gruen); background-clip: padding-box;
-  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
-  color: var(--weiss);
-  rotate: 8deg;
-}
-.steps-check .icn { stroke-width: 3; }
+/* --steps-at: the middle of the accent shape in the box (the pin, the picked row, the check disc); it grows from there */
+.steps-art-1 { --steps-acc: var(--blau); --steps-at: 50% 78%; }
+.steps-art-2 { --steps-acc: var(--rot); --steps-at: 48% 25%; }
+.steps-art-3 { --steps-acc: var(--gruen); --steps-at: 83.6% 25.5%; }
+.steps-svg { display: block; inline-size: 100%; block-size: 100%; max-width: none; overflow: visible; }
+.steps-ink { fill: none; stroke: var(--tinte); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; }
+.steps-paper { fill: var(--parkett); }
+.steps-acc { fill: var(--steps-acc); }
+.steps-on { fill: var(--parkett); }
+.steps-on-line { fill: none; stroke: var(--parkett); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; }
+/* The check disc of drawing three is cut free from the ink outline under it by a ring in the band's own ground */
+.steps-knock { stroke: var(--parkett-2); stroke-width: 5px; }
+.steps-go { position: absolute; inset: 0; display: block; transform-origin: var(--steps-at); pointer-events: none; }
 
 /* ---------- Match card under the steps ---------- */
 .steps-match { margin-top: clamp(3rem, 2.25rem + 3vw, 5rem); }
 
-@media (min-width: 861px) {
-  /* The card hangs out of the text column by its own padding, so its three columns are exactly the steps' columns:
-     the seeker under step one, the firm under step two, the green result panel under step three. */
+@media (min-width: 1040px) {
+  /* The card's outer edges are the container's. Inside it repeats the steps' three columns: the firm starts on the
+     edge of column two, the green result panel fills column three and reaches back into the gap by the card's
+     padding, so its text starts on the edge of column three. (Below 1040 px a third of the container is too narrow
+     for a party or the criteria: there the card keeps match.css's layout, parties side by side, panel below.) */
   .steps-match .match {
-    --match-pad: clamp(1.25rem, .9rem + 1vw, 1.75rem);
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: var(--steps-gap); row-gap: 0;
-    align-items: center;
-    margin-inline: calc(var(--match-pad) * -1);
-    padding: 0 var(--match-pad);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--steps-gap); row-gap: clamp(1.25rem, 1rem + .8vw, 1.75rem);
+    padding: 0;
+  }
+  .steps-match .match-label { grid-column: 1 / 3; padding: var(--match-pad) var(--match-pad) 0; }
+  .steps-match .match-party { grid-row: 2; align-self: start; padding-bottom: calc(var(--match-pad) + .5rem); }
+  .steps-match .match-party-seeker { padding-left: var(--match-pad); }
+  .steps-match .match-foot {
+    grid-column: 3; grid-row: 1 / -1;
+    align-content: center;
+    margin: 0 0 0 calc(var(--match-pad) * -1);
+    padding: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem) var(--match-pad);
   }
   .steps-match .match-criteria { display: grid; grid-template-columns: repeat(2, max-content); justify-items: start; }
-  .steps-match .match-party { padding-block: clamp(2rem, 1.5rem + 1.5vw, 2.75rem); }
-  .steps-match .match-foot {
-    align-self: stretch; align-content: center;
-    margin: 0 calc(var(--match-pad) * -1);
-    padding: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem) var(--match-pad);
-    border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
-  }
 }
 
-/* Wide columns: the scenes a fifth larger (zoom scales the whole composition, stickers and lines included) */
-@media (min-width: 1100px) { .steps-art { zoom: 1.2; } }
+/* Wide columns: the drawings a fifth larger (their lines grow with them: 3.6 px) */
+@media (min-width: 1100px) { .steps-art { inline-size: 264px; } }
 
 @media (max-width: 860px) {
   .steps-list { grid-template-columns: minmax(0, 1fr); }
@@ -108,7 +78,7 @@
   .steps-match .match { max-width: 30rem; }
 }
 
-/* One column but wide (small tablets): the scene stands beside its text, the text centred on the scene's height */
+/* One column but wide (small tablets): the drawing stands beside its text, the text centred on the drawing's height */
 @media (min-width: 600px) and (max-width: 860px) {
   .steps-item {
     grid-template-columns: auto minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr;
@@ -122,31 +92,22 @@
 }
 
 /* ---------- Motion ----------
-   Settle: the three steps fade in one after another (data-reveal, site.css); inside each, the line draws and the
-   pieces settle with a short stagger (--i: the step, --d: the piece). All of it is over in about a second. */
-@keyframes steps-row-in { from { opacity: 0; translate: -10px 0; } }
-@keyframes steps-pop { from { opacity: 0; scale: .5; } 60% { opacity: 1; scale: 1.1; } }
+   The three steps fade in one after another (data-reveal, site.css; --i: the step). Inside each, the two connecting
+   lines of drawing one draw, and the accent shape pops in. All of it is over in about a second. */
+@keyframes steps-pop { from { opacity: 0; scale: .7; } 60% { opacity: 1; scale: 1.05; } }
 
 html.motion .steps-item[data-reveal] { transition-delay: calc(var(--i, 0) * 90ms); }
-html.motion .steps-item.is-in .cl-path {
-  animation: kit-draw .8s cubic-bezier(.65, 0, .35, 1) calc(var(--i, 0) * 90ms + 100ms) backwards;
+html.motion .steps-item.is-in .steps-draw {
+  animation: kit-draw .6s cubic-bezier(.65, 0, .35, 1) calc(var(--i, 0) * 90ms + 150ms) backwards;
 }
-html.motion .steps-item.is-in :is(.stk, .tstk) { animation-delay: calc(var(--i, 0) * 90ms + var(--d, 0ms) + 180ms); }
-html.motion .steps-item.is-in .steps-row {
-  animation: steps-row-in .4s var(--ease-out) calc(var(--i, 0) * 90ms + var(--d, 0ms) + 200ms) backwards;
-}
-html.motion .steps-item.is-in .steps-check {
-  animation: steps-pop .45s var(--ease-out) calc(var(--i, 0) * 90ms + 480ms) backwards;
+html.motion .steps-item.is-in .steps-go {
+  animation: steps-pop .45s var(--ease-out) calc(var(--i, 0) * 90ms + 450ms) backwards;
 }
 
-/* Hover: one small reaction per scene. The two sides move together, the marked row slides out, the check pops. */
-html.motion .steps-p,
-html.motion .steps-row { transition: translate .4s var(--ease-out), scale .4s var(--ease-out), rotate .4s var(--ease-out); }
+/* Hover: one small reaction per step, on its accent shape. The pin lifts, the picked row slides out, the check grows. */
+html.motion .steps-go { transition: translate .4s var(--ease-out), scale .4s var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
-  html.motion .steps-item:hover :is(.steps-s1-ball, .steps-s1-note) { translate: 9px 0; }
-  html.motion .steps-item:hover .steps-s1-brezel { translate: -9px 0; rotate: -4deg; }
-  html.motion .steps-item:hover .steps-row-on { translate: 7px 0; }
-  html.motion .steps-item:hover .steps-score { translate: 7px -3px; rotate: 6deg; }
-  html.motion .steps-item:hover .steps-check { scale: 1.14; rotate: -6deg; }
-  html.motion .steps-item:hover .steps-s3-bib { rotate: 3deg; }
+  html.motion .steps-item:hover .steps-art-1 .steps-go { translate: 0 -7px; }
+  html.motion .steps-item:hover .steps-art-2 .steps-go { translate: 8px 0; }
+  html.motion .steps-item:hover .steps-art-3 .steps-go { scale: 1.1; }
 }

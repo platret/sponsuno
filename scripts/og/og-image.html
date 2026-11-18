@@ -5,13 +5,14 @@
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --hide-scrollbars \
     --window-size=1200,630 --screenshot=public/og-image.png scripts/og/og-image.html
   (or any Chromium at 1200 × 630, device scale factor 1; wait for document.fonts.ready).
-  Look: design system v2 «Turnhalle» (DESIGN.md). Parquet ground, the hero line in Archivo Wide 800 (ink, the last word
-  blue), the ink loop wordmark, the launch signal as a yellow text sticker, court lines (blue centre circle, red
-  line) and two picture stickers. Fonts: the site's own subsets (src/assets/fonts). Sticker and line styles come straight
-  from src/styles/kit.css (it carries every colour as a fallback, so it works without tokens.css); the two sticker
-  drawings are copies of what components/kit/Sticker.tsx renders (ball, note): copy them again from the
-  rendered page if a drawing changes. No photos, no faces, no numbers. The product is not live: the pill says so.
-  Keep the pill in step with hero.badge (content.ts) and site.ogImageAlt (pages.ts).
+  Look: design system v2 «Turnhalle» after the clean-up pass (DESIGN.md, clean rules). Parquet ground, the hero line
+  in Archivo Wide 800 (ink, the last word blue), the ink loop wordmark, the launch signal as the kit's flat yellow tag
+  (never tilted), the hero's two thin court lines (a red base line, a blue corner arc) and ONE picture sticker, the
+  ball, on the arc. Fonts: the site's own subsets (src/assets/fonts). Tag, sticker and line styles come straight from
+  src/styles/kit.css (it carries every colour as a fallback, so it works without tokens.css); the sticker drawing is
+  a copy of what components/kit/Sticker.tsx renders (ball): copy it again from the rendered page if the drawing
+  changes. No photos, no faces, no numbers. The product is not live: the tag says so.
+  Keep the tag in step with hero.badge (content.ts) and site.ogImageAlt (pages.ts).
 -->
 <html lang="de-CH">
 <head>
@@ -29,30 +30,29 @@
     font-family: 'Schibsted Grotesk', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .cl { --cl-w: 7px; }
+  .cl { --cl-w: 4px; }
   .wordmark { position: relative; display: block; width: 212px; height: auto; }
   h1 {
     position: absolute; left: 72px; top: 214px; margin: 0;
     font: 800 96px/1 'Archivo Wide', 'Arial Black', sans-serif; letter-spacing: -0.02em;
   }
   h1 span { display: block; color: #1F4E9C; }
-  .tstk { position: absolute; left: 66px; bottom: 54px; --stk-fs: 25px; }
+  .tag { position: absolute; left: 72px; bottom: 60px; --tag-fs: 25px; }
   .domain { position: absolute; right: 72px; bottom: 72px; margin: 0; font: 600 26px/1 'Schibsted Grotesk', Arial, sans-serif; }
+  /* The ball's centre lies on the middle of the corner arc (radius 190 around the upper right corner) */
   .stk { position: absolute; }
-  .s-ball { left: 898px; top: 30px; }
-  .s-note { left: 1070px; top: 388px; }
+  .s-ball { left: 1018px; top: 86px; }
 </style>
 </head>
 <body>
   <svg class="cl" viewBox="0 0 1200 630" aria-hidden="true">
-    <path class="cl-path" data-line="blau" d="M1210 257.5A176 176 0 1 1 1210 -65.5" />
     <path class="cl-path" data-line="rot" d="M-10 462H1210" />
+    <path class="cl-path" data-line="blau" d="M1010 -10V0A190 190 0 0 0 1200 190H1210" />
   </svg>
   <img class="wordmark" src="../../src/assets/wordmark-dark.svg" alt="Sponsuno">
   <h1>Sponsoring, das <span>zusammenpasst.</span></h1>
-  <span class="stk s-ball" style="--stk-size:132px;--stk-rot:10deg;--stk-n:132"><svg viewBox="0 0 120 120"><g><g class="stk-edge"><path d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z" style="--w: 7px;"/></g><g class="stk-cut"><path d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z" style="--w: 7px;"/></g><g class="stk-art"><path class="stk-o" d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z"/><path class="stk-gelb" d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z"/><path class="stk-blau" d="M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z"/><path class="stk-l" d="M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46"/><path class="stk-h" d="M45 27a36 36 0 0 1 13-3"/></g></g></svg></span>
-  <span class="stk s-note" style="--stk-size:120px;--stk-rot:8deg;--stk-n:120"><svg viewBox="0 0 120 120"><g><g class="stk-edge"><path d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z" style="--w: 7px;"/><path d="M46 31L90 22V76L48 84Z"/></g><g class="stk-cut"><path d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z" style="--w: 7px;"/><path d="M46 31L90 22V76L48 84Z"/></g><g class="stk-art"><path class="stk-o" d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z"/><path class="stk-rot" d="M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM42 30h7v56h-7ZM87 21h7v55h-7ZM42 23.8L94 13v15L42 38.8Z"/><path class="stk-h" d="M28 86.5a8 6 -20 0 1 7-4.5M73 76.5a8 6 -20 0 1 7-4.5"/></g></g></svg></span>
-  <span class="tstk" data-tone="gelb" style="--stk-rot:-3deg">Bald verfügbar in der Deutschschweiz</span>
+  <span class="stk s-ball" style="--stk-size:96px;--stk-rot:-6deg;--stk-n:96"><svg viewBox="0 0 120 120"><g><g class="stk-edge"><path d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z" style="--w: 7px;"/></g><g class="stk-cut"><path d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z" style="--w: 7px;"/></g><g class="stk-art"><path class="stk-o" d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z"/><path class="stk-gelb" d="M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z"/><path class="stk-blau" d="M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z"/><path class="stk-l" d="M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46"/><path class="stk-h" d="M45 27a36 36 0 0 1 13-3"/></g></g></svg></span>
+  <span class="tag" data-tone="gelb"><span class="tag-dot"></span>Bald verfügbar in der Deutschschweiz</span>
   <p class="domain">sponsuno.ch</p>
 </body>
 </html>

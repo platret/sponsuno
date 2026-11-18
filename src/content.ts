@@ -96,8 +96,9 @@ export const statement = {
 
 // Word band (WordBand.tsx): two rows of giant words on ink. Decorative for the eye; screen readers get the label and
 // both rows once as one plain list, so only words that are shown are listed. Row one is exactly the two words of the
-// lockup; WordBand.tsx sticks a sticker on Sport, Kultur and Turnverein and fails the build if one of them is gone,
-// and wordband.css sizes the lockup from the widths of these words (re-measure there when a word changes).
+// lockup; WordBand.tsx sticks the band's one sticker (the note) on «Kultur» and stops the build unless row one is
+// exactly two words ending in «Kultur», and wordband.css sizes the lockup from the widths of these words (re-measure
+// there when a word changes).
 export const wordband = {
   label: proof.disciplinesLabel,
   rows: [['Sport', 'Kultur'], proof.disciplines],
@@ -188,13 +189,13 @@ const STEP_MATCH = {
 };
 
 // "So funktioniert es" (#ablauf, Steps.tsx): three steps, a title and one sentence each, then the match card.
-// `art` names the sticker-style illustration of each step (for the kit).
+// Steps.tsx draws one line drawing per step, by position (it stops the build when the counts differ).
 export const steps = {
   title: 'So funktioniert es',
   items: [
-    { art: 'profil', title: STEP_PLACE.title, text: STEP_PLACE.lead },
-    { art: 'liste', title: STEP_SUGGEST.title, text: STEP_SUGGEST.lead },
-    { art: 'handschlag', title: STEP_MATCH.title, text: STEP_MATCH.lead },
+    { title: STEP_PLACE.title, text: STEP_PLACE.lead },
+    { title: STEP_SUGGEST.title, text: STEP_SUGGEST.lead },
+    { title: STEP_MATCH.title, text: STEP_MATCH.lead },
   ],
 };
 

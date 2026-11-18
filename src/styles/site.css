@@ -18,7 +18,6 @@
 
   /* Type scale. The display face (Archivo Wide 800) is about a quarter wider than Schibsted, so its sizes start small
      enough for the longest word of a title to fit a 360 px screen (longer words carry soft hyphens in content.ts). */
-  --fs-hero: clamp(1.5rem, 8.6vw, 6.5rem);                     /* the hero H1 and the giant closing H2 */
   --fs-h1: clamp(1.875rem, 1.1rem + 3.4vw, 3.75rem);           /* page titles */
   --fs-h2: clamp(1.75rem, 1.2rem + 2.3vw, 3rem);               /* section titles */
   --fs-sub: clamp(1.25rem, 1.1rem + .6vw, 1.625rem);           /* titles inside a reading column */

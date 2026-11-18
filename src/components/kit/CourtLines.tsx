@@ -2,86 +2,61 @@
 // positioned over its (position: relative) parent, never catches the pointer. Styles and the draw animations in
 // styles/kit.css (.cl, .cl-path, data-scroll="draw", data-draw="load").
 // Every path: fill none, pathLength 1, class cl-path, data-line with its colour; the stroke keeps its weight however
-// the drawing is scaled (vector-effect: non-scaling-stroke).
-import type { ReactNode } from 'react';
-import type { Vars } from './Sticker';
+// the drawing is scaled (vector-effect: non-scaling-stroke: 3 px at 1440 px wide, 2 px on phones). The two door
+// drawings are the exception: doors.css gives their lines one weight as a share of the drawing's box.
 import '../../styles/kit.css';
 
-export type CourtLinesVariant = 'hero' | 'page' | 'band' | 'door-sport' | 'door-firma';
-export type CourtLine = 'blau' | 'rot' | 'gruen' | 'gelb' | 'hell';
+export type CourtLinesVariant = 'hero' | 'band' | 'door-sport' | 'door-firma';
+export type CourtLine = 'blau' | 'rot' | 'gelb' | 'hell';
 
-export type CourtLinesProps = {
-  variant: CourtLinesVariant;
+type Shared = {
   className?: string;
   /**
    * "load": the lines draw once when the page loads (hero, under 1.5 s). "scroll": they draw with the scroll, with the
-   * svg itself as the measured block. Leave it out when a container carries data-scroll="draw" (or for still lines).
+   * svg itself as the measured block (the word band's lane lines). Leave it out when a container carries
+   * data-scroll="draw" (or for still lines).
    */
   draw?: 'load' | 'scroll';
 };
+/** `line`: the colour of the one line of variant "band" (default gelb); the other variants bring their own colours */
+export type CourtLinesProps = Shared & (
+  | { variant: 'band'; line?: CourtLine }
+  | { variant: Exclude<CourtLinesVariant, 'band'> }
+);
 
 const Line = ({ d, line, className }: { d: string; line: CourtLine; className?: string }) => (
   <path className={className ? `cl-path ${className}` : 'cl-path'} data-line={line} d={d} pathLength={1} fill="none" />
 );
 
-/* hero, wide screens (1440 x 900, covers its box, anchored to the right edge): the left two thirds stay calm.
-   Circle: centre (1400, 360), r 320, only the part that can be seen is drawn.
-   hero.css restates four things of these two drawings: the base line's distance from the lower edge (130 of 900
-   wide, 144 of 844 on phones: .hero-lines), the x of the pennant's foot on it (1124 of 1440: .hero-stk-wimpel),
-   and the order of the paths (the circle is child 1, the corner arc child 4: their colours are swapped there).
-   Change them together. */
-const HERO_WIDE = (
-  <>
-    <Line line="blau" d="M1460 45.7A320 320 0 1 0 1460 674.3" />
-    <Line line="rot" d="M-20 770H1460" />
-    <Line line="gruen" d="M1040 920V610A70 70 0 0 1 1110 540H1460" />
-    <Line line="gelb" d="M-10 690A220 220 0 0 1 210 910" />
-  </>
-);
-/* hero, phones (390 x 844): the same four lines, pushed to the right and lower edge. Circle: centre (420, 300), r 180 */
-const HERO_NARROW = (
-  <>
-    <Line line="blau" d="M400 121.1A180 180 0 0 0 400 478.9" />
-    <Line line="rot" d="M-10 700H400" />
-    <Line line="gruen" d="M262 860V612A40 40 0 0 1 302 572H400" />
-    <Line line="gelb" d="M-10 742A118 118 0 0 1 108 860" />
-  </>
+/* A straight line across the whole box at the height `y` (in percent of the box). The svg around it has no viewBox, so
+   one user unit is one px and the dash of the draw animation is exactly as long as the line at every width. (With a
+   stroke that does not scale, Chromium sizes the dash by the path's length in user units but lays it out in px: a
+   line drawn in a small stretched viewBox would break into dashes while it draws.) */
+const Across = ({ line, y }: { line: CourtLine; y: string }) => (
+  <line className="cl-path" data-line={line} x1="0" y1={y} x2="100%" y2={y} pathLength={1} />
 );
 
-/* page: one tape line down the whole page, stretched to its box. Drawn for an expected shape of the page
-   (wide: about 1440 x 5600, phones: about 390 x 7000); the turns stay round within about a third either way.
-   Two numbers of the wide drawing are needed by the CSS that hangs and draws it (end of header.css); they go to the
-   svg as custom properties, so they are stated once, next to the path:
-   --pl-turn  where the line first turns to cross the page, as a share of the drawing's height (y 600 of 4000)
-   --pl-len   the length of the path in the drawing's own units (about 4010 down plus 2520 across) */
-const PAGE_BOX = { w: 1000, h: 4000 };
-const PAGE_TURN_Y = 600;
-const PAGE_LEN = 6530;
-const PAGE_WIDE =
-  'M940 -10V560a40 40 0 0 1-40 40H100a40 40 0 0 0-40 40V1960a40 40 0 0 0 40 40H440C580 2000 580 1850 490 1850C400 1850 400 2000 540 2000H900a40 40 0 0 1 40 40V3300a40 40 0 0 1-40 40H540a40 40 0 0 0-40 40V4010';
-const PAGE_NARROW =
-  'M388 -10V900a28 28 0 0 1-28 28H40a28 28 0 0 0-28 28V3400a28 28 0 0 0 28 28H150C250 3428 250 3328 190 3328C130 3328 130 3428 230 3428H360a28 28 0 0 1 28 28V5800a28 28 0 0 1-28 28H228a28 28 0 0 0-28 28V7210';
+/* hero: the corner arc (blue), a quarter circle around the lower right corner of its box; its radius is the side of
+   the box (hero.css, .hero-arc: a square of the arc's radius in the hero's lower right corner, standing on the base
+   line). Drawn in 320 units for a radius of at most 320 px (hero.css keeps it at 16rem or less), so the path is never
+   shorter in units than on screen and the draw animation's dash always covers it. The hero's red base line is not
+   part of this drawing: Hero.tsx sets it as two "band" strips, left and right of the round arrow, so no line runs
+   behind that button and the lines' boxes never lie behind the text (axe can then measure every contrast).
 
-/* band: two lane lines with tick marks, stretched over a full-width band (only straight lines, so nothing distorts) */
-const ticks = (y: number, dy: number, from: number) =>
-  Array.from({ length: 12 }, (_, i) => `M${from + i * 120} ${y}v${dy}`).join('');
+   band: one straight line across its box, in the colour of the prop `line` (the hero's base line in red, the word
+   band's two yellow lane lines, the waitlist band's parquet line). */
 
-/* door-sport (600 x 600, from above): end line, goal area, goal; the ball's way into the goal (the ball itself is drawn
-   by Doors.tsx on this path) */
+/* door-sport (600 x 600, from above): end line, goal area, goal; the ball's way into the goal in yellow (the ball
+   itself is drawn by Doors.tsx on this path, and the pennant sticker stands on the path's start: doors.css restates
+   30 548). doors.css gives the lines of both door drawings one weight as a share of the box (no non-scaling stroke). */
 export const BALL_PATH = 'M30 548C210 548 250 300 400 300H563';
-/* door-firma (600 x 600, front): ground, shop with awning, window and door, the sign on the roof */
+/* door-firma (600 x 600, front): ground, shop with awning, window and door, the sign on the roof (its fill, .cl-glow,
+   is the drawing's one yellow). doors.css restates the window's centre (228 412: the pretzel sticker) and the right
+   end of the ground line (560: it lies on the page container's edge). */
 const SIGN = 'M216 96h168a16 16 0 0 1 16 16v36a16 16 0 0 1-16 16H216a16 16 0 0 1-16-16v-36a16 16 0 0 1 16-16Z';
 
-function nested(wide: ReactNode, narrow: ReactNode, boxWide: string, boxNarrow: string, par: string) {
-  return (
-    <>
-      <svg className="cl-wide" width="100%" height="100%" viewBox={boxWide} preserveAspectRatio={par}>{wide}</svg>
-      <svg className="cl-narrow" width="100%" height="100%" viewBox={boxNarrow} preserveAspectRatio={par}>{narrow}</svg>
-    </>
-  );
-}
-
-export function CourtLines({ variant, className, draw }: CourtLinesProps) {
+export function CourtLines(props: CourtLinesProps) {
+  const { variant, className, draw } = props;
   const cls = `cl cl-${variant}${className ? ` ${className}` : ''}`;
   const shared = {
     className: cls,
@@ -93,22 +68,13 @@ export function CourtLines({ variant, className, draw }: CourtLinesProps) {
 
   switch (variant) {
     case 'hero':
-      return <svg {...shared}>{nested(HERO_WIDE, HERO_NARROW, '0 0 1440 900', '0 0 390 844', 'xMaxYMid slice')}</svg>;
-    case 'page':
       return (
-        <svg {...shared} style={{ '--pl-turn': PAGE_TURN_Y / PAGE_BOX.h, '--pl-len': `${PAGE_LEN}px` } as Vars}>
-          {nested(<Line line="gelb" d={PAGE_WIDE} />, <Line line="gelb" d={PAGE_NARROW} />, `0 0 ${PAGE_BOX.w} ${PAGE_BOX.h}`, '0 0 400 7200', 'none')}
+        <svg {...shared} viewBox="0 0 320 320" preserveAspectRatio="xMaxYMax meet">
+          <Line line="blau" d="M0 320A320 320 0 0 1 320 0" />
         </svg>
       );
     case 'band':
-      return (
-        <svg {...shared} viewBox="0 0 1440 240" preserveAspectRatio="none">
-          <Line line="hell" d="M-10 36H1450" />
-          <Line line="hell" d="M-10 204H1450" />
-          <Line line="gelb" d={ticks(36, 20, 60)} />
-          <Line line="gelb" d={ticks(204, -20, 120)} />
-        </svg>
-      );
+      return <svg {...shared}><Across line={props.line ?? 'gelb'} y="50%" /></svg>;
     case 'door-sport':
       return (
         <svg {...shared} viewBox="0 0 600 600" preserveAspectRatio="xMaxYMax meet">
@@ -128,7 +94,6 @@ export function CourtLines({ variant, className, draw }: CourtLinesProps) {
           <Line line="hell" d="M162 356h132a10 10 0 0 1 10 10v92a10 10 0 0 1-10 10H162a10 10 0 0 1-10-10v-92a10 10 0 0 1 10-10Z" />
           <Line line="hell" d="M346 548V366a10 10 0 0 1 10-10h78a10 10 0 0 1 10 10V548M420 452v14" />
           <Line line="hell" d={`${SIGN}M248 164v32M352 164v32M244 130h112`} />
-          <Line line="gelb" className="cl-rays" d="M300 72V44M186 84L168 62M414 84L432 62" />
         </svg>
       );
   }

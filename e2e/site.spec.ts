@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { BLOCKS, STICKERS, eggsReady } from './helpers.ts';
+import { BLOCKS, COLLECTABLE, STICKERS, STICKER_HOME, eggsReady, type StickerName } from './helpers.ts';
 
 // Browser smoke tests of the built site (`npm run build`, then `npm run test:e2e`). Few and stable on purpose: no
 // screenshots, no animation timing, no copy (content.ts changes often); structure, ids and behaviour only.
@@ -57,13 +57,30 @@ const wholeWords = (page: Page) => page.locator('.wb-word').evaluateAll((words) 
   })
   .map((word) => word.getAttribute('data-word')));
 
-/** The first copy of a sticker that is shown and counts for the album, brought to the middle of the window */
-async function findSticker(page: Page, id: string): Promise<Locator> {
-  const copies = page.locator(`main .stk[data-sticker="${id}"][data-collectable]`);
-  const shown = await copies.evaluateAll((els) => els.findIndex((el) => el.getClientRects().length > 0));
-  expect(shown, `a collectable ${id} is shown`).toBeGreaterThanOrEqual(0);
-  const sticker = copies.nth(shown);
+/** The one sticker with this id that counts for the album (in its block, STICKER_HOME), brought to the middle of the window */
+async function findSticker(page: Page, id: StickerName): Promise<Locator> {
+  // Each id is on the page exactly once, so there is no second copy to fall back on
+  await expect(page.locator(COLLECTABLE).and(page.locator(`[data-sticker="${id}"]`)), `one collectable ${id} on the page`).toHaveCount(1);
+  const sticker = page.locator(`${STICKER_HOME[id]} .stk[data-sticker="${id}"][data-collectable]`);
+  await expect(sticker, `the ${id} is in ${STICKER_HOME[id]}`).toHaveCount(1);
+  expect(await sticker.evaluate((el) => el.getClientRects().length > 0), `the ${id} is shown`).toBe(true);
   await sticker.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  // Wait until the sticker stands still (the scroll-linked row it rides on has caught up with the jump, its reveal
+  // has settled). A click or tap that starts while it still moves makes Playwright retry with forced scrolls to
+  // other alignments, and every such scroll slides the word band's rows again: the note at the end of «Kultur» is
+  // then out of the window or under another word.
+  await sticker.evaluate((el) => new Promise<void>((resolve) => {
+    let last = '';
+    let still = 0;
+    const tick = () => {
+      const r = el.getBoundingClientRect();
+      const now = `${r.left} ${r.top} ${r.width}`;
+      still = now === last ? still + 1 : 0;
+      last = now;
+      if (still >= 6) resolve(); else requestAnimationFrame(tick);
+    };
+    tick();
+  }));
   return sticker;
 }
 
@@ -257,8 +274,9 @@ async function fillAlbum(page: Page, touch: boolean) {
   await eggsReady(page);
   const chip = page.locator('.site-header .album-chip');
   const album = page.locator('#album');
-  // The hero alone cannot fill the album: two of its stickers count, the other ids are further down the page
-  await expect(page.locator('#top .stk[data-collectable]')).toHaveCount(2);
+  // The hero alone cannot fill the album: it holds one sticker, the other five ids are further down the page
+  await expect(page.locator('#top .stk')).toHaveCount(1);
+  await expect(page.locator('#top .stk[data-collectable]')).toHaveCount(1);
   const order = [...STICKERS].reverse();
   expect(order.at(-1)).toBe('ball');
   for (const [i, id] of order.entries()) {
@@ -270,17 +288,17 @@ async function fillAlbum(page: Page, touch: boolean) {
       await expect(chip).toHaveText(`${i + 1}/6`);
     });
   }
-  // Full, found at the top of the page: the chip celebrates there, the album (screens away) has not been seen yet
+  // Full, found at the top of the page: the chip marks it there, the album (screens away) has not been seen yet
   await expect(chip).toHaveClass(/(^|\s)is-full(\s|$)/);
-  await expect(chip.locator('.alb-burst')).toHaveCount(1);
   await expect(album).toHaveClass(/(^|\s)is-full(\s|$)/);
   await expect(album).not.toHaveClass(/(^|\s)is-seen(\s|$)/);
-  await expect(album.locator('.alb-burst')).toHaveCount(0);
   await expect(album.locator('.alb-slot.is-found')).toHaveCount(6);
-  // The finale starts when the album comes on screen (the chip leads there)
+  // Nothing is left to find, and no sticker was counted twice
+  await expect(page.locator(COLLECTABLE).and(page.locator(':not([data-collected])'))).toHaveCount(0);
+  await expect(album.locator('.alb-num')).toHaveText('6');
+  // The finale (the six stickers hop once) starts when the album comes on screen (the chip leads there)
   if (touch) await chip.tap(); else await chip.click();
   await expect(album).toHaveClass(/(^|\s)is-seen(\s|$)/);
-  await expect(album.locator('.alb-burst')).toHaveCount(1);
   await expect(album).toBeInViewport();
   expect(await stored(page)).toEqual(NOTHING_STORED);
 }
@@ -308,18 +326,19 @@ test.describe('Easter eggs (optional layer, state in memory only)', () => {
     await expect(album.locator('.alb-num')).toHaveText('1');
     await expect(album.locator('.alb-slot.is-found')).toHaveCount(1);
 
-    // A second copy of the same sticker (the ball in the word band) does not count twice; another sticker does
-    const second = page.locator('.wb .wb-row-1 .stk[data-sticker="ball"][data-collectable]');
-    await second.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
-    await second.click();
-    await expect(second).toHaveAttribute('data-collected', '');
+    // Every id counts once: a second click on the collected ball changes nothing; another sticker does count
+    await ball.click();
     await expect(chip).toHaveText('1/6');
-    await page.locator('#top .stk[data-sticker="wimpel"][data-collectable]').click();
+    await expect(album.locator('.alb-slot.is-found')).toHaveCount(1);
+    const note = await findSticker(page, 'note');
+    await note.click();
+    await expect(note).toHaveAttribute('data-collected', '');
     await expect(chip).toHaveText('2/6');
     await expect(album.locator('.alb-slot.is-found')).toHaveCount(2);
-    // A hero sticker that is only illustration there (the note) can be clicked without counting
-    await page.locator('#top .stk[data-sticker="note"]').click();
-    await expect(chip).toHaveText('2/6');
+    // The album's own six stickers are only shown: they do not count and take no click
+    await expect(album.locator('.stk')).toHaveCount(6);
+    await expect(album.locator('.stk[data-collectable]')).toHaveCount(0);
+    expect(await album.locator('.stk').evaluateAll((els) => els.filter((el) => getComputedStyle(el).pointerEvents !== 'none').length)).toBe(0);
 
     // A pointer extra: counter and album are hidden from assistive technology and hold nothing that takes focus
     await expect(chip).toHaveAttribute('aria-hidden', 'true');
@@ -340,12 +359,14 @@ test.describe('Easter eggs (optional layer, state in memory only)', () => {
     await fillAlbum(page, false);
   });
 
-  test('dragging a hero sticker moves it and does not collect it; it never ends under the header', async ({ page }) => {
+  test('dragging the hero ball moves it and does not collect it; it never ends under the header', async ({ page }) => {
     await page.goto('/');
     await eggsReady(page);
     const sticker = page.locator('#top .stk[data-sticker="ball"][data-draggable]');
     await expect(sticker).toBeVisible();
-    // Wait for the stickers' load animation, so the measured place is the resting place
+    // The ball is the page's only draggable sticker
+    await expect(page.locator('[data-draggable]')).toHaveCount(1);
+    // Wait for the sticker's load animation, so the measured place is the resting place
     await page.waitForFunction(() =>
       document.getAnimations().every((a) => a.timeline !== document.timeline || a.playState !== 'running'));
     const before = await sticker.boundingBox();
@@ -366,7 +387,20 @@ test.describe('Easter eggs (optional layer, state in memory only)', () => {
     await expect(page.locator('.site-header .album-chip')).toHaveCount(0);
     await expect(page.locator('#album .alb-slot.is-found')).toHaveCount(0);
 
-    // Dragged far up, it stops at the header's lower edge and can still be reached
+    // What the ball lies on: the hero's tag, headline, lead, buttons and arrow (it must never, clean rule 1)
+    const lyingOn = () => page.evaluate(() => {
+      const a = document.querySelector('#top .stk[data-draggable]')!.getBoundingClientRect();
+      return [...document.querySelectorAll('#top .hero-badge, #top .hero-title, #top .hero-lead, #top .hero-actions a, #top .hero-next')]
+        .filter((el) => {
+          const b = el.getBoundingClientRect();
+          return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        })
+        .map((el) => el.className);
+    });
+    expect(await lyingOn()).toEqual([]);
+
+    // Dragged far up, it stops below the text it meets on the way (or at the header's lower edge where the way is
+    // free) and can still be reached
     const mid = { x: after.x + after.width / 2, y: after.y + after.height / 2 };
     await page.mouse.move(mid.x, mid.y);
     await page.mouse.down();
@@ -378,7 +412,50 @@ test.describe('Easter eggs (optional layer, state in memory only)', () => {
     if (!top || !bar) throw new Error('no box after the second drag');
     expect(top.y).toBeGreaterThanOrEqual(bar.y + bar.height - 1);
     expect(top.y).toBeLessThan(after.y);
+    expect(await lyingOn()).toEqual([]);
+
+    // Dragged onto a button, it stops beside it: the button stays free and still works
+    const cta = page.locator('#top .hero-actions a').last();
+    const target = await cta.boundingBox();
+    const now = await sticker.boundingBox();
+    if (!target || !now) throw new Error('no box before the third drag');
+    await page.mouse.move(now.x + now.width / 2, now.y + now.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 24 });
+    await page.mouse.up();
+    expect(await lyingOn()).toEqual([]);
+    await expect(sticker).not.toHaveAttribute('data-collected');
+    await cta.click();
+    await expectLanded(page, '#warteliste');
+    await expect(page.locator('.site-header .album-chip')).toHaveCount(0);
     expect(await stored(page)).toEqual(NOTHING_STORED);
+  });
+
+  test('a hovered sticker never tilts further than it rests (8 degrees at most)', async ({ page }) => {
+    await page.goto('/');
+    await eggsReady(page);
+    const sticker = page.locator('#top .stk[data-sticker="ball"]');
+    await page.waitForFunction(() =>
+      document.getAnimations().every((a) => a.timeline !== document.timeline || a.playState !== 'running'));
+    const box = await sticker.boundingBox();
+    if (!box) throw new Error('hero sticker has no box');
+    // Net tilt: the sticker's own rotation plus its inner layer's (the wiggle and the press turn that one)
+    const sample = () => sticker.evaluate((el) => new Promise<number>((resolve) => {
+      const deg = (node: Element) => parseFloat(getComputedStyle(node).rotate) || 0;
+      const inner = el.querySelector('.stk-in')!;
+      let worst = 0;
+      const start = performance.now();
+      const tick = () => {
+        worst = Math.max(worst, Math.abs(deg(el) + deg(inner)));
+        if (performance.now() - start < 650) requestAnimationFrame(tick); else resolve(worst);
+      };
+      tick();
+    }));
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    expect(await sample()).toBeLessThanOrEqual(8.01);
+    await page.mouse.down();
+    expect(await sample()).toBeLessThanOrEqual(8.01);
+    await page.mouse.up();
   });
 
   test('typing «tor» shows the scoreboard, typing in the e-mail field does not', async ({ page }) => {
@@ -404,7 +481,7 @@ test.describe('Easter eggs (optional layer, state in memory only)', () => {
     await expect(toast).toBeVisible();
     await expect(toast).toHaveAttribute('aria-hidden', 'true');
     await expect(toast.locator('.egg-toast-score')).toHaveText('1:0');
-    // It leaves by itself (after two seconds)
+    // It leaves by itself (after 1.6 seconds)
     await expect(toast).toHaveCount(0, { timeout: 6000 });
     expect(errors).toEqual([]);
     expect(await stored(page)).toEqual(NOTHING_STORED);
@@ -447,7 +524,7 @@ test.describe('motion without scroll timelines (Firefox, older Safari)', () => {
             const box = el.getBoundingClientRect();
             return box.width > 0 && box.bottom > 0 && box.top < window.innerHeight * 0.66;
           };
-          const hidden = [...document.querySelectorAll('[data-reveal], [data-scroll], .stk, .tstk')]
+          const hidden = [...document.querySelectorAll('[data-reveal], [data-scroll], .stk')]
             .filter((el) => inView(el) && getComputedStyle(el).opacity !== '1').length;
           const undrawn = [...document.querySelectorAll('.cl-path')]
             .filter((el) => inView(el) && getComputedStyle(el).strokeDasharray !== 'none').length;
@@ -467,7 +544,7 @@ test.describe('phone viewport (390 × 844)', () => {
     await fillAlbum(page, true);
   });
 
-  test('a finger on a hero sticker neither drags it nor blocks scrolling', async ({ page }) => {
+  test('a finger on the hero ball neither drags it nor blocks scrolling', async ({ page }) => {
     await page.goto('/');
     await eggsReady(page);
     const sticker = page.locator('#top .stk[data-sticker="ball"][data-draggable]');
@@ -555,7 +632,7 @@ async function unfinished(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const name = (el: Element) => `${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}`;
     const rendered = (el: Element) => el.getClientRects().length > 0;
-    const faded = [...document.querySelectorAll('[data-reveal], [data-scroll], .stk, .tstk, .st-text .w')]
+    const faded = [...document.querySelectorAll('[data-reveal], [data-scroll], .stk, .st-text .w')]
       .filter((el) => rendered(el) && getComputedStyle(el).opacity !== '1').map(name);
     // A drawn line has no dash pattern left (kit.css: the static style and the last keyframe)
     const undrawn = [...document.querySelectorAll('.cl-path')]
@@ -634,11 +711,196 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('.album-chip')).toHaveCount(0);
     // Without the inline script there is no html.motion: nothing waits hidden, every line is drawn
     await expect(page.locator('html')).not.toHaveClass(/(^|\s)(js|motion|scroll-fx)(\s|$)/);
-    expect(await page.locator('[data-reveal], [data-scroll], .stk, .tstk, .st-text .w').evaluateAll((els) =>
+    expect(await page.locator('[data-reveal], [data-scroll], .stk, .st-text .w').evaluateAll((els) =>
       els.filter((el) => el.getClientRects().length > 0 && getComputedStyle(el).opacity !== '1').length)).toBe(0);
     expect(await page.locator('.cl-path').evaluateAll((els) =>
       els.filter((el) => el.getClientRects().length > 0 && getComputedStyle(el).strokeDasharray !== 'none').length)).toBe(0);
     // The header is the solid bar
     expect(await page.locator('.site-header').evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
   });
+});
+
+// The clean rules of the landing page (DESIGN.md -> Principles, Shapes and Kit), checked in the still final state at
+// the four widths the design is looked at: six picture stickers and no more, nothing else tilted, at most two line
+// colours per block, and no hall line (or the hero ball) on or behind a headline, a text, a button or the form.
+const CLEAN_VIEWPORTS = [[1440, 900], [1024, 768], [768, 1024], [390, 844]] as const;
+/** The text and controls of each block that a line must keep clear of */
+const CLEAR_OF: Record<string, string> = {
+  // .hero-next: the round arrow stands in a gap of the base line, the line does not run behind it
+  '#top': '.hero-badge .tag, .hero-title, .hero-lead, .hero-actions a, .hero-next',
+  '.wb': '.wb-label, .wb-word',
+  '#fuer-wen': '.door-label, .door-title, .door-text, .door-btn',
+  '#warteliste': '.wl-title, .wl-intro, .wl-card',
+};
+
+test.describe('clean rules', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  for (const [width, height] of CLEAN_VIEWPORTS) {
+    test(`${width} px: six stickers, nothing else tilted, two line colours per block, lines clear of the text`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto('/');
+      await expect(page.locator('h1')).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
+
+      await test.step('sticker budget: six picture stickers, each id once, all collectable', async () => {
+        const stickers = await page.locator(COLLECTABLE).evaluateAll((els) => els.map((el) => ({
+          id: el.getAttribute('data-sticker') ?? '',
+          shown: el.getClientRects().length > 0,
+          size: (el as HTMLElement).offsetWidth,
+          tilt: Math.abs(parseFloat(getComputedStyle(el).rotate) || 0),
+        })));
+        expect(stickers.map((s) => s.id).sort()).toEqual([...STICKERS].sort());
+        for (const id of STICKERS) {
+          await expect(page.locator(`${STICKER_HOME[id]} .stk[data-sticker="${id}"][data-collectable]`), `${id} in ${STICKER_HOME[id]}`).toHaveCount(1);
+        }
+        // Nothing beside them: five in <main>, the whistle and the album's six slots in the footer, none elsewhere
+        await expect(page.locator('main .stk')).toHaveCount(5);
+        await expect(page.locator('main .stk[data-collectable]')).toHaveCount(5);
+        await expect(page.locator('footer.ft .stk')).toHaveCount(7);
+        await expect(page.locator('.stk')).toHaveCount(12);
+        await expect(page.locator('#idee .stk, #ablauf .stk')).toHaveCount(0);
+        // The hero ball is the only sticker that can be dragged
+        await expect(page.locator('[data-draggable]')).toHaveCount(1);
+        await expect(page.locator('#top .stk[data-sticker="ball"][data-draggable][data-collectable]')).toHaveCount(1);
+        // Small and nearly upright: at most 96 px (72 px on phones), tilted by at most 8 degrees
+        const max = width <= 760 ? 72 : 96;
+        expect(stickers.filter((s) => !s.shown || s.size > max + 0.5 || s.tilt > 8)).toEqual([]);
+      });
+
+      await test.step('nothing but a sticker is rotated', async () => {
+        const tilted = await page.evaluate(() => {
+          const out: string[] = [];
+          for (const el of document.querySelectorAll('.site-header, .site-header *, main *, footer.ft *, .sticky-cta, .sticky-cta *')) {
+            if (el.closest('.stk')) continue;
+            const style = getComputedStyle(el);
+            const turned = style.rotate !== 'none' && (parseFloat(style.rotate.split(' ').pop() ?? '') || 0) !== 0;
+            // matrix(a, b, c, d, tx, ty): b and c are zero unless the element is rotated or skewed
+            const m = /^matrix(3d)?\(([^)]+)\)/.exec(style.transform);
+            const n = (m?.[2] ?? '').split(',').map(Number);
+            const skewed = m ? Math.abs(n[1] ?? 0) > 1e-4 || Math.abs(n[m[1] ? 4 : 2] ?? 0) > 1e-4 : false;
+            if (turned || skewed) out.push(`${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}`);
+          }
+          return out;
+        });
+        expect(tilted).toEqual([]);
+        // The old tilted text stickers are gone; labels are the flat tag
+        await expect(page.locator('.tstk')).toHaveCount(0);
+        await expect(page.locator('#top .hero-badge .tag')).toHaveCount(1);
+        await expect(page.locator('#ablauf .match-label .tag')).toHaveCount(1);
+      });
+
+      await test.step('at most two line colours in any block (per door tile)', async () => {
+        const colours = await page.evaluate((blocks) => {
+          const groups = blocks.flatMap((b) => (b === '#fuer-wen' ? ['#fuer-wen .door-sport', '#fuer-wen .door-firma'] : [b]));
+          return groups.map((group) => {
+            const lines = [...document.querySelectorAll(`${group} .cl-path`)].filter((el) => el.getClientRects().length > 0);
+            return [group, [...new Set(lines.map((el) => el.getAttribute('data-line')))].sort()] as const;
+          });
+        }, BLOCKS);
+        expect(colours.filter(([, lines]) => lines.length > 2)).toEqual([]);
+        // The hall lines are still there: the hero, the word band, both doors and the waitlist band carry some
+        expect(colours.filter(([, lines]) => lines.length > 0).map(([group]) => group))
+          .toEqual(['#top', '.wb', '#fuer-wen .door-sport', '#fuer-wen .door-firma', '#warteliste']);
+      });
+
+      await test.step('no line and no hero ball on or behind text, buttons or the form', async () => {
+        const hits = await page.evaluate((clearOf) => {
+          const name = (el: Element) => `${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}`;
+          const out: string[] = [];
+          for (const [block, texts] of Object.entries(clearOf)) {
+            const marks = [...document.querySelectorAll(`${block} .cl-path, ${block} .cl-glow, ${block} .door-ball-move${block === '#top' ? ', #top .stk' : ''}`)]
+              .filter((el) => el.getClientRects().length > 0);
+            const words = [...document.querySelectorAll(texts.split(', ').map((t) => `${block} ${t}`).join(', '))]
+              .filter((el) => el.getClientRects().length > 0);
+            if (!marks.length || !words.length) out.push(`${block}: nothing to compare`);
+            for (const mark of marks) {
+              // A line's box is its geometry: add its stroke (and a little air)
+              const a = mark.getBoundingClientRect();
+              const pad = mark.matches('.stk') ? 0 : 4;
+              for (const word of words) {
+                const b = word.getBoundingClientRect();
+                if (a.left - pad < b.right && a.right + pad > b.left && a.top - pad < b.bottom && a.bottom + pad > b.top) {
+                  out.push(`${block}: ${name(mark)} meets ${name(word)}`);
+                }
+              }
+            }
+          }
+          return out;
+        }, CLEAR_OF);
+        expect(hits).toEqual([]);
+      });
+
+      await test.step('the hero headline stays inside the page container, with side margins', async () => {
+        const out = await page.evaluate(() => {
+          const inner = document.querySelector('#top .hero-inner')!;
+          const style = getComputedStyle(inner);
+          const box = inner.getBoundingClientRect();
+          const left = box.left + parseFloat(style.paddingLeft);
+          const right = box.right - parseFloat(style.paddingRight);
+          // The ink of every line of the headline (text nodes, so the centred block's empty sides do not count)
+          const range = document.createRange();
+          range.selectNodeContents(document.querySelector('#top .hero-title')!);
+          return [...range.getClientRects()]
+            .filter((r) => r.width > 0 && (r.left < left - 0.5 || r.right > right + 0.5))
+            .map((r) => `${Math.round(r.left)}..${Math.round(r.right)} outside ${Math.round(left)}..${Math.round(right)}`);
+        });
+        expect(out).toEqual([]);
+      });
+
+      await test.step('«4 von 4» stands only in the match card', async () => {
+        const outside = await page.evaluate(() => {
+          const out: string[] = [];
+          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+          for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (node.parentElement?.closest('.match, script, style')) continue;
+            if (/4\s*(von|\/)\s*4/i.test(node.textContent ?? '')) out.push((node.textContent ?? '').trim());
+          }
+          return out;
+        });
+        expect(outside).toEqual([]);
+        await expect(page.locator('#ablauf .match')).toContainText(/4\s+von\s+4/);
+      });
+    });
+  }
+
+  for (const [width, height] of [[1440, 900], [390, 844]] as const) {
+    test(`${width} px: the album counter stays inside the header bar`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto('/');
+      await eggsReady(page);
+      await page.locator('#top .stk[data-sticker="ball"][data-collectable]').click();
+      const chip = page.locator('.site-header .album-chip');
+      await expect(chip).toBeVisible();
+      // The bar is fixed and the chip hangs on its button: wherever the page is scrolled to, the chip lies inside
+      // the bar and never on the page's content
+      for (const block of BLOCKS) {
+        await page.locator(block).evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'instant' }));
+        const [bar, box] = [await page.locator('.site-header').boundingBox(), await chip.boundingBox()];
+        if (!bar || !box) throw new Error('no box for the header or the chip');
+        expect(box.y, block).toBeGreaterThanOrEqual(bar.y);
+        expect(box.y + box.height, block).toBeLessThanOrEqual(bar.y + bar.height);
+        expect(box.x, block).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width, block).toBeLessThanOrEqual(width);
+      }
+    });
+  }
+
+  for (const [width, height] of [[1440, 900], [390, 844]] as const) {
+    test(`${width} px: a static page has one small sticker, not collectable`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto('/kosten/');
+      await expect(page.locator('h1')).toBeVisible();
+      const stickers = page.locator('.stk');
+      await expect(stickers).toHaveCount(1);
+      await expect(page.locator('.stk[data-collectable]')).toHaveCount(0);
+      await expect(page.locator('.lg-band .stk')).toHaveCount(1);
+      const look = await stickers.evaluate((el) => ({
+        size: (el as HTMLElement).offsetWidth,
+        tilt: Math.abs(parseFloat(getComputedStyle(el).rotate) || 0),
+      }));
+      expect(look.size).toBeLessThanOrEqual(72.5);
+      expect(look.tilt).toBeLessThanOrEqual(8);
+    });
+  }
 });

@@ -1,5 +1,5 @@
 /* Support (Sachleistungen): parquet, after the cost cards. The title starts in column 1, the three kinds sit below as
-   three cards (radius 20, 1 px border, 40 px inner margin, no shadow) on parkett-2, each with a sticker-style badge
+   three cards (radius 20, 1 px border, 40 px inner margin, no shadow) on parkett-2, each with a flat round badge
    (.lg-badge, legal.css: blue, red, green). No motion. */
 
 /* Head as a split row: the title in columns 1-7, the intro beside it on the baseline (stacked below 961 px) */

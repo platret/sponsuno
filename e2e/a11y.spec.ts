@@ -81,12 +81,11 @@ test.describe('axe, with motion', () => {
     expect(await scan(page)).toEqual([]);
   });
 
-  test('the unfilled statement is measured by axe and passes (1200 px wide: no page tape line)', async ({ page }) => {
-    // From 1240 px wide the page tape line lies under the statement block (z-index -1, a box as wide as the page).
-    // axe then cannot tell the text's background ("overlapped by another element") and lists every word under
-    // `incomplete`, which fails nothing and proves nothing. Just below that width the line is not shown and the same
-    // words stand on the same parquet in the same start grey: here axe measures them, and they must pass.
-    await page.setViewportSize({ width: 1200, height: 800 });
+  test('the unfilled statement is measured by axe and passes', async ({ page }) => {
+    // A word axe cannot measure lands under `incomplete`, which fails nothing and proves nothing (it happened while a
+    // page-wide court line lay under this block; that line is gone, and no hall line may lie behind text). So: every
+    // word must be measured and pass, in its start grey, at the width the page is designed for.
+    await page.setViewportSize({ width: 1440, height: 800 });
     await open(page, '/');
     const words = page.locator('#idee .st-text .w:not(.st-sign)');
     const ink = await page.locator('#idee .st-text').evaluate((el) => getComputedStyle(el).color);
@@ -95,6 +94,18 @@ test.describe('axe, with motion', () => {
     expect(failures(violations)).toEqual([]);
     expect(incomplete.flatMap((rule) => rule.nodes).map((node) => node.html)).toEqual([]);
     expect(passes.flatMap((rule) => rule.nodes).length).toBe(await words.count());
+  });
+
+  test('the hero buttons are measured by axe and pass at the design width', async ({ page }) => {
+    // The hero's hall lines are three small boxes (two strips on the base line, a corner box for the arc), so none
+    // of them lies behind the button row: axe must measure both buttons, not park them under `incomplete` (it did
+    // while one svg as wide as the hero lay behind them).
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await open(page, '/');
+    const { passes, incomplete, violations } = await new AxeBuilder({ page }).include('#top .hero-actions').withRules(['color-contrast']).analyze();
+    expect(failures(violations)).toEqual([]);
+    expect(incomplete.flatMap((rule) => rule.nodes).map((node) => node.html)).toEqual([]);
+    expect(passes.flatMap((rule) => rule.nodes).length).toBe(await page.locator('#top .hero-actions a').count());
   });
 
   test('/ block by block while scrolling, then the whole page', async ({ page }) => {

@@ -1,8 +1,8 @@
-/* Statement (Statement.tsx): parquet. Three sentences in large Schibsted 600 (about 44 px on desktop, 26 px on
-   phones), one sentence per line where the width allows; a round sign in front of the first two. The words fill from
-   grey to ink along the scroll. Under it three points, each with a line icon in a drawn ring. Prefix st-. */
-
-.st { padding-block: clamp(4rem, 2.5rem + 6vw, 8.5rem); }
+/* Statement (Statement.tsx): parquet, on the page container, with the vertical rhythm of every block (.section).
+   Three sentences in large Schibsted 600 (about 44 px on desktop, 26 px on phones), one sentence per line where the
+   width allows; a small flat disc hangs in front of each. The words fill from grey to ink along the scroll: that
+   is the block's one effect, nothing else moves beside the text. Under it three points, each with a line icon in a
+   thin ring. Prefix st-. */
 
 .st-text {
   /* Colour of a word the fill has not reached yet: rgb(132,133,135), 3.4:1 on parquet (3.36 exactly). The type is never below 26 px, so it is large
@@ -12,29 +12,27 @@
   letter-spacing: -0.022em;
   color: var(--heading);
 }
-/* One sentence per line; a sentence that is longer than the line wraps and hangs under its first word */
-.st-sentence { display: block; text-wrap: balance; }
+/* One sentence per row. Each is a grid of two columns: a hanging column for the round sign (its width plus the gap)
+   and the words. So the three sentences, and every wrapped line of them, share one left edge at every width, and
+   the signs stand on the container's edge. */
+.st-sentence { display: grid; grid-template-columns: 1.22em minmax(0, 1fr); }
 .st-sentence + .st-sentence { margin-top: .16em; }
-/* Sign and first word stay together at a line break */
-.st-nb { white-space: nowrap; }
+.st-words { grid-column: 2; text-wrap: balance; }
 
-/* Round sign: a flat disc with a white die-cut edge and a hairline, as on the stickers, a little tilted */
+/* Round sign: a flat disc, upright, no edge. Blue and red are the colours the two sides have on the two doors
+   (clubs blue, firms red); the third, for Sponsuno's own sentence, is ink. Centred on the capitals of the first
+   line (line box 1.2 em, disc .94 em). */
 .st-sign {
-  display: inline-grid; place-items: center;
-  inline-size: 1.08em; block-size: 1.08em;
-  margin-block: -.2em; margin-inline-end: .24em;
-  /* centred on the capitals: middle is half an x-height above the baseline, the rest is the nudge */
-  position: relative; inset-block-start: -.075em;
-  vertical-align: middle;
-  border: max(2px, .07em) solid var(--weiss);
+  grid-column: 1;
+  display: grid; place-items: center;
+  inline-size: .94em; block-size: .94em;
+  margin-top: .13em;
   border-radius: 50%;
   background: var(--st-sign, var(--blau));
-  background-clip: padding-box;
-  box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
   color: var(--weiss);
-  rotate: var(--st-tilt, -8deg);
 }
-.st-sign-rot { --st-sign: var(--rot); --st-tilt: 7deg; }
+.st-sign-rot { --st-sign: var(--rot); }
+.st-sign-tinte { --st-sign: var(--tinte); color: var(--parkett); }
 .st-sign .icn { inline-size: .56em; block-size: .56em; stroke-width: 2.4; }
 
 /* ---------- The three points ---------- */
@@ -45,13 +43,11 @@
   margin-top: clamp(3rem, 2rem + 4.5vw, 6rem);
 }
 .st-point {
-  --st-ring: var(--blau);
   display: flex; align-items: flex-start; gap: 1rem;
   font-size: 1.0625rem; line-height: 1.4; font-weight: 600; color: var(--heading);
 }
-.st-point:nth-child(2) { --st-ring: var(--rot); }
-.st-point:nth-child(3) { --st-ring: var(--gruen); }
-/* Line icon in an outlined circle (48 px, the ring in a line colour, 2 px like the icon's stroke) */
+/* Line icon in an outlined circle (48 px; all three rings in the one accent of the surface, blue, 2 px like the
+   icon's stroke: with the signs the block shows blue, red and ink, nothing else) */
 .st-icon {
   position: relative; flex: none; display: grid; place-items: center;
   width: 3rem; height: 3rem;
@@ -59,7 +55,7 @@
 }
 .st-ring {
   position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; overflow: visible;
-  fill: none; stroke: var(--st-ring); stroke-width: 2; stroke-linecap: round;
+  fill: none; stroke: var(--accent-text); stroke-width: 2; stroke-linecap: round;
 }
 /* The first line of the text sits on the middle of the ring */
 .st-point-text { max-width: 19em; padding-top: calc((3rem - 1.4em) / 2); text-wrap: balance; }
@@ -73,7 +69,7 @@
 
 /* Points: one after another (data-reveal, site.css), and each ring draws once when its point comes in */
 .motion .st-point[data-reveal] { transition-delay: calc(var(--st-i, 0) * .12s); }
-html.motion .st-point.is-in .st-ring circle {
+html.motion .st-point.is-in .st-ring path {
   animation: kit-draw .7s var(--ease-out) calc(var(--st-i, 0) * .12s + .12s) backwards;
 }
 
@@ -89,10 +85,11 @@ html.motion .st-point.is-in .st-ring circle {
     .scroll-fx .st-text[data-scroll="fill-words"] .w { animation-name: st-fill; }
     .scroll-fx .st-text[data-scroll="fill-words"] .st-sign { animation-name: st-sign; }
 
-    /* Screens taller than the hero (its height stops at 60rem): the statement can be in view when the page loads.
-       There the fill follows the page scroll itself, from the first pixels to 44 vh, so it is whole grey at
-       scroll 0 and never loads half filled. */
-    @media (min-height: 60.0625rem) {
+    /* Screens taller than the hero (its height stops at 60rem; at 44rem between 481 and 760 px wide, hero.css): the
+       statement can be in view when the page loads. There the fill follows the page scroll itself, from the first
+       pixels to 44 vh, so it is whole grey at scroll 0 and never loads half filled. (In the narrow range the fill
+       would start at load from about 868 px of height: 52rem is safely below that.) */
+    @media (min-height: 60.0625rem), (min-width: 481px) and (max-width: 760px) and (min-height: 52rem) {
       .scroll-fx .st-text[data-scroll="fill-words"] .w {
         animation-timeline: scroll(root block);
         animation-range:
@@ -108,11 +105,12 @@ html.motion .st-point.is-in .st-ring circle {
 }
 
 /* Tall screens where the block is in view at load: nothing starts hidden (no reveal for the paragraph where the
-   scroll fill is missing, none for the points from 80rem) */
-@media (min-height: 60.0625rem) {
+   scroll fill is missing, none for the points from 80rem; between 481 and 760 px wide, where the hero is at most
+   44rem high, from 44rem and 60rem) */
+@media (min-height: 60.0625rem), (min-width: 481px) and (max-width: 760px) and (min-height: 44.0625rem) {
   .motion .st-text[data-reveal] { opacity: 1; transform: none; transition: none; }
 }
-@media (min-height: 80rem) {
+@media (min-height: 80rem), (min-width: 481px) and (max-width: 760px) and (min-height: 60rem) {
   .motion .st-point[data-reveal] { opacity: 1; transform: none; transition: none; }
-  html.motion .st-point.is-in .st-ring circle { animation: none; }
+  html.motion .st-point.is-in .st-ring path { animation: none; }
 }

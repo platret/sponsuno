@@ -1,6 +1,6 @@
-// Stickers of the «Turnhalle» look (brief: design system v2): six flat vector drawings with a white die-cut border,
-// plus the pill-shaped text sticker. Decorative: the drawings are aria-hidden, a TextSticker carries real text.
-// Styles in styles/kit.css (.stk, .tstk). All drawings are original and use only the palette of tokens.css.
+// Stickers of the «Turnhalle» look (brief: design system v2): six flat vector drawings with a white die-cut border.
+// Decorative: the drawings are aria-hidden. Labels with real text are the flat tag (kit/Tag.tsx), never a sticker.
+// Styles in styles/kit.css (.stk). All drawings are original and use only the palette of tokens.css.
 //
 // How a drawing is built (viewBox 0 0 120 120, the same recipe for all six, so the set reads as one hand):
 //   1. `sil`: the silhouette. Each entry is drawn twice behind the artwork with round joins: once as the hairline
@@ -21,8 +21,8 @@ type Drawing = { sil: Sil[]; slot: string; shift?: string; art: ReactNode };
 
 /* ---- ball: a generic two-tone hall ball, four curved panels around an off-centre pole ---- */
 const BALL = 'M60 17a43 43 0 1 0 0 86a43 43 0 1 0 0-86Z';
-export const BALL_PANELS = 'M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z';
-export const BALL_SEAMS = 'M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46';
+const BALL_PANELS = 'M52 50C63 37 80 29 94 34A43 43 0 0 1 96 83C83 85 62 72 52 50ZM52 50C40 60 28 78 31 92A43 43 0 0 1 19 46C30 38 43 42 52 50Z';
+const BALL_SEAMS = 'M52 50C63 37 80 29 94 34M52 50C62 72 83 85 96 83M52 50C40 60 28 78 31 92M52 50C43 42 30 38 19 46';
 
 /* ---- note: a beamed pair ---- */
 const NOTE_HEADS = 'M48.5 84.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2ZM93.5 74.4a13 10 -20 1 1-25 9.2a13 10 -20 1 1 25-9.2Z';
@@ -155,7 +155,7 @@ export type StickerProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children' | 'i
   id: StickerId;
   /** Width and height in px (the box; the drawing fills it up to its die-cut border). Default 96. */
   size?: number;
-  /** Rotation in degrees (brief: between -12 and 12). Default 0. */
+  /** Resting tilt in degrees, at most 8 either way (clean rule 1; the kit's motion never tilts further). Default 0. */
   rotate?: number;
   /** Counts for the sticker album (data-collectable). Default true. */
   collectable?: boolean;
@@ -196,26 +196,6 @@ export function Sticker({ id, size = 96, rotate = 0, className, collectable = tr
           </g>
         </svg>
       </span>
-    </span>
-  );
-}
-
-export type TextStickerTone = 'gelb' | 'blau' | 'rot' | 'gruen' | 'tinte' | 'parkett';
-
-export type TextStickerProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
-  /** Fill colour; the text colour follows (at least 4.5:1 on every tone). Default gelb. */
-  tone?: TextStickerTone;
-  /** Rotation in degrees. Default 0. */
-  rotate?: number;
-  children: ReactNode;
-};
-
-/** Pill-shaped sticker with real, selectable text. Scale it with the custom property --stk-fs (default 13px). */
-export function TextSticker({ tone = 'gelb', rotate = 0, className, style, children, ...rest }: TextStickerProps) {
-  const vars: Custom = { '--stk-rot': `${rotate}deg`, ...style };
-  return (
-    <span {...rest} className={className ? `tstk ${className}` : 'tstk'} data-tone={tone} style={vars}>
-      {children}
     </span>
   );
 }

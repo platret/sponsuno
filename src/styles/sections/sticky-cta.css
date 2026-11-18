@@ -1,6 +1,6 @@
-/* Sticky waitlist bar (StickyCta.tsx): phones only, after the hero has scrolled out. A floating ink pill, cut like a
-   sticker (white edge, one hairline, no shadow), so it reads on parquet, on the ink band and on the colour tiles
-   alike: the closing line in the display face and the yellow pill button. */
+/* Sticky waitlist bar (StickyCta.tsx): phones only, after the hero has scrolled out. A floating flat ink pill (no
+   white sticker edge, no shadow; a faint parquet hairline keeps its shape on the ink band and the footer): the
+   closing line in the display face and the yellow pill button. */
 .sticky-cta { display: none; }
 
 @media (max-width: 760px) {
@@ -8,9 +8,8 @@
     position: fixed; left: .75rem; right: .75rem; bottom: calc(.75rem + env(safe-area-inset-bottom, 0px)); z-index: 40;
     display: flex; align-items: center; justify-content: space-between; gap: .75rem;
     padding: .3125rem .3125rem .3125rem 1.125rem;
-    border: 3px solid var(--weiss); border-radius: 2.25rem;
-    box-shadow: 0 0 0 1px rgba(26, 28, 32, .12);
-    background: var(--tinte); background-clip: padding-box;
+    border: 1px solid rgba(248, 244, 234, .3); border-radius: 2.25rem;
+    background: var(--tinte);
     color: var(--parkett);
     /* the yellow button's focus ring on ink */
     --focus: var(--gelb);

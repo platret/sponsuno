@@ -17,16 +17,10 @@
 
 /* ---------- Closing block: back to the waitlist on the landing page ----------
    The same yellow band as the landing page's waitlist (.surface-gelb in InfoPage.tsx: ink text, ink button), with the
-   giant title. One sticker sits on the band's upper edge, at the container's right edge (decorative). */
-.pg-end { position: relative; }
+   giant title. Text and one button on the container grid, no decoration. */
 .pg-end h2 { font-size: clamp(2.25rem, 1rem + 5.4vw, 5.5rem); line-height: 1; }
 .pg-end-text { margin-top: 1.5rem; max-width: 38rem; font-size: var(--fs-lead); line-height: 1.55; }
 .pg-end-more { margin-top: .75rem; max-width: 38rem; }
 .pg-end-more a { font-weight: 600; text-underline-offset: 3px; }
 .pg-end-more a:hover { text-decoration-thickness: 2px; }
 .pg-end-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 2rem; }
-.stk.pg-end-stk {
-  position: absolute; top: 0; right: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
-  inline-size: clamp(6rem, 3.5rem + 9vw, 10.5rem);
-  translate: 0 -42%;
-}

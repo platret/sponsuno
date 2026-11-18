@@ -1,86 +1,81 @@
-/* Hero (#top, Hero.tsx): parquet, one screen, centred. Yellow launch sticker, giant H1 (Archivo Wide, accent word in
-   blue), lead, two pill buttons. Behind: the hall lines (kit CourtLines, drawn once on load). On and around the
-   headline: six stickers, each in a slot that places it, staggers it in at load and lets it drift a little while the
-   hero scrolls away. The round arrow sits on the red base line. Static styles are the final state: without
-   html.motion (reduced motion, no JS) nothing moves. Prefix hero-. */
+/* Hero (#top, Hero.tsx): parquet, one screen, centred on the page container. A flat yellow tag (launch signal), the
+   H1 (Archivo Wide, accent word in blue), lead, two pill buttons. Two thin hall lines frame the lower right of the
+   block: the red base line and, from 761 px, a blue corner arc. One sticker, the ball, sits on a line. No line and
+   no sticker ever lies behind the headline, the lead or a button (the sums are next to each rule): the round arrow
+   stands in a gap of the base line, which stops before it and goes on after it. Static styles are the final state:
+   without html.motion (reduced motion, no JS) nothing moves. Prefix hero-. */
 
 .hero {
-  /* The headline size drives everything: 8.6vw keeps "zusammenpasst." (about 10.25 em) inside the gutters, so the
-     headline is two lines from 481 px up; the svh term keeps badge, headline, lead and buttons on one screen on low
-     windows. Phones (up to 480 px) set it in four lines at a larger size, see the end of this file. */
-  --hero-fs: clamp(1.5rem, min(8.6vw, 14svh), 12.5rem);
-  /* Height of the red base line above the lower edge: the hall lines end on it, the round arrow sits on it */
+  /* The headline: 8.6vw keeps "zusammenpasst." (about 10.3 em) inside the container at every width, with a little
+     air to its edges; 6.5rem is where it fills the 1200 px container; the svh term keeps tag,
+     headline, lead and buttons on one screen on low windows. Two lines from 481 px up; phones (up to 480 px) set it
+     in four lines at a larger size, see the end of this file. */
+  --hero-fs: clamp(1.5rem, min(8.6vw, 14svh), 6.5rem);
+  /* Height of the base line above the lower edge: the arc ends on it, the round arrow stands in its gap */
   --hero-base: 3.5rem;
+  /* The round arrow's size, and the air between it and the two ends of the base line */
+  --hero-next: 3rem;
+  --hero-next-air: .75rem;
+  /* Free floor between the buttons and the base line (at least 60 px) */
+  --hero-gap: calc(1.5rem + clamp(2.25rem, 5vh, 3rem));
+  /* Radius of the corner arc (its centre: right edge, base line) */
+  --hero-r: min(18vw, 16rem);
+  --hero-top: clamp(1rem, 3vh, 2rem);
   position: relative;
-  /* isolate: the decorative layers (lines behind, stickers in front) stack inside the hero only */
+  /* isolate: the decorative layers (lines behind, the ball) stack inside the hero only */
   isolation: isolate;
   overflow: clip;
   display: grid;
   align-items: center;
-  /* One screen, but never much taller than the lines (which grow with the width) can fill: at most 60rem on normal
-     screens, half the width on very wide ones, and less on upright tablets. */
-  min-height: min(100svh, max(60rem, 50vw), 62vw + 20rem);
+  /* One screen, but never much taller than the content needs: at most 60rem, and less on upright tablets */
+  min-height: min(100svh, 60rem, 62vw + 20rem);
   padding-block:
-    calc(var(--header-h) + env(safe-area-inset-top, 0px) + clamp(1rem, 3vh, 2rem))
-    calc(var(--hero-base) + 1.5rem + clamp(2.25rem, 5vh, 3rem));
+    calc(var(--header-h) + env(safe-area-inset-top, 0px) + var(--hero-top))
+    calc(var(--hero-base) + var(--hero-gap));
   background: var(--parkett);
   color: var(--text);
 }
-/* The hero keeps its own ground down to the red base line. header.css makes the parquet blocks transparent so the
-   page tape line (App.tsx) shows through them; in the hero that line would run through the end of the headline. So
-   the hero's ground is a layer of its own that ends on the base line: the hero has its own hall lines above it, and
-   the tape starts visibly on the base line (it joins the red line) instead of with a cut end on open parquet. */
-#top.hero { background: transparent; }
-.hero::before {
-  content: ""; position: absolute; z-index: -1;
-  inset: 0 0 var(--hero-base) 0;
-  background: var(--parkett);
-}
 
-/* Hall lines: a box of the drawing's own proportions (1440 x 900), as wide as the hero, hung so that its red base
-   line (130 units above the drawing's lower edge) runs --hero-base above the lower edge of the hero at every size.
-   Everything below the base line is cut away: the other lines end on it, as court markings do. */
-.hero-lines {
-  --cl-w: clamp(4px, 3.26px + .19vw, 6px);
-  inset: auto 0 calc(var(--hero-base) - 100vw * 130 / 1440) auto;
-  inline-size: 100%;
-  block-size: auto;
-  aspect-ratio: 1440 / 900;
-  clip-path: inset(0 0 calc(100% * 130 / 900 - var(--cl-w) / 2) 0);
+/* ---------- Hall lines (kit CourtLines) ----------
+   Three small boxes, so no box of a line lies behind the text or a button (axe measures every contrast):
+   - the base line (red): two 12 px strips at the height of the base line (kit variant "band": one straight line
+     through the middle of its strip), from the left edge to the round arrow and from the arrow to the right edge.
+     Each ends --hero-next-air before the arrow, with a round cap: the line never runs behind the button;
+   - the corner arc (blue, kit variant "hero", from 761 px): a square of the arc's radius in the lower right corner,
+     standing on the base line; the arc is a quarter circle around that corner.
+   Why the arc stays clear of the text (width W, R = 18 % of W, at most 256 px):
+   - buttons (446 px wide, centred): their right edge is (W - 446) / 2 from the right edge, which is more than R from
+     697 px up; the arc only exists from 761 px;
+   - lead (at most half the width, centred): its right edge is a quarter of W from the right edge, more than R;
+   - headline: its lower edge is at least 245 px above the base line (floor 60, buttons 52, lead two lines, their
+     gaps), and at the headline's right edge the arc is at most 207 px high (worst at about 1210 px wide). */
+.hero-line {
+  inset: auto auto calc(var(--hero-base) - .375rem) 0;
+  inline-size: calc(50% - var(--hero-next) / 2 - var(--hero-next-air));
+  block-size: .75rem;
+  /* the round cap at the arrow's side reaches half a stroke out of the strip */
+  overflow: visible;
+  --draw-time: .45s;
 }
-/* The big circle runs behind the end of the headline: in yellow it stays quiet under the ink and the blue word (the
-   kit draws it blue, which would run into "zusammenpasst."). The corner arc takes the blue in exchange. */
-.hero .cl-path:nth-child(1) { stroke: var(--gelb); }
-.hero .cl-path:nth-child(4) { stroke: var(--blau); }
-.hero-ring { display: none; }
-/* Wide, low windows: the lines grow with the width, the text with the height. The green corner would then run
-   under the last letters of the headline, so it stays away. */
-@media (min-aspect-ratio: 19 / 10) { .hero-lines .cl-path:nth-child(3) { display: none; } }
+.hero-line-b { inset-inline: auto 0; --draw-delay: .4s; }
+.hero-arc {
+  inset: auto 0 var(--hero-base) auto;
+  inline-size: var(--hero-r); block-size: var(--hero-r);
+  /* half the stroke lies outside the box at both ends of the arc */
+  overflow: visible;
+  /* The arc starts when the base line, drawn from the left, comes by */
+  --draw-time: .9s; --draw-delay: .45s;
+}
 
 .hero-inner {
   position: relative; z-index: 1;
   display: grid; justify-items: center;
-  inline-size: 100%;
-  padding-inline: var(--gutter);
   text-align: center;
 }
 
-/* Badge, headline and the sticker layer over them. The lower edge of this box is the lower edge of the headline:
-   the stickers are placed from there, in em of the headline size. */
-.hero-head {
-  position: relative;
-  display: grid; justify-items: center;
-  inline-size: 100%;
-}
-
-/* Launch signal: the kit's yellow text sticker (ink on yellow, 9.8:1), real text, read first. It hangs a little
-   into the headline's line box, like something stuck on afterwards. */
-.hero-badge {
-  /* above the sticker layer: the launch signal is text and is never covered */
-  position: relative; z-index: 3;
-  margin-bottom: clamp(.5rem, .15rem + 1vw, 1rem);
-}
-.hero-badge .tstk { --stk-fs: clamp(.8125rem, .76rem + .25vw, 1rem); }
+/* Launch signal: the kit's flat yellow tag (ink on yellow, 9.8:1), real text, read first */
+.hero-badge { margin-bottom: clamp(.75rem, .5rem + 1vw, 1.5rem); }
+.hero-badge .tag { --tag-fs: clamp(.8125rem, .76rem + .25vw, 1rem); }
 
 .hero-title {
   font-size: var(--hero-fs);
@@ -91,8 +86,8 @@
 
 .hero-lead {
   margin-top: clamp(1.25rem, .9rem + 1.6vw, 2.25rem);
-  /* 44vw: on medium widths the lead ends before the big circle, whose left edge is at 75 % of the width */
-  max-width: min(36rem, 44vw);
+  /* 50vw: on medium widths the lead ends well before the corner arc and the ball (see the sums above) */
+  max-width: min(36rem, 50vw);
   font-size: var(--fs-lead); line-height: 1.5;
   text-wrap: balance;
 }
@@ -101,57 +96,31 @@
   display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem;
   margin-top: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
 }
-/* Opaque, so a hall line never shows through the outline button */
-.hero-actions .btn-outline { background: var(--parkett); }
-@media (hover: hover) { .hero-actions .btn-outline:hover { background: var(--parkett-2); } }
 
-/* ---------- Stickers ---------- */
-
-/* Two layers, neither catches the pointer (only the stickers themselves do): .hero-stickers covers the head, its
-   stickers are placed from the headline in em of the headline size; .hero-floor covers the hero, its sticker is
-   placed from the hall lines. */
-.hero-stickers, .hero-floor {
-  position: absolute; inset: 0; z-index: 2;
-  font-size: var(--hero-fs);
-  pointer-events: none;
-}
-.hero-floor { z-index: 1; }
-/* Slot: --x from the centre line, --y from the lower edge of the headline (to the slot's own centre), --s its size */
-.hero-stk {
-  position: absolute;
-  inset-inline-start: calc(50% + var(--x) - var(--s) / 2);
-  inset-block-end: calc(var(--y) - var(--s) / 2);
+/* ---------- The ball: the hero's one sticker, on the corner arc ----------
+   Slot: its centre lies on the middle of the arc (45 degrees: .7071 of the radius left of the right edge and above
+   the base line). --s is its size, at most 96 px. The slot never catches the pointer, only the sticker does.
+   Clear of the text: its left edge is .127 W + s / 2 from the right edge, less than the buttons' (W - 446) / 2 from
+   705 px up and less than the lead's quarter of W; its upper edge is at most 229 px above the base line (199 px at
+   1210 px wide), the headline at least 245 px. */
+.hero-ball {
+  --s: clamp(4.5rem, 4rem + 2.2vw, 6rem);
+  position: absolute; z-index: 1;
+  inset-inline-end: calc(var(--hero-r) * .7071 - var(--s) / 2);
+  inset-block-end: calc(var(--hero-base) + var(--hero-r) * .7071 - var(--s) / 2);
   inline-size: var(--s);
   pointer-events: none;
 }
-.hero-stk .stk { display: block; inline-size: 100%; pointer-events: auto; }
+.hero-ball .stk { display: block; inline-size: 100%; pointer-events: auto; }
 
-/* On the "s" of "das" */
-.hero-stk-ball { --s: clamp(84px, 1.21em, 150px); --x: 5.05em; --y: 2.02em; --k: 0; --dy: -70px; --dr: 6deg; }
-/* On the "z" of "zusammenpasst." */
-.hero-stk-startnummer { --s: clamp(72px, .94em, 132px); --x: -5.3em; --y: .08em; --k: 1; --dy: -34px; --dr: -4deg; }
-.hero-stk-note { --s: clamp(72px, .78em, 110px); --x: -4.6em; --y: 2.42em; --k: 2; --dy: -96px; --dr: -6deg; }
-.hero-stk-brezel { --s: clamp(76px, 1.03em, 140px); --x: 4.7em; --y: -.98em; --k: 3; --dy: -52px; --dr: 5deg; }
-/* Half off the left edge of the window */
-.hero-stk-pfeife { --s: clamp(80px, 1.1em, 150px); --x: calc(-50vw + .04em); --y: -1.3em; --k: 4; --dy: -20px; --dr: 5deg; }
-/* The pennant stands on the red base line, inside the green corner: the foot of its stick (21.5% / 82% of the tilted
-   sticker) is the point that is placed, and the point it sways around while the hero scrolls away. */
-.hero-stk-wimpel {
-  --s: clamp(72px, .84em, 120px); --k: 5; --dy: 0px; --dr: -9deg;
-  inset-inline-start: calc(100vw * 1124 / 1440 - .215 * var(--s));
-  inset-block-end: calc(var(--hero-base) - .2 * var(--s));
-  transform-origin: 21.5% 82%;
-}
-
-/* ---------- Scroll hint: a round outline button on the red base line ---------- */
+/* ---------- Scroll hint: a round outline button in the gap of the base line (its centre at the line's height) ---------- */
 
 .hero-next {
   position: absolute; z-index: 1;
-  inset-inline-start: 50%;
-  inset-block-end: calc(var(--hero-base) - 1.5rem);
+  inset-inline-start: calc(50% - var(--hero-next) / 2);
+  inset-block-end: calc(var(--hero-base) - var(--hero-next) / 2);
   display: grid; place-items: center;
-  inline-size: 3rem; block-size: 3rem;
-  margin-inline-start: -1.5rem;
+  inline-size: var(--hero-next); block-size: var(--hero-next);
   border: 2px solid var(--heading); border-radius: 50%;
   background: var(--parkett); color: var(--heading);
   transition: background-color .2s ease, color .2s ease;
@@ -166,26 +135,23 @@
 /* ---------- Motion (html.motion: not with reduced motion, not without JS) ---------- */
 
 @keyframes hero-stick { from { opacity: 0; } to { opacity: 1; } }
-/* --dy / --dr: how far a slot has drifted when the hero has left the window */
-@keyframes hero-drift { to { translate: 0 var(--dy, -40px); rotate: var(--dr, 0deg); } }
+/* How far the ball has drifted when the hero has left the window (20 px: less than the free floor above it) */
+@keyframes hero-drift { to { translate: 0 -20px; } }
 
-/* Load: the stickers are stuck on one after another, after the first lines have started to draw. The slot fades
-   in while the kit's settle (scale and tilt) runs on the sticker, with the same delay. All done in about 1.2 s. */
-html.motion .hero-stk {
-  animation: hero-stick .18s ease-out both;
-  animation-delay: calc(.45s + var(--k, 0) * .09s);
-}
-html.motion .hero-stk .stk { animation-delay: calc(.45s + var(--k, 0) * .09s); }
+/* Load: the lines draw (kit, data-draw="load"), then the ball is stuck on. The slot fades in while the kit's
+   settle (scale and tilt) runs on the sticker, with the same delay. All done in about 1.35 s. */
+html.motion .hero-ball { animation: hero-stick .18s ease-out .75s both; }
+html.motion .hero-ball .stk { animation-delay: .75s; }
 
-/* Scroll: while the first screen scrolls away, each slot drifts up by its own amount and turns a little, so the
-   stickers leave at slightly different speeds. Only with scroll timelines; elsewhere they simply stay put. */
+/* Scroll: while the first screen scrolls away, the ball drifts up a little, so it leaves slightly faster than the
+   text. Only with scroll timelines; elsewhere it simply stays put. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    html.scroll-fx .hero-stk {
+    html.scroll-fx .hero-ball {
       animation-name: hero-stick, hero-drift;
       animation-duration: .18s, auto;
       animation-timing-function: ease-out, linear;
-      animation-delay: calc(.45s + var(--k, 0) * .09s), 0s;
+      animation-delay: .75s, 0s;
       animation-fill-mode: both, both;
       animation-timeline: auto, scroll(root block);
       animation-range: normal, 0px 100svh;
@@ -193,63 +159,43 @@ html.motion .hero-stk .stk { animation-delay: calc(.45s + var(--k, 0) * .09s); }
   }
 }
 
-/* ---------- Phones: four smaller stickers in a band of their own above the badge ---------- */
+/* ---------- Up to 760 px: the base line alone, the ball on it ---------- */
 
 @media (max-width: 760px) {
   .hero {
     --hero-base: 3.25rem;
+    --hero-next: 2.75rem;
+    /* at least 54 px of free floor: the ball (28 px above the base line, 48 px at the end of its drift) stays below
+       the buttons at every height */
+    --hero-gap: 3.375rem;
+    --hero-top: .5rem;
     min-height: min(100svh, 60rem);
-    padding-block:
-      calc(var(--header-h) + env(safe-area-inset-top, 0px) + .5rem)
-      calc(var(--hero-base) + 1.375rem + 2rem);
   }
-  /* Lines: only the base line and the corner arc stay below the buttons; the circle moves up behind the stickers */
-  .hero-lines {
-    aspect-ratio: 390 / 844;
-    inset-block-end: calc(var(--hero-base) - 100vw * 144 / 390);
-    clip-path: inset(0 0 calc(100% * 144 / 844 - var(--cl-w) / 2) 0);
+  /* No room for an arc beside the text: the text column fills the width */
+  .hero-arc { display: none; }
+  /* The ball's centre lies on the base line, at the line's right end: clearly apart from the round arrow in the
+     middle (two discs side by side would read as a pair of controls) */
+  .hero-ball {
+    --s: 3.5rem;
+    inset-inline-end: var(--gutter);
+    inset-block-end: calc(var(--hero-base) - var(--s) / 2);
   }
-  .hero-lines .cl-path:nth-child(1), .hero-lines .cl-path:nth-child(3), .hero-ring .cl-path:nth-child(n+2) { display: none; }
-  /* The band: as high as the screen leaves room for; the stickers and the circle are sized from its height */
-  .hero-stickers {
-    position: relative; inset: auto; order: -1;
-    inline-size: 100%; block-size: clamp(6.5rem, 30svh - 4.5rem, 14rem);
-    container-type: size;
-    font-size: 1rem;
-  }
-  .hero-ring {
-    display: block;
-    /* The box ends at the right edge of the window. The circle's radius is 180 / 844 of the box height (half the
-       band), its centre 300 / 844 from the top (the middle of the band) and just outside the window. */
-    inset: -32% calc(-1 * var(--gutter)) auto auto;
-    inline-size: auto; block-size: 230%;
-    aspect-ratio: 390 / 844;
-  }
-  /* In the band: --x from its centre line, --y from its lower edge (in % of its height) */
-  .hero-stk-ball { --s: 5rem; --x: -6rem; --y: 42%; }
-  .hero-stk-note { --s: 3.5rem; --x: .25rem; --y: 68%; }
-  /* Half off the right edge, in the circle */
-  .hero-stk-brezel { --s: 4.5rem; --x: calc(50vw - 1.25rem); --y: 50%; }
-  @supports (width: 1cqh) {
-    .hero-stk-ball { --s: clamp(4.25rem, 54cqh, 6.25rem); }
-    .hero-stk-note { --s: clamp(3rem, 38cqh, 4.5rem); }
-    .hero-stk-brezel { --s: clamp(3.75rem, 48cqh, 5.75rem); }
-  }
-  .hero-stk-startnummer, .hero-stk-pfeife { display: none; }
   .hero-lead { max-width: 36rem; }
-  .hero-stk-wimpel { --s: 3.5rem; inset-inline-start: calc(78vw - .215 * var(--s)); }
-  .hero-next { inline-size: 2.75rem; block-size: 2.75rem; margin-inline-start: -1.375rem; inset-block-end: calc(var(--hero-base) - 1.375rem); }
+}
+/* Large phones and small tablets, upright: a full first screen would leave the short two-line headline alone in a
+   960 px block. Phones (up to 480 px, four-line headline) keep the full first screen. */
+@media (min-width: 481px) and (max-width: 760px) {
+  .hero { min-height: min(100svh, 44rem); }
 }
 
 @media (max-width: 480px) {
   .hero-actions { flex-direction: column; align-self: stretch; width: 100%; max-width: 22rem; justify-self: center; }
   /* Phones: the headline as a stack of four short lines ("Sponsoring," / "das" / "zusammen-" / "passt."), so it is
      the biggest type of the first screen. The accent word breaks at its soft hyphen (content.ts); the longest line,
-     "Sponsoring," (7.06 em of ink), fits between the gutters at 12.4vw from 320 px up. The svh term keeps badge,
-     headline, lead and both buttons on the first screen of low phones; the sticker band gives up the height. */
-  .hero { --hero-fs: clamp(1.75rem, min(12.4vw, 5.6svh), 3.75rem); }
+     "Sponsoring," (7.06 em of ink), fits between the gutters at 12.4vw from 320 px up. The svh term keeps tag,
+     headline, lead and both buttons on the first screen of low phones. */
+  .hero { --hero-fs: clamp(1.75rem, min(12.4vw, 6.2svh), 3.75rem); }
   .hero-title { line-height: .96; }
-  .hero-stickers { block-size: clamp(5.5rem, 30svh - 8.5rem, 14rem); }
 }
 
 /* Short screens (landscape phones): the hero simply grows with its content */

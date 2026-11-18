@@ -46,7 +46,8 @@ html:not(.js) .site-header {
 .main-nav a:hover,
 .main-nav a[aria-current] { color: var(--heading); background: color-mix(in srgb, var(--heading) 8%, transparent); }
 
-.header-actions { display: flex; align-items: center; gap: .5rem; }
+/* position: the album's counter badge (eggs.css, .album-chip) hangs on the waitlist button's corner */
+.header-actions { position: relative; display: flex; align-items: center; gap: .5rem; }
 /* No margin of its own: nav and button then sit exactly where they do on the static pages (legal.css, .lg-actions) */
 .header-cta { background: var(--btn-bg); color: var(--btn-fg); }
 @media (hover: hover) { .header-cta:hover { background: var(--btn-bg-hover); } }
@@ -57,6 +58,8 @@ html:not(.js) .site-header {
   width: 44px; height: 44px; padding: 0;
   border: 0; border-radius: var(--radius-pill); background: transparent; color: inherit; cursor: pointer;
 }
+/* Without JavaScript the button could not open anything (the four links are in the footer): it is not shown */
+html:not(.js) .menu-toggle { display: none; }
 .menu-toggle-bars,
 .menu-toggle-bars::before,
 .menu-toggle-bars::after {
@@ -113,72 +116,13 @@ html:not(.js) .site-header {
   pointer-events: none; visibility: hidden;
 }
 
-/* ---------- Page tape line (App.tsx: div.page-line > div.page-line-fit > CourtLines variant="page") ----------
+/* ---------- Landing page frame ----------
    Lives here because this stylesheet belongs to the landing page's frame (App.tsx has none of its own).
-   One yellow line of tape on the hall floor, drawn with the scroll: it comes out from under the hero in the page
-   margin, crosses the page right below the hero, runs down the other margin beside the statement and goes on under
-   the ink band.
-   - Under everything: <main> is its own stacking context and the line sits at z-index -1, so every block with a
-     ground of its own covers it (the hero down to its red base line, which has its own hall lines; the ink band,
-     parkett-2, the colour tiles, the yellow band) and it never crosses in front of text. The line so starts on the
-     hero's base line, like tape that begins at a court marking (hero.css: the hero's ground ends on that line). The statement gives up its own ground, which is the same
-     parquet <main> now paints, so the line shows there. Everything after the first crossing is covered on purpose.
-   - Where the crossing lies: the kit's drawing is stretched to its box and turns at --pl-turn of its height (15 %; the
-     svg carries the number, CourtLines.tsx). The helper box .page-line-fit reaches from the top of
-     <main> to the hero's lower edge (CSS anchor positioning), and the drawing is made 1/--pl-turn as tall as that plus a
-     little, so the turn always lands --pl-drop below the hero, whatever the hero's height. Browsers without anchor
-     positioning get no tape line (decoration only).
-   - Sideways the box is widened so the long vertical runs (at 6 % and 94 % of the drawing) lie in the page margin,
-     halfway between the screen edge and the text column. <main> clips what sticks out.
-   - Below 1240 px: no tape line. The line runs halfway between the screen edge and the text column; it needs a
-     margin of at least 60 px to read as tape on the floor. In a narrower margin (40 px on tablets, 16 px on phones)
-     it would hug the text like a quote bar.
-   - Drawing: the kit's data-scroll="draw" on .page-line, but measured against <main> (the named timeline below). */
-main { position: relative; isolation: isolate; overflow: clip; background: var(--parkett); view-timeline: --page-line block; }
+   <main> is its own stacking context on the parquet ground and clips what a block lets stick out sideways. (The page
+   tape line that used to lie under the blocks went with the clean-up pass: every hall line belongs to a block.) */
+main { position: relative; isolation: isolate; overflow: clip; background: var(--parkett); }
 /* The blocks are full-bleed bands: a link to one lands with its upper edge flush under the header, so no strip of
    the band before stays visible (and the bar never keeps the colour of a band that has passed). scrollToHash() in
    lib/motion.ts does this for clicks on the page; this takes back the 16 px of scroll-padding-top (site.css) for
    links the browser follows itself. */
 main > section { scroll-margin-top: -16px; }
-main > .surface-parkett { background: transparent; }
-main > #top { anchor-name: --pl-hero; }
-.page-line { display: none; }
-@supports (anchor-name: --a) {
-  @media (min-width: 1240px) { .page-line { display: block; } }
-  .page-line {
-    block-size: 0;
-    /* the free margin beside the text column, the width of the drawing's box, and how far under the hero it turns */
-    --pl-m: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
-    --pl-w: calc((100vw - var(--pl-m)) / .88);
-    --pl-drop: clamp(1.75rem, 1rem + 2.4vw, 3.25rem);
-    /* how many px of line one px of scroll draws */
-    --pl-speed: 2.8;
-  }
-  .page-line-fit {
-    position: absolute; z-index: -1;
-    top: 0; bottom: anchor(--pl-hero bottom);
-    left: calc(var(--pl-m) / 2 - var(--pl-w) * .06);
-    inline-size: var(--pl-w);
-    pointer-events: none;
-  }
-  .page-line .cl-page {
-    inset: 0 auto auto 0;
-    block-size: calc((100% + var(--pl-drop)) / var(--pl-turn));
-    overflow: visible;
-  }
-  /* The path is far longer than the page (most of it lies under the bands) and its first stretch lies under the
-     hero, so the range is given in px of scroll instead of the kit's "tip at 60 % of the viewport": at scroll 0 the
-     tip is where the hero ends (--pl-hero, the hero's usual height), and from there it runs --pl-speed times as
-     fast as the page, so the crossing is drawn while it is on screen. --pl-len: the path's length in the drawing's
-     own units (set on the svg by CourtLines.tsx, next to the path). With a stroke that does not scale, Chromium lays the dash out in
-     screen px but sizes it by that length, so a share p of the animation draws p x 6530 px of line, whatever the
-     size of the box. (An engine that sizes it by the length on screen draws the line sooner; nothing breaks.) */
-  .scroll-fx main .page-line .cl-path { animation-timeline: --page-line; }
-  .scroll-fx main .page-line .cl-page {
-    /* the hero's usual height and a little more: at scroll 0 the line already runs from the base line out of the
-       window's lower edge, so its tip is never seen standing still */
-    --pl-hero: calc(min(100svh, 60rem) + 2.5rem);
-    --draw-start: cover calc(100vh - var(--pl-hero) / var(--pl-speed));
-    --draw-end: cover calc(100vh + (var(--pl-len) - var(--pl-hero)) / var(--pl-speed));
-  }
-}

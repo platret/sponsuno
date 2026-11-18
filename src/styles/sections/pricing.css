@@ -1,6 +1,6 @@
 /* Pricing (Kosten): parkett-2 (--bg-alt), under the page head band (title and intro). Four cards, two by two (one
-   column below 700 px): radius 20, 1 px border, no shadow. In each: a round badge (.lg-badge, legal.css: green with a
-   check = decided, empty dashed slot = open), the item as an uppercase label, the answer in large type. The first card
+   column below 700 px): radius 20, 1 px border, no shadow. In each: a flat round badge (.lg-badge, legal.css: green with a
+   check = decided, empty dashed ring = open), the item as an uppercase label, the answer in large type. The first card
    is ink (.surface-tinte in Pricing.tsx) and sets its one-word answer in the display face. No motion. */
 
 .price-grid {

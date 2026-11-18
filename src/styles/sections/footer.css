@@ -1,5 +1,5 @@
 /* Footer (Footer.tsx): the ink closing block of every page (.surface-tinte sets ground and roles). The claim in
-   column 1 and the link columns under uppercase yellow labels, the sticker album (landing page only), the parquet
+   column 1 and the link columns under uppercase yellow labels, the sticker album row (landing page only), the parquet
    loop wordmark at full container width (always the SVG, never set as text), then the bottom row.
    On the landing page it follows the yellow waitlist band; on sub-pages (legal pages, topic pages) it stands alone
    (.ft-standalone); those pages never get .motion, so the footer is static there.
@@ -44,28 +44,53 @@
 .ft-mail { overflow-wrap: anywhere; }
 .ft-text { display: flex; align-items: center; min-height: 44px; font-size: var(--fs-small); color: var(--grau-hell); }
 
-/* Sticker album (Album.tsx, landing page only; Easter egg, aria-hidden): one card on the lighter ink. Left the
-   label, the count in the display face and one line; right the six slots. An empty slot is the sticker's own dashed
-   outline (kit: data-collected) in parquet; lib/eggs.ts puts the found stickers in. */
-.alb {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
-  gap: 1.75rem clamp(2rem, 1rem + 4vw, 5rem);
+/* Sticker album row (landing page only; Easter egg, aria-hidden): one quiet row under a hairline, no card. Left the
+   album (Album.tsx): label and count on one line, one line of text under them, then six small upright slots. An
+   empty slot is one neutral dashed ring, the same for all six (the stickers' own outlines are unreadable at 48 px);
+   lib/eggs.ts puts the found stickers in. Right of the album the footer's one sticker, the whistle (72 px, phones
+   64 px). Collected, it is simply gone: it now sits in its slot right beside, and a large dashed outline next to a
+   full album would read as a seventh, missing sticker. */
+.ft-album {
+  display: flex; align-items: center; gap: clamp(1rem, .5rem + 2vw, 2.5rem);
   margin-top: clamp(2.5rem, 2rem + 2.5vw, 4.5rem);
-  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem) clamp(1.5rem, 1rem + 2.5vw, 3rem);
-  border-radius: var(--radius);
-  background: var(--tinte-2);
+  padding-top: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  border-top: 1px solid var(--linie-dunkel);
   color: var(--parkett);
 }
-.alb-count { margin-top: .6rem; font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.stk.ft-stk { inline-size: 72px; }
+.stk.ft-stk[data-collected] .stk-slot { opacity: 0; }
+.alb {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem clamp(1.5rem, 1rem + 3vw, 4rem);
+}
+.alb-text { min-width: 0; }
+.alb-head { display: flex; align-items: baseline; gap: .75rem; }
+.alb-count { font-size: 1.125rem; line-height: 1; font-variant-numeric: tabular-nums; color: var(--parkett); }
 .alb-num { display: inline-block; }
 .alb-of { color: var(--grau-hell); }
 .is-full .alb-num, .is-full .alb-of { color: var(--gelb); }
-.alb-line { margin-top: .75rem; max-width: 24ch; font-size: var(--fs-small); line-height: 1.5; color: var(--grau-hell); }
+.alb-line { margin-top: .4rem; font-size: var(--fs-small); line-height: 1.5; color: var(--grau-hell); text-wrap: balance; }
 .is-full .alb-line { color: var(--parkett); }
-.alb-slots { position: relative; display: grid; grid-template-columns: repeat(6, auto); gap: clamp(.75rem, .25rem + 1.2vw, 1.5rem); }
-.alb-slot { display: grid; place-items: center; }
-/* The sticker's size is set inline (kit); the album scales it with the page */
-.alb-slot .stk { inline-size: clamp(4rem, 2.6rem + 3.4vw, 5.5rem); cursor: default; }
+/* Six slots of 48 px in one row at every width; they shrink with the row on narrow phones (about 40 px at 390 px) */
+.alb-slots {
+  flex: none; min-width: 0;
+  display: grid; grid-template-columns: repeat(6, minmax(0, 3rem));
+  gap: clamp(.5rem, .25rem + .8vw, 1rem);
+}
+.alb-slot { position: relative; display: grid; place-items: center; }
+/* The sticker's size is set inline (kit); here it fills its slot. The album is only shown, never clicked. */
+.alb-slot .stk { inline-size: 100%; pointer-events: none; }
+/* Empty slot: a dashed ring a little inside the slot, in place of the sticker's own outline */
+.alb-slot .stk[data-collected] .stk-slot { opacity: 0; }
+.alb-slot::before {
+  content: ""; position: absolute; inset: 6%;
+  border: 2px dashed currentColor; border-radius: 50%;
+  opacity: .45;
+  transition: opacity .25s ease;
+}
+.alb-slot.is-found::before { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .alb-slot::before { transition: none; } }
 
 /* The giant wordmark: always the SVG, never set as text. The wrapper carries the scroll motion (and is where the
    Easter-egg chunk hangs its click area); the image keeps the SVG's own proportions. */
@@ -91,19 +116,23 @@
 }
 .ft-bottom a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--gelb); transition: color .2s ease; }
 .ft-bottom a:hover { color: var(--parkett); }
-/* Below 1200 px the five columns leave the claim too narrow (under 150 px at 1024 px): stack them */
+/* Below 1200 px the link columns leave the claim too narrow (under 150 px at 1024 px): stack them */
 @media (max-width: 1199px) {
   .ft-top { grid-template-columns: minmax(0, 1fr); }
 }
-/* Album: the slots move under the text and, on phones, into two rows of three */
-@media (max-width: 960px) {
-  .alb { grid-template-columns: minmax(0, 1fr); }
-  .alb-line { max-width: none; }
-  .alb-slots { justify-content: space-between; }
+/* Stacked and wide: the four columns lie on the container, from its left edge to its right one (as a left-aligned
+   cluster they left the right 40 % of the footer head empty) */
+@media (min-width: 700px) and (max-width: 1199px) {
+  .ft-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-@media (max-width: 640px) {
-  .alb-slots { grid-template-columns: repeat(3, auto); row-gap: 1.25rem; }
-  .alb-slot .stk { inline-size: clamp(4.25rem, 22vw, 5.5rem); }
+/* Album: below 861 px the slots move under the text; the whistle follows right after the slots, on their row */
+@media (max-width: 860px) {
+  .ft-album { align-items: flex-end; }
+  .alb { flex: 0 1 auto; flex-direction: column; align-items: stretch; }
+  .alb-slots { flex: 0 1 auto; }
+}
+@media (max-width: 760px) {
+  .stk.ft-stk { inline-size: 64px; }
 }
 @media (max-width: 520px) {
   /* The five columns as a two-column grid, so the rows line up (Kontakt alone in the last row) */

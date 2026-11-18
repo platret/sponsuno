@@ -5,9 +5,10 @@ import { cta, menu, nav } from '../content';
 import { siteHref } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import { MobileMenu } from './MobileMenu';
-import { AlbumBurst, useAlbum } from './Album';
+import { useAlbum } from './Album';
 import { Icon } from './kit/Icon';
 import { STICKER_IDS } from './kit/Sticker';
+import { Tag } from './kit/Tag';
 import '../styles/sections/header.css';
 
 /** Landing page header. Plain full-width bar: transparent on the parquet hero with the ink wordmark, solid parquet
@@ -75,10 +76,12 @@ export function Header() {
     };
   }, [menuOpen]);
 
-  // Sticker album (Easter egg): the chip shows how many of the six stickers have been found. A pointer extra: a plain
-  // span (no link, no button, nothing focusable) hidden from assistive technology; a click scrolls to the album
-  // without moving focus. With the sixth sticker it bursts once, at the place the visitor is looking at (the album
-  // itself is at the end of the page and celebrates when it comes into view, Album.tsx).
+  // Sticker album (Easter egg): the chip, a small flat tag, shows how many of the six stickers have been found. It
+  // is worn as a badge on the waitlist button's upper right corner, inside the bar (eggs.css). A pointer extra: a
+  // plain span (no link, no button, nothing focusable) hidden from assistive technology; a click scrolls to the
+  // album without moving focus. With the sixth sticker it swells once (eggs.css), at the place the
+  // visitor is looking at (the album itself is at the end of the page and has its moment when it comes into view,
+  // Album.tsx).
   const found = useAlbum().length;
   const full = found === STICKER_IDS.length;
   const toAlbum = () => {
@@ -107,11 +110,10 @@ export function Header() {
           </nav>
           <div className="header-actions">
             {found > 0 && (
-              <span className={`tstk album-chip${full ? ' is-full' : ''}`} data-tone="gelb" aria-hidden="true" onClick={toAlbum}>
-                <Icon name="stern" size={14} />
+              <Tag tone="gelb" className={`album-chip${full ? ' is-full' : ''}`} aria-hidden="true" onClick={toAlbum}>
+                <Icon name="stern" size={12} />
                 <span className="album-chip-n" key={found}>{found}/{STICKER_IDS.length}</span>
-                {full && <AlbumBurst />}
-              </span>
+              </Tag>
             )}
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>

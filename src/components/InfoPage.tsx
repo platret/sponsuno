@@ -6,7 +6,6 @@ import { AiManager } from './AiManager';
 import { Faq, FaqIntro } from './Faq';
 import { Footer } from './Footer';
 import { LinkArrowLabel } from './LinkArrowLabel';
-import { Sticker, type StickerId } from './kit/Sticker';
 import { PageBand, PageHeader } from './PageHeader';
 import { Pricing } from './Pricing';
 import { Support } from './Support';
@@ -74,18 +73,13 @@ function TopicBand({ id }: { id: InfoPageId }) {
   }
 }
 
-/** Sticker on the upper edge of the closing band, per page: never the one already in the page head band, and none of
-    the yellow ones (ball, brezel), which would sink into the yellow band */
-const END_STICKER: Partial<Record<InfoPageId, StickerId>> = { kosten: 'startnummer', fragen: 'note', 'ueber-uns': 'pfeife' };
-
 /** Closing block, the same yellow band as the landing page's waitlist: the giant title, the launch line and one button
-    to the waitlist on the landing page. One sticker sits on the band's upper edge (decorative). */
+    to the waitlist on the landing page. No sticker: the page head band holds the page's only one. */
 function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
   const text = closingLine(infoPage.endText, infoPage.previewEndText);
   return (
     <section className="section surface-gelb pg-end" aria-labelledby="pg-end-title">
-      <Sticker id={END_STICKER[id] ?? 'startnummer'} size={168} rotate={9} collectable={false} className="pg-end-stk" />
       <div className="container">
         <h2 id="pg-end-title">{infoPage.endTitle}</h2>
         {text && <p className="pg-end-text">{text}</p>}

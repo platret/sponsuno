@@ -11,14 +11,13 @@ import { Doors } from './components/Doors';
 import { Waitlist } from './components/Waitlist';
 import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
-import { CourtLines } from './components/kit/CourtLines';
 
 /**
  * The landing page («Turnhalle», November 2026), seven short blocks: header, hero, statement, word band, how it works
  * (three steps), the two doors, waitlist + footer. Kosten, Fragen and Team are static pages of their own
  * (InfoPage.tsx), reached from the header. Parked and not imported: Story, StoryArt, ProofLine, Audience, HowItWorks.
- * Two layers lie over and under the blocks: the page tape line (one court line behind the content from the hero down,
- * drawn with the scroll; styles at the end of header.css) and the Easter eggs (lib/eggs.ts, loaded when idle).
+ * One optional layer lies over the blocks: the Easter eggs (lib/eggs.ts, loaded when idle). The page tape line (a
+ * court line behind the content from the hero down) went with the clean-up pass: every hall line now belongs to a block.
  */
 export default function App() {
   const [role, setRole] = useState<Role>('athlete');
@@ -95,11 +94,6 @@ export default function App() {
       <a className="skip-link" href="#inhalt">Zum Inhalt springen</a>
       <Header />
       <main id="inhalt">
-        {/* One line of tape down the hall floor, behind everything: it shows on the parquet blocks and runs under
-            the ink band and the colour tiles. Placement and drawing: end of header.css. */}
-        <div className="page-line" data-scroll="draw" aria-hidden="true">
-          <div className="page-line-fit"><CourtLines variant="page" /></div>
-        </div>
         <Hero onChooseRole={setRole} />
         <Statement />
         <WordBand />
