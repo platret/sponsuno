@@ -23,6 +23,9 @@
 /* The closing statement of the page: one line, as wide as the text column allows (the three words measure about
    9.4 em in Archivo Wide) */
 .wl-title { position: relative; font-size: clamp(1.75rem, 9.3vw, 7.375rem); line-height: .98; }
+/* Always the one line it is sized for: the fallback face is a little wider for these words and would wrap them until
+   the web font arrives, then the form would jump up a line (a visible shift on a direct link to the form). */
+@media (min-width: 961px) { .wl-title { white-space: nowrap; } }
 
 /* ---------- Decoration: court line and stickers (aria-hidden) ---------- */
 
@@ -57,7 +60,6 @@
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(1.5rem, 1.25rem + 1.5vw, 2.5rem);
   margin-top: clamp(2rem, 1.5rem + 2.5vw, 4rem);
-  max-width: 40rem;
   position: relative;
 }
 
@@ -72,6 +74,9 @@
   padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
   border-radius: var(--radius);
 }
+/* After sending: the card keeps the height the form had (--wl-keep, set by Waitlist.tsx), the confirmation stands
+   in its middle. The band below does not move. */
+.wl-card.is-done { display: grid; align-content: center; min-block-size: var(--wl-keep, 0px); }
 
 /* ---------- Role pills ---------- */
 
@@ -183,7 +188,6 @@
   .wl-inner {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: 24px;
-    max-width: none;
     align-items: start;
   }
   .wl-head { grid-column: 1 / span 5; padding-top: .5rem; }

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { contact, waitlist, type Role } from '../content';
 import { WAITLIST_ENDPOINT as ENDPOINT } from '../lib/links';
-import { motionEnabled } from '../lib/motion';
-import { Sticker } from './kit/Sticker';
+import { headerOffset, motionEnabled } from '../lib/motion';
+import { Sticker, type Vars } from './kit/Sticker';
 import '../styles/sections/waitlist.css';
 
 // Set VITE_WAITLIST_ENDPOINT=/api/warteliste (the Worker route, worker/waitlist.ts: Brevo double opt-in) to store
@@ -63,10 +63,27 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
     }
   };
 
+  // The card keeps the height the form had (--wl-keep), so the band does not shrink under the visitor when the short
+  // confirmation takes the form's place (on phones the footer would slide up into view, on wide screens the whistle
+  // and its court line, hung from the band's lower edge, would slide onto the intro).
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [keep, setKeep] = useState<number | null>(null);
   const succeed = () => {
+    setKeep(cardRef.current?.getBoundingClientRect().height ?? null);
     setStatus('done');
-    requestAnimationFrame(() => successRef.current?.focus({ preventScroll: true }));
   };
+  // The confirmation takes focus (announced as a status) and is brought into view if any of it is outside the window
+  // or under the header: after an on-screen keyboard the e-mail field, and with it the card, sits high in the window.
+  useLayoutEffect(() => {
+    const box = successRef.current;
+    if (status !== 'done' || !box) return;
+    box.focus({ preventScroll: true });
+    const rect = box.getBoundingClientRect();
+    const view = window.visualViewport?.height ?? window.innerHeight;
+    if (rect.top < headerOffset() + 8 || rect.bottom > view - 8) {
+      box.scrollIntoView({ block: 'center', behavior: motionEnabled() ? 'smooth' : 'auto' });
+    }
+  }, [status]);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -130,7 +147,11 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
             {intro && <p className="wl-intro">{intro}</p>}
           </div>
 
-          <div className="wl-card surface-tinte">
+          <div
+            className={`wl-card surface-tinte${status === 'done' ? ' is-done' : ''}`}
+            ref={cardRef}
+            style={status === 'done' && keep ? ({ '--wl-keep': `${Math.round(keep)}px` } as Vars) : undefined}
+          >
           {status !== 'done' ? (
             <form
               className="wl-form"

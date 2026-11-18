@@ -4,7 +4,9 @@
 // State lives in memory only (the album store in components/Album.tsx and a few variables below): no cookie, no
 // localStorage, no sessionStorage, no IndexedDB. A reload starts again at 0/6.
 //   1. Stickeralbum: a click or tap on any [data-sticker][data-collectable] collects it (each id once).
-//   2. Drag: [data-draggable] stickers follow the pointer, stay inside the hero and stay where they are dropped.
+//   2. Drag: [data-draggable] stickers follow the mouse, stay inside the hero (below the header) and stay where they
+//      are dropped. Mouse only: a finger that starts on a sticker scrolls and zooms the page as anywhere else (no
+//      touch-action override), and a tap collects.
 //   3. «tor»: typing t, o, r outside a form field shows a small scoreboard for two seconds.
 //   4. Loop: a click on the loop of the giant footer wordmark makes its last «o» bounce twice.
 // No listener runs per scroll frame.
@@ -16,9 +18,12 @@ import { STICKER_IDS, type StickerId } from '../components/kit/Sticker';
 const DRAG_START = 6;
 /** How long the scoreboard stays (ms) */
 const TOAST_TIME = 2000;
-/** The wordmark's viewBox is 611.932 wide from x 4.028: the loop («un») and the last «o» as fractions of its width */
+/** The wordmark's viewBox is 611.932 wide from x 4.028. As fractions of its width: where the loop («un») starts and
+    how wide it is (the click area), and where the cut between the «n» (ends at 85.8 %) and the last «o» (starts at
+    87.5 %) lies. eggs.css clips the two copies of the image at that cut (--egg-o), so all three live here. */
 const LOOP_FROM = 0.665;
 const LOOP_WIDTH = 0.193;
+const O_FROM = 0.867;
 
 const isStickerId = (value: string | undefined): value is StickerId =>
   (STICKER_IDS as readonly string[]).includes(value ?? '');
@@ -47,19 +52,22 @@ export function initEggs(goalWord: string): () => void {
 
   on('pointerdown', (event) => {
     dropped = null;
-    if (!event.isPrimary || event.button !== 0) return;
+    // Mouse only. Touch (and pen) keep the page's own gestures: a swipe that starts on a sticker scrolls.
+    if (event.pointerType !== 'mouse' || !event.isPrimary || event.button !== 0) return;
     const el = (event.target as Element | null)?.closest?.<HTMLElement>('[data-draggable]');
     if (!el) return;
-    // A mouse drag that starts on a sticker must not select the text it passes over
-    if (event.pointerType === 'mouse') event.preventDefault();
+    // A drag that starts on a sticker must not select the text it passes over
+    event.preventDefault();
     const bounds = (el.closest('[data-drag-bounds], .hero, section') ?? document.body).getBoundingClientRect();
+    // Never under the fixed header: a sticker dropped there could not be reached again
+    const ceiling = Math.max(bounds.top, document.querySelector('.site-header')?.getBoundingClientRect().bottom ?? 0);
     const box = el.getBoundingClientRect();
     const base = offsets.get(el) ?? { x: 0, y: 0 };
     drag = {
       el, id: event.pointerId, startX: event.clientX, startY: event.clientY, base, moved: false,
       // How far the sticker may still travel in each direction before it would leave its bounds
       minX: base.x + Math.min(0, bounds.left - box.left), maxX: base.x + Math.max(0, bounds.right - box.right),
-      minY: base.y + Math.min(0, bounds.top - box.top), maxY: base.y + Math.max(0, bounds.bottom - box.bottom),
+      minY: base.y + Math.min(0, ceiling - box.top), maxY: base.y + Math.max(0, bounds.bottom - box.bottom),
     };
   });
 
@@ -137,7 +145,8 @@ export function initEggs(goalWord: string): () => void {
   undo.push(hideToast);
 
   on('keydown', (event) => {
-    if (event.ctrlKey || event.metaKey || event.altKey || event.key.length !== 1) return;
+    // Autofill and password managers dispatch keydown events without a `key` on form fields
+    if (typeof event.key !== 'string' || event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey) return;
     const target = event.target as Element | null;
     if (target?.closest?.('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) {
       typed = '';
@@ -180,12 +189,14 @@ export function initEggs(goalWord: string): () => void {
       bounceTimer = window.setTimeout(settle, 1000);
     };
     hit.addEventListener('click', bounce);
+    wordmark.style.setProperty('--egg-o', `${O_FROM * 100}%`);
     wordmark.append(last, hit);
     wordmark.classList.add('has-egg');
     undo.push(() => {
       settle();
       last.remove();
       hit.remove();
+      wordmark.style.removeProperty('--egg-o');
       wordmark.classList.remove('has-egg');
     });
   }

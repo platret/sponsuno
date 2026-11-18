@@ -70,7 +70,7 @@
   --text: var(--grau);                 /* body and secondary text */
   --line: var(--linie);                /* hairlines, card borders */
   --accent-text: var(--blau);          /* accent text, labels and icons: blue on parquet, yellow on ink */
-  --btn-bg: var(--tinte);              /* primary button on the surface (.btn-primary): ink on parquet, yellow on ink */
+  --btn-bg: var(--tinte);              /* primary button on the surface (.btn-tinte, the header button): ink on parquet, yellow on ink */
   --btn-fg: var(--parkett);
   --btn-bg-hover: var(--tinte-2);
   --focus: var(--blau);                /* focus ring: blue on light, yellow on ink */

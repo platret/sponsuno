@@ -1,12 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { BLOCKS, eggsReady } from './helpers.ts';
 
 // Accessibility checks with axe-core (WCAG 2.x A/AA plus axe's best practices) on the landing page, the topic pages
 // /kosten/ and /fragen/, and a legal page (one light theme, DESIGN.md -> Colour). Fails on serious and critical
 // violations only (moderate ones are axe best practices, not WCAG failures).
 //
 // There is NO exception for any page or element. In particular the landing page's scroll effects must pass in every
-// state axe can meet them in: the statement's words before they fill (their grey is 3.4:1 on parquet at 26 px and
+// state axe can meet them in: the statement's words before they fill (their grey is 3.4:1 on parquet, 3.36 exactly, at 26 px and
 // more, i.e. large text), the steps and doors while they draw, the word band while it slides. If an effect fails,
 // fix the effect, not this file.
 //
@@ -16,8 +17,6 @@ import { expect, test, type Page } from '@playwright/test';
 // scrolling through every block, so the reveals are in and the scroll effects are in the state a reader stops at.
 
 const PAGES = ['/', '/kosten/', '/fragen/', '/impressum/'];
-/** The blocks of the landing page that are scanned one by one with motion */
-const BLOCKS = ['#top', '#idee', '.wb', '#ablauf', '#fuer-wen', '#warteliste', 'footer.ft'];
 type Violation = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'][number];
 
 /** Waits for the time-based animations and transitions to end (the hero load, a reveal in view). Scroll-driven
@@ -80,10 +79,22 @@ test.describe('axe, with motion', () => {
     await open(page, '/');
     await expect(page.locator('html')).toHaveClass(/(^|\s)motion(\s|$)/);
     expect(await scan(page)).toEqual([]);
-    // The unfilled words are really part of that scan: the statement is rendered and its text is checked for contrast
-    const { passes, incomplete, violations } = await new AxeBuilder({ page }).include('#idee').withRules(['color-contrast']).analyze();
+  });
+
+  test('the unfilled statement is measured by axe and passes (1200 px wide: no page tape line)', async ({ page }) => {
+    // From 1240 px wide the page tape line lies under the statement block (z-index -1, a box as wide as the page).
+    // axe then cannot tell the text's background ("overlapped by another element") and lists every word under
+    // `incomplete`, which fails nothing and proves nothing. Just below that width the line is not shown and the same
+    // words stand on the same parquet in the same start grey: here axe measures them, and they must pass.
+    await page.setViewportSize({ width: 1200, height: 800 });
+    await open(page, '/');
+    const words = page.locator('#idee .st-text .w:not(.st-sign)');
+    const ink = await page.locator('#idee .st-text').evaluate((el) => getComputedStyle(el).color);
+    await expect(words.first()).not.toHaveCSS('color', ink); // still in the start grey
+    const { passes, incomplete, violations } = await new AxeBuilder({ page }).include('#idee .st-text').withRules(['color-contrast']).analyze();
     expect(failures(violations)).toEqual([]);
-    expect(passes.length + incomplete.length).toBeGreaterThan(0);
+    expect(incomplete.flatMap((rule) => rule.nodes).map((node) => node.html)).toEqual([]);
+    expect(passes.flatMap((rule) => rule.nodes).length).toBe(await words.count());
   });
 
   test('/ block by block while scrolling, then the whole page', async ({ page }) => {
@@ -105,7 +116,7 @@ test.describe('axe, with motion', () => {
 
   test('/ with a collected sticker and the counter in the header', async ({ page }) => {
     await open(page, '/');
-    await expect(page.locator('[data-wordmark].has-egg')).toHaveCount(1, { timeout: 15_000 });
+    await eggsReady(page);
     await page.locator('#top .stk[data-sticker="ball"][data-collectable]').click();
     await expect(page.locator('.site-header .album-chip')).toBeVisible();
     await settled(page);

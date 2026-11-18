@@ -5,8 +5,9 @@
    html.motion (reduced motion, no JS) nothing moves. Prefix hero-. */
 
 .hero {
-  /* The headline size drives everything: 8.6vw keeps "zusammenpasst." (about 10.25 em) inside the gutters from 320 px
-     up; the svh term keeps badge, headline, lead and buttons on one screen on low windows. */
+  /* The headline size drives everything: 8.6vw keeps "zusammenpasst." (about 10.25 em) inside the gutters, so the
+     headline is two lines from 481 px up; the svh term keeps badge, headline, lead and buttons on one screen on low
+     windows. Phones (up to 480 px) set it in four lines at a larger size, see the end of this file. */
   --hero-fs: clamp(1.5rem, min(8.6vw, 14svh), 12.5rem);
   /* Height of the red base line above the lower edge: the hall lines end on it, the round arrow sits on it */
   --hero-base: 3.5rem;
@@ -25,10 +26,16 @@
   background: var(--parkett);
   color: var(--text);
 }
-/* The hero keeps its own ground. header.css makes the parquet blocks transparent so the page tape line (App.tsx)
-   shows through them; in the hero that line would run through the end of the headline and, a few pixels off, along
-   the base line. The hero has its own hall lines, the tape comes out from under its lower edge. */
-#top.hero { background: var(--parkett); }
+/* The hero keeps its own ground down to the red base line. header.css makes the parquet blocks transparent so the
+   page tape line (App.tsx) shows through them; in the hero that line would run through the end of the headline. So
+   the hero's ground is a layer of its own that ends on the base line: the hero has its own hall lines above it, and
+   the tape starts visibly on the base line (it joins the red line) instead of with a cut end on open parquet. */
+#top.hero { background: transparent; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1;
+  inset: 0 0 var(--hero-base) 0;
+  background: var(--parkett);
+}
 
 /* Hall lines: a box of the drawing's own proportions (1440 x 900), as wide as the hero, hung so that its red base
    line (130 units above the drawing's lower edge) runs --hero-base above the lower edge of the hero at every size.
@@ -96,7 +103,7 @@
 }
 /* Opaque, so a hall line never shows through the outline button */
 .hero-actions .btn-outline { background: var(--parkett); }
-.hero-actions .btn-outline:hover { background: var(--parkett-2); }
+@media (hover: hover) { .hero-actions .btn-outline:hover { background: var(--parkett-2); } }
 
 /* ---------- Stickers ---------- */
 
@@ -149,9 +156,11 @@
   background: var(--parkett); color: var(--heading);
   transition: background-color .2s ease, color .2s ease;
 }
-.hero-next:hover { background: var(--tinte); color: var(--parkett); }
 .hero-next .icn { transition: translate .2s var(--ease-out, ease); }
-.hero-next:hover .icn { translate: 0 2px; }
+@media (hover: hover) {
+  .hero-next:hover { background: var(--tinte); color: var(--parkett); }
+  .hero-next:hover .icn { translate: 0 2px; }
+}
 .hero-next:focus-visible { border-radius: 50%; }
 
 /* ---------- Motion (html.motion: not with reduced motion, not without JS) ---------- */
@@ -234,6 +243,13 @@ html.motion .hero-stk .stk { animation-delay: calc(.45s + var(--k, 0) * .09s); }
 
 @media (max-width: 480px) {
   .hero-actions { flex-direction: column; align-self: stretch; width: 100%; max-width: 22rem; justify-self: center; }
+  /* Phones: the headline as a stack of four short lines ("Sponsoring," / "das" / "zusammen-" / "passt."), so it is
+     the biggest type of the first screen. The accent word breaks at its soft hyphen (content.ts); the longest line,
+     "Sponsoring," (7.06 em of ink), fits between the gutters at 12.4vw from 320 px up. The svh term keeps badge,
+     headline, lead and both buttons on the first screen of low phones; the sticker band gives up the height. */
+  .hero { --hero-fs: clamp(1.75rem, min(12.4vw, 5.6svh), 3.75rem); }
+  .hero-title { line-height: .96; }
+  .hero-stickers { block-size: clamp(5.5rem, 30svh - 8.5rem, 14rem); }
 }
 
 /* Short screens (landscape phones): the hero simply grows with its content */

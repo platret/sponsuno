@@ -1,9 +1,9 @@
-import { Fragment, type CSSProperties } from 'react';
+import { Fragment } from 'react';
 import { statement } from '../content';
 import { Icon, ICON_NAMES, type IconName } from './kit/Icon';
+import type { Vars } from './kit/Sticker';
 import '../styles/sections/statement.css';
 
-type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
 /* The round signs in front of the first word of sentence one and two: the two sides of a sponsorship in the colours
    they have on the two doors further down (clubs blue, firms red). Sentence three (what Sponsuno does) has none. */

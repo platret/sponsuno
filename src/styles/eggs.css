@@ -6,10 +6,15 @@
 
 /* ---------- Counter chip in the header (Header.tsx renders it after the first find) ---------- */
 
-/* A small yellow text sticker (kit: .tstk) with the star and the count, tilted against the button beside it */
+/* A small yellow text sticker (kit: .tstk) with the star and the count, tilted against the button above it. It is
+   out of the flow at every width (appearing must never move the nav or the button): it hangs from the bar's lower
+   edge under the waitlist button, like a sticker stuck on the rim. A plain span, a pointer extra. */
 .album-chip {
   --stk-fs: 13px;
   --stk-rot: -5deg;
+  position: absolute; top: calc(100% - .7em);
+  /* the text column's right edge, a little in from the button's corner */
+  right: calc(max(var(--gutter), (100vw - var(--container)) / 2 + var(--gutter)) + .75rem);
   display: inline-flex; align-items: center; gap: .35em;
   padding: .4em .8em .4em .65em;
   white-space: nowrap;
@@ -24,14 +29,22 @@ html.motion .album-chip-n { animation: egg-count .4s var(--ease-out) both; }
   html.motion .album-chip { transition: rotate .2s var(--ease-out), scale .2s var(--ease-out); }
   html.motion .album-chip:hover { rotate: 3deg; scale: 1.05; }
 }
-/* Phones: no room in the bar beside wordmark, button and menu. The chip hangs from the bar's lower edge instead,
-   like a sticker stuck on its rim. */
-@media (max-width: 600px) {
-  .album-chip {
-    position: absolute; top: calc(100% - .7em); right: calc(var(--gutter) + 52px);
-    --stk-rot: -6deg;
-  }
+/* Below 961 px the menu button stands right of the waitlist button: the chip hangs under the waitlist button */
+@media (max-width: 960px) {
+  .album-chip { right: calc(var(--gutter) + 52px); --stk-rot: -6deg; }
 }
+/* Fingers: a target of 44 px */
+@media (pointer: coarse) { .album-chip { min-block-size: 44px; } }
+/* Album full: the chip hops and a few loop signs fly out of it, where the visitor found the sixth sticker */
+html.motion .album-chip.is-full { animation: egg-chip-full .7s var(--ease-out) both; }
+@keyframes egg-chip-full {
+  0% { scale: 1; rotate: var(--stk-rot); }
+  30% { scale: 1.28; rotate: 6deg; }
+  60% { scale: .96; rotate: -9deg; }
+  100% { scale: 1; rotate: var(--stk-rot); }
+}
+/* The chip is at the top of the window: its signs fall instead of rising */
+html.motion .album-chip .alb-burst { font-size: .8rem; --burst-dir: -1; }
 
 /* ---------- Album (footer): a sticker lands in its slot, the count ticks, the full album bursts ---------- */
 
@@ -42,8 +55,16 @@ html.motion .alb-slot.is-found .stk-in { animation: egg-land .5s var(--ease-out)
 }
 html.motion .alb-num { animation: egg-count .4s var(--ease-out) both; }
 
-/* Little loop signs fly out of the full album and fade: once, 1.5 s with the stagger, CSS only. Without motion
-   they are never shown (the line under the count says it instead). */
+/* The finale waits for the full album to be on screen (.is-seen, Album.tsx): the six stickers hop one after another
+   (--k: the slot) and little loop signs fly out and fade. Once, 1.5 s with the stagger, CSS only. Without motion
+   neither happens (the line under the count says it instead). */
+html.motion .alb.is-seen .alb-slot .stk-in { animation: egg-hop .55s var(--ease-out) calc(var(--k, 0) * 70ms) both; }
+@keyframes egg-hop {
+  0% { translate: 0 0; scale: 1; }
+  35% { translate: 0 -22%; scale: 1.12; }
+  70% { translate: 0 3%; scale: .97; }
+  100% { translate: 0 0; scale: 1; }
+}
 .alb-burst { display: none; }
 html.motion .alb-burst {
   display: block; position: absolute; left: 50%; top: 50%;
@@ -58,17 +79,24 @@ html.motion .alb-burst {
 }
 .alb-burst svg:nth-child(3n + 2) { fill: var(--parkett); }
 .alb-burst svg:nth-child(4n + 3) { fill: var(--rot); }
+/* On the chip the signs fly over the parquet page: ink instead of parquet */
+.album-chip .alb-burst svg:nth-child(3n + 2) { fill: var(--blau); }
 @keyframes egg-burst {
   from { opacity: 0; translate: 0 0; rotate: 0deg; scale: .4; }
   15% { opacity: 1; }
   70% { opacity: 1; }
-  to { opacity: 0; translate: var(--x) var(--y); rotate: var(--turn); scale: 1.1; }
+  to { opacity: 0; translate: var(--x) calc(var(--y) * var(--burst-dir, 1)); rotate: var(--turn); scale: 1.1; }
 }
 
-/* ---------- Drag ---------- */
+/* ---------- Collecting and dragging ---------- */
 
-/* Only the sticker itself keeps the browser from scrolling or zooming with the finger on it */
-.stk[data-draggable] { touch-action: none; }
+/* The cursors live here, not in the kit: a sticker looks clickable only once this chunk has made it so. Every hero
+   sticker can be dragged (mouse only, eggs.ts: touch keeps scrolling and zooming, so there is no touch-action here);
+   a sticker that also counts for the album shows the pointer. */
+.stk[data-draggable] { cursor: grab; }
+.stk[data-collectable] { cursor: pointer; }
+.stk[data-collected] { cursor: default; }
+.stk[data-draggable][data-collected] { cursor: grab; }
 .stk.is-dragging { position: relative; z-index: 5; cursor: grabbing; }
 html.motion .stk.is-dragging .stk-in { scale: 1.07; rotate: -4deg; animation: none; }
 
@@ -108,13 +136,15 @@ html.motion .egg-toast-score { animation: egg-score .45s var(--ease-out) .12s bo
 
 /* .ft-wordmark holds the image; eggs.ts adds a second copy of it (.egg-o) and the click area over the loop
    (.egg-loop). At rest only the first image shows. While bouncing, the first is clipped to everything before the
-   «o» (which starts at 87.5 % of the width; the «n» ends at 85.8 %) and the copy to the «o», and the copy moves. */
-.egg-o { display: none; position: absolute; inset: 0; pointer-events: none; }
+   «o» and the copy to the «o», and the copy moves. --egg-o: where the cut lies, set by eggs.ts next to the click
+   area's numbers (86.7 % of the width). */
+/* (img.egg-o under .ft-wordmark: footer.css shows every image of the wordmark as a block) */
+.ft-wordmark img.egg-o { display: none; position: absolute; inset: 0; pointer-events: none; }
 .egg-loop { position: absolute; top: 0; bottom: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-html.motion .is-bouncing > img:first-child { clip-path: inset(-60% 13.3% -60% 0); }
-html.motion .is-bouncing > .egg-o {
+html.motion .is-bouncing > img:first-child { clip-path: inset(-60% calc(100% - var(--egg-o, 86.7%)) -60% 0); }
+html.motion .ft-wordmark.is-bouncing > img.egg-o {
   display: block;
-  clip-path: inset(-60% 0 -60% 86.7%);
+  clip-path: inset(-60% 0 -60% var(--egg-o, 86.7%));
   animation: egg-bounce .9s linear both;
 }
 /* Two hops, the second lower: up eased out, down eased in, like a ball */

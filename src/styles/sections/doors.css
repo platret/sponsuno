@@ -59,8 +59,7 @@
    weight is therefore a share of the box (1 % = 6 units), set per layout to match the white lines' px weight. */
 .door-sport .cl-path[data-line="gelb"] { vector-effect: none; stroke-width: var(--door-trail, 1.35%); }
 
-/* The ball: the kit's plain dot gives way to the sticker ball drawn in Doors.tsx (same path, same box) */
-.door-art .cl-ball { display: none; }
+/* The ball: the sticker ball drawn in Doors.tsx, on the yellow line's path in the same box */
 .door-ball { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; max-width: none; overflow: visible; pointer-events: none; }
 .door-ball-move { offset-rotate: 0deg; }
 @media (forced-colors: active) { .door-ball { display: none; } }

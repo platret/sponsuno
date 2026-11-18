@@ -5,7 +5,7 @@
 .st { padding-block: clamp(4rem, 2.5rem + 6vw, 8.5rem); }
 
 .st-text {
-  /* Colour of a word the fill has not reached yet: 3.3:1 on parquet. The type is never below 26 px, so it is large
+  /* Colour of a word the fill has not reached yet: rgb(132,133,135), 3.4:1 on parquet (3.36 exactly). The type is never below 26 px, so it is large
      text (WCAG 1.4.3: 3:1) in every state, also when the block is looked at or checked before it has filled. */
   --st-grey: color-mix(in srgb, var(--grau) 71%, var(--parkett));
   font: 600 clamp(1.625rem, 1.15rem + 2.1vw, 2.75rem)/1.2 var(--sans);

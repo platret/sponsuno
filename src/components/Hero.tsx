@@ -7,20 +7,23 @@ import '../styles/sections/hero.css';
 /* The six picture stickers of the hero. Place and size of each live in hero.css (.hero-stk-<id>); here only the
    tilt and the nominal size (the kit uses it for its hairline; the real size comes from the slot). HEAD stickers are
    placed from the headline, the FLOOR sticker from the hall lines (the pennant stands on the red base line). Phones
-   show four: ball, note, pretzel and the pennant. */
-type Slot = { id: StickerId; size: number; rotate: number };
+   show four: ball, note, pretzel and the pennant.
+   All six can be dragged (mouse), but only two count for the sticker album here (`find`: the ball and the pennant,
+   both also shown on phones). The other four ids are found further down the page (word band, steps, doors,
+   waitlist), so the album cannot be filled on the first screen and the hero keeps its colour. */
+type Slot = { id: StickerId; size: number; rotate: number; find?: boolean };
 const HEAD: Slot[] = [
-  { id: 'ball', size: 150, rotate: -8 },
+  { id: 'ball', size: 150, rotate: -8, find: true },
   { id: 'startnummer', size: 116, rotate: 7 },
   { id: 'note', size: 96, rotate: -10 },
   { id: 'brezel', size: 128, rotate: 11 },
   { id: 'pfeife', size: 136, rotate: -12 },
 ];
-const FLOOR: Slot[] = [{ id: 'wimpel', size: 104, rotate: 6 }];
+const FLOOR: Slot[] = [{ id: 'wimpel', size: 104, rotate: 6, find: true }];
 
 const slot = (s: Slot) => (
   <span className={`hero-stk hero-stk-${s.id}`} key={s.id}>
-    <Sticker id={s.id} size={s.size} rotate={s.rotate} data-draggable="" />
+    <Sticker id={s.id} size={s.size} rotate={s.rotate} collectable={s.find === true} data-draggable="" />
   </span>
 );
 
@@ -32,7 +35,7 @@ const slot = (s: Slot) => (
  * Decoration, all aria-hidden: the hall lines behind (CourtLines, drawn once on load) and six stickers on and around
  * the headline. Each sticker sits in a slot (.hero-stk): the slot carries place, size, the load stagger and the scroll
  * drift; the sticker inside stays free for the kit (rotate, scale) and for the Easter-egg chunk, which makes every
- * [data-draggable] sticker draggable with `translate` and collectable. The two sticker layers (.hero-stickers over the
+ * [data-draggable] sticker draggable with `translate` (mouse only) and two of them collectable. The two sticker layers (.hero-stickers over the
  * headline, .hero-floor over the lines) never catch the pointer, only the stickers do. The round arrow on the base
  * line leads to the next block. Classes prefixed hero-.
  */

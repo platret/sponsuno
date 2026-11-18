@@ -1,9 +1,9 @@
-// All visible copy of the site lives here. Homepage blocks since the «Turnhalle» redesign (November 2026): hero,
-// statement, wordband, steps, doors, waitlist, footer. Content of parked sections (story, problem, audience,
-// howItWorks, proof.items as a section of its own) stays below because their sources still type-check; the bundler
-// drops what the landing page does not read.
-// All visible copy of the landing page lives here. Rules for writing it are in AGENTS.md (Swiss spelling,
-// formal "Sie", nothing presented as decided or working that the team has not decided or built).
+// All visible copy of the site lives here. Rules for writing it are in AGENTS.md (Swiss spelling, formal "Sie", nothing
+// presented as decided or working that the team has not decided or built).
+// Landing page blocks since the «Turnhalle» redesign (November 2026): hero, statement, wordband, steps, match, doors,
+// waitlist, album, stickyCta, footer. Content of parked sections (story, problem, audience, howItWorks) stays below
+// because their sources still type-check; the bundler drops what the landing page does not read. `proof` is live:
+// the statement reads proof.items, the word band proof.disciplines and proof.disciplinesLabel.
 
 import { pageMeta } from './pages';
 import photoAlex from './assets/photos/team-alex-platret.jpg';
@@ -95,10 +95,12 @@ export const statement = {
 };
 
 // Word band (WordBand.tsx): two rows of giant words on ink. Decorative for the eye; screen readers get the label and
-// both rows as plain lists.
+// both rows once as one plain list, so only words that are shown are listed. Row one is exactly the two words of the
+// lockup; WordBand.tsx sticks a sticker on Sport, Kultur and Turnverein and fails the build if one of them is gone,
+// and wordband.css sizes the lockup from the widths of these words (re-measure there when a word changes).
 export const wordband = {
   label: proof.disciplinesLabel,
-  rows: [['Sport', 'Kultur', 'Gewerbe'], proof.disciplines],
+  rows: [['Sport', 'Kultur'], proof.disciplines],
 };
 
 // Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits): the people
@@ -309,10 +311,13 @@ export const guideLinks: FooterLink[] = [
   { href: pageMeta('kultursponsoring').path, label: 'Kultursponsoring' },
 ];
 
-// The parked two-track "So funktioniert Sponsuno" (HowItWorks.tsx). Its intro line and the companies' steps are also
-// used elsewhere (the confirmation page's link list, the parked /fuer-firmen/): they are plain constants, so those
-// objects do not read `howItWorks` and the landing page bundle does not have to keep the whole parked object.
+// The parked two-track "So funktioniert Sponsuno" (HowItWorks.tsx). The companies' steps are also used by the parked
+// /fuer-firmen/: a plain constant, so that page does not read `howItWorks` and the landing page bundle does not have
+// to keep the whole parked object.
 const HOW_INTRO = 'Ein Ablauf für beide Seiten: vom ersten Profil bis zur Bilanz nach der Saison.';
+// The same line cut to what the three steps of the landing page (#ablauf) still show: they end at the match, there is
+// no "Bilanz nach der Saison" on the page any more. Used by the link list of /warteliste/bestaetigt/.
+const HOW_LINK_TEXT = 'Ein Ablauf für beide Seiten.';
 const HOW_SPONSOR_STEPS = [
   { title: 'Firmenprofil anlegen', text: 'Region, Budget, Ziele und welche Unterstützung Sie geben möchten: Geld, Material oder Dienstleistungen.' },
   { title: 'Vorschläge erhalten', text: 'Sie sehen Sportlerinnen, Sportler und Vereine aus Ihrer Region, die zu Ihrer Firma passen.' },
@@ -1674,7 +1679,7 @@ export const waitlistConfirmed = {
   intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start.',
   linksTitle: 'Bis dahin',
   links: [
-    { href: '#ablauf', label: 'So funktioniert es', text: HOW_INTRO },
+    { href: '#ablauf', label: 'So funktioniert es', text: HOW_LINK_TEXT },
     { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
     { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
     { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },

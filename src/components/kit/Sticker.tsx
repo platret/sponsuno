@@ -147,7 +147,9 @@ const DRAWINGS: Record<StickerId, Drawing> = {
   },
 };
 
-type Custom = CSSProperties & Record<`--${string}`, string | number>;
+/** A style object that may carry CSS custom properties (the one such type of the site: import it, do not redeclare it) */
+export type Vars = CSSProperties & Record<`--${string}`, string | number>;
+type Custom = Vars;
 
 export type StickerProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children' | 'id'> & {
   id: StickerId;

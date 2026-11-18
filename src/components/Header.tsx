@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import wordmarkLight from '../assets/wordmark-light.svg';
 import wordmarkDark from '../assets/wordmark-dark.svg';
 import { cta, menu, nav } from '../content';
 import { siteHref } from '../lib/links';
 import { motionEnabled } from '../lib/motion';
 import { MobileMenu } from './MobileMenu';
-import { useAlbum } from './Album';
+import { AlbumBurst, useAlbum } from './Album';
 import { Icon } from './kit/Icon';
 import { STICKER_IDS } from './kit/Sticker';
 import '../styles/sections/header.css';
@@ -35,7 +35,8 @@ export function Header() {
     // The solid bar takes the colour of what lies directly below it: ink while an ink band crosses the bar's lower
     // edge, the page surface otherwise. So it joins a band the moment the band reaches it and lets go the moment the
     // band has passed (never an ink bar over parquet or a parquet bar over ink). The observed strip is the 1 px line
-    // at the bar's lower edge.
+    // just below the bar's lower edge (one px lower than the edge itself: a band that ends exactly at the edge, which
+    // is where an in-page link to the block after it lands, would still count as touching it).
     const darkZones = [...document.querySelectorAll<HTMLElement>('[data-header-dark]')];
     const underBar = new Map<Element, boolean>();
     let darkIo: IntersectionObserver | undefined;
@@ -45,7 +46,7 @@ export function Header() {
       darkIo = new IntersectionObserver((entries) => {
         entries.forEach((entry) => underBar.set(entry.target, entry.isIntersecting));
         setDark(darkZones.some((el) => underBar.get(el)));
-      }, { rootMargin: `${-Math.round(barH)}px 0px ${-Math.max(0, window.innerHeight - Math.round(barH) - 1)}px 0px` });
+      }, { rootMargin: `${-Math.round(barH) - 1}px 0px ${-Math.max(0, window.innerHeight - Math.round(barH) - 2)}px 0px` });
       darkZones.forEach((el) => darkIo!.observe(el));
     };
     buildDark();
@@ -74,11 +75,13 @@ export function Header() {
     };
   }, [menuOpen]);
 
-  // Sticker album (Easter egg): the chip shows how many of the six stickers have been found. A pointer extra, so it
-  // is hidden from assistive technology and skipped by Tab; it scrolls to the album without moving focus there.
+  // Sticker album (Easter egg): the chip shows how many of the six stickers have been found. A pointer extra: a plain
+  // span (no link, no button, nothing focusable) hidden from assistive technology; a click scrolls to the album
+  // without moving focus. With the sixth sticker it bursts once, at the place the visitor is looking at (the album
+  // itself is at the end of the page and celebrates when it comes into view, Album.tsx).
   const found = useAlbum().length;
-  const toAlbum = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
+  const full = found === STICKER_IDS.length;
+  const toAlbum = () => {
     document.getElementById('album')?.scrollIntoView({ behavior: motionEnabled() ? 'smooth' : 'auto', block: 'center' });
   };
 
@@ -104,10 +107,11 @@ export function Header() {
           </nav>
           <div className="header-actions">
             {found > 0 && (
-              <a className="tstk album-chip" data-tone="gelb" href="#album" aria-hidden="true" tabIndex={-1} onClick={toAlbum}>
+              <span className={`tstk album-chip${full ? ' is-full' : ''}`} data-tone="gelb" aria-hidden="true" onClick={toAlbum}>
                 <Icon name="stern" size={14} />
                 <span className="album-chip-n" key={found}>{found}/{STICKER_IDS.length}</span>
-              </a>
+                {full && <AlbumBurst />}
+              </span>
             )}
             <a className="btn btn-sm header-cta" href="#warteliste">
               <span className="header-cta-long">{cta.waitlist}</span>

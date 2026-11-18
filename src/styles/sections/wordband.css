@@ -5,14 +5,15 @@
    The lockup. At rest the rows fill the band exactly from gutter to gutter, so the type is as large as the width
    allows and every crop falls between two words:
      from 641 px   row one "Sport Kultur", row two "Triathlon Chor Turnverein"
-     up to 640 px  row one "Sport", row two "Turnverein"
+     up to 640 px  three rows, one word each: "Sport", "Kultur" (row one set once more, .wb-track-1b), "Turnverein"
    The font sizes are worked out from the widths of these words in Archivo Wide 800 at -0.02em tracking, measured
-   in Chromium (canvas measureText), in em: advance Sport 3.294, Triathlon 5.276, Chor 2.878; ink from the origin
-   to the right edge Sport 3.273, Kultur 3.592, Turnverein 6.315; left side bearing S .05, T .024. So it is the
-   ink of the first and the last letter that meets the gutter, not the letter's box.
+   in Chromium (canvas measureText), in em: advance Sport 3.294, Kultur 3.582, Triathlon 5.276, Chor 2.878; ink from
+   the origin to the right edge Sport 3.273, Kultur 3.592, Turnverein 6.315; left side bearing S .05, K .085, T .024.
+   So it is the ink of the first and the last letter that meets the gutter, not the letter's box.
    The space between two words is the gutter plus a little, so the neighbours of the lockup stay outside the band.
-   If the words in content.ts change, measure again and update the divisors below; nothing breaks if they are off,
-   the lockup is then only no longer flush. */
+   If the words in content.ts change, measure again and update the divisors below (WordBand.tsx stops the build when
+   a word with a sticker is gone, e2e/site.spec.ts checks which words stand whole in the band at rest); nothing breaks
+   if they are off, the lockup is then only no longer flush. */
 
 .wb {
   position: relative;
@@ -86,10 +87,22 @@
   line-height: 1.1;
   --slide: var(--wb-t2);
 }
+/* Row one once more for phones, starting with "Kultur" and sliding to the right: hidden from 641 px */
+.wb-track-1b { display: none; }
 @media (max-width: 640px) {
   .wb-rows { --wb-t1: calc(var(--wb-w) * 1.1); --wb-t2: calc(var(--wb-w) * 1.3); }
   .wb-row-1 { font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.223); }    /* 3.273 - .05 */
+  .wb-track-1b { display: flex; }
+  .wb-row-1b {
+    --wb-gap: calc(var(--gutter) + .12em);
+    margin-inline-start: calc(var(--gutter) - .085em);   /* minus the side bearing of the K */
+    font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 3.507);    /* 3.592 - .085 */
+    line-height: .98;
+    --slide: var(--wb-t1);
+  }
   .wb-row-2 { font-size: calc((var(--wb-w) - 2 * var(--gutter)) / 6.291); }    /* 6.315 - .024 */
+  /* The note sits on the Kultur of the second row here; the one of row one is outside the band at rest */
+  .wb-row-1 .wb-stk-note { display: none; }
 }
 
 .wb-set { display: flex; flex: none; }
@@ -131,6 +144,7 @@
     /* slide-x moves a row from its place to --slide. The track sets it back by half of that, so the row passes its
        resting place (the lockup) when the band is in the middle of the viewport. */
     .scroll-fx .wb-track-1 { translate: calc(var(--wb-t1) / 2) 0; }
+    .scroll-fx .wb-track-1b { translate: calc(var(--wb-t1) / -2) 0; }
     .scroll-fx .wb-track-2 { translate: calc(var(--wb-t2) / -2) 0; }
     /* The lane lines are done when the band's upper edge is at about half height */
     .scroll-fx .wb-lines { --draw-end: cover 45vh; }

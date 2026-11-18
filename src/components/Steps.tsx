@@ -1,11 +1,10 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { match, steps } from '../content';
-import { Sticker, TextSticker } from './kit/Sticker';
+import { Sticker, TextSticker, type Vars } from './kit/Sticker';
 import { Icon, type IconName } from './kit/Icon';
 import { MatchCard } from './MatchCard';
 import '../styles/sections/steps.css';
 
-type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
 /** One court line behind a scene (kit line style: .cl-path), drawn in the scene's own 220 x 196 box. */
 const SceneLine = ({ d, line }: { d: string; line: 'blau' | 'rot' | 'gruen' }) => (
@@ -14,7 +13,8 @@ const SceneLine = ({ d, line }: { d: string; line: 'blau' | 'rot' | 'gruen' }) =
   </svg>
 );
 
-/** "4 von 4", cut from the match card's result line (content.ts), so the scene and the card always say the same. */
+/** "4 von 4", cut from the match card's result line (content.ts), so the scene and the card always say the same.
+    Empty when that line no longer holds such a figure: scene two then shows no score sticker (never an empty pill). */
 const SCORE = /\d+ von \d+/.exec(match.result)?.[0] ?? '';
 
 /** Rows of the little suggestion list in scene two: icon and disc colour; the first one is the highlighted match. */
@@ -54,9 +54,11 @@ const SCENES: ReactNode[] = [
         </span>
       ))}
     </span>
-    <span className="steps-p steps-score" style={{ '--d': '260ms' } as Vars}>
-      <TextSticker tone="gelb" rotate={8}>{SCORE}</TextSticker>
-    </span>
+    {SCORE && (
+      <span className="steps-p steps-score" style={{ '--d': '260ms' } as Vars}>
+        <TextSticker tone="gelb" rotate={8}>{SCORE}</TextSticker>
+      </span>
+    )}
   </>,
   <>
     <SceneLine line="gruen" d="M10 90A100 100 0 0 0 210 90" />

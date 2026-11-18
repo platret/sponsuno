@@ -1,6 +1,5 @@
-import type { CSSProperties } from 'react';
 import { match } from '../content';
-import { TextSticker } from './kit/Sticker';
+import { TextSticker, type Vars } from './kit/Sticker';
 import { Icon, type IconName } from './kit/Icon';
 import '../styles/sections/match.css';
 
@@ -46,7 +45,7 @@ export function MatchCard() {
         </p>
         <ul className="match-criteria">
           {match.criteria.map((c, i) => (
-            <li key={c} style={{ '--i': i } as CSSProperties}>
+            <li key={c} style={{ '--i': i } as Vars}>
               <Icon name={CRITERIA_ICONS[i] ?? 'check'} size={16} />
               {c}
             </li>

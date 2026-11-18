@@ -9,8 +9,8 @@ const SURFACE = { sport: 'surface-blau', firma: 'surface-rot' } as const;
 
 /**
  * The hall ball of the sticker set as a small drawing of its own (the kit's ball panels and seams, centred on 0 0),
- * laid over the court drawing in the same viewBox; it follows BALL_PATH, the yellow line of the kit's door-sport drawing. It replaces the kit's plain dot (hidden in doors.css): it
- * rides the tip of the yellow line while the line draws with the scroll, and rolls in again when the tile is hovered
+ * laid over the court drawing in the same viewBox; it follows BALL_PATH, the yellow line of the kit's door-sport
+ * drawing: it rides the tip of the yellow line while the line draws with the scroll, and rolls in again when the tile is hovered
  * or holds focus. Rest state: in the goal.
  */
 const Ball = () => (

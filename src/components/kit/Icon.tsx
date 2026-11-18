@@ -5,8 +5,6 @@ import '../../styles/kit.css';
 const PATHS = {
   // a person: head and shoulders
   profil: 'M12 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8ZM4.5 20.5a7.5 7.5 0 0 1 15 0',
-  // a list with three bullets
-  liste: 'M9.5 6h10.5M9.5 12h10.5M9.5 18h10.5M4.5 6h.01M4.5 12h.01M4.5 18h.01',
   // two hands meeting
   handschlag: 'M2.5 6.5v9M21.5 6.5v9M2.5 8l5-1.5 4.5 2 4.5-2 5 1.5M2.5 14.5l3.5 1 4.2 3.7a2 2 0 0 0 2.6 0l4.2-3.7 3.5-1M12 8.5l-3.2 3.3a1.6 1.6 0 0 0 2.3 2.2l2.4-2.3 3.3 3.5',
   // a map pin
@@ -24,13 +22,10 @@ const PATHS = {
   // an envelope
   mail: 'M5 5.5h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2ZM3.5 8.5l8.5 5.5 8.5-5.5',
   check: 'M5 12.5l4.5 4.5L19 7.5',
-  plus: 'M12 5v14M5 12h14',
   // a five-point star
   stern: 'M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9Z',
   // a house
   haus: 'M3.5 11.5L12 4l8.5 7.5M5.5 10V20h13V10M10 20v-5.5h4V20',
-  // a beamed pair of notes
-  musik: 'M9.5 17.5V6L19 4v11.5M9.5 17.5a2.75 2.75 0 1 1-5.5 0a2.75 2.75 0 1 1 5.5 0ZM19 15.5a2.75 2.75 0 1 1-5.5 0a2.75 2.75 0 1 1 5.5 0Z',
   // the hall ball of the sticker set
   ball: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18ZM10.3 9.9c2.3-2.7 5.9-4.4 8.8-3.3M10.3 9.9c2.1 4.6 6.5 7.3 9.2 6.9M10.3 9.9c-2.5 2.1-5 5.9-4.4 8.8M10.3 9.9C8.4 8.2 5.7 7.4 3.4 9.1',
 } as const;

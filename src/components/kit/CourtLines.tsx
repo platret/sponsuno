@@ -4,6 +4,7 @@
 // Every path: fill none, pathLength 1, class cl-path, data-line with its colour; the stroke keeps its weight however
 // the drawing is scaled (vector-effect: non-scaling-stroke).
 import type { ReactNode } from 'react';
+import type { Vars } from './Sticker';
 import '../../styles/kit.css';
 
 export type CourtLinesVariant = 'hero' | 'page' | 'band' | 'door-sport' | 'door-firma';
@@ -12,8 +13,6 @@ export type CourtLine = 'blau' | 'rot' | 'gruen' | 'gelb' | 'hell';
 export type CourtLinesProps = {
   variant: CourtLinesVariant;
   className?: string;
-  /** Colour of the one line of variant "page". Default gelb. */
-  tone?: 'gelb' | 'blau';
   /**
    * "load": the lines draw once when the page loads (hero, under 1.5 s). "scroll": they draw with the scroll, with the
    * svg itself as the measured block. Leave it out when a container carries data-scroll="draw" (or for still lines).
@@ -26,7 +25,11 @@ const Line = ({ d, line, className }: { d: string; line: CourtLine; className?: 
 );
 
 /* hero, wide screens (1440 x 900, covers its box, anchored to the right edge): the left two thirds stay calm.
-   Circle: centre (1400, 360), r 320, only the part that can be seen is drawn. */
+   Circle: centre (1400, 360), r 320, only the part that can be seen is drawn.
+   hero.css restates four things of these two drawings: the base line's distance from the lower edge (130 of 900
+   wide, 144 of 844 on phones: .hero-lines), the x of the pennant's foot on it (1124 of 1440: .hero-stk-wimpel),
+   and the order of the paths (the circle is child 1, the corner arc child 4: their colours are swapped there).
+   Change them together. */
 const HERO_WIDE = (
   <>
     <Line line="blau" d="M1460 45.7A320 320 0 1 0 1460 674.3" />
@@ -46,7 +49,14 @@ const HERO_NARROW = (
 );
 
 /* page: one tape line down the whole page, stretched to its box. Drawn for an expected shape of the page
-   (wide: about 1440 x 5600, phones: about 390 x 7000); the turns stay round within about a third either way. */
+   (wide: about 1440 x 5600, phones: about 390 x 7000); the turns stay round within about a third either way.
+   Two numbers of the wide drawing are needed by the CSS that hangs and draws it (end of header.css); they go to the
+   svg as custom properties, so they are stated once, next to the path:
+   --pl-turn  where the line first turns to cross the page, as a share of the drawing's height (y 600 of 4000)
+   --pl-len   the length of the path in the drawing's own units (about 4010 down plus 2520 across) */
+const PAGE_BOX = { w: 1000, h: 4000 };
+const PAGE_TURN_Y = 600;
+const PAGE_LEN = 6530;
 const PAGE_WIDE =
   'M940 -10V560a40 40 0 0 1-40 40H100a40 40 0 0 0-40 40V1960a40 40 0 0 0 40 40H440C580 2000 580 1850 490 1850C400 1850 400 2000 540 2000H900a40 40 0 0 1 40 40V3300a40 40 0 0 1-40 40H540a40 40 0 0 0-40 40V4010';
 const PAGE_NARROW =
@@ -56,7 +66,8 @@ const PAGE_NARROW =
 const ticks = (y: number, dy: number, from: number) =>
   Array.from({ length: 12 }, (_, i) => `M${from + i * 120} ${y}v${dy}`).join('');
 
-/* door-sport (600 x 600, from above): end line, goal, goal area, penalty mark; the ball's way into the goal */
+/* door-sport (600 x 600, from above): end line, goal area, goal; the ball's way into the goal (the ball itself is drawn
+   by Doors.tsx on this path) */
 export const BALL_PATH = 'M30 548C210 548 250 300 400 300H563';
 /* door-firma (600 x 600, front): ground, shop with awning, window and door, the sign on the roof */
 const SIGN = 'M216 96h168a16 16 0 0 1 16 16v36a16 16 0 0 1-16 16H216a16 16 0 0 1-16-16v-36a16 16 0 0 1 16-16Z';
@@ -70,7 +81,7 @@ function nested(wide: ReactNode, narrow: ReactNode, boxWide: string, boxNarrow: 
   );
 }
 
-export function CourtLines({ variant, className, tone = 'gelb', draw }: CourtLinesProps) {
+export function CourtLines({ variant, className, draw }: CourtLinesProps) {
   const cls = `cl cl-${variant}${className ? ` ${className}` : ''}`;
   const shared = {
     className: cls,
@@ -85,8 +96,8 @@ export function CourtLines({ variant, className, tone = 'gelb', draw }: CourtLin
       return <svg {...shared}>{nested(HERO_WIDE, HERO_NARROW, '0 0 1440 900', '0 0 390 844', 'xMaxYMid slice')}</svg>;
     case 'page':
       return (
-        <svg {...shared}>
-          {nested(<Line line={tone} d={PAGE_WIDE} />, <Line line={tone} d={PAGE_NARROW} />, '0 0 1000 4000', '0 0 400 7200', 'none')}
+        <svg {...shared} style={{ '--pl-turn': PAGE_TURN_Y / PAGE_BOX.h, '--pl-len': `${PAGE_LEN}px` } as Vars}>
+          {nested(<Line line="gelb" d={PAGE_WIDE} />, <Line line="gelb" d={PAGE_NARROW} />, `0 0 ${PAGE_BOX.w} ${PAGE_BOX.h}`, '0 0 400 7200', 'none')}
         </svg>
       );
     case 'band':
@@ -104,9 +115,7 @@ export function CourtLines({ variant, className, tone = 'gelb', draw }: CourtLin
           <Line line="hell" d="M540 20V580" />
           <Line line="hell" d="M540 120A180 180 0 0 0 540 480" />
           <Line line="hell" d="M540 246h42a8 8 0 0 1 8 8v92a8 8 0 0 1-8 8h-42" />
-          <Line line="hell" className="cl-soft" d="M300 282v36" />
           <Line line="gelb" d={BALL_PATH} />
-          <circle className="cl-ball" r="15" style={{ offsetPath: `path('${BALL_PATH}')`, offsetDistance: '100%' }} />
         </svg>
       );
     case 'door-firma':
