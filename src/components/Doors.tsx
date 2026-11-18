@@ -4,8 +4,12 @@ import { Sticker } from './kit/Sticker';
 import { Icon } from './kit/Icon';
 import '../styles/sections/doors.css';
 
-/** Ground of each tile: blue for sport and culture, red for companies (white text on both) */
-const SURFACE = { sport: 'surface-blau', firma: 'surface-rot' } as const;
+/**
+ * Ground of each tile: blue (the one brand colour) for sport and culture, ink for companies. Never red or yellow:
+ * those are accent colours (DESIGN.md -> Colour, the surface rule); the firm tile keeps its yellow shop sign and the
+ * pretzel sticker as its small accents.
+ */
+const SURFACE = { sport: 'surface-blau', firma: 'surface-tinte' } as const;
 
 /**
  * The ball of the court drawing: a plain yellow disc (the drawing's one accent, not a sticker), laid over the court
@@ -20,13 +24,13 @@ const Ball = () => (
 );
 
 /**
- * The two doors (#fuer-wen): two full-height colour tiles side by side (stacked on phones), one per side of the
- * market. Each: an uppercase label, the title, one sentence and a parquet pill button with an arrow that sets the
+ * The two doors (#fuer-wen): two full-height tiles side by side (stacked on phones), one per side of the market,
+ * blue and ink. Each: an uppercase label, the title, one sentence and a parquet pill button with an arrow that sets the
  * waitlist role and leads to #warteliste (the click handler only sets the role; App.tsx scrolls). The section's H2 is
  * read by screen readers only; the tile titles are H3.
  * Each tile carries one white line drawing (aria-hidden) in its lower right corner that draws with the scroll as it
  * comes into view: a court seen from above whose ball rolls into the goal (blue), a shop whose sign lights up yellow
- * (red). One reaction on hover or keyboard focus per tile: the ball rolls in again, the sign flickers.
+ * (ink). One reaction on hover or keyboard focus per tile: the ball rolls in again, the sign flickers.
  * One small collectable sticker per tile, part of the drawing: the pennant stands where the ball's line starts, the
  * pretzel lies in the shop window. Classes prefixed door-.
  */

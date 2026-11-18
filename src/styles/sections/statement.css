@@ -19,8 +19,8 @@
 .st-sentence + .st-sentence { margin-top: .16em; }
 .st-words { grid-column: 2; text-wrap: balance; }
 
-/* Round sign: a flat disc, upright, no edge. Blue and red are the colours the two sides have on the two doors
-   (clubs blue, firms red); the third, for Sponsuno's own sentence, is ink. Centred on the capitals of the first
+/* Round sign: a flat disc, upright, no edge. Blue and red are the sign colours of the two sides (clubs blue, firms
+   red, as on the avatars of the match card; red only ever as such a small sign); the third, for Sponsuno's own sentence, is ink. Centred on the capitals of the first
    line (line box 1.2 em, disc .94 em). */
 .st-sign {
   grid-column: 1;

@@ -16,8 +16,10 @@
 }
 
 /* ---------- Closing block: back to the waitlist on the landing page ----------
-   The same yellow band as the landing page's waitlist (.surface-gelb in InfoPage.tsx: ink text, ink button), with the
-   giant title. Text and one button on the container grid, no decoration. */
+   A blue band (.surface-blau in InfoPage.tsx: white title, text and link, 8.0:1; parquet button with an ink label,
+   15.5:1, the pill 7.3:1 off the blue; white focus ring), with the giant title. Blue is the one colour surface of a
+   topic page: it stands apart from the parquet section before it and the ink footer after it. Text and one button on
+   the container grid, no decoration. */
 .pg-end h2 { font-size: clamp(2.25rem, 1rem + 5.4vw, 5.5rem); line-height: 1; }
 .pg-end-text { margin-top: 1.5rem; max-width: 38rem; font-size: var(--fs-lead); line-height: 1.55; }
 .pg-end-more { margin-top: .75rem; max-width: 38rem; }

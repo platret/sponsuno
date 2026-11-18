@@ -1,7 +1,7 @@
 /* Footer (Footer.tsx): the ink closing block of every page (.surface-tinte sets ground and roles). The claim in
    column 1 and the link columns under uppercase yellow labels, the sticker album row (landing page only), the parquet
    loop wordmark at full container width (always the SVG, never set as text), then the bottom row.
-   On the landing page it follows the yellow waitlist band; on sub-pages (legal pages, topic pages) it stands alone
+   On the landing page it follows the parquet waitlist band; on sub-pages (legal pages, topic pages) it stands alone
    (.ft-standalone); those pages never get .motion, so the footer is static there.
    Motion on the landing page (DESIGN.md -> Motion): the top rises, the wordmark rises and scales .9 -> 1.
    Both sit at the end of the page, so their range ends at entry 100% (final once fully in view), or after

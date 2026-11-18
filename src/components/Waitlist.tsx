@@ -28,10 +28,11 @@ interface WaitlistProps {
   onRoleChange: (role: Role) => void;
 }
 
-/** Closing block (#warteliste): a yellow band with the giant H2 in ink across the full width, under it the intro on
- * the left and the form in an ink card (.surface-tinte) on the right (stacked on phones). The ink footer follows.
+/** Closing block (#warteliste): a parquet band (the lighter parquet; never a colour band) with the giant H2 in ink
+ * across the full width, under it the intro on the left and the form in an ink card (.surface-tinte, with the yellow
+ * submit button) on the right (stacked on phones). The ink footer follows.
  * Static surface: no reveal, so the form is never hidden while it waits for a script.
- * Decoration (aria-hidden, never needed): one parquet court line along the band's upper edge, drawn with the scroll,
+ * Decoration (aria-hidden, never needed): one thin yellow court line along the band's upper edge, drawn with the scroll,
  * and on it, above the end of the title, the one sticker of this block: the start number (it counts for the album).
  * The sticker has a row of its own in the flow, so it can never lie on the title, the intro or a field. */
 export function Waitlist({ role, onRoleChange }: WaitlistProps) {
@@ -131,10 +132,10 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const invalid = error !== null;
 
   return (
-    <section className="wl section surface-gelb" id="warteliste" aria-labelledby="warteliste-title">
-      {/* One straight line from edge to edge (the kit's band line, in parquet). It is drawn from the left, towards
-          the sticker. */}
-      <CourtLines variant="band" line="hell" draw="scroll" className="wl-line" />
+    <section className="wl section surface-parkett" id="warteliste" aria-labelledby="warteliste-title">
+      {/* One straight line from edge to edge (the kit's band line, in yellow: all that is left of the yellow band).
+          It is drawn from the left, towards the sticker. */}
+      <CourtLines variant="band" line="gelb" draw="scroll" className="wl-line" />
       <div className="container">
         <div className="wl-mark" aria-hidden="true">
           <Sticker id="startnummer" size={96} rotate={6} className="wl-stk" data-reveal="" />

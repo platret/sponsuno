@@ -6,8 +6,8 @@ import '../styles/sections/statement.css';
 
 
 /* The round signs, one per sentence, in a hanging column of their own (so every line of text shares one left edge):
-   the two sides of a sponsorship in the colours they have on the two doors further down (clubs blue, firms red), and
-   an ink check for what Sponsuno does with them. A sentence without an entry simply has an empty first column. */
+   the two sides of a sponsorship in their sign colours (clubs blue, firms red: the same two as the avatars of the
+   match card; small signs, so red is an accent here), and an ink check for what Sponsuno does with them. A sentence without an entry simply has an empty first column. */
 const SIGNS: { icon: IconName; tone: 'blau' | 'rot' | 'tinte' }[] = [
   { icon: 'ball', tone: 'blau' },
   { icon: 'branche', tone: 'rot' },

@@ -82,24 +82,22 @@ type PageBandProps = {
 /**
  * Page head band of the static pages, the first child of <main>: the H1 and its intro on ink, right under the ink
  * header (legal.css → .lg-band). The title starts in column 1. On the right, a piece of the hall floor: the centre
- * circle rising from the band's lower edge (parquet line), the halfway line through it (yellow) and one small sticker
- * on the centre spot, half on the page below. It is the only sticker of a static page. All of it is decoration
- * (aria-hidden). The lines draw once on load and the sticker settles, in CSS only (these pages ship no script); with
- * reduced motion everything stands still.
+ * circle rising from the band's lower edge as one thin parquet line, and one small sticker on the centre spot, half
+ * on the page below. The band's lower edge itself is the halfway line: there is no vertical line any more (a yellow
+ * one ran up to the header right under the yellow waitlist button until 2026-11-18, as if the button hung on it; its
+ * short parquet successor read as a string the sticker hung from). It is the only sticker of a static page. All of
+ * it is decoration (aria-hidden). The line draws once on load and the sticker settles, in CSS only (these pages ship
+ * no script); with reduced motion everything stands still.
  */
 export function PageBand({ titleId, title, narrow = false, eyebrow, sticker = 'ball', missing = false, done = false, children }: PageBandProps) {
   return (
     <div className="lg-band surface-tinte">
       <div className="lg-band-art" aria-hidden="true">
-        {/* Both lines keep the rule of kit/CourtLines.tsx: with a stroke that does not scale, Chromium sizes the dash
+        {/* The arc keeps the rule of kit/CourtLines.tsx: with a stroke that does not scale, Chromium sizes the dash
             of the draw animation in user units but lays it out in px, so a path must never be shorter in units than
-            on screen. The arc is drawn in 300 units for a box of at most 288 px (legal.css: twice --r, 9rem at
-            most); the halfway line is a <line> in an svg without a viewBox (one unit is one px). */}
+            on screen. It is drawn in 300 units for a box of at most 288 px (legal.css: twice --r, 9rem at most). */}
         <svg className="cl lg-band-arc" viewBox="-150 -150 300 150" focusable="false">
           <path className="cl-path" data-line="hell" d="M-146 6V0A146 146 0 0 1 146 0V6" pathLength={1} />
-        </svg>
-        <svg className="cl lg-band-line" focusable="false">
-          <line className="cl-path" data-line="gelb" x1="50%" y1="-4%" x2="50%" y2="104%" pathLength={1} />
         </svg>
       </div>
       <Sticker

@@ -13,9 +13,12 @@ import '../styles/sections/header.css';
 
 /** Landing page header. Plain full-width bar: transparent on the parquet hero with the ink wordmark, solid parquet
     with a hairline after 80 px, solid ink with the parquet wordmark while an ink band (every element marked
-    `data-header-dark`: the word band, the footer) runs under it. Over the blue, red and yellow bands it stays the
-    parquet bar (a decision: one calm bar, the colour belongs to the bands). The nav links to the topic pages (content.ts → nav,
-    shared with PageHeader on the static pages); the landing page itself is not in it, so no item is current here. */
+    `data-header-dark`: the word band, the footer) runs under it. Over the two door tiles (blue and ink) it stays the
+    parquet bar (a decision: one calm bar; the ink tile is a tile beside the blue one, not a band). That also holds
+    below 861 px, where the tiles are stacked and the ink tile is as wide as the window: the bar is parquet over the
+    blue tile just before it, and staying parquet avoids a flip between two tiles of one block. The nav links to the
+    topic pages (content.ts → nav, shared with PageHeader on the static pages); the landing page itself is not in it,
+    so no item is current here. */
 export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLSpanElement>(null);
@@ -35,7 +38,9 @@ export function Header() {
 
     // The solid bar takes the colour of what lies directly below it: ink while an ink band crosses the bar's lower
     // edge, the page surface otherwise. So it joins a band the moment the band reaches it and lets go the moment the
-    // band has passed (never an ink bar over parquet or a parquet bar over ink). The observed strip is the 1 px line
+    // band has passed (never an ink bar over parquet, and a parquet bar over ink only over the ink door tile: that
+    // tile belongs to the doors block and is not marked, so the bar stays parquet over both tiles, also below
+    // 861 px where they are stacked and the ink tile fills the window's width). The observed strip is the 1 px line
     // just below the bar's lower edge (one px lower than the edge itself: a band that ends exactly at the edge, which
     // is where an in-page link to the block after it lands, would still count as touching it).
     const darkZones = [...document.querySelectorAll<HTMLElement>('[data-header-dark]')];

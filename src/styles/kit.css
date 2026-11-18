@@ -54,7 +54,7 @@
 .stk-num { stroke: var(--tinte, #1A1C20); stroke-width: 6px; }
 
 /* Collected (sticker album): the sticker leaves a dashed empty outline in place. The outline takes the text colour
-   of its surroundings, so it reads on parquet, ink and the colour bands. */
+   of its surroundings, so it reads on parquet, ink and blue. */
 .stk-slot {
   fill: none; stroke: currentColor; stroke-width: 2.5px; stroke-dasharray: 5 7; stroke-linecap: round; stroke-linejoin: round;
   opacity: 0; transition: opacity .25s ease;

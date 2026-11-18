@@ -1,6 +1,7 @@
 /* Sponsuno: base layer of every page. Tokens in tokens.css, one stylesheet per section in styles/sections/.
-   Design system v2 "Turnhalle" (DESIGN.md): ink type on a light parquet ground; colour comes as court lines,
-   stickers and a few full bands. Flat colours only: no gradients, no shadows. */
+   Design system v2 "Turnhalle" (DESIGN.md): ink type on a light parquet ground. Large surfaces are parquet, ink and
+   one brand colour, blue; red, yellow and green come only as accents (thin lines, small signs, tags, stickers).
+   Flat colours only: no gradients, no shadows. */
 @import './tokens.css';
 
 /* Cascade: everything up to the reveal rules sits in the cascade layer `base`. Section stylesheets (and the kit) are
@@ -112,8 +113,9 @@ strong, b { font-weight: 600; }
    .surface-parkett and .surface-parkett-2 are the two light grounds. .surface-tinte is an ink area: it paints the ground
    and sets the role tokens for everything inside (headings parquet, text light grey, accent and focus yellow, cards
    tinte-2), so component CSS written with role tokens works on both grounds. The static header, the page head band
-   and the footer carry it too. Full colour bands (.surface-blau, .surface-rot, .surface-gelb) do the same for their
-   ground: white text on blue and red, ink on yellow; at most one of them per screen. */
+   and the footer carry it too. .surface-blau is the one colour ground (the sport door tile, the closing band of the
+   topic pages): white text and focus ring. There is no red, yellow or green surface: those three are accent colours
+   (thin lines, small signs and icons, tags, the yellow button on ink, the green match result), never a band or tile. */
 
 .section { padding-block: var(--section-pad); }
 .surface-parkett { background: var(--parkett); }
@@ -130,25 +132,15 @@ strong, b { font-weight: 600; }
   --accent-text: var(--gelb);
   --focus: var(--gelb);
 }
-.surface-blau, .surface-rot {
+.surface-blau {
+  background: var(--blau);
   color: var(--weiss);
+  --bg: var(--blau);
   --heading: var(--weiss);
   --text: var(--weiss);
   --line: rgba(255, 255, 255, .35);
   --accent-text: var(--weiss);
   --focus: var(--weiss);
-}
-.surface-blau { background: var(--blau); --bg: var(--blau); }
-.surface-rot { background: var(--rot); --bg: var(--rot); }
-.surface-gelb {
-  background: var(--gelb);
-  color: var(--tinte);
-  --bg: var(--gelb);
-  --heading: var(--tinte);
-  --text: var(--tinte);
-  --line: rgba(26, 28, 32, .25);
-  --accent-text: var(--tinte);
-  --focus: var(--tinte);
 }
 
 .section-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem); }
@@ -157,9 +149,9 @@ strong, b { font-weight: 600; }
 
 /* ---------- Buttons and links ----------
    Every button is a pill. Fixed colours, picked by the ground the button stands on:
-   .btn-tinte   ink fill, parquet label: primary on parquet, parkett-2 and yellow
-   .btn-gelb    yellow fill, ink label: primary on ink
-   .btn-parkett parquet fill, ink label: primary on a blue or red band
+   .btn-tinte   ink fill, parquet label: primary on parquet and parkett-2
+   .btn-gelb    yellow fill, ink label: primary on ink (the one yellow fill larger than a tag)
+   .btn-parkett parquet fill, ink label: primary on blue, and on the ink door tile beside the blue one
    .btn-outline outline in the surface's heading colour: secondary on any ground
    Hover colours only where a pointer can hover: on touch screens :hover sticks after a tap, and the tapped button
    (the yellow submit button in its error state) would keep looking like a different, weaker one. */

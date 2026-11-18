@@ -31,11 +31,13 @@ function Portrait({ member }: { member: TeamMember }) {
 }
 
 /** "Stand des Projekts": the programme with a link, then the steps so far and the planned ones as a short
-    vertical sequence, in an ink card. The state is written out (Erledigt / Geplant); the marker on the line only echoes
-    it (done: a yellow disc with a check; planned: an empty dashed ring). */
+    vertical sequence, in a parquet card like the founders' cards (it was an ink card until 2026-11-18: with the blue
+    closing band and the ink footer right after it the page ended on three dark slabs). The state is written out
+    (Erledigt / Geplant); the marker on the line only echoes it (done: a small green disc with a white check, the
+    check badge of the cost cards; planned: an empty dashed ring). */
 function ProjectStatus() {
   return (
-    <div className="team-status surface-tinte">
+    <div className="team-status">
       <div className="team-status-head">
         <h2 className="team-status-title" id="team-status-title">{projectStatus.title}</h2>
         <p className="team-status-intro">{rich(projectStatus.intro)}</p>

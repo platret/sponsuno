@@ -1,8 +1,8 @@
 /* Team (/ueber-uns/): parkett-2 band under the page head band. Four founders as cards (radius 20, 1 px border, no
    shadow), each with a flat round portrait (upright, no rim): a monogram (Archivo Wide initials, white on blue) until
-   a real photo exists; a photo uses the same disc. Then "Stand des Projekts" as one ink card
-   (.surface-tinte): the head on the left, the steps as a short vertical sequence on the right, with uppercase labels
-   for date and state. No motion. */
+   a real photo exists; a photo uses the same disc. Then "Stand des Projekts" as one more parquet card
+   (same border and radius; not ink: the blue closing band and the ink footer follow, see below): the head on the
+   left, the steps as a short vertical sequence on the right, with uppercase labels for date and state. No motion. */
 
 .team-grid {
   display: grid;
@@ -34,16 +34,21 @@
 .team-name { margin-top: 2rem; }
 .team-focus { margin-top: .5rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); max-width: 18rem; }
 
-/* Stand des Projekts: one ink card under the founders. Head in the first column, the steps beside it: a hairline runs
-   through the markers (done: yellow disc with a check; planned: dashed ring and a dashed line after it). The state is
-   also written out; the markers are decorative. */
+/* Stand des Projekts: one parquet card under the founders (the :root roles: ink title and step text 15.5:1, grey
+   text 6.5:1, blue dates and link underline 7.3:1). It was an ink card until 2026-11-18; then ink card, blue closing
+   band and ink footer stacked as three dark slabs, so the page now keeps one dark block before the footer, the blue
+   band. Head in the first column, the steps beside it: a hairline runs through the markers (done: a green disc with a
+   white check, 5.7:1, the disc 5.2:1 on parquet; planned: a dashed grey ring, 6.5:1, and a dashed line after it).
+   The state is also written out; the markers are decorative. */
 .team-status {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2rem clamp(1.5rem, 1rem + 2vw, 3rem);
   margin-top: clamp(1rem, .5rem + 1.4vw, 2rem);
   padding: var(--card-pad);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
+  background: var(--surface);
 }
 .team-status-title { font-size: var(--fs-sub); line-height: 1.1; }
 .team-status-intro { margin-top: .75rem; font-size: var(--fs-small); line-height: 1.6; }
@@ -71,9 +76,9 @@
   width: 22px; height: 22px;
   border: 2px dashed var(--text);
   border-radius: 50%;
-  color: var(--tinte);
+  color: var(--weiss);
 }
-.is-done > .team-step-mark { border: 0; background: var(--gelb); }
+.is-done > .team-step-mark { border: 0; background: var(--gruen); }
 .team-step-mark .icn { stroke-width: 3.5; }
 
 .team-step-meta {

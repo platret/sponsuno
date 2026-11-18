@@ -904,3 +904,124 @@ test.describe('clean rules', () => {
     });
   }
 });
+
+// The surface rule (DESIGN.md -> Colour, 2026-11-18): large surfaces are parquet, ink and one brand colour, blue. Red,
+// yellow and green are accent colours (thin lines, small signs, tags, the yellow button on ink) and never the ground
+// of a band, a tile or a panel. Checked on every page at the two design widths: nothing that is at least two fifths
+// of the window wide and taller than 200 px may have the red, the yellow or the green token as its background. (Two
+// fifths, not "wider than half": a door tile is exactly half the window at 1440 px and must be caught. The yellow
+// buttons and the tags are at most 52 px high, the red row of step two 60 px.) The one green that carries meaning,
+// the result panel of the match card (.match-foot), is named and skipped; it is checked on its own below: never
+// wider than half its card from 600 px up.
+// The landing page's block sequence and the closing band of the topic pages are pinned with it.
+const SURFACE_PAGES = ['/', '/kosten/', '/fragen/', '/ueber-uns/', '/impressum/', '/datenschutz/', '/404.html', '/warteliste/bestaetigt/'];
+
+/** The ground an element stands on: its own background, or the nearest painted one behind it, as a token name */
+const grounds = (page: Page, selectors: string[]) => page.evaluate((list) => {
+  // One fresh probe per token: with reduced motion every element has a (very short) transition, so a probe whose
+  // colour is changed would still report the colour before
+  const names: Record<string, string> = {};
+  for (const token of ['parkett', 'parkett-2', 'tinte', 'tinte-2', 'blau', 'rot', 'gelb', 'gruen']) {
+    const probe = document.createElement('i');
+    probe.style.backgroundColor = `var(--${token})`;
+    document.body.append(probe);
+    names[getComputedStyle(probe).backgroundColor] = token;
+    probe.remove();
+  }
+  return list.map((selector) => {
+    for (let el = document.querySelector(selector); el; el = el.parentElement) {
+      const bg = getComputedStyle(el).backgroundColor;
+      if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') return names[bg] ?? bg;
+    }
+    return 'none';
+  });
+}, selectors);
+
+test.describe('surface rule: parquet, ink and blue', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+  for (const [width, height] of [[1440, 900], [390, 844]] as const) {
+    test(`${width} px: no red, yellow or green surface on any page`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      for (const path of SURFACE_PAGES) {
+        await test.step(path, async () => {
+          await page.goto(path);
+          await expect(page.locator('h1')).toBeVisible();
+          const loud = await page.evaluate(() => {
+            // One fresh probe per token (a changed probe would report the colour before: see grounds())
+            const banned = ['rot', 'gelb', 'gruen'].map((token) => {
+              const probe = document.createElement('i');
+              probe.style.backgroundColor = `var(--${token})`;
+              document.body.append(probe);
+              const colour = getComputedStyle(probe).backgroundColor;
+              probe.remove();
+              return colour;
+            });
+            // Every token resolves to a real colour of its own (a renamed token must not turn this test into a no-op)
+            if (banned.some((colour) => !/^rgb\(\d+, \d+, \d+\)$/.test(colour)) || new Set(banned).size !== banned.length) return ['tokens --rot / --gelb / --gruen not found'];
+            const out: string[] = [];
+            for (const el of document.querySelectorAll('body, body *')) {
+              const box = el.getBoundingClientRect();
+              if (box.width < window.innerWidth * 0.4 || box.height <= 200) continue;
+              if (el.closest('.match-foot')) continue;
+              const bg = getComputedStyle(el).backgroundColor;
+              if (banned.includes(bg)) out.push(`${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''} ${Math.round(box.width)} x ${Math.round(box.height)} ${bg}`);
+            }
+            return out;
+          });
+          expect(loud).toEqual([]);
+        });
+      }
+    });
+
+    test(`${width} px: the blocks run parquet, parquet, ink, parquet 2, blue and ink, parquet, ink`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto('/');
+      await expect(page.locator('h1')).toBeVisible();
+      expect(await grounds(page, ['#top', '#idee', '.wb', '#ablauf', '#fuer-wen .door-sport', '#fuer-wen .door-firma', '#warteliste', 'footer.ft']))
+        .toEqual(['parkett', 'parkett', 'tinte', 'parkett-2', 'blau', 'tinte', 'parkett', 'tinte']);
+      // The waitlist is still the destination: the one ink card of the band, with the yellow button inside
+      expect(await grounds(page, ['#warteliste .wl-card', '#warteliste .wl-submit'])).toEqual(['tinte', 'gelb']);
+      // A topic page closes on the one brand colour, between its last parquet section and the ink footer
+      await page.goto('/kosten/');
+      await expect(page.locator('h1')).toBeVisible();
+      expect(await grounds(page, ['.lg-header', '.lg-band', '.pg-end', 'footer.ft'])).toEqual(['tinte', 'tinte', 'blau', 'tinte']);
+    });
+  }
+
+  // The one green that carries meaning stays a compact panel at every width: a column of the match card where the
+  // card has three columns (at most half the card wide), a low row inside the card's padding between 600 and 1039 px
+  // (until 2026-11-18 it bled across the whole card there, right above the blue door tile), the card's foot on phones.
+  for (const width of [1440, 1024, 768, 600, 390]) {
+    test(`${width} px: the green result panel is a compact part of the match card, not a band`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      await expect(page.locator('h1')).toBeVisible();
+      const card = (await page.locator('.steps-match .match').boundingBox())!;
+      const panel = (await page.locator('.steps-match .match-foot').boundingBox())!;
+      expect(await grounds(page, ['.steps-match .match-foot'])).toEqual(['gruen']);
+      if (width >= 1040) expect(panel.width).toBeLessThanOrEqual(card.width * 0.5);
+      else if (width >= 600) {
+        expect(panel.height).toBeLessThanOrEqual(120);
+        expect(panel.x).toBeGreaterThan(card.x + 8);
+        expect(panel.x + panel.width).toBeLessThan(card.x + card.width - 8);
+      } else expect(panel.height).toBeLessThanOrEqual(200);
+    });
+  }
+
+  // Phones: the floating ink waitlist pill has no body of its own on the ink firm tile (and each tile has its own
+  // waitlist button), so it is gone from the doors on.
+  test('390 px: the floating waitlist pill shows over the steps and is gone over the doors', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    const pill = page.locator('.sticky-cta');
+    const show = (selector: string) => page.evaluate((s) => document.querySelector(s)!.scrollIntoView({ block: 'start', behavior: 'instant' }), selector);
+    await show('#ablauf');
+    await expect(pill).toHaveClass(/is-shown/);
+    for (const tile of ['.door-sport', '.door-firma']) {
+      await show(tile);
+      await expect(pill).not.toHaveClass(/is-shown/);
+      await expect(pill.locator('a')).toHaveAttribute('tabindex', '-1');
+    }
+  });
+});

@@ -1,9 +1,15 @@
-/* Waitlist (#warteliste, Waitlist.tsx): the yellow closing band (.surface-gelb: ink text, 9.8:1). The giant H2 in ink
-   across the full width; under it, from 1200 px, two columns on the 12-column grid: the intro in columns 1-5, the form
-   in an ink card (.surface-tinte, radius 20) in columns 6-12. Below that the card sits under the intro. The card holds
-   the role pills (real radios), one e-mail row with the yellow pill button, the hint; after sending, the success box.
-   Decoration: one parquet court line along the upper edge and, on it, one sticker (the start number).
-   The band uses the page's section padding (.section), like every other block. The ink footer follows. Prefix wl-. */
+/* Waitlist (#warteliste, Waitlist.tsx): the closing band on the lighter parquet (.surface-parkett: ink title and
+   intro, 15.5:1). It is the destination of the page without being a colour band: the giant H2 in ink across the full
+   width, the section's full padding, and the one ink card of the page with the yellow button. Under the title, from
+   961 px, two columns on the 12-column grid: the intro on the left, the form in an ink card (.surface-tinte,
+   radius 20) on the right (columns 5-12, from 1200 px 6-12), so the card stays a card on its calm ground and never
+   becomes a second ink band above the ink footer. Below 961 px the card sits under the intro and the band keeps
+   half a section padding more under it. The card holds the role pills (real radios), one e-mail row with the yellow
+   pill button, the hint; after sending, the success box.
+   Decoration: one thin yellow court line along the upper edge and, on it, one sticker (the start number). Yellow is
+   an accent here (the line, the button), never the ground.
+   The band uses the page's section padding (.section), like every other block. Neighbours: the blue and the ink door
+   tile above, the ink footer below; it never meets another parquet block. Prefix wl-. */
 
 .wl.section {
   /* The start number: its size (96 px, phones 72 px) and how far below the band's upper edge it starts */
@@ -16,14 +22,13 @@
 
 /* ---------- Decoration: one court line and one sticker (aria-hidden) ---------- */
 
-/* The court line: one straight parquet line from edge to edge in the band's upper margin, above the title, through
-   the middle of the sticker. Nothing else is at that height at any width, so it never runs behind text or the form.
+/* The court line: one straight yellow line from edge to edge in the band's upper margin, above the title, through
+   the middle of the sticker (decoration: it carries no meaning, so its 1.6:1 on parquet is no contrast failure). Nothing else is at that height at any width, so it never runs behind text or the form.
    Drawn with the scroll while the band comes in (the kit's default range). The svg is a 12 px strip (kit: CourtLines
    variant "band"); the line has the kit's one weight (3 px at 1440 px wide, 2 px on phones). */
 .wl-line {
   inset: calc(var(--wl-stk-top) + var(--wl-stk) / 2 - 6px) 0 auto;
   block-size: 12px;
-  --cl-hell: var(--parkett);
 }
 /* The sticker's row: in the flow, above the end of the title (the title fills the row at every width, so there is no
    free place beside it). Pulled up into the band's upper margin; the title follows below it. Collected, the sticker
@@ -174,17 +179,27 @@
 
 /* ---------- Responsive ---------- */
 
-/* Desktop: two columns on the 12-column grid (24 px gutter), from 1200 px: there the card is wide enough for the
-   pills two by two and the button beside the field. Below that the card fills the container under the intro (a
-   narrow card beside a three-line intro grew to twice its height and left the column beside it empty). */
-@media (min-width: 1200px) {
+/* Two columns on the 12-column grid (24 px gutter) from 961 px, where the title is one line: the intro in columns
+   1-4, the card in columns 5-12 (at least 580 px: wide enough for the pills two by two and the button beside the
+   field); from 1200 px the intro takes five columns and the card seven. On parquet a card that filled the container
+   read as a second ink band right above the ink footer, so it is a card beside the intro as early as it fits. */
+@media (min-width: 961px) {
   .wl-inner {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: 24px;
     align-items: start;
   }
-  .wl-head { grid-column: 1 / span 5; padding-top: .5rem; }
+  .wl-head { grid-column: 1 / span 4; padding-top: .5rem; }
+  .wl-card { grid-column: 5 / -1; }
+}
+@media (min-width: 1200px) {
+  .wl-head { grid-column: 1 / span 5; }
   .wl-card { grid-column: 6 / -1; }
+}
+/* Stacked (tablets upright, phones): the card fills the container, so the band keeps half a section padding more
+   below it: card and footer must not read as two ink slabs with a strip between them. Spacing, no new colour. */
+@media (max-width: 960px) {
+  .wl.section { padding-bottom: calc(var(--section-pad) * 1.5); }
 }
 
 @media (max-width: 560px) {

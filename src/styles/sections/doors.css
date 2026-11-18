@@ -1,11 +1,14 @@
-/* The two doors (#fuer-wen, Doors.tsx): two full-bleed colour tiles side by side, blue (sport and culture) and red
-   (companies), stacked on phones. The copy stands at the top left of each tile, the tile's white line drawing
-   (.door-art, a square box holding the kit's court lines) in the lower right corner. White text on both grounds
-   (8.0:1 on blue, 5.3:1 on red), white focus ring (--focus from the surface class). Two line colours per tile: white
-   and one yellow accent. One small sticker per tile, nothing else is tilted. Prefix door-.
+/* The two doors (#fuer-wen, Doors.tsx): two full-bleed tiles side by side, blue (sport and culture, .surface-blau)
+   and ink (companies, .surface-tinte), stacked on phones. The copy stands at the top left of each tile, the tile's
+   white line drawing (.door-art, a square box holding the kit's court lines) in the lower right corner.
+   Blue tile: white label, title and sentence (8.0:1), white focus ring. Ink tile: parquet label, title and sentence
+   (15.5:1; the label is not the ink surface's yellow accent: the tiles are a pair with one light label each, and
+   yellow stays with the drawing), yellow focus ring (9.8:1); white lines (17.1:1). Both: the parquet pill button with an ink
+   label (15.5:1; the pill stands 7.3:1 off blue and 15.5:1 off ink). Two line colours per tile: white and one yellow
+   accent. One small sticker per tile, nothing else is tilted. Prefix door-.
 
    Grid: the copy starts on the page container's left edge (blue) or one inner gutter right of the page's middle
-   (red); the shop's ground line ends on the container's right edge. The tiles' top padding is the section padding of
+   (ink); the shop's ground line ends on the container's right edge. The tiles' top padding is the section padding of
    every other block.
 
    Space: the tile reserves the drawing's height below the copy (padding-bottom), so the drawing's box starts where
@@ -33,12 +36,16 @@
 .door-body { position: relative; z-index: 1; display: grid; justify-items: start; max-width: 30rem; pointer-events: none; }
 .door-body > * { pointer-events: auto; }
 .door-label { margin-bottom: 1rem; }
+.door-firma .door-label { color: var(--parkett); }
 .door-title {
   font-size: clamp(2rem, 1.3rem + 3vw, 4rem);
   line-height: 1;
   color: var(--heading);
 }
 .door-text { margin-top: 1.25rem; max-width: 26rem; font-size: var(--fs-lead); line-height: 1.5; }
+/* The ink tile's sentence is parquet, not the light grey of body text on ink: the two tiles are a pair, and the
+   sentence beside it on blue is white */
+.door-firma .door-text { color: var(--parkett); }
 .door-btn { margin-top: 2rem; }
 .door-btn-icon { margin-right: -.2rem; }
 
@@ -81,7 +88,7 @@
 .door-ball-move { fill: var(--gelb); offset-rotate: 0deg; }
 @media (forced-colors: active) { .door-ball { display: none; } }
 
-/* The shop sign is lit at rest (the tile's one yellow, like the ball on the blue tile) */
+/* The shop sign is lit at rest (the drawing's one yellow, like the ball on the blue tile) */
 .door-firma .cl-glow { opacity: 1; }
 
 /* ---------- Motion ---------- */

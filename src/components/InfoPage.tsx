@@ -73,19 +73,21 @@ function TopicBand({ id }: { id: InfoPageId }) {
   }
 }
 
-/** Closing block, the same yellow band as the landing page's waitlist: the giant title, the launch line and one button
-    to the waitlist on the landing page. No sticker: the page head band holds the page's only one. */
+/** Closing block, a blue band (the one brand colour; a topic page has no other colour surface): the giant title, the
+    launch line and one parquet button to the waitlist on the landing page. Blue, because it must stand apart from the
+    parquet section before it and from the ink footer after it on every topic page. No sticker: the page head band
+    holds the page's only one. */
 function PageEnd({ id, role }: { id: InfoPageId; role?: Role }) {
   const more = infoPage.more[id];
   const text = closingLine(infoPage.endText, infoPage.previewEndText);
   return (
-    <section className="section surface-gelb pg-end" aria-labelledby="pg-end-title">
+    <section className="section surface-blau pg-end" aria-labelledby="pg-end-title">
       <div className="container">
         <h2 id="pg-end-title">{infoPage.endTitle}</h2>
         {text && <p className="pg-end-text">{text}</p>}
         {more && <p className="pg-end-more">{rich(more)}</p>}
         <div className="pg-end-actions">
-          <a className="btn btn-tinte" href={waitlistHref(role)}>{infoPage.endButton}</a>
+          <a className="btn btn-parkett" href={waitlistHref(role)}>{infoPage.endButton}</a>
         </div>
       </div>
     </section>

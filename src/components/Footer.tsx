@@ -19,7 +19,7 @@ type FooterProps = {
 
 /**
  * Ink closing block of every page (.surface-tinte): the claim and the link columns, the sticker album with the whistle
- * sticker beside it (landing page only), the giant loop wordmark in parquet and the copyright row. On the landing page it follows the yellow waitlist band; on
+ * sticker beside it (landing page only), the giant loop wordmark in parquet and the copyright row. On the landing page it follows the parquet waitlist band; on
  * sub-pages it stands alone (ft-standalone). `data-header-dark` turns the landing header ink while the footer runs
  * under it.
  */

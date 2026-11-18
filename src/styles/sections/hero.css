@@ -110,6 +110,8 @@
   inset-block-end: calc(var(--hero-base) + var(--hero-r) * .7071 - var(--s) / 2);
   inline-size: var(--s);
   pointer-events: none;
+  /* what the collected ball's dashed outline takes: ink at half strength, 3.2:1 on parquet (as .wl-mark) */
+  color: var(--tinte);
 }
 .hero-ball .stk { display: block; inline-size: 100%; pointer-events: auto; }
 

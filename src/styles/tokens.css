@@ -1,5 +1,5 @@
-/* Sponsuno design tokens. Source: design system v2 "Turnhalle" (November 2026): ink type on a light parquet ground,
-   four court-line colours. Shared by the landing page, the static pages and the parked demo. See DESIGN.md. */
+/* Sponsuno design tokens. Source: design system v2 "Turnhalle" (November 2026): ink type on a light parquet ground.
+   Surfaces: parquet, ink and one brand colour (blue). Red, yellow and green are accent colours only. Shared by the landing page, the static pages and the parked demo. See DESIGN.md. */
 
 /* Metric-matched fallbacks: until the self-hosted fonts arrive, text is set in Arial scaled to the same width and line
    box, so the swap (font-display: swap) moves nothing (CLS). Schibsted: computed from the font tables (advance widths
@@ -17,13 +17,13 @@
   --parkett-2: #EFE8D8;      /* alternate band, cards on parquet */
   --grau: #55585E;           /* body text on parquet (6.5:1; 5.8:1 on parkett-2) */
   --grau-hell: #B9BBBF;      /* body text on ink (8.9:1) */
-  --blau: #1F4E9C;           /* line colour; accent text and links on parquet (7.3:1); blue band with white text */
-  --rot: #C23B24;            /* line colour; red band with white or parquet text; small text on parquet only >= 4.5:1 */
-  --gruen: #1A7552;          /* line colour; green fills with white text (5.7:1) */
-  --gelb: #EDBE3A;           /* line colour; accent on ink (9.8:1); yellow band or button with ink text. Never text on parquet */
+  --blau: #1F4E9C;           /* the one brand colour: blue surfaces with white text (8.0:1); line colour; accent text and links on parquet (7.3:1) */
+  --rot: #C23B24;            /* accent only (never a surface): line colour, small signs with a white icon (5.3:1); small text on parquet only >= 4.5:1 */
+  --gruen: #1A7552;          /* accent only (never a surface): the match result panel and check badges with white text (5.7:1) */
+  --gelb: #EDBE3A;           /* accent only (never a surface): line colour, tags, accent on ink (9.8:1), the button on ink with ink text. Never text on parquet */
   --linie: #E2DAC6;          /* hairlines and card borders on parquet */
   --linie-dunkel: #3A3E45;   /* borders inside ink areas */
-  --weiss: #FFFFFF;          /* die-cut border of stickers, text on blue / red / green only */
+  --weiss: #FFFFFF;          /* die-cut border of stickers, text on blue and on the small red / green signs only */
   --error-on-dark: #F2C5B5;  /* form error text on ink (documented extra) */
 
   --display: "Archivo Wide", "Archivo Wide Fallback", "Arial Black", "Helvetica Neue", Arial, system-ui, sans-serif;
@@ -62,7 +62,7 @@
   /* Role tokens (DESIGN.md -> Colour): one light theme. Section CSS uses these for a surface and what stands on it.
      :root holds the roles of the parquet page surface; an ink area sets them again for itself with the class
      .surface-tinte (site.css; also used by the page head band, the static header and the footer), so the same
-     component CSS works on both grounds. Colour bands (blue, red, yellow) set what they need in their own section. */
+     component CSS works on both grounds. The blue ground does the same with .surface-blau. */
   --bg: var(--parkett);                /* page surface (sections, reading column, scrolled header) */
   --bg-alt: var(--parkett-2);          /* alternate band, boxes on the page surface (table of contents) */
   --surface: var(--parkett);           /* cards on either band (with a 1 px --line border) */

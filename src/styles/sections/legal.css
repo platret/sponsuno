@@ -91,12 +91,15 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 /* ---------- Page head band (PageBand in PageHeader.tsx): label, H1 and intro on ink, right under the header ----------
    .surface-tinte (set in PageBand) paints the ground and sets the ink roles: parquet H1, light grey intro, yellow label
    and link underline. On the right a piece of the hall floor (decoration, aria-hidden): the centre circle rising from
-   the band's lower edge (parquet line, radius --r, its right edge on the container's text edge --edge), the halfway
-   line through its centre (yellow) and one small sticker on the centre spot (--stk: 56 to 72 px), half on the page
-   below. Two line colours, nothing else.
-   From 1000 px the text keeps left of the halfway line and the intro left of the circle; below that the lines get
-   their own strip under the text (padding-bottom), so no line ever runs behind a word.
-   Motion without script (these pages ship none): the lines draw once on load (kit-draw of kit.css, under 1.2 s), the
+   the band's lower edge (one parquet line, 15.5:1 on ink, radius --r, its right edge on the container's text edge
+   --edge) and one small sticker on the centre spot (--stk: 56 to 72 px), half on the page below. Nothing else: the
+   band's lower edge is the halfway line. There is no vertical line (until 2026-11-18 a yellow one ran, from 1000 px,
+   up to the header, straight down from the yellow waitlist button, as if the button hung on it; the short parquet
+   line that replaced it stuck out of the circle and ended on the sticker, like a string the sticker hung from).
+   Clear ink lies between the bar and the circle.
+   From 1000 px the text keeps left of the circle; below that the circle gets its own strip under the text
+   (padding-bottom), so the line never runs behind a word.
+   Motion without script (these pages ship none): the line draws once on load (kit-draw of kit.css, under 1.2 s), the
    sticker settles; with reduced motion nothing moves. The static styles are the final state. */
 .lg-band {
   --r: clamp(5.25rem, 11vw, 9rem);
@@ -112,31 +115,23 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-band .lg-intro, .lg-band .section-intro, .lg-band .gd-note { max-width: 40rem; }
 .lg-band-art { position: absolute; inset: 0; overflow: hidden; }
 .cl.lg-band-arc { inset: auto var(--edge) 0 auto; inline-size: calc(2 * var(--r)); block-size: var(--r); overflow: visible; }
-.cl.lg-band-line {
-  inset: auto calc(var(--edge) + var(--r) - 1px) var(--gap, 0px) auto;
-  inline-size: 2px; block-size: calc(var(--r) + 1.5rem - var(--gap, 0px)); overflow: visible;
-}
 .stk.lg-band-stk {
   position: absolute; z-index: 2; right: calc(var(--edge) + var(--r)); bottom: 0;
   inline-size: var(--stk);
   translate: 50% 50%;
 }
-/* The 404 page: the sticker is gone, its dashed album slot stays (the kit's "collected" look) and the halfway line
-   stops at it. Blended with the page, so the outline is light on the ink above the band's edge and dark on the
-   parquet below it (the band makes no stacking context for that reason; the sticker's z-index lifts it over the
-   section that follows). */
+/* The 404 page: the sticker is gone, its dashed album slot stays (the kit's "collected" look). Blended with the
+   page, so the outline is light on the ink above the band's edge and dark on the parquet below it (the band makes
+   no stacking context for that reason; the sticker's z-index lifts it over the section that follows). */
 .lg-band-slot { color: var(--weiss); mix-blend-mode: difference; }
 .lg-band-slot .stk-slot { opacity: .8; }
-.lg-band-art:has(+ .lg-band-slot) { --gap: calc(var(--stk) * .44); }
 .lg-band-badge { margin-bottom: 1.5rem; }
 @media (min-width: 1000px) {
   .lg-band { padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
   .lg-band-inner { max-width: calc(100% - var(--r) - 2.5rem); }
-  .cl.lg-band-line { block-size: calc(100% - var(--gap, 0px)); }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .lg-band .cl-path { animation: kit-draw .6s cubic-bezier(.65, 0, .35, 1) backwards; }
-  .lg-band-arc .cl-path { animation-duration: .8s; animation-delay: .3s; }
+  .lg-band .cl-path { animation: kit-draw .8s cubic-bezier(.65, 0, .35, 1) .1s backwards; }
   /* The sticker is stuck on last: hidden until then (no start pose on show), then it settles */
   .lg-band-stk { animation: stk-settle .36s var(--ease-out) .7s backwards, lg-band-stick .18s ease-out .7s backwards; }
 }

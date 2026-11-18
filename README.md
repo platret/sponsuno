@@ -73,7 +73,7 @@ Vite 8, React 19 und TypeScript im Strict-Modus, ohne UI- oder CSS-Framework. Je
 
 ## Design-System
 
-Alles folgt dem Sponsuno Design-System v2 «Turnhalle»: Tinte auf hellem Parkett, vier Linienfarben wie auf dem Boden einer Mehrzweckhalle und sechs kleine Sticker als einzige verspielte Ebene. Farbe kommt als dünne Linie, als Sticker und als wenige volle Farbbänder.
+Alles folgt dem Sponsuno Design-System v2 «Turnhalle»: Tinte auf hellem Parkett, dünne Hallenlinien wie auf dem Boden einer Mehrzweckhalle und sechs kleine Sticker als einzige verspielte Ebene. Grosse Flächen sind Parkett, Tinte und ein Blau; Rot, Gelb und Grün kommen nur als Akzent: dünne Linie, Sticker, kleines Zeichen.
 
 <p>
   <img src="https://img.shields.io/badge/Tinte-1A1C20-1A1C20?style=for-the-badge&labelColor=1A1C20" alt="Tinte #1A1C20">

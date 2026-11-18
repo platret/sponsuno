@@ -80,7 +80,7 @@ html.motion .stk.is-dragging .stk-in { scale: 1.05; rotate: 0deg; animation: non
   translate: -50% 0;
   display: flex; align-items: center; gap: .5rem;
   padding: .3rem .35rem .3rem .85rem;
-  border: 1px solid rgba(248, 244, 234, .3); border-radius: var(--radius-pill);
+  border: 1px solid rgba(248, 244, 234, .4); border-radius: var(--radius-pill);
   background: var(--tinte);
   color: var(--parkett);
   font: var(--display-weight) .8125rem/1 var(--display); letter-spacing: var(--display-tracking);

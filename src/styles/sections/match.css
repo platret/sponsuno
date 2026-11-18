@@ -2,8 +2,9 @@
    "Beispieldaten" tag (flat, outlined) stands in the card's top left corner; two parties with flat round avatars
    (blue for the seeker, red for the firm); then the green result panel (white text on --gruen, 5.7:1): the result
    line in the display face and the four criteria as parquet chips with line icons. Nothing is tilted.
-   Base layout: one column (phones), the two parties side by side from 600 px; steps.css lays the card out on three
-   columns from 1040 px. Prefix match-. (The parked scroll story styled the same class names on ink in story-art.css.) */
+   Base layout: one column (phones); from 600 px the two parties side by side and the result as one compact rounded
+   row inside the card's padding (score left, criteria right; never a green band bleeding across the card: surface
+   rule); steps.css lays the card out on three columns from 1040 px. Prefix match-. (The parked scroll story styled the same class names on ink in story-art.css.) */
 
 .match {
   --match-pad: clamp(1.25rem, 1rem + 1vw, 1.75rem);
@@ -64,11 +65,22 @@
   font-size: .8125rem; font-weight: 600; line-height: 1.4; color: var(--tinte);
 }
 
-/* Wider than a phone, narrower than three comfortable columns: the two parties side by side, label and result panel
-   across both */
+/* Wider than a phone, narrower than three comfortable columns: the two parties side by side, label and result
+   across both. The result is one compact row here, inside the card's padding and with the small radius: the check
+   and the score on the left, the four criteria on the right (about 64 px high; at the narrow end the criteria take
+   a second row). Until 2026-11-18 the panel bled to the card's edges at its full size here: a container-wide green
+   band (942 x 125 px at 1024 px) right above the blue door tile, which the surface rule forbids. */
 @media (min-width: 600px) and (max-width: 1039px) {
   .match { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
   .match-label, .match-foot { grid-column: 1 / -1; }
+  .match-foot {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .625rem 1.5rem;
+    margin: .25rem 0 0;
+    padding: .75rem 1rem;
+    border-radius: var(--radius-sm);
+  }
+  .match-score { align-items: center; font-size: 1.125rem; }
+  .match-check { margin-top: 0; }
 }
 
 /* Settle (only under html.motion, inside a revealed [data-reveal] block): avatars, check and chips pop in turn */

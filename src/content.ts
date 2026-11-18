@@ -199,7 +199,7 @@ export const steps = {
   ],
 };
 
-// The two doors (#fuer-wen, Doors.tsx): one colour tile per side of the market. Titles are the hero's button labels;
+// The two doors (#fuer-wen, Doors.tsx): one tile per side of the market (blue and ink). Titles are the hero's button labels;
 // the sentences are cut from the first two solution steps. The button sets the waitlist role and leads to #warteliste.
 export const doors = {
   title: AUDIENCE_TITLE,
@@ -500,7 +500,7 @@ export const projectStatus = {
 };
 
 export const waitlist = {
-  // The giant closing H2 on the yellow band; also the title of the topic pages' closing block and the sticky bar
+  // The giant closing H2 of the parquet waitlist band; also the title of the topic pages' closing block and the sticky bar
   title: 'Früh dabei sein.',
   intro: 'Tragen Sie sich ein. Wir melden uns, sobald Sponsuno startet.',
   // Replaces intro while the form stores nothing (no VITE_WAITLIST_ENDPOINT); without a contact address no intro is shown
