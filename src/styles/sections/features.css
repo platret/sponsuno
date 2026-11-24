@@ -1,70 +1,64 @@
-/* «Mit Sponsuno» (Features.tsx): three cards on Tintenblau. Card = Tinte 2 surface; on top a picture area with a
-   small Hafer product panel (square corners), below the step title and text. Bernstein only in the score dots. */
+/* «Mit Sponsuno» (Features.tsx, simpler since 2026-11-25): Tintenblau, two columns. Left the head and three steps
+   under thin pitch lines, right one large Hafer product panel (square corners) on a Tinte-2 field. Bernstein only in
+   the score dots. */
 
-.fx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.fx-card { display: flex; flex-direction: column; background: var(--graphit-2); }
-.fx-picture {
-  display: grid; place-items: center;
-  aspect-ratio: 4 / 3;
-  padding: clamp(1.25rem, .75rem + 2vw, 2rem);
-  background: var(--card-dark-b);
+.fx-grid {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2.5rem, 1rem + 5vw, 6rem); align-items: center;
 }
-.fx-text { padding: clamp(1.25rem, 1rem + 1vw, 1.75rem); }
-.fx-text h3 { color: var(--kalk); margin-bottom: .6rem; }
-.fx-text p { color: var(--steel); font-size: 1rem; }
-.fx-caption { margin-top: 1rem; font-size: var(--fs-small); color: rgba(236, 230, 218, .55); text-align: right; }
 
-/* ---------- The product panel (a picture: aria-hidden, text sizes for looks only, contrast still 4.5:1) ---------- */
+.fx-steps { display: grid; gap: 1.75rem; margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem); }
+.fx-step { border-top: 1px solid var(--pitch-line); padding-top: 1.25rem; }
+.fx-step h3 { color: var(--kalk); margin-bottom: .5rem; }
+.fx-step p { color: var(--steel); font-size: 1rem; line-height: 1.6; max-width: 30rem; }
+
+.fx-figure {
+  margin: 0;
+  display: grid; justify-items: center;
+  padding: clamp(1.5rem, .5rem + 4vw, 4rem);
+  background: var(--graphit-2);
+}
+.fx-caption { justify-self: end; margin-top: 1rem; font-size: var(--fs-small); color: var(--steel); }
+
+/* ---------- The product panel (a picture: aria-hidden; still readable at its real size) ---------- */
 .fx-ui {
-  width: 100%; max-width: 320px;
+  width: 100%; max-width: 30rem;
   background: var(--kalk); color: var(--graphit);
-  font-size: .8125rem; line-height: 1.35;
-  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .6);
+  font-size: .9375rem; line-height: 1.35;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, .7);
 }
 .fx-bar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: .6rem .8rem; border-bottom: 1px solid var(--kalk-2);
-  font: 500 .75rem/1.2 var(--display); letter-spacing: .01em;
+  padding: .9rem 1.1rem; border-bottom: 1px solid var(--kalk-2);
+  font: 500 .875rem/1.2 var(--display); letter-spacing: .01em;
 }
 .fx-tab { font: 600 .6875rem/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
 .fx-ui b { font-weight: 600; display: block; }
-.fx-ui small { display: block; font-size: .75rem; color: var(--ink); }
+.fx-ui small { display: block; font-size: .8125rem; color: var(--ink); margin-top: .15rem; }
 
 .fx-disc {
   display: inline-grid; place-items: center; flex: none;
-  width: 26px; height: 26px;
+  width: 34px; height: 34px;
   background: var(--graphit); color: var(--kalk);
-  font: 700 .6875rem/1 var(--display);
+  font: 700 .75rem/1 var(--display);
 }
 .fx-disc-f { background: var(--kalk-2); color: var(--graphit); }
 
-.fx-who { display: flex; align-items: center; gap: .6rem; padding: .7rem .8rem; }
-.fx-rows { margin: 0; padding: 0 .8rem .4rem; }
-.fx-rows div { display: grid; grid-template-columns: 5.5rem 1fr; gap: .5rem; padding: .45rem 0; border-top: 1px solid var(--kalk-2); }
-.fx-rows dt { color: var(--ink); }
-.fx-rows dd { margin: 0; font-weight: 600; }
-
-.fx-list li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .6rem; padding: .55rem .8rem; border-top: 1px solid var(--kalk-2); }
+.fx-list li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .85rem; padding: .9rem 1.1rem; border-top: 1px solid var(--kalk-2); }
 .fx-list li:first-child { border-top: 0; }
 .fx-pair { display: flex; }
-.fx-pair .fx-disc + .fx-disc { margin-left: -6px; box-shadow: -2px 0 0 var(--kalk); }
+.fx-pair .fx-disc + .fx-disc { margin-left: -8px; box-shadow: -2px 0 0 var(--kalk); }
 .fx-names { min-width: 0; }
 .fx-names b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fx-score { display: grid; justify-items: end; gap: .2rem; font-size: .6875rem; color: var(--ink); white-space: nowrap; }
+.fx-score { display: grid; justify-items: end; gap: .3rem; font-size: .75rem; color: var(--ink); white-space: nowrap; }
 .fx-dots { display: flex; gap: 3px; }
-.fx-dots i { width: 6px; height: 6px; background: var(--kalk-2); }
+.fx-dots i { width: 7px; height: 7px; background: var(--kalk-2); }
 .fx-dots i.is-on { background: var(--brass); }
 
-.fx-duo { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--kalk-2); }
-.fx-duo .fx-who { padding-inline: .8rem .4rem; }
-.fx-duo .fx-who + .fx-who { border-left: 1px solid var(--kalk-2); }
-.fx-criteria { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem .8rem; padding: .7rem .8rem; }
-.fx-criteria li { display: flex; align-items: center; gap: .35rem; }
-.fx-check { width: 14px; height: 14px; flex: none; fill: none; stroke: var(--brass-dark); stroke-width: 2; stroke-linecap: square; }
-.fx-result { margin: 0 .8rem; padding: .55rem .7rem; background: var(--graphit); color: var(--kalk); font-weight: 600; }
-.fx-agreed { display: flex; align-items: center; gap: .35rem; padding: .6rem .8rem .75rem; color: var(--ink); }
-
 @media (max-width: 960px) {
-  .fx-grid { grid-template-columns: 1fr; max-width: 34rem; }
-  .fx-picture { aspect-ratio: auto; min-height: 260px; }
+  .fx-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .fx-figure { padding: 1rem; }
+  .fx-list li { padding-inline: .8rem; gap: .6rem; }
 }

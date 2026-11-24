@@ -5,6 +5,9 @@ import { pageMeta } from './pages';
 import photoAlex from './assets/photos/team-alex-platret.jpg';
 import photoAurel from './assets/photos/team-aurel-eugster.jpg';
 import photoMaurice from './assets/photos/team-maurice-straessle.jpg';
+import photoAlexAvif from './assets/photos/team-alex-platret.avif';
+import photoAurelAvif from './assets/photos/team-aurel-eugster.avif';
+import photoMauriceAvif from './assets/photos/team-maurice-straessle.avif';
 
 // Main navigation (three items since 2026-11-25, owner's call: /kosten/ is linked from the FAQ and the notice pages,
 // not from the header or the footer since 2026-11-25): one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
@@ -234,17 +237,7 @@ export const features = {
   title: 'Vom Profil zum passenden Partner.',
   intro: 'Beide Seiten zeigen, was sie suchen und was sie bieten. Sponsuno bringt zusammen, was passt.',
   caption: 'Beispieldaten',
-  profile: {
-    title: 'Profil',
-    rows: [
-      { k: 'Region', v: 'Zürcher Oberland' },
-      { k: 'Sportart', v: 'Mountainbike, Langstrecke' },
-      { k: 'Sucht', v: 'Material und Reisekosten' },
-      { k: 'Bietet', v: 'Logo auf dem Trikot, Beiträge' },
-    ],
-  },
   list: { title: 'Passende Partner', tab: 'Vorschläge' },
-  match: { title: 'Ein Match', agreed: 'Gegenleistungen festgehalten' },
 };
 
 export type Track = 'seeker' | 'sponsor';
@@ -387,29 +380,54 @@ export const faq = {
   ] satisfies FaqItem[],
 };
 
-// Founders section (id="team"), on /ueber-uns/. Team decision (2026-11-03): full names allowed here.
-// Nothing else personal (no ages, schools, home addresses, private e-mails, social handles).
+// Short FAQ on the landing page (HomeFaq.tsx, 2026-11-25): four questions from faq.items, word for word (picked by
+// their question, so a changed question fails the build instead of silently dropping out), then a link to /fragen/.
+// The cost question stands in for the Kosten link that left the header and the footer.
+const HOME_FAQ_QUESTIONS = [
+  'Wann geht es los?',
+  'Bleibt nach der Provision genug übrig?',
+  'Für wen ist Sponsuno?',
+  'Sind die Firmen wirklich interessiert?',
+];
+export const homeFaq = {
+  title: 'Häufige Fragen',
+  link: 'Alle Fragen und Antworten',
+  items: HOME_FAQ_QUESTIONS.map((q) => {
+    const item = faq.items.find((i) => i.q === q);
+    if (!item) throw new Error(`homeFaq: no FAQ item "${q}" in faq.items`);
+    return item;
+  }),
+};
+
+// Founders section (id="team"), on /ueber-uns/, and the team row on the landing page (TeamStrip). Team decision
+// (2026-11-03): full names allowed here. Since 2026-11-25 (owner's call) no individual roles: the four are shown as
+// the founding team, in this order. Nothing else personal (no ages, schools, home addresses, private e-mails); the
+// only profile link allowed is each person's own LinkedIn page, added when they send it.
 // Without a photo the card shows a monogram. To add a real, consented photo later: put a square JPEG
-// (at least 240 x 240 px, under 40 KB) in src/assets/photos/, import it at the top of this file and set
-// `photo: { src: importedFile, alt: 'Porträt von …' }` on the person.
+// (240 x 240 px, under 40 KB) in src/assets/photos/, add it to PHOTOS in scripts/photos.mjs (sameName) and run
+// `npm run photos` for its AVIF, import both at the top of this file and set `photo` on the person.
 export type TeamMember = {
   name: string;
-  /** Provisional focus in the team */
-  focus: string;
-  photo?: { src: string; alt: string };
+  photo?: { src: string; avif: string; alt: string };
+  /** The person's own LinkedIn profile (https://www.linkedin.com/in/…), only once they sent it */
+  linkedin?: string;
 };
 
 const teamMembers: TeamMember[] = [
-  { name: 'Aurel Eugster', focus: 'Medien und Content', photo: { src: photoAurel, alt: 'Porträt von Aurel Eugster' } },
-  { name: 'Alex Platret', focus: 'Technik', photo: { src: photoAlex, alt: 'Porträt von Alex Platret' } },
-  { name: 'Maurice Strässle', focus: 'Branding, Marketing, Sales und Partnerschaften', photo: { src: photoMaurice, alt: 'Porträt von Maurice Strässle' } },
-  { name: 'Dozie Ilunga', focus: 'Organisation und Prozesse' },
+  { name: 'Aurel Eugster', photo: { src: photoAurel, avif: photoAurelAvif, alt: 'Porträt von Aurel Eugster' }, linkedin: 'https://www.linkedin.com/in/aurel-eugster-004569399/' },
+  { name: 'Alex Platret', photo: { src: photoAlex, avif: photoAlexAvif, alt: 'Porträt von Alex Platret' }, linkedin: 'https://www.linkedin.com/in/platret/' },
+  { name: 'Maurice Strässle', photo: { src: photoMaurice, avif: photoMauriceAvif, alt: 'Porträt von Maurice Strässle' }, linkedin: 'https://www.linkedin.com/in/maurice-str%C3%A4ssle-926a61391/' },
+  { name: 'Dozie Ilunga' },
 ];
 
 export const team = {
   title: 'Wer hinter Sponsuno steht',
-  intro: 'Wir sind ein Team aus vier Personen und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
+  intro: 'Wir sind ein Team aus vier Personen und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf.',
   members: teamMembers,
+  // Landing page row (TeamStrip)
+  stripLabel: 'Gründungsteam',
+  stripLink: 'Mehr über uns',
+  linkedinLabel: (name: string) => `${name} auf LinkedIn`,
 };
 
 // "Stand des Projekts" block at the end of the team section. Sources and rules: AGENTS.md -> Project status.
@@ -493,15 +511,11 @@ export const footer = {
   sub: 'Sponsoren finden für Sport und Kultur in der Deutschschweiz.',
   columns: [
     {
-      title: 'Plattform',
+      // One column since 2026-11-25 (Plattform had only two links left after Kosten moved out)
+      title: 'Sponsuno',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
         { href: pageMeta('fragen').path, label: 'Fragen' },
-      ],
-    },
-    {
-      title: 'Mehr',
-      links: [
         { href: pageMeta('ueber-uns').path, label: 'Über uns' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
