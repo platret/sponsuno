@@ -38,6 +38,16 @@
   text-wrap: initial;
 }
 .hero-accent { color: var(--brass); hyphens: manual; }
+/* The Bernstein word as letters (Hero.tsx): each half is nowrap, so it still only breaks at the soft hyphen. Under
+   html.motion the letters run one small wave, once after the load animation and again on hover: a crowd wave in
+   the stand, 30 ms apart, a tenth of the letter height. Nothing moves without motion. */
+.hero-accent-group { white-space: nowrap; }
+.hero-ch { display: inline-block; }
+.motion .hero-accent.is-waving .hero-ch { animation: hero-wave .55s cubic-bezier(.3, .7, .4, 1) calc(var(--i) * 30ms) both; }
+@keyframes hero-wave {
+  40% { translate: 0 -.1em; color: var(--brass-light); }
+  to { translate: 0 0; }
+}
 
 /* Pitch: halfway line across the full width, centre circle on it */
 .hero-pitch { position: relative; height: clamp(120px, 21vh, 210px); pointer-events: none; }

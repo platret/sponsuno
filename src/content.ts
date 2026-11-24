@@ -6,12 +6,12 @@ import photoAlex from './assets/photos/team-alex-platret.jpg';
 import photoAurel from './assets/photos/team-aurel-eugster.jpg';
 import photoMaurice from './assets/photos/team-maurice-straessle.jpg';
 
-// Main navigation: one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
+// Main navigation (three items since 2026-11-25, owner's call: /kosten/ is linked from the footer, the FAQ and the
+// notice pages, not from the header): one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
 // '#ablauf' is the landing page section (siteHref() in lib/links.ts: a plain anchor on the landing page, /#ablauf on the
 // other pages); the rest are page paths relative to the site root. The current page is marked by navCurrent().
 export const nav: FooterLink[] = [
   { href: '#ablauf', label: 'So funktioniert es' },
-  { href: pageMeta('kosten').path, label: 'Kosten' },
   { href: pageMeta('fragen').path, label: 'Fragen' },
   { href: pageMeta('ueber-uns').path, label: 'Über uns' },
 ];
@@ -76,8 +76,6 @@ export const proof = {
     'Entstanden aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer',
     'Kein Abo, keine Grundgebühr',
   ],
-  disciplinesLabel: 'Zum Beispiel für',
-  disciplines: ['Mountainbike', 'Unihockey', 'Musikgesellschaft', 'Beachvolleyball', 'Theaterverein', 'Triathlon', 'Chor', 'Turnverein'],
 };
 
 // Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits): the people

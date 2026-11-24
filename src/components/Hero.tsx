@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { hero, type Role } from '../content';
 import { motionEnabled } from '../lib/motion';
 import type { HeroField } from '../lib/heroField';
@@ -16,6 +16,7 @@ export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
   const field = useRef<HeroField | null>(null);
   const [ready, setReady] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [wave, setWave] = useState(false);
 
   useEffect(() => {
     const el = canvas.current;
@@ -31,13 +32,48 @@ export function Hero({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
 
   useEffect(() => { field.current?.setPaused(paused); }, [paused]);
 
+  // The Bernstein word waves once after the load animation, then again on every hover (pointer devices).
+  useEffect(() => {
+    if (!motionEnabled()) return;
+    const t = window.setTimeout(() => setWave(true), 1300);
+    return () => window.clearTimeout(t);
+  }, []);
+  const waveAgain = () => { if (motionEnabled()) setWave(true); };
+
+  // Letters for the wave, grouped at the soft hyphen: each group is nowrap, so the word still only breaks there.
+  const groups = hero.titleAccent.split('\u00AD');
+  const letterCount = groups.join('').length;
+  let n = 0;
+
   return (
     <section className="hero" id="top" aria-labelledby="hero-title" data-header-dark="">
       <canvas className={`hero-field${ready ? ' is-on' : ''}`} ref={canvas} aria-hidden="true" />
       <div className="container hero-copy">
         <p className="label hero-badge">{hero.badge}</p>
-        <h1 id="hero-title">
-          {hero.titleStart} <span className="hero-accent">{hero.titleAccent}</span>
+        <h1 id="hero-title" aria-label={`${hero.titleStart} ${hero.titleAccent.replace('\u00AD', '')}`}>
+          {hero.titleStart}{' '}
+          <span className={`hero-accent${wave ? ' is-waving' : ''}`} onMouseEnter={waveAgain}>
+            <span>
+              {groups.map((g, gi) => (
+                <span key={g}>
+                  {gi > 0 && '\u00AD'}
+                  <span className="hero-accent-group">
+                    {[...g].map((ch) => {
+                      const i = n++;
+                      return (
+                        <span
+                          key={i}
+                          className="hero-ch"
+                          style={{ '--i': i } as CSSProperties}
+                          onAnimationEnd={i === letterCount - 1 ? () => setWave(false) : undefined}
+                        >{ch}</span>
+                      );
+                    })}
+                  </span>
+                </span>
+              ))}
+            </span>
+          </span>
         </h1>
       </div>
       <div className="hero-pitch" aria-hidden="true">
