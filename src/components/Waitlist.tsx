@@ -108,7 +108,7 @@ export function Waitlist({ role, onRoleChange }: WaitlistProps) {
   const invalid = error !== null;
 
   return (
-    <section className="wl section surface-graphit" id="warteliste" aria-labelledby="warteliste-title">
+    <section className="wl section surface-graphit" id="warteliste" aria-labelledby="warteliste-title" data-header-dark="">
       {/* Signature 2 ("the page opens"): the graphit surface as its own layer, so the scroll-driven clip
           (data-scroll="frame") never touches the content or its focus outlines. Hidden without .scroll-fx. */}
       <div className="wl-surface" data-scroll="frame" aria-hidden="true" />

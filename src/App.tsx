@@ -4,8 +4,9 @@ import { observeReveals, scrollToHash } from './lib/motion';
 import { MOVED_SECTIONS, pageHref, ROLE_PARAM } from './lib/links';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { Story } from './components/Story';
 import { ProofLine } from './components/ProofLine';
+import { Problem } from './components/Problem';
+import { Features } from './components/Features';
 import { Audience } from './components/Audience';
 import { HowItWorks } from './components/HowItWorks';
 import { Waitlist } from './components/Waitlist';
@@ -13,7 +14,8 @@ import { Footer } from './components/Footer';
 import { StickyCta } from './components/StickyCta';
 
 /**
- * The landing page: hero, scroll story, proof line, audience ("two doors"), how it works, waitlist. KI-Manager,
+ * The landing page (D1 redesign, 2026-11-24): hero («Punkte» field), proof line, «Heute» (problem), «Mit Sponsuno»
+ * (features), how it works, audience («Für wen», two cards), waitlist. KI-Manager,
  * Kosten, Fragen and Team moved to their own static pages (InfoPage.tsx), reached from the header.
  */
 export default function App() {
@@ -73,10 +75,11 @@ export default function App() {
       <Header />
       <main id="inhalt">
         <Hero onChooseRole={setRole} />
-        <Story />
         <ProofLine />
-        <Audience />
+        <Problem />
+        <Features />
         <HowItWorks onChooseRole={setRole} />
+        <Audience onChooseRole={setRole} />
         <Waitlist role={role} onRoleChange={setRole} />
       </main>
       <Footer />

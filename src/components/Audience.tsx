@@ -1,4 +1,4 @@
-import { audience, type AudienceImage } from '../content';
+import { audience, hero, type AudienceImage, type Role } from '../content';
 import athlete from '../assets/photos/audience-athlete.jpg';
 import athlete480 from '../assets/photos/audience-athlete-480w.avif';
 import athlete640 from '../assets/photos/audience-athlete-640w.avif';
@@ -24,16 +24,15 @@ const images: Record<AudienceImage, { jpg: string; avif: string }> = {
   firma: { jpg: firma, avif: `${firma480} 480w, ${firma640} 640w` },
 };
 
-/** Rendered photo width (audience.css): four cards of at most 264 px from 1024 px, two below, one below 601 px. */
-const SIZES = '(min-width: 1024px) 264px, (min-width: 601px) 46vw, 92vw';
+/** Rendered photo width (audience.css): two cards of at most 584 px from 961 px, one card below. */
+const SIZES = '(min-width: 961px) 584px, 92vw';
 
 /**
- * Kalk band under the proof line: who Sponsuno is meant for. Four photo cards (stock photos, Symbolbilder, named as such
- * in the landing page footer and the Impressum, credited there), each with a short label and one sentence.
- * Scroll motion (DESIGN.md -> Motion): head and cards rise with stagger, each photo opens inside its frame (the frame
- * clips, the <picture> scales).
+ * «Für wen» on Hafer 2 (D1 redesign): two cards (Mobbin reference: Supabase), the people who look for support and the
+ * companies. Each card has one photo on top (stock photos, Symbolbilder, named as such in the landing page footer and the
+ * Impressum, credited there), the groups in words and one call to action that preselects the waitlist role.
  */
-export function Audience() {
+export function Audience({ onChooseRole }: { onChooseRole: (role: Role) => void }) {
   return (
     <section className="section surface-kalk aud" id="fuer-wen" aria-labelledby="aud-title">
       <div className="container">
@@ -42,29 +41,30 @@ export function Audience() {
           <p className="section-intro">{audience.intro}</p>
         </div>
         <ul className="aud-grid" role="list" data-scroll-stagger="">
-          {audience.items.map((item) => (
-            <li className="aud-item" data-reveal="" data-scroll="rise" key={item.image}>
-              {/* Frame for the scroll motion: it opens from a slight inset while the photo settles inside it */}
-              <div className="aud-frame" data-scroll="photo">
-                <picture className="aud-picture">
-                  <source type="image/avif" srcSet={images[item.image].avif} sizes={SIZES} />
-                  <img
-                    className="aud-photo"
-                    src={images[item.image].jpg}
-                    alt={item.alt}
-                    width={640}
-                    height={480}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </picture>
-              </div>
-              <div className="aud-text">
-                <h3 className="aud-label">{item.label}</h3>
-                <p className="aud-desc">{item.text}</p>
-              </div>
-            </li>
-          ))}
+          {audience.cards.map((card, c) => {
+            const first = audience.items[card.items[0]];
+            const cta = card.role === 'sponsor' ? hero.ctaSponsor.label : hero.ctaSeeker.label;
+            return (
+              <li className={`aud-card aud-card-${c}`} data-reveal="" data-scroll="rise" key={card.title}>
+                <div className="aud-frame" data-scroll="photo">
+                  <picture className="aud-picture">
+                    <source type="image/avif" srcSet={images[first.image].avif} sizes={SIZES} />
+                    <img className="aud-photo" src={images[first.image].jpg} alt={first.alt} width={640} height={480} loading="lazy" decoding="async" />
+                  </picture>
+                </div>
+                <div className="aud-body">
+                  <h3>{card.title}</h3>
+                  {card.items.length === 1 && <p className="aud-text">{first.text}</p>}
+                  <ul className="aud-groups" role="list">
+                    {(card.items.length > 1 ? card.items.map((i) => audience.items[i]) : audience.firmGroups).map((g) => (
+                      <li key={g.label}><b>{g.label}</b><span>{g.text}</span></li>
+                    ))}
+                  </ul>
+                  <a className={`btn ${c === 0 ? 'btn-graphit' : 'btn-outline'} aud-cta`} href="#warteliste" onClick={() => onChooseRole(card.role)}>{cta}</a>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>

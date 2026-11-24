@@ -18,11 +18,13 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(root, 'src/assets/fonts');
 const cssFile = path.join(root, 'src/styles/fonts.css');
 
-/** Only the CD weights (DESIGN.md -> Typography). Do not add weights or families. */
+/** Only the CD weights (Markenhandbuch D1, DESIGN.md -> Typography): Unbounded 700 titles, 500 subtitles; DM Sans 400
+    text, 600 emphasis. Do not add weights or families. */
 const FACES = [
-  { family: 'Schibsted Grotesk', weight: 400, pkg: 'schibsted-grotesk', name: 'schibsted-grotesk-400' },
-  { family: 'Schibsted Grotesk', weight: 600, pkg: 'schibsted-grotesk', name: 'schibsted-grotesk-600' },
-  { family: 'Schibsted Grotesk', weight: 700, pkg: 'schibsted-grotesk', name: 'schibsted-grotesk-700' },
+  { family: 'Unbounded', weight: 500, pkg: 'unbounded', name: 'unbounded-500' },
+  { family: 'Unbounded', weight: 700, pkg: 'unbounded', name: 'unbounded-700' },
+  { family: 'DM Sans', weight: 400, pkg: 'dm-sans', name: 'dm-sans-400' },
+  { family: 'DM Sans', weight: 600, pkg: 'dm-sans', name: 'dm-sans-600' },
 ];
 const FEATURES = ['kern', 'liga', 'calt', 'ccmp', 'locl', 'mark', 'mkmk', 'lnum', 'tnum'];
 const PARTS = [

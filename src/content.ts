@@ -109,6 +109,18 @@ export const audience = {
       alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
     },
   ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
+  // Since the D1 redesign (2026-11-24) the four groups sit in two cards: who looks for support (items 0-2) and the
+  // companies (item 3). One photo per card: the first item's photo.
+  cards: [
+    { title: 'Sportlerinnen, Sportler und Vereine', items: [0, 1, 2], role: 'athlete' as Role },
+    { title: 'Firmen aus der Region', items: [3], role: 'sponsor' as Role },
+  ],
+  // The companies' card lists the kinds of support (wording close to support.kinds on /kosten/)
+  firmGroups: [
+    { label: 'Geld', text: 'Beiträge an Saison, Reisen, Startgelder oder Vereinsprojekte.' },
+    { label: 'Material und Ausrüstung', text: 'Velos, Bälle, Trikots oder Instrumente.' },
+    { label: 'Dienstleistungen', text: 'Zum Beispiel Druck, Transport oder Handwerk vor Ort.' },
+  ],
 };
 
 export const problem = {
@@ -209,6 +221,27 @@ export const story = {
   // Short score on the pair cards and the hero window rows; the match card uses match.result.
   // A 3 marks the last criterion (Budget) as partly matching, as in the demo.
   scoreShort: (n: number) => `${n} von 4`,
+};
+
+// «Mit Sponsuno» (Features.tsx): three cards on Tintenblau, each a small product picture with one of the story steps'
+// texts. Everything in the pictures is a fictional example (match, story.pairs); the section carries one
+// "Beispieldaten" label for all three pictures (copy rule 6).
+export const features = {
+  label: 'Mit Sponsuno',
+  title: 'Vom Profil zum passenden Partner.',
+  intro: 'Beide Seiten zeigen, was sie suchen und was sie bieten. Sponsuno bringt zusammen, was passt.',
+  caption: 'Beispieldaten',
+  profile: {
+    title: 'Profil',
+    rows: [
+      { k: 'Region', v: 'Zürcher Oberland' },
+      { k: 'Sportart', v: 'Mountainbike, Langstrecke' },
+      { k: 'Sucht', v: 'Material und Reisekosten' },
+      { k: 'Bietet', v: 'Logo auf dem Trikot, Beiträge' },
+    ],
+  },
+  list: { title: 'Passende Partner', tab: 'Vorschläge' },
+  match: { title: 'Ein Match', agreed: 'Gegenleistungen festgehalten' },
 };
 
 export type Track = 'seeker' | 'sponsor';
@@ -650,7 +683,7 @@ export const legal = {
     // persona portrait again: 'Porträt der Mountainbikerin in der Produktvorschau (Profil und Sponsor-Cockpit):
     // KI-generiert, Symbolbild ohne reale Person.' (the block is left out while the list is empty)
     aiImages: [] as string[],
-    fonts: 'Schrift: Schibsted Grotesk, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
+    fonts: 'Schriften: Unbounded und DM Sans, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
   },
 
   impressum: {

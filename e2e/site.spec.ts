@@ -67,8 +67,9 @@ test('pages download only their preloaded font files (the core subsets)', async 
       const preloads = await page.locator('link[rel="preload"][as="font"]').evaluateAll((els) =>
         els.map((el) => new URL((el as HTMLLinkElement).href).pathname));
       expect(fonts.every((f) => !f.includes('-extra-'))).toBe(true);
-      if (preloads.length) expect([...new Set(fonts)].sort()).toEqual([...preloads].sort());
-      expect(new Set(fonts).size).toBe(3);
+      // Every preloaded file is used; besides them a page may fetch Unbounded 500 (Titel 3, below the first screen)
+      for (const file of preloads) expect(fonts).toContain(file);
+      expect(new Set(fonts).size).toBeLessThanOrEqual(4);
     });
   }
 });
@@ -81,7 +82,7 @@ test('homepage photos load as AVIF, not as the JPEG fallback', async ({ page }) 
   });
   await page.goto('/');
   const photos = page.locator('#fuer-wen img');
-  await expect(photos).toHaveCount(4);
+  await expect(photos).toHaveCount(2); // one photo per audience card (D1 redesign)
   for (const photo of await photos.all()) {
     await photo.scrollIntoViewIfNeeded();
     await expect(photo).toHaveJSProperty('complete', true);

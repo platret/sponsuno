@@ -1,5 +1,20 @@
 # DESIGN.md – Sponsuno visual system
 
+## Markenhandbuch «Entwurf D1» (since 2026-11-24) – read this first
+
+The site now follows the team's brand handbook **«Sponsuno CI CD – Entwurf D1»** (November 2026, for team review, not final). Where the older sections below (design system v1.0, Graphit/Messing/Kalk) disagree with this block, **this block wins**; they stay as history and for rules that still hold (motion primitives, imagery, honesty).
+
+- **Colours** (raw token names kept from v1.0, values replaced in `tokens.css`): Tintenblau `#1A2B40` (`--graphit`, 60 %: hero, «Mit Sponsuno», waitlist, footer, header over them, text on light), Hafer `#ECE6DA` (`--kalk`/`--paper`, 30 %: page ground, light text on Tintenblau), Bernstein `#F2873A` (`--brass`, 10 %: the loop, the one main button per screen, at most one word per title). Supporting: Tinte 2 `#2A3E57` (cards on Tintenblau), Hafer 2 `#DCD3C3` (`--bg-alt`: bands and cards on Hafer), Schiefer for secondary text (`--ink`, `#4A596D`: the handbook's `#53647A` one step darker so it passes 4.5:1 on Hafer 2), Bernstein dunkel for text and links on light (`--brass-dark`, `#904513`: the handbook's `#9A4A15` one step darker, same reason). Never Bernstein text on Hafer, never Hafer text on Bernstein. No gradients.
+- **Type**: Unbounded 700 for titles (hero H1 up to 104 px, H2 Titel 2), Unbounded 500 for Titel 3 (H3), never for running text; DM Sans 400 for text, 600 for emphasis and UI; labels DM Sans 600, 12 px, caps, +12 %.
+- **Shapes**: square corners everywhere (`--radius*` are 0). The only curves: the loop of the logo and the pitch lines.
+- **Pitch lines** (Spielfeldlinien): thin Hafer lines at about 16 % on Tintenblau (`--pitch-line`): the halfway line and the centre circle under the hero H1. Never behind text, never the main motif.
+- **Logo**: `scripts/logo.mjs` draws it from Unbounded Bold: «sponsuno» with the «un» replaced by the loop (the n turned 180° as u, sharing the middle stem with the following n). On Tintenblau Hafer letters with a Bernstein loop (`wordmark-light.svg`); on Hafer at small sizes one colour Tintenblau (`wordmark-dark.svg`, the handbook allows the Bernstein loop on Hafer only from 200 px). Symbol: the loop in Bernstein on a Tintenblau square.
+- **Hero «Anstoss» with the «Punkte» field** (owner's choice 2026-11-24, after mock-ups in `../hero-concepts/ci-d1/`): very large H1 «Sponsoring, das **zusammenpasst.**» in two lines, halfway line and centre circle, lead and buttons at the foot. Behind it a WebGL dot grid like a scoreboard (`lib/heroField.ts`): dots in Hafer at 4 to 23 %, a slow diagonal wave, dots swell around the pointer; a pause button; quiet zone behind the lead. This replaces the line in «What we removed» about WebGL shaders for this one use.
+- **Homepage order** (Mobbin references in brackets): hero → proof strip → «Heute» on Hafer, three numbered findings under a rule (Beside, Escape) → «Mit Sponsuno» on Tintenblau, three cards with a small Hafer product panel each and one «Beispieldaten» caption (Cursor, Linear) → «So funktioniert es», both tracks → «Für wen» on Hafer 2, two cards with one photo each (Supabase) → waitlist on Tintenblau → footer with the large wordmark.
+- **Calm first** (owner, 2026-11-18 and 2026-11-24): playful only as a small layer; no stickers, no photo grids in the hero.
+
+---
+
 The source of truth for colours, type, shapes and the logo is the **Sponsuno design system v1.0 (November 2026, "Graphit, Messing, Kalk")**, Alex's design-system artifact. It replaced the navy/gold/Cormorant look of the CD manual on 2026-11-16 (PR #23). This file translates it into how the website uses it. If the code and this file disagree, fix one of them in the same change.
 
 Tokens are CSS custom properties in [`src/styles/tokens.css`](src/styles/tokens.css); the landing page base layer is [`src/styles/site.css`](src/styles/site.css); each section has its own stylesheet in `src/styles/sections/`.

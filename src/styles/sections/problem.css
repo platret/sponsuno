@@ -1,0 +1,22 @@
+/* «Heute» (Problem.tsx): head on the left two thirds, then three numbered findings under a 1.5 px Tintenblau rule. */
+.pb-head { max-width: 46rem; margin-bottom: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
+.pb-head .label { margin-bottom: 1rem; }
+
+.pb-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+.pb-item { border-top: 1.5px solid var(--heading); padding-top: 1.25rem; }
+.pb-num {
+  display: block; margin-bottom: 1.75rem;
+  font: 500 .875rem/1 var(--display); letter-spacing: .02em; color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.pb-item h3 { margin-bottom: .75rem; max-width: 18ch; }
+.pb-item p { color: var(--text); }
+
+@media (max-width: 860px) {
+  .pb-list { grid-template-columns: 1fr; gap: 2rem; }
+  .pb-num { margin-bottom: 1rem; }
+}

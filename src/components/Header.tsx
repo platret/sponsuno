@@ -26,9 +26,9 @@ export function Header() {
     });
     if (sentinel) solidIo.observe(sentinel);
 
-    // While the graphit hero or the graphit story runs under the bar, the solid bar stays graphit (no kalk strip over
-    // the pinned stage); it turns to the page surface once that reaches it. The band is the bar's own height.
-    const darkZones = [document.getElementById('top'), document.getElementById('problem')].filter((el): el is HTMLElement => el !== null);
+    // While a Tintenblau section (data-header-dark: hero, «Mit Sponsuno», waitlist) runs under the bar, the solid bar
+    // stays Tintenblau; over the Hafer sections it turns to the page surface. The band is the bar's own height.
+    const darkZones = Array.from(document.querySelectorAll<HTMLElement>('[data-header-dark]'));
     const underBar = new Map<Element, boolean>();
     let darkIo: IntersectionObserver | undefined;
     const buildDark = () => {
@@ -75,9 +75,9 @@ export function Header() {
       <header className={`site-header${isSolid ? ' is-solid' : ''}${isDark ? ' is-dark' : ''}`}>
         <div className="container header-inner">
           <a className="brand" href="#top" aria-label="Sponsuno, zum Seitenanfang">
-            <img className="brand-on-dark" src={wordmarkLight} alt="" width={141} height={24} />
+            <img className="brand-on-dark" src={wordmarkLight} alt="" width={172} height={22} />
             {/* Hidden until the bar turns kalk: low priority, so React does not preload it with the first screen */}
-            <img className="brand-on-light" src={wordmarkDark} alt="" width={141} height={24} fetchPriority="low" />
+            <img className="brand-on-light" src={wordmarkDark} alt="" width={172} height={22} fetchPriority="low" />
           </a>
           <nav className="main-nav" aria-label="Hauptnavigation">
             <ul>
