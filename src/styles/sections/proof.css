@@ -1,39 +1,28 @@
-/* Proof line: a quiet kalk band under the hero, left-aligned on the grid. Three proof points, then example
-   disciplines under a label. Static, no motion. Markup is a plain list so it can later become a logo row.
-   Layouts: >=761 three columns, each point under its own hairline, the disciplines in one row beside their label;
-            <=760 a stacked list, each point under a hairline, the disciplines wrapping under their label. */
+/* Under the hero (D1 redesign): a large statement in DM Sans, then a thin rule with the three proof points in one row
+   and the example disciplines under them. Static apart from the shared rise. */
+.proof { padding-block: clamp(5rem, 3.5rem + 6vw, 9rem) clamp(3rem, 2rem + 3vw, 4.5rem); }
 
-.proof {
-  padding-block: clamp(2.5rem, 2rem + 1.6vw, 3.5rem);
-  border-bottom: 1px solid var(--line);
-}
-
-.proof-items {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-.proof-items li {
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-  font-size: 1.0625rem; font-weight: 600; line-height: 1.45; color: var(--heading);
+.proof-statement {
+  max-width: 24ch;
+  font: 400 clamp(1.75rem, 1.1rem + 2.6vw, 3.25rem)/1.18 var(--sans);
+  letter-spacing: -0.02em; color: var(--heading);
   text-wrap: pretty;
 }
+.proof-accent { color: var(--accent-text); }
 
-.proof-disciplines {
-  display: flex; align-items: baseline; gap: .5rem 1.5rem;
-  margin-top: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+.proof-items {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
+  margin-top: clamp(3.5rem, 2.5rem + 4vw, 6rem); padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
 }
+.proof-items li { font-size: 1rem; font-weight: 600; line-height: 1.45; color: var(--heading); text-wrap: pretty; }
+
+.proof-disciplines { display: flex; align-items: baseline; gap: .5rem 1.5rem; margin-top: 1.5rem; }
 .proof-label { flex: none; }
-/* Plain words separated by space only: works at every wrap point, no dangling separators */
-.proof-list {
-  display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; min-width: 0;
-  font-size: var(--fs-small); line-height: 1.5; color: var(--text);
-}
+.proof-list { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; min-width: 0; font-size: var(--fs-small); line-height: 1.5; color: var(--text); }
 .proof-list li { white-space: nowrap; }
 
-/* Phones: the points stack, each under its hairline; disciplines wrap under their label */
 @media (max-width: 760px) {
-  .proof-items { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .proof-items li { padding-top: .85rem; font-size: 1rem; }
+  .proof-items { grid-template-columns: 1fr; gap: .75rem; }
   .proof-disciplines { flex-direction: column; gap: .5rem; }
 }

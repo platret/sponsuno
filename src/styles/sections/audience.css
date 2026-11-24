@@ -1,13 +1,13 @@
 /* «Für wen» (Audience.tsx), D1 redesign: two cards on Hafer 2, square corners. Photo on top (4:3 crop to 16:10),
    then title, the groups and one call to action. */
-.aud-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.aud-card { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); }
+.aud-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 1rem + 3vw, 4rem); }
+.aud-card { display: flex; flex-direction: column; }
 .aud-frame { aspect-ratio: 16 / 10; overflow: hidden; background: var(--kalk-2); }
 .aud-picture { display: block; width: 100%; height: 100%; }
 .aud-photo { width: 100%; height: 100%; object-fit: cover; }
-.aud-body { display: flex; flex-direction: column; flex: 1; padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem); }
+.aud-body { display: flex; flex-direction: column; flex: 1; padding-top: clamp(1.5rem, 1rem + 1vw, 2rem); }
 .aud-body h3 { font-size: var(--fs-sub); margin-bottom: 1.25rem; max-width: 20ch; }
-.aud-groups li { display: grid; gap: .2rem; padding: .85rem 0; border-top: 1px solid var(--line); }
+.aud-groups li { display: grid; gap: .2rem; padding: .85rem 0; border-top: 1px solid var(--rule); }
 .aud-groups b { font-weight: 600; color: var(--heading); }
 .aud-groups span, .aud-text { color: var(--text); font-size: 1rem; }
 .aud-text { max-width: 40ch; margin-bottom: 1.25rem; }

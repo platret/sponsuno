@@ -1,17 +1,17 @@
-import { problem, story } from '../content';
+import { problem } from '../content';
 import '../styles/sections/problem.css';
 
 /**
  * «Heute» on Hafer (replaces the scroll story of the Graphit site): the interview findings, word for word from
- * content.ts → problem, as three numbered columns under a thin rule (Mobbin references: Beside, Escape).
+ * content.ts → problem. Two columns: the head stays in view on the left (sticky) while the three numbered findings
+ * pass on the right, each under a thin rule (Mobbin references: Beside, Escape, Linear's method pages).
  * Keeps the id #problem, which old links and the header logic know.
  */
 export function Problem() {
   return (
     <section className="section surface-paper pb" id="problem" aria-labelledby="pb-title">
-      <div className="container">
+      <div className="container pb-grid">
         <div className="pb-head" data-reveal="" data-scroll="rise">
-          <p className="label">{story.labels.heute}</p>
           <h2 id="pb-title">{problem.title}</h2>
           <p className="section-intro">{problem.intro}</p>
         </div>

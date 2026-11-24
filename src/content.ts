@@ -66,6 +66,11 @@ export const match = {
 };
 
 export const proof = {
+  // D1 redesign: one large statement under the hero (the handbook's own sentence, page 01, with culture named, copy
+  // rule 7); the accent is one word in Bernstein dunkel.
+  statementStart: 'Sponsuno verbindet Vereine aus Sport und Kultur, Sportlerinnen und Sportler mit Firmen, die zu ihnen ',
+  statementAccent: 'passen',
+  statementEnd: ': nach Region, Budget, Branche und Art der Unterstützung.',
   items: [
     'Für Sport und Kultur in der Deutschschweiz',
     'Entstanden aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer',

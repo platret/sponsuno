@@ -1,120 +1,56 @@
-/* Waitlist: first half of the graphit closing block. Flat graphit so it runs into the footer without a seam.
-   From 961 px two columns on the 12-column grid: title and intro in columns 1-6, the form card (verlauf-dunkel,
-   1 px border, radius 16) in columns 7-12 (from 1200 px: head 1-5, card 6-12, wide enough for the pills two by two). Below that the card sits under the head. The card holds the role
-   pills (real radios), one e-mail row with the brass pill button, the hint; after sending, the success box. */
+/* Waitlist (D1 redesign, 2026-11-24): the closing block on Tintenblau, centred like a closing call to action
+   (Mobbin reference: Gumroad). Large title, one line of intro, then the form without a card: the four roles as one
+   segmented row (real radios), the e-mail field and the Bernstein button in one row, the hint under a pitch line.
+   Square corners. Runs into the Tintenblau footer without a seam. */
 
 .wl.surface-graphit { background: var(--graphit); }
-.wl.section { padding-bottom: clamp(4rem, 3rem + 4vw, 6.5rem); }
-
-/* ---------- Signature 2: "the page opens" (DESIGN.md -> Motion) ----------
-   With scroll timelines, the graphit moves from the section onto .wl-surface, a layer behind the content.
-   It opens (data-scroll="frame") from an inset card with rounded top corners to full bleed while the
-   section enters, over the page surface that continues the band above it (So funktioniert es). Bottom inset and radius
-   are 0, and the frame is final once the section is fully in view (or after 60vh), so it is full bleed before the
-   graphit footer can show: no seam. The content is never inside the clip (focus outlines stay intact); the top inset
-   is far smaller than the section padding, and the side inset always stays 1rem outside the content edge (the
-   container gutter), so kalk text never stands on the page surface while the frame opens. Without .scroll-fx (Firefox, reduced motion, no JS) the layer is not
-   rendered and the section stays flat graphit. */
+.wl.section { padding-block: clamp(5rem, 3.5rem + 6vw, 9rem) clamp(4rem, 3rem + 4vw, 6.5rem); }
 .wl-surface { display: none; }
 
-.scroll-fx .wl.surface-graphit {
-  position: relative;
-  isolation: isolate;
-  background: var(--bg);
-}
-.scroll-fx .wl-surface {
-  display: block;
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--graphit);
-  --scroll-frame-inset: clamp(.75rem, 2vw, 1.5rem) clamp(.5rem, 3vw, 3rem) 0;
-  --scroll-frame-radius: 0px;
-}
+.wl-inner { max-width: 44rem; margin-inline: auto; text-align: center; }
+.wl-card { --scroll-i: 1; margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem); text-align: left; }
 
-/* Head, then the card one stagger step later (phones: no stagger, by token) */
-.wl-card { --scroll-i: 1; }
+.wl-title { font-size: clamp(2.25rem, 1.2rem + 4vw, 4.5rem); line-height: 1; color: var(--kalk); }
+.wl-intro { margin: 1.25rem auto 0; max-width: 30rem; font-size: var(--fs-lead); line-height: 1.55; color: var(--steel); }
 
-/* ---------- Layout ---------- */
-
-.wl-inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(2rem, 1.5rem + 1.5vw, 2.5rem);
-  max-width: 40rem;
-}
-
-/* The closing statement of the page: set at titel size */
-.wl-title { font-size: var(--fs-h1); line-height: 1.02; color: var(--kalk); }
-.wl-intro {
-  margin-top: 1.25rem; max-width: 26rem;
-  font-size: var(--fs-lead); line-height: 1.55; color: var(--steel);
-}
-
-.wl-card {
-  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-  border: 1px solid var(--card-dark-line);
-  border-radius: var(--radius);
-  background: var(--grad-dark);
-  color: var(--steel);
-}
-
-/* ---------- Role pills ---------- */
+/* ---------- Roles: one segmented row ---------- */
 
 .wl-roles { margin: 0; padding: 0; border: 0; min-width: 0; }
-.wl-legend { padding: 0; margin-bottom: 1rem; }
-
+.wl-legend { padding: 0; margin: 0 auto .9rem; text-align: center; width: 100%; }
 .wl-chips {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: 1fr; /* both rows share the tallest pill, even when one label wraps */
-  gap: .625rem;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid rgba(236, 230, 218, .28);
 }
-
 .wl-chip { position: relative; display: grid; cursor: pointer; }
-/* The radio stays a real, focusable input laid over the pill; arrow keys move within the group. */
-.wl-chip-input {
-  position: absolute; inset: 0; z-index: 1;
-  width: 100%; height: 100%; margin: 0;
-  opacity: 0; cursor: pointer;
-}
-/* Pill with a radio mark: a ring, filled once chosen (the chosen pill turns kalk) */
+.wl-chip + .wl-chip { border-left: 1px solid rgba(236, 230, 218, .28); }
+/* The radio stays a real, focusable input laid over the segment; arrow keys move within the group. */
+.wl-chip-input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .wl-chip-box {
-  display: flex; align-items: center; gap: .7rem;
-  min-height: 52px; padding: .65rem 1.25rem .65rem 1rem;
-  border: 1px solid rgba(245, 243, 238, .4); border-radius: var(--radius-pill);
-  font-size: .9375rem; font-weight: 600; line-height: 1.25;
-  color: var(--kalk);
-  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+  display: grid; place-items: center; text-align: center;
+  min-height: 52px; padding: .6rem .75rem;
+  font-size: .9375rem; font-weight: 600; line-height: 1.25; color: rgba(236, 230, 218, .78);
+  transition: background-color .2s ease, color .2s ease;
 }
-.wl-chip-box::before {
-  content: ""; flex: none;
-  width: 16px; height: 16px; box-sizing: border-box;
-  border: 1.5px solid currentColor; border-radius: 50%;
-  transition: border-width .2s ease;
-}
-.wl-chip:hover .wl-chip-box { border-color: var(--kalk); }
-.wl-chip-input:checked + .wl-chip-box { background: var(--kalk); border-color: var(--kalk); color: var(--graphit); }
-.wl-chip-input:checked + .wl-chip-box::before { border-width: 5px; }
-.wl-chip-input:focus-visible + .wl-chip-box { outline: 3px solid var(--focus); outline-offset: 3px; }
+.wl-chip:hover .wl-chip-box { color: var(--kalk); background: rgba(236, 230, 218, .05); }
+.wl-chip-input:checked + .wl-chip-box { background: var(--kalk); color: var(--graphit); }
+.wl-chip-input:focus-visible + .wl-chip-box { outline: 3px solid var(--focus); outline-offset: -3px; }
 
 /* ---------- E-mail row ---------- */
 
-.wl-row { display: flex; gap: .625rem; margin-top: 1.5rem; }
-
+.wl-row { display: flex; margin-top: .75rem; }
 .wl-email {
   flex: 1 1 auto; min-width: 0;
-  height: 52px; padding: 0 1.25rem;
-  border: 1px solid rgba(245, 243, 238, .4); border-radius: var(--radius-pill);
-  background: var(--graphit); color: var(--kalk);
+  height: 56px; padding: 0 1.25rem;
+  border: 1px solid rgba(236, 230, 218, .28); border-right: 0;
+  background: var(--graphit-2); color: var(--kalk);
   font: inherit; font-size: 1rem;
   transition: border-color .2s ease;
 }
 .wl-email::placeholder { color: var(--steel); opacity: 1; }
-.wl-email:hover { border-color: rgba(245, 243, 238, .65); }
-.wl-email:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-color: transparent; border-radius: var(--radius-pill); }
+.wl-email:hover { border-color: rgba(236, 230, 218, .55); }
+.wl-email:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
 .wl-email[aria-invalid="true"] { border-color: var(--error-on-dark); }
-
-.wl-submit { flex: none; }
+.wl-submit { flex: none; min-height: 56px; }
 .wl-submit:disabled { opacity: .7; cursor: progress; }
 
 .motion .wl-row.is-shaking { animation: wl-shake .45s ease; }
@@ -125,82 +61,41 @@
   90% { transform: translateX(1px); }
 }
 
-.wl-error { margin-top: .75rem; padding-inline: 1.25rem; font-size: var(--fs-small); color: var(--error-on-dark); }
+.wl-error { margin-top: .75rem; font-size: var(--fs-small); color: var(--error-on-dark); }
 .wl-hint {
-  margin-top: 1.25rem; padding-top: 1.25rem;
-  border-top: 1px solid var(--card-dark-line);
-  font-size: var(--fs-small); line-height: 1.55; color: var(--steel);
+  margin-top: 1.5rem; padding-top: 1.25rem;
+  border-top: 1px solid var(--pitch-line);
+  font-size: var(--fs-small); line-height: 1.55; color: var(--steel); text-align: center;
 }
-
-/* Links in the hint: kalk, underlined in brass (hover: thicker) */
 .wl-hint a {
   color: var(--kalk); font-weight: 600;
   text-decoration: underline; text-decoration-color: var(--brass);
-  text-underline-offset: 3px; text-decoration-thickness: 1px;
-  overflow-wrap: anywhere;
+  text-underline-offset: 3px; text-decoration-thickness: 1px; overflow-wrap: anywhere;
 }
 .wl-hint a:hover { text-decoration-thickness: 2px; }
 
-/* ---------- Success (inside the card) ---------- */
+/* ---------- Success ---------- */
 
-.wl-success { color: var(--kalk); font-size: var(--fs-body); line-height: 1.55; border-radius: var(--radius-sm); }
+.wl-success { color: var(--kalk); font-size: var(--fs-body); line-height: 1.55; padding: 1.5rem; border: 1px solid rgba(236, 230, 218, .28); }
 .wl-success:focus { outline: none; }
-.wl-success:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
+.wl-success:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
 .wl-success-main { display: flex; align-items: flex-start; gap: 1rem; }
 .wl-success-main p + p { margin-top: .5rem; color: var(--steel); }
 .wl-success svg {
   width: 24px; height: 24px; flex: none; margin-top: .1rem;
-  fill: none; stroke: var(--brass); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  fill: none; stroke: var(--brass); stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter;
 }
-/* Interim e-mail (no endpoint yet): the brass pill button, the address as text beside it for copying */
-.wl-success .wl-mail {
-  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem;
-  margin-top: 1.25rem;
-}
+.wl-success .wl-mail { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: 1.25rem; }
 .wl-mail-address { font-size: var(--fs-small); color: var(--steel); overflow-wrap: anywhere; }
 .motion .wl-success { animation: wl-in .5s var(--ease-out) both; }
 @keyframes wl-in { from { opacity: 0; transform: translateY(8px); } }
 
-/* ---------- Responsive ---------- */
-
-/* Desktop: two columns on the 12-column grid (24 px gutter); an inset surface that opens to full bleed. */
-@media (min-width: 961px) {
-  .wl-inner {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 24px;
-    max-width: none;
-    align-items: start;
-  }
-  .wl-head { grid-column: 1 / span 6; padding-top: .5rem; }
-  .wl-card { grid-column: 7 / -1; }
-  /* Until the card is wide enough for two pills side by side without a wrapped label, one per row, and the
-     button under the field */
-  .wl-chips { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: .5rem; }
-  .wl-row { flex-direction: column; }
-  .scroll-fx .wl-surface {
-    --scroll-frame-inset: clamp(1.5rem, 4vw, 3.5rem)
-      clamp(.5rem, min(6vw, max(0px, (100vw - var(--container)) / 2) + var(--gutter) - 1rem), 6.5rem) 0;
-    --scroll-frame-radius: 36px 36px 0 0;
-  }
-}
-
-@media (min-width: 1200px) {
-  .wl-head { grid-column: 1 / span 5; }
-  .wl-card { grid-column: 6 / -1; }
-  .wl-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .625rem; }
-  .wl-row { flex-direction: row; }
-}
-
-@media (max-width: 600px) {
-  .scroll-fx .wl-surface { --scroll-frame-radius: 20px 20px 0 0; }
-}
-
-@media (max-width: 560px) {
-  .wl-row { flex-direction: column; }
+/* ---------- Phones: roles two by two, button under the field ---------- */
+@media (max-width: 640px) {
+  .wl-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wl-chip:nth-child(3) { border-left: 0; }
+  .wl-chip:nth-child(n+3) { border-top: 1px solid rgba(236, 230, 218, .28); }
+  .wl-row { flex-direction: column; gap: .5rem; }
+  .wl-email { border-right: 1px solid rgba(236, 230, 218, .28); }
   .wl-submit { width: 100%; }
-}
-/* Phones: one pill per row, so no label wraps inside a pill */
-@media (max-width: 480px) {
-  .wl-chips { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: .5rem; }
-  .wl-chip-box { min-height: 48px; }
 }

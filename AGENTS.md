@@ -8,7 +8,7 @@ Sponsuno is a startup project of a four-person team in the programme Youngpreneu
 
 This repo holds:
 
-1. The public **landing page** (`/`). It explains the idea and collects interest on a waitlist. Since November 2026 it is kept short; since the D1 redesign (2026-11-24): hero with the «Punkte» field, proof line, «Heute» (problem), «Mit Sponsuno» (three product cards), how it works, «Für wen» (two audience cards), waitlist. The rest lives on topic pages.
+1. The public **landing page** (`/`). It explains the idea and collects interest on a waitlist. Since November 2026 it is kept short; since the D1 redesign (2026-11-24): hero with the «Punkte» field, statement (ProofLine), «Heute» (problem), «Mit Sponsuno» (three product cards), how it works (segmented switch), «Für wen» (two audience columns), waitlist (centred). The rest lives on topic pages.
 2. Three **topic pages** reached from the header: `/kosten/` (with "Nicht nur Geld"), `/fragen/`, `/ueber-uns/` (team and project status).
 3. The legal pages `/impressum/` and `/datenschutz/`.
 4. A **404 page** (`dist/404.html`), which Cloudflare serves with status 404 for every unknown URL.
@@ -145,8 +145,10 @@ scripts/subset-fonts.mjs  `npm run fonts`: cuts the @fontsource "latin" woff2 fi
                         harfbuzz as wasm, no system packages). Not part of the build. Character sets in
                         scripts/font-glyphs.mjs, shared with check-dist.
 scripts/og/og-image.html  Source of public/og-image.png (rendered once with headless Chrome, see "SEO").
-scripts/logo.mjs        Draws the D1 wordmark (wordmark-light/-dark.svg) and the symbol (Sponsuno_Icon.svg, public/favicon.svg) from
-                        the outlines of Unbounded Bold (harfbuzzjs, already installed with subset-font). Not part of the build.
+scripts/logo.mjs        Draws the D1 wordmark (wordmark-light/-dark.svg), the symbol (Sponsuno_Icon.svg, public/favicon.svg) and the
+                        loop alone (loop.svg): "spons" and "o" from the outlines of Unbounded Bold (harfbuzzjs, installed with
+                        subset-font), the loop constructed geometrically (superelliptic centreline, elliptical pen: stems 204,
+                        bowls 172 units, point-symmetric; constants at the top of the script). Not part of the build.
 scripts/icons.mjs       Regenerates the PNG/ICO icons in public/ from src/assets/Sponsuno_Icon.svg (see "SEO").
 scripts/photos.mjs      `npm run photos`: encodes the AVIF versions of the JPEGs in src/assets/photos/ (sharp, devDependency,
                         pinned so the outputs stay reproducible; widths and quality per file in PHOTOS). Not part of

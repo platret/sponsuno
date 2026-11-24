@@ -2,15 +2,12 @@
    small Hafer product panel (square corners), below the step title and text. Bernstein only in the score dots. */
 
 .fx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.fx-card { display: flex; flex-direction: column; background: var(--graphit-2); border: 1px solid var(--card-dark-line); }
+.fx-card { display: flex; flex-direction: column; background: var(--graphit-2); }
 .fx-picture {
   display: grid; place-items: center;
   aspect-ratio: 4 / 3;
   padding: clamp(1.25rem, .75rem + 2vw, 2rem);
-  border-bottom: 1px solid var(--card-dark-line);
-  background:
-    linear-gradient(var(--pitch-line), var(--pitch-line)) 50% 50% / 100% 1px no-repeat,
-    var(--card-dark-b);
+  background: var(--card-dark-b);
 }
 .fx-text { padding: clamp(1.25rem, 1rem + 1vw, 1.75rem); }
 .fx-text h3 { color: var(--kalk); margin-bottom: .6rem; }
