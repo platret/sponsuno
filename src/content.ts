@@ -232,9 +232,8 @@ export const features = {
   label: 'Mit Sponsuno',
   title: 'Vom Profil zum passenden Partner.',
   intro: 'Beide Seiten zeigen, was sie suchen und was sie bieten. Sponsuno bringt zusammen, was passt.',
-  caption: 'Beispieldaten',
-  score: '4 von 4 Kriterien passen',
-  seekerName: 'Mountainbikerin',
+  // Words inside the three diagrams (Features.tsx)
+  diagram: { seeker: 'Verein', firm: 'Firma', score: '4 von 4 Kriterien' },
 };
 
 export type Track = 'seeker' | 'sponsor';

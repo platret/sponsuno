@@ -1,61 +1,85 @@
-import { features, match, story } from '../content';
+import { features, story } from '../content';
 import '../styles/sections/features.css';
 
-/** The one picture (simpler since 2026-11-25, owner: "more simplistic"): two sides, one line between them, and how
-    many of the four criteria match. No app chrome. Example data (match in content.ts). */
-function MatchPicture() {
+/* Three plain diagrams in one visual language (squares, the halfway line and centre circle of the pitch, one Bernstein
+   line), telling the three steps as a progression: both sides on their own half → Sponsuno suggests who fits → they
+   meet. Filled Hafer square = club or athlete, outlined square = firm. No example data, so no "Beispieldaten" label.
+   Decorative (aria-hidden): the step text says the same in words. */
+
+const Pitch = () => (
+  <g className="fx-pitch">
+    <line x1="160" y1="0" x2="160" y2="200" />
+    <circle cx="160" cy="100" r="34" />
+  </g>
+);
+
+function SidesDiagram() {
   return (
-    <div className="fx-match">
-      <div className="fx-sides">
-        <div className="fx-side">
-          <span className="fx-sq">M</span>
-          <b>{features.seekerName}</b>
-          <small>{match.athlete.meta}</small>
-        </div>
-        <span className="fx-link" />
-        <div className="fx-side">
-          <span className="fx-sq fx-sq-f">{match.sponsor.mark}</span>
-          <b>{match.sponsor.name}</b>
-          <small>{match.sponsor.meta}</small>
-        </div>
-      </div>
-      <p className="fx-score">{features.score}</p>
-      <ul className="fx-criteria" role="list">
-        {match.criteria.map((c) => <li key={c}>{c}</li>)}
-      </ul>
-    </div>
+    <svg viewBox="0 0 320 200">
+      <Pitch />
+      <rect className="fx-seeker" x="58" y="62" width="44" height="44" />
+      <rect className="fx-firm" x="218.75" y="62.75" width="42.5" height="42.5" />
+      <text className="fx-label" x="80" y="134">{features.diagram.seeker}</text>
+      <text className="fx-label" x="240" y="134">{features.diagram.firm}</text>
+    </svg>
   );
 }
 
+function SuggestDiagram() {
+  return (
+    <svg viewBox="0 0 320 200">
+      <Pitch />
+      <line className="fx-option-line" x1="102" y1="100" x2="226" y2="46" />
+      <line className="fx-option-line" x1="102" y1="100" x2="226" y2="154" />
+      <line className="fx-match-line" x1="102" y1="100" x2="226" y2="100" />
+      <rect className="fx-seeker" x="58" y="78" width="44" height="44" />
+      <rect className="fx-firm fx-firm-dim" x="226.75" y="32.75" width="26.5" height="26.5" />
+      <rect className="fx-firm" x="226.75" y="86.75" width="26.5" height="26.5" />
+      <rect className="fx-firm fx-firm-dim" x="226.75" y="140.75" width="26.5" height="26.5" />
+    </svg>
+  );
+}
+
+function MatchDiagram() {
+  return (
+    <svg viewBox="0 0 320 200">
+      <Pitch />
+      <line className="fx-match-line" x1="102" y1="84" x2="218" y2="84" />
+      <rect className="fx-seeker" x="58" y="62" width="44" height="44" />
+      <rect className="fx-firm" x="218.75" y="62.75" width="42.5" height="42.5" />
+      <text className="fx-score" x="160" y="156">{features.diagram.score}</text>
+    </svg>
+  );
+}
+
+const DIAGRAMS = [SidesDiagram, SuggestDiagram, MatchDiagram];
+
 /**
- * «Mit Sponsuno» on Tintenblau (simpler since 2026-11-25, owner: "simpler and cleaner"): two columns. Left the head
- * and the three story steps (content.ts → story.steps) under thin pitch lines, right one simple picture: two sides, one
- * line, «4 von 4» and the four criteria. The picture is aria-hidden; the steps say the same in words.
- * One "Beispieldaten" caption under it (copy rule 6).
+ * «Mit Sponsuno» on Tintenblau (third form, 2026-11-25, after the owner found the earlier pictures too busy; Mobbin
+ * references: Browserbase, Notion and Granola «How it works»): head, then the three story steps side by side, each a
+ * plain diagram above its title and text (content.ts → story.steps).
  */
 export function Features() {
   return (
     <section className="section surface-graphit fx" id="mit-sponsuno" aria-labelledby="fx-title" data-header-dark="">
-      <div className="container fx-grid">
-        <div className="fx-copy">
-          <div data-reveal="" data-scroll="rise">
-            <p className="label">{features.label}</p>
-            <h2 id="fx-title">{features.title}</h2>
-            <p className="section-intro">{features.intro}</p>
-          </div>
-          <ul className="fx-steps" role="list" data-scroll-stagger="">
-            {story.steps.map((step) => (
+      <div className="container">
+        <div className="fx-head" data-reveal="" data-scroll="rise">
+          <p className="label">{features.label}</p>
+          <h2 id="fx-title">{features.title}</h2>
+          <p className="section-intro">{features.intro}</p>
+        </div>
+        <ol className="fx-steps" role="list" data-scroll-stagger="">
+          {story.steps.slice(0, 3).map((step, i) => {
+            const Diagram = DIAGRAMS[i];
+            return (
               <li className="fx-step" key={step.title} data-reveal="" data-scroll="rise">
+                <div className="fx-panel" aria-hidden="true"><Diagram /></div>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
               </li>
-            ))}
-          </ul>
-        </div>
-        <figure className="fx-figure" data-reveal="" data-scroll="rise">
-          <div aria-hidden="true"><MatchPicture /></div>
-          <figcaption className="fx-caption">{features.caption}</figcaption>
-        </figure>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
