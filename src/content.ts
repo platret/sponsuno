@@ -232,8 +232,35 @@ export const features = {
   label: 'Mit Sponsuno',
   title: 'Vom Profil zum passenden Partner.',
   intro: 'Beide Seiten zeigen, was sie suchen und was sie bieten. Sponsuno bringt zusammen, was passt.',
-  // Words inside the three diagrams (Features.tsx)
-  diagram: { seeker: 'Verein', firm: 'Firma', score: '4 von 4 Kriterien' },
+  // The product card beside the steps (Features.tsx, 2026-11-25; Mobbin: Unfair, Fruitful, Profound). Fictional
+  // example data with its one "Beispieldaten" label per card (copy rule 6).
+  card: {
+    label: 'Beispieldaten',
+    tabs: ['Profil', 'Vorschläge', 'Match'],
+    profile: {
+      mark: 'M',
+      name: 'Langstrecken-Mountainbikerin',
+      place: 'Zürcher Oberland',
+      rows: [
+        { k: 'Sportart', v: 'Mountainbike, Langstrecke' },
+        { k: 'Sucht', v: 'Material und Reisekosten' },
+        { k: 'Bietet', v: 'Logo auf dem Trikot, Beiträge' },
+      ],
+    },
+    suggestions: {
+      title: 'Passende Firmen',
+      items: [
+        { mark: 'V', name: 'Velogeschäft', meta: 'Zürcher Oberland · Velo und Zubehör', score: 4 },
+        { mark: 'S', name: 'Sanitärbetrieb', meta: 'Zürcher Oberland · Handwerk', score: 3 },
+        { mark: 'B', name: 'Bäckerei', meta: 'Zürcher Oberland · Lebensmittel', score: 3 },
+      ],
+    },
+    match: {
+      firmMark: 'V',
+      firm: 'Velogeschäft',
+      agreed: 'Gegenleistungen festgehalten',
+    },
+  },
 };
 
 export type Track = 'seeker' | 'sponsor';

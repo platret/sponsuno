@@ -1,65 +1,43 @@
+import { useEffect, useRef, useState, type ComponentType, type CSSProperties } from 'react';
 import { features, story } from '../content';
+import { StaticCard } from './featuresCard';
 import '../styles/sections/features.css';
 
-/* Three plain diagrams in one visual language (squares, the halfway line and centre circle of the pitch, one Bernstein
-   line), telling the three steps as a progression: both sides on their own half → Sponsuno suggests who fits → they
-   meet. Filled Hafer square = club or athlete, outlined square = firm. No example data, so no "Beispieldaten" label.
-   Decorative (aria-hidden): the step text says the same in words. */
-
-const Pitch = () => (
-  <g className="fx-pitch">
-    <line x1="160" y1="0" x2="160" y2="200" />
-    <circle cx="160" cy="100" r="34" />
-  </g>
-);
-
-function SidesDiagram() {
-  return (
-    <svg viewBox="0 0 320 200">
-      <Pitch />
-      <rect className="fx-seeker" x="58" y="62" width="44" height="44" />
-      <rect className="fx-firm" x="218.75" y="62.75" width="42.5" height="42.5" />
-      <text className="fx-label" x="80" y="134">{features.diagram.seeker}</text>
-      <text className="fx-label" x="240" y="134">{features.diagram.firm}</text>
-    </svg>
-  );
-}
-
-function SuggestDiagram() {
-  return (
-    <svg viewBox="0 0 320 200">
-      <Pitch />
-      <line className="fx-option-line" x1="102" y1="100" x2="226" y2="46" />
-      <line className="fx-option-line" x1="102" y1="100" x2="226" y2="154" />
-      <line className="fx-match-line" x1="102" y1="100" x2="226" y2="100" />
-      <rect className="fx-seeker" x="58" y="78" width="44" height="44" />
-      <rect className="fx-firm fx-firm-dim" x="226.75" y="32.75" width="26.5" height="26.5" />
-      <rect className="fx-firm" x="226.75" y="86.75" width="26.5" height="26.5" />
-      <rect className="fx-firm fx-firm-dim" x="226.75" y="140.75" width="26.5" height="26.5" />
-    </svg>
-  );
-}
-
-function MatchDiagram() {
-  return (
-    <svg viewBox="0 0 320 200">
-      <Pitch />
-      <line className="fx-match-line" x1="102" y1="84" x2="218" y2="84" />
-      <rect className="fx-seeker" x="58" y="62" width="44" height="44" />
-      <rect className="fx-firm" x="218.75" y="62.75" width="42.5" height="42.5" />
-      <text className="fx-score" x="160" y="156">{features.diagram.score}</text>
-    </svg>
-  );
-}
-
-const DIAGRAMS = [SidesDiagram, SuggestDiagram, MatchDiagram];
-
 /**
- * «Mit Sponsuno» on Tintenblau (third form, 2026-11-25, after the owner found the earlier pictures too busy; Mobbin
- * references: Browserbase, Notion and Granola «How it works»): head, then the three story steps side by side, each a
- * plain diagram above its title and text (content.ts → story.steps).
+ * «Mit Sponsuno» on Tintenblau (fourth form, 2026-11-25, owner's Mobbin references Unfair, Fruitful and Profound): the
+ * three story steps on the left on a rail with numbered dots, one Hafer product card on the right that stays in view
+ * and changes with the step in the middle of the screen (profile → suggestions → match). Scroll decides the step
+ * (IntersectionObserver), nothing advances by itself. Motion (motion.dev) animates the card on desktop, loaded
+ * after hydration (FeaturesLive.tsx); until then, and on phones, the card is static (featuresCard.tsx). Lucide draws the
+ * icons. Below 961 px and without JS each step shows its own static card instead. The cards
+ * are aria-hidden: the step text says the same in words.
  */
+const STEPS = story.steps.slice(0, 3);
+
 export function Features() {
+  const [active, setActive] = useState(0);
+  const [Live, setLive] = useState<ComponentType<{ step: number }> | null>(null);
+
+  // The animated card (Motion) only where the sticky stage shows: desktop width. Loaded after hydration.
+  useEffect(() => {
+    if (!window.matchMedia('(min-width: 961px)').matches) return;
+    let cancelled = false;
+    import('./FeaturesLive').then((mod) => { if (!cancelled) setLive(() => mod.LiveCard); });
+    return () => { cancelled = true; };
+  }, []);
+  const stepRefs = useRef<(HTMLLIElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.i));
+      });
+    }, { rootMargin: '-50% 0px -50% 0px' });
+    stepRefs.current.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <section className="section surface-graphit fx" id="mit-sponsuno" aria-labelledby="fx-title" data-header-dark="">
       <div className="container">
@@ -68,18 +46,31 @@ export function Features() {
           <h2 id="fx-title">{features.title}</h2>
           <p className="section-intro">{features.intro}</p>
         </div>
-        <ol className="fx-steps" role="list" data-scroll-stagger="">
-          {story.steps.slice(0, 3).map((step, i) => {
-            const Diagram = DIAGRAMS[i];
-            return (
-              <li className="fx-step" key={step.title} data-reveal="" data-scroll="rise">
-                <div className="fx-panel" aria-hidden="true"><Diagram /></div>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </li>
-            );
-          })}
-        </ol>
+        <div className="fx-layout">
+          <div className="fx-steps-wrap" style={{ '--fx-p': active / (STEPS.length - 1) } as CSSProperties}>
+            <span className="fx-rail" aria-hidden="true"><span className="fx-rail-fill" /></span>
+            <ol className="fx-steps" role="list">
+              {STEPS.map((step, i) => (
+                <li
+                  key={step.title}
+                  ref={(el) => { stepRefs.current[i] = el; }}
+                  data-i={i}
+                  className={`fx-step${i === active ? ' is-active' : ''}${i < active ? ' is-done' : ''}`}
+                >
+                  <span className="fx-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                  <div className="fx-inline" aria-hidden="true"><StaticCard step={i} /></div>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="fx-stage" aria-hidden="true">
+            <div className="fx-sticky">
+              {Live ? <Live step={active} /> : <StaticCard step={active} />}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
