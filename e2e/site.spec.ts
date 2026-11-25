@@ -74,22 +74,13 @@ test('pages download only their preloaded font files (the core subsets)', async 
   }
 });
 
-test('homepage photos load as AVIF, not as the JPEG fallback', async ({ page }) => {
-  // <picture> with an AVIF srcset and the JPEG as fallback (scripts/photos.mjs); Chromium supports AVIF.
-  const images: string[] = [];
-  page.on('request', (request) => {
-    if (request.resourceType() === 'image' && request.url().includes('/assets/')) images.push(new URL(request.url()).pathname);
-  });
+test('every «Für wen» card preselects its waitlist role', async ({ page }) => {
+  // Since 2026-11-25 the four groups are drawn cards (no photos); each link sets the role of the waitlist form
   await page.goto('/');
-  const photos = page.locator('#fuer-wen img');
-  await expect(photos).toHaveCount(2); // one photo per audience card (D1 redesign)
-  for (const photo of await photos.all()) {
-    await photo.scrollIntoViewIfNeeded();
-    await expect(photo).toHaveJSProperty('complete', true);
-    expect(await photo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
-    expect(await photo.evaluate((img: HTMLImageElement) => img.currentSrc)).toMatch(/\.avif$/);
-  }
-  expect(images.filter((f) => f.endsWith('.jpg'))).toEqual([]);
+  const links = page.locator('#fuer-wen .aud-cta');
+  await expect(links).toHaveCount(4);
+  await links.nth(2).click();
+  await expect(page.locator('input[name="rolle"][value="kulturverein"]')).toBeChecked();
 });
 
 test('waitlist form rejects an invalid e-mail and accepts a valid one', async ({ page }) => {

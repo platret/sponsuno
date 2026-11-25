@@ -44,22 +44,30 @@
 .fx .fx-card h3 { color: var(--graphit); margin-bottom: .55rem; }
 .fx .fx-card p { color: var(--ink); font-size: 1rem; line-height: 1.6; }
 
-/* ---------- Drawing colours (D1 only: Tintenblau, Bernstein, their tints, Hafer) ---------- */
-.fx-art { display: block; width: 100%; height: 100%; overflow: visible; }
-.fx-art .a-ink { fill: var(--graphit); }
-.fx-art .a-amber { fill: var(--brass); }
-.fx-art .a-amber-soft { fill: #F7BE93; }
-.fx-art .a-mist { fill: #9FB1C6; }
-.fx-art .a-oat { fill: var(--kalk); }
-.fx-art .a-light { fill: var(--kalk); }
-.fx-art .a-line { fill: var(--rule); }
-.fx-art .a-line-light { fill: rgba(236, 230, 218, .85); }
-.fx-art .a-wire { fill: none; stroke-width: 2.5; stroke-linecap: round; }
-.fx-art .a-wire-ink { stroke: var(--graphit); }
-.fx-art .a-wire-mist { stroke: #9FB1C6; }
-.fx-art .a-wire-amber { stroke: #F7BE93; }
-.fx-art .a-check { fill: none; stroke: var(--brass); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.fx-art .a-check-light { stroke: var(--kalk); stroke-width: 3; }
+/* ---------- Drawing colours (D1 only: Tintenblau, Bernstein, their tints, Hafer); shared with «Für wen» ---------- */
+:is(.fx-art, .aud-art) { display: block; width: 100%; height: 100%; overflow: visible; }
+:is(.fx-art, .aud-art) .a-ink { fill: var(--graphit); }
+:is(.fx-art, .aud-art) .a-amber { fill: var(--brass); }
+:is(.fx-art, .aud-art) .a-amber-soft { fill: #F7BE93; }
+:is(.fx-art, .aud-art) .a-mist { fill: #9FB1C6; }
+:is(.fx-art, .aud-art) .a-oat { fill: var(--kalk); }
+:is(.fx-art, .aud-art) .a-light { fill: var(--kalk); }
+:is(.fx-art, .aud-art) .a-line { fill: var(--rule); }
+:is(.fx-art, .aud-art) .a-line-light { fill: rgba(236, 230, 218, .85); }
+:is(.fx-art, .aud-art) .a-wire { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+:is(.fx-art, .aud-art) .a-wire-ink { stroke: var(--graphit); }
+:is(.fx-art, .aud-art) .a-wire-mist { stroke: #9FB1C6; }
+:is(.fx-art, .aud-art) .a-wire-amber { stroke: #F7BE93; }
+:is(.fx-art, .aud-art) .a-check { fill: none; stroke: var(--brass); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+:is(.fx-art, .aud-art) .a-check-light { stroke: var(--kalk); stroke-width: 3; }
+
+:is(.fx-art, .aud-art) .a-ink2 { fill: var(--graphit-2); }
+.aud-art .a-soft-ink { stroke: var(--graphit); stroke-width: 6; stroke-linejoin: round; }
+.aud-art .a-collar { fill: none; stroke: var(--kalk); stroke-width: 3; stroke-linecap: round; }
+.aud-art .a-pitch { fill: none; stroke: var(--kalk); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.aud-art .a-staff { fill: none; stroke: rgba(26, 43, 64, .22); stroke-width: 1.5; stroke-linecap: round; }
+.aud-art .a-stem { fill: none; stroke: var(--graphit); stroke-width: 4; stroke-linecap: round; }
+.aud-art .a-beam { fill: none; stroke: var(--brass); stroke-width: 9; stroke-linecap: round; }
 
 @media (max-width: 560px) {
   .fx-arrows { display: none; }

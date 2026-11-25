@@ -8,7 +8,8 @@ import '../styles/sections/features.css';
 const STEPS = [...story.steps.slice(0, 3), story.after];
 
 /**
- * «Mit Sponsuno» on Tintenblau (fifth form, 2026-11-25, owner: a horizontal row with arrows, drawings like Fruitful's):
+ * «Mit Sponsuno» on Tintenblau, id #ablauf (the nav's «So funktioniert es»; the separate how-it-works section was
+ * removed 2026-11-25 as a repeat of this one) (fifth form, 2026-11-25, owner: a horizontal row with arrows, drawings like Fruitful's):
  * head with two arrow buttons on the right, then a horizontally scrolling row of four Hafer cards (the three story
  * steps and story.after), each with a drawing above its number, title and text. The row scrolls natively (touch,
  * trackpad, Shift + wheel, keyboard once focused) and snaps to the cards; the arrows move it by one card and are
@@ -55,7 +56,7 @@ export function Features() {
   const Wrap = Live ?? Fragment;
 
   return (
-    <section className="section surface-graphit fx" id="mit-sponsuno" aria-labelledby="fx-title" data-header-dark="">
+    <section className="section surface-graphit fx" id="ablauf" aria-labelledby="fx-title" data-header-dark="">
       <div className="container fx-top">
         <div className="fx-head" data-reveal="" data-scroll="rise">
           <p className="label">{features.label}</p>

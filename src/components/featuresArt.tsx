@@ -1,6 +1,6 @@
 import { createContext, useContext, type ElementType, type ReactNode } from 'react';
 
-/* The four illustrations of «Mit Sponsuno» (Features.tsx), drawn after Fruitful's «How it works» (owner's reference,
+/* The four illustrations of «Mit Sponsuno» (Features.tsx; audienceArt.tsx reuses Frame, draw, pop and useV), drawn after Fruitful's «How it works» (owner's reference,
    2026-11-25): soft rounded blocks joined by curved lines, in the D1 colours only (Tintenblau, Bernstein, their tints
    and Hafer 2). The rounded corners are for these drawings only; UI stays square.
    Without Motion every element is a plain SVG element in its final state (prerender, no JS, phones before the chunk,
@@ -11,26 +11,26 @@ type Kit = { live: boolean; svg: ElementType; g: ElementType; path: ElementType;
 export const ArtKit = createContext<Kit>({ live: false, svg: 'svg', g: 'g', path: 'path', rect: 'rect', circle: 'circle' });
 
 const EASE = [0.22, 1, 0.36, 1];
-const draw = (delay: number) => ({
+export const draw = (delay: number) => ({
   hidden: { pathLength: 0, opacity: 0 },
   show: { pathLength: 1, opacity: 1, transition: { pathLength: { duration: 0.9, delay, ease: EASE }, opacity: { duration: 0.01, delay } } },
 });
-const pop = (delay: number, hoverY = -4) => ({
+export const pop = (delay: number, hoverY = -4) => ({
   hidden: { opacity: 0, scale: 0.8 },
   show: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20, delay } },
   hover: { y: hoverY, transition: { type: 'spring', stiffness: 300, damping: 18 } },
 });
 
 /** Motion props for one element, only when live (plain SVG elements must not get them) */
-function useV() {
+export function useV() {
   const { live } = useContext(ArtKit);
   return (variants: object) => (live ? { variants } : {});
 }
 
-function Frame({ children }: { children: ReactNode }) {
+export function Frame({ children, viewBox = '0 0 360 200', className = 'fx-art' }: { children: ReactNode; viewBox?: string; className?: string }) {
   const { live, svg: Svg } = useContext(ArtKit);
   const motionProps = live ? { initial: 'hidden', whileInView: 'show', whileHover: 'hover', viewport: { once: true, amount: 0.5 } } : {};
-  return <Svg className="fx-art" viewBox="0 0 360 200" {...motionProps}>{children}</Svg>;
+  return <Svg className={className} viewBox={viewBox} {...motionProps}>{children}</Svg>;
 }
 
 /** Two short text lines inside a block */

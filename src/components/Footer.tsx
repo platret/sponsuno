@@ -63,13 +63,6 @@ export function Footer({ onLanding = true, current }: FooterProps) {
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>
-          {/* The audience photos are on the landing page only, so only its footer names them */}
-          {onLanding && (
-            <p>
-              {footer.photoNote.before}
-              <a href={siteHref(footer.photoNote.href, onLanding)}>{footer.photoNote.link}</a>
-            </p>
-          )}
         </div>
       </div>
     </footer>

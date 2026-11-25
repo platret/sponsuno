@@ -8,7 +8,6 @@ import { ProofLine } from './components/ProofLine';
 import { Problem } from './components/Problem';
 import { Features } from './components/Features';
 import { Audience } from './components/Audience';
-import { HowItWorks } from './components/HowItWorks';
 import { TeamStrip } from './components/TeamStrip';
 import { HomeFaq } from './components/HomeFaq';
 import { Waitlist } from './components/Waitlist';
@@ -80,7 +79,6 @@ export default function App() {
         <ProofLine />
         <Problem />
         <Features />
-        <HowItWorks onChooseRole={setRole} />
         <Audience onChooseRole={setRole} />
         <TeamStrip />
         <HomeFaq />

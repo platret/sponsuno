@@ -77,51 +77,37 @@ export const proof = {
   ],
 };
 
-// Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits): the people
-// shown have nothing to do with Sponsuno. They illustrate the target groups only (no names, never shown as users);
-// the note saying so sits in the landing page footer (footer.photoNote) and in the Impressum.
-export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
-
+// «Für wen» (Audience.tsx, redrawn 2026-11-25: drawings instead of stock photos, Mobbin references Mural and Maze):
+// four cards, each with a drawing (audienceArt.tsx), the group, one sentence and a link that preselects the waitlist
+// role. Culture clubs keep their own card (copy rule 7).
 export const audience = {
   title: 'Für wen Sponsuno gemacht ist',
   intro: 'Für alle, die in ihrer Region Sponsoren finden oder selbst sponsern möchten, im Sport wie in der Kultur.',
   items: [
     {
-      image: 'athlete',
+      role: 'athlete' as Role,
       label: 'Sportlerinnen und Sportler',
       text: 'Sie trainieren neben Ausbildung oder Beruf und suchen Unterstützung für Material, Startgelder oder Reisen.',
-      alt: 'Eine Person läuft auf einem schmalen Bergweg durch grüne Hänge mit blühenden Alpenrosen.',
+      cta: 'Als Sportlerin oder Sportler eintragen',
     },
     {
-      image: 'sportverein',
+      role: 'sportverein' as Role,
       label: 'Sportvereine',
       text: 'Ehrenamtliche Vorstände, die Partner für Trikots, Trainingslager oder Turniere suchen.',
-      alt: 'Ein Ruderboot mit drei Personen von oben auf einem Fluss in der Abendsonne.',
+      cta: 'Als Sportverein eintragen',
     },
     {
-      image: 'kulturverein',
+      role: 'kulturverein' as Role,
       label: 'Kulturvereine',
       text: 'Musikgesellschaften, Chöre und Theatervereine, die Instrumente, Kostüme oder Aufführungen finanzieren müssen.',
-      alt: 'Musikanten in Tracht und Filzhut spielen Posaune, vorne ein Notenhalter.',
+      cta: 'Als Kulturverein eintragen',
     },
     {
-      image: 'firma',
+      role: 'sponsor' as Role,
       label: 'Firmen aus der Region',
       text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
-      alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
+      cta: 'Als Firma eintragen',
     },
-  ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
-  // Since the D1 redesign (2026-11-24) the four groups sit in two cards: who looks for support (items 0-2) and the
-  // companies (item 3). One photo per card: the first item's photo.
-  cards: [
-    { title: 'Sportlerinnen, Sportler und Vereine', items: [0, 1, 2], role: 'athlete' as Role },
-    { title: 'Firmen aus der Region', items: [3], role: 'sponsor' as Role },
-  ],
-  // The companies' card lists the kinds of support (wording close to support.kinds on /kosten/)
-  firmGroups: [
-    { label: 'Geld', text: 'Beiträge an Saison, Reisen, Startgelder oder Vereinsprojekte.' },
-    { label: 'Material und Ausrüstung', text: 'Velos, Bälle, Trikots oder Instrumente.' },
-    { label: 'Dienstleistungen', text: 'Zum Beispiel Druck, Transport oder Handwerk vor Ort.' },
   ],
 };
 
@@ -518,8 +504,6 @@ export const footer = {
   // mailto link and the town of the postal address. Not shown while both are missing.
   contactTitle: 'Kontakt',
   copyright: '© 2026 Team Sponsuno',
-  // Landing page only (the audience photos): the stock photos are named as such once, outside the content flow.
-  photoNote: { before: 'Fotos: Symbolbilder, ', link: 'Bildnachweise', href: 'impressum/#urheberrecht' },
 };
 
 export const stickyCta = {
@@ -608,48 +592,9 @@ export type PhotoCredit = {
 };
 
 /** Every third-party photo on the site, in page order. Listed in the Impressum. Originals stay outside the repo. */
-export const photoCredits: PhotoCredit[] = [
-  {
-    subject: 'Mountainbikerin in der Beispielkarte (Startseite), Symbolbild',
-    photographer: 'Corneliu Stefan Esanu',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/woman-riding-on-a-mountain-bike-23410483/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Traillauf auf einem Bergweg, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'Alin Serban',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/trail-runner-in-green-mountain-landscape-30932860/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Ruderteam auf dem Fluss, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'Adrian Jozefowicz',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/three-people-on-brown-canoe-sailing-on-calm-water-1046231/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Blasmusik in Tracht, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'Bastian Riccardi',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/traditional-bavarian-musicians-playing-trombones-34013753/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Schreinerei, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'cottonbro studio',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/men-looking-at-a-piece-of-wood-7484154/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-];
+// Empty since 2026-11-25: «Für wen» uses drawings now, and no published page shows a third-party photo. The stock
+// photos stay in src/assets/photos/ (and their credits in git history) in case they come back.
+export const photoCredits: PhotoCredit[] = [];
 
 /**
  * Contact data: shown on the legal pages (legal.contact) and used by the footer, the waitlist's e-mail route, the FAQ
@@ -720,7 +665,6 @@ export const legal = {
           // Legally relevant (no misleading claims): the site describes the product before its launch. Keep this
           // section factual even though the rest of the site uses product voice (AGENTS.md, copy rules).
           { type: 'p', text: 'Sponsuno ist noch nicht gestartet. Vermittlung, KI-Sponsoringmanager und Zahlungen sind bis zum Start nicht verfügbar. Angaben zu Funktionen, Kosten und Abläufen geben den aktuellen Planungsstand wieder und können sich ändern.' },
-          { type: 'p', text: 'Die Fotos von Personen auf der Startseite sind Symbolbilder. Die abgebildeten Personen haben keinen Bezug zu Sponsuno.' },
         ],
       },
       {
@@ -1603,7 +1547,7 @@ export const waitlistConfirmed = {
   intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start.',
   linksTitle: 'Bis dahin',
   links: [
-    { href: '#ablauf', label: 'So funktioniert es', text: howItWorks.intro },
+    { href: '#ablauf', label: 'So funktioniert es', text: features.intro },
     { href: '#team', label: 'Über uns', text: ueberUnsText },
     { href: '#fragen', label: 'Fragen', text: fragenText },
   ] satisfies (FooterLink & { text: string })[],
