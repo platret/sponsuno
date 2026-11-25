@@ -1,5 +1,5 @@
 /* Landing page team row (TeamStrip.tsx): head with the link on the right, then four square portraits (no radius,
-   brand rule) with the name under each. Without a photo a Tintenblau square with the initials. */
+   brand rule) with the name under each. Since 2026-11-25 no photos: a small Tintenblau square with the initials. */
 .ts-head {
   display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 2rem;
   margin-bottom: clamp(2.5rem, 2rem + 2vw, 3.5rem);
@@ -11,7 +11,8 @@
 .ts-photo { display: block; width: 100%; max-width: 240px; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--graphit); }
 .ts-mono {
   display: grid; place-items: center;
-  color: var(--kalk); font: 700 clamp(1.5rem, 1rem + 1.5vw, 2.25rem)/1 var(--display);
+  width: 6.5rem; max-width: none;
+  color: var(--kalk); font: 700 1.5rem/1 var(--display);
 }
 .ts-name { margin-top: 1rem; font-weight: 600; color: var(--heading); }
 .ts-link {

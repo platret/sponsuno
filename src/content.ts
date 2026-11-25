@@ -2,21 +2,14 @@
 // formal "Sie", nothing presented as decided or working that the team has not decided or built).
 
 import { pageMeta } from './pages';
-import photoAlex from './assets/photos/team-alex-platret.jpg';
-import photoAurel from './assets/photos/team-aurel-eugster.jpg';
-import photoMaurice from './assets/photos/team-maurice-straessle.jpg';
-import photoAlexAvif from './assets/photos/team-alex-platret.avif';
-import photoAurelAvif from './assets/photos/team-aurel-eugster.avif';
-import photoMauriceAvif from './assets/photos/team-maurice-straessle.avif';
 
-// Main navigation (three items since 2026-11-25, owner's call: /kosten/ is linked from the FAQ and the notice pages,
-// not from the header or the footer since 2026-11-25): one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
-// '#ablauf' is the landing page section (siteHref() in lib/links.ts: a plain anchor on the landing page, /#ablauf on the
-// other pages); the rest are page paths relative to the site root. The current page is marked by navCurrent().
+// Main navigation: one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
+// Since 2026-11-25 (owner: "just the main page for now") only landing page sections, in page order: siteHref() in
+// lib/links.ts keeps them plain anchors on the landing page and makes them /#… on the legal and notice pages.
 export const nav: FooterLink[] = [
   { href: '#ablauf', label: 'So funktioniert es' },
-  { href: pageMeta('fragen').path, label: 'Fragen' },
-  { href: pageMeta('ueber-uns').path, label: 'Über uns' },
+  { href: '#team', label: 'Über uns' },
+  { href: '#fragen', label: 'Fragen' },
 ];
 
 export const cta = {
@@ -380,30 +373,18 @@ export const faq = {
   ] satisfies FaqItem[],
 };
 
-// Short FAQ on the landing page (HomeFaq.tsx, 2026-11-25): four questions from faq.items, word for word (picked by
-// their question, so a changed question fails the build instead of silently dropping out), then a link to /fragen/.
-// The cost question stands in for the Kosten link that left the header and the footer.
-const HOME_FAQ_QUESTIONS = [
-  'Wann geht es los?',
-  'Bleibt nach der Provision genug übrig?',
-  'Für wen ist Sponsuno?',
-  'Sind die Firmen wirklich interessiert?',
-];
+// FAQ on the landing page (HomeFaq.tsx, id #fragen): since 2026-11-25 all questions of faq.items (the /fragen/ page is
+// parked), word for word. The cost question stands in for the parked Kosten page.
 export const homeFaq = {
-  title: 'Häufige Fragen',
-  link: 'Alle Fragen und Antworten',
-  items: HOME_FAQ_QUESTIONS.map((q) => {
-    const item = faq.items.find((i) => i.q === q);
-    if (!item) throw new Error(`homeFaq: no FAQ item "${q}" in faq.items`);
-    return item;
-  }),
+  title: faq.title,
+  items: faq.items,
 };
 
 // Founders section (id="team"), on /ueber-uns/, and the team row on the landing page (TeamStrip). Team decision
 // (2026-11-03): full names allowed here. Since 2026-11-25 (owner's call) no individual roles: the four are shown as
 // the founding team, in this order. Nothing else personal (no ages, schools, home addresses, private e-mails); the
 // only profile link allowed is each person's own LinkedIn page, added when they send it.
-// Without a photo the card shows a monogram. To add a real, consented photo later: put a square JPEG
+// Since 2026-11-25 (owner's call) no photos: every card shows the initials. To add a real, consented photo later: put a square JPEG
 // (240 x 240 px, under 40 KB) in src/assets/photos/, add it to PHOTOS in scripts/photos.mjs (sameName) and run
 // `npm run photos` for its AVIF, import both at the top of this file and set `photo` on the person.
 export type TeamMember = {
@@ -414,9 +395,9 @@ export type TeamMember = {
 };
 
 const teamMembers: TeamMember[] = [
-  { name: 'Aurel Eugster', photo: { src: photoAurel, avif: photoAurelAvif, alt: 'Porträt von Aurel Eugster' }, linkedin: 'https://www.linkedin.com/in/aurel-eugster-004569399/' },
-  { name: 'Alex Platret', photo: { src: photoAlex, avif: photoAlexAvif, alt: 'Porträt von Alex Platret' }, linkedin: 'https://www.linkedin.com/in/platret/' },
-  { name: 'Maurice Strässle', photo: { src: photoMaurice, avif: photoMauriceAvif, alt: 'Porträt von Maurice Strässle' }, linkedin: 'https://www.linkedin.com/in/maurice-str%C3%A4ssle-926a61391/' },
+  { name: 'Aurel Eugster', linkedin: 'https://www.linkedin.com/in/aurel-eugster-004569399/' },
+  { name: 'Alex Platret', linkedin: 'https://www.linkedin.com/in/platret/' },
+  { name: 'Maurice Strässle', linkedin: 'https://www.linkedin.com/in/maurice-str%C3%A4ssle-926a61391/' },
   { name: 'Dozie Ilunga' },
 ];
 
@@ -426,7 +407,6 @@ export const team = {
   members: teamMembers,
   // Landing page row (TeamStrip)
   stripLabel: 'Gründungsteam',
-  stripLink: 'Mehr über uns',
   linkedinLabel: (name: string) => `${name} auf LinkedIn`,
 };
 
@@ -515,8 +495,8 @@ export const footer = {
       title: 'Sponsuno',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
-        { href: pageMeta('fragen').path, label: 'Fragen' },
-        { href: pageMeta('ueber-uns').path, label: 'Über uns' },
+        { href: '#team', label: 'Über uns' },
+        { href: '#fragen', label: 'Fragen' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
@@ -1578,11 +1558,10 @@ export const forFirms = {
   },
 };
 
-// One line per page for the link boxes of the 404 page and /warteliste/bestaetigt/ (and the welcome e-mail), taken from
-// the pages' own intros (pricing.intro, the FAQ, team and projectStatus)
-const kostenText = 'Kein Abo, keine Grundgebühr: was feststeht und was wir vor dem Start bekannt geben.';
+// One line per link for the link boxes of the 404 page and /warteliste/bestaetigt/ (and the welcome e-mail): the landing
+// page sections #team and #fragen (the topic pages are parked since 2026-11-25)
 const fragenText = 'Antworten auf häufige Fragen, von der Provision bis zum Start.';
-const ueberUnsText = 'Das Team hinter Sponsuno und der aktuelle Stand des Projekts.';
+const ueberUnsText = 'Die vier Personen hinter Sponsuno.';
 
 // ---------- 404 page (dist/404.html, NoticePage.tsx): served by Cloudflare for every unknown URL ----------
 // Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
@@ -1595,9 +1574,8 @@ export const notFound = {
   linksTitle: 'Weiter zu',
   links: [
     { href: '', label: 'Startseite', text: 'Worum es bei Sponsuno geht und wie es funktioniert.' },
-    { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
-    { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
-    { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },
+    { href: '#team', label: 'Über uns', text: ueberUnsText },
+    { href: '#fragen', label: 'Fragen', text: fragenText },
     { href: '#warteliste', label: 'Warteliste', text: 'Sponsuno startet bald. Melden Sie hier Ihr Interesse an.' },
   ] satisfies (FooterLink & { text: string })[],
   /** Only shown while a contact address exists */
@@ -1621,9 +1599,8 @@ export const waitlistConfirmed = {
   linksTitle: 'Bis dahin',
   links: [
     { href: '#ablauf', label: 'So funktioniert es', text: howItWorks.intro },
-    { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
-    { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
-    { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },
+    { href: '#team', label: 'Über uns', text: ueberUnsText },
+    { href: '#fragen', label: 'Fragen', text: fragenText },
   ] satisfies (FooterLink & { text: string })[],
   /** Only shown while a contact address exists */
   contact: confirmedMail

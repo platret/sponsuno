@@ -1,20 +1,15 @@
 import { homeFaq } from '../content';
-import { pageMeta } from '../pages';
-import { pageHref } from '../lib/links';
 import '../styles/sections/home-faq.css';
 
-/** Landing page FAQ (2026-11-25): the head on the left, four questions on the right as native <details> rows under
-    thin rules, then the link to /fragen/. Same two-column rhythm as «Heute». No JS. */
+/** Landing page FAQ (#fragen, 2026-11-25; the header, the footer and old /fragen/ links lead here): the title on the
+    left (sticky on wide screens), all questions on the right as native <details> rows under thin rules. Same
+    two-column rhythm as «Heute». No JS. The FAQPage JSON-LD of the landing page is built from the same list. */
 export function HomeFaq() {
   return (
-    <section className="section surface-kalk hf" aria-labelledby="hf-title">
+    <section className="section surface-kalk hf" id="fragen" aria-labelledby="hf-title">
       <div className="container hf-grid">
         <div className="hf-head" data-reveal="" data-scroll="rise">
           <h2 id="hf-title">{homeFaq.title}</h2>
-          <a className="link-arrow hf-more" href={pageHref(pageMeta('fragen').path)}>
-            {homeFaq.link}
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
-          </a>
         </div>
         <div className="hf-list" data-reveal="" data-scroll="rise">
           {homeFaq.items.map((item) => (

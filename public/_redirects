@@ -5,6 +5,14 @@
 # Parked pages (owner's direction 2026-11-16, AGENTS.md → "Parked (not built)"): the topic pages Für Firmen and
 # KI-Manager, the four guides (Ratgeber) with their Word templates, and the product preview. Their old URLs lead to the
 # homepage. Bringing a page back: drop its lines here first, or the redirect hides the page.
+# Parked 2026-11-25 (owner: everything on the landing page for now): the FAQ and the team are landing page sections,
+# the cost question is in the FAQ.
+/kosten /#fragen 301
+/kosten/ /#fragen 301
+/fragen /#fragen 301
+/fragen/ /#fragen 301
+/ueber-uns /#team 301
+/ueber-uns/ /#team 301
 /fuer-firmen / 301
 /fuer-firmen/ / 301
 /ki-manager / 301

@@ -30,21 +30,21 @@ test('homepage loads without console errors and shows its H1', async ({ page }) 
   expect(errors).toEqual([]);
 });
 
-test('every header nav link leads to a page with an H1', async ({ page }) => {
+test('every header nav link leads to a landing page section', async ({ page }) => {
+  // Since 2026-11-25 the nav holds only landing page anchors (content.ts → nav): each target exists once, and a click
+  // keeps the page, sets the hash and brings the section into view.
   await page.goto('/');
   const links = page.locator('.site-header nav a');
   const hrefs = await links.evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''));
   expect(hrefs.length).toBeGreaterThan(0);
   for (const [i, href] of hrefs.entries()) {
     await test.step(href, async () => {
-      if (i > 0) await page.goto('/');
+      expect(href).toMatch(/^#[a-z-]+$/);
+      await expect(page.locator(href)).toHaveCount(1);
       const errors = trackErrors(page);
       await links.nth(i).click();
-      // Compare the path only ('So funktioniert es' is an in-page link, #ablauf)
-      const expected = new URL(href, page.url()).pathname;
-      await expect(page).toHaveURL((url) => url.pathname === expected);
-      await expect(page.locator('h1')).toHaveCount(1);
-      await expect(page.locator('h1')).toBeVisible();
+      await expect(page).toHaveURL((url) => url.pathname === '/' && url.hash === href);
+      await expect(page.locator(href)).toBeInViewport();
       expect(errors).toEqual([]);
     });
   }
@@ -53,7 +53,7 @@ test('every header nav link leads to a page with an H1', async ({ page }) => {
 test('pages download only their preloaded font files (the core subsets)', async ({ page }) => {
   // src/styles/fonts.css: each face has a core file (preloaded) and an extra file for characters the site's own text
   // does not use; scripts/check-dist.mjs checks the text, this checks what the browser actually fetches.
-  for (const path of ['/', '/kosten/', '/impressum/']) {
+  for (const path of ['/', '/datenschutz/', '/impressum/']) {
     await test.step(path, async () => {
       const fonts: string[] = [];
       const onRequest = (request: { resourceType(): string; url(): string }) => {
@@ -127,10 +127,10 @@ test('the waitlist confirmation page (Brevo redirect target) shows its H1 and st
   expect(errors).toEqual([]);
 });
 
-test('an old section link (/#kosten) redirects to its topic page', async ({ page }) => {
+test('an old section link (/#kosten) leads to the FAQ, which holds the cost question', async ({ page }) => {
   await page.goto('/#kosten');
-  await expect(page).toHaveURL(/\/kosten\/$/);
-  await expect(page.locator('h1')).toBeVisible();
+  await expect(page).toHaveURL(/\/#fragen$/);
+  await expect(page.locator('#fragen')).toBeAttached();
 });
 
 test('a dark system setting still shows the one light theme', async ({ page }) => {
@@ -151,7 +151,7 @@ test('a dark system setting still shows the one light theme', async ({ page }) =
 test.describe('phone viewport (390 × 844)', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
-  for (const path of ['/', '/kosten/', '/impressum/']) {
+  for (const path of ['/', '/datenschutz/', '/impressum/']) {
     test(`${path} has no horizontal overflow`, async ({ page }) => {
       await page.goto(path);
       await expect(page.locator('h1')).toBeVisible();

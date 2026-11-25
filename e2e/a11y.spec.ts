@@ -1,15 +1,15 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-// Accessibility checks with axe-core (WCAG 2.x A/AA plus axe's best practices) on the landing page, the topic pages
-// /kosten/ and /fragen/, and a legal page (one light theme, DESIGN.md -> Theme). Fails on serious and critical violations only (moderate
+// Accessibility checks with axe-core (WCAG 2.x A/AA plus axe's best practices) on the landing page, the 404 page
+// and a legal page (one light theme, DESIGN.md -> Theme). Fails on serious and critical violations only (moderate
 // ones are axe best practices, not WCAG failures).
 //
 // Scanned with reduced motion: every piece is in its final state then (with motion, the reveals below the fold wait
 // at opacity 0 for the scroll and axe would skip them, and the hero copy fades in for about a second). The landing
 // page is scanned once more with motion, as most visitors see it, after its load animations have finished.
 
-const PAGES = ['/', '/kosten/', '/fragen/', '/impressum/'];
+const PAGES = ['/', '/404.html', '/impressum/'];
 type Violation = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'][number];
 
 async function open(page: Page, path: string) {

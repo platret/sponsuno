@@ -21,10 +21,6 @@ const PHOTOS = {
   'audience-sportverein.jpg': { widths: [480, 640], quality: 55 },
   // Match card avatar (52 px circle): same size as the JPEG, so one file named like it
   'mtb-athlete-104.jpg': { widths: [104], quality: 60, sameName: true },
-  // Team portraits (240 px masters, shown at 88-120 px on /ueber-uns/ and the landing page team row)
-  'team-alex-platret.jpg': { widths: [240], quality: 60, sameName: true },
-  'team-aurel-eugster.jpg': { widths: [240], quality: 60, sameName: true },
-  'team-maurice-straessle.jpg': { widths: [240], quality: 60, sameName: true },
 };
 
 const jpegs = (await readdir(dir)).filter((f) => f.endsWith('.jpg'));

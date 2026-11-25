@@ -30,7 +30,7 @@ export const titleFor = (id: PageId): string => escapeAttr(pageMeta(id).title);
 /**
  * Head tags of a page, injected at the <!--seo--> marker: description, canonical, Open Graph, Twitter card,
  * on the landing page the robots preview hint, the JSON-LD graph (WebSite, Organization) and the redirect of old
- * section links (movedScript), on /fragen/ the FAQPage JSON-LD, on the topic pages with scrollFx (none published; the parked /ki-manager/) the scroll motion gate (SCROLL_FX_SCRIPT). Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
+ * section links (movedScript) and the FAQPage JSON-LD of its #fragen section, on the topic pages with scrollFx (none published; the parked /ki-manager/) the scroll motion gate (SCROLL_FX_SCRIPT). Canonical = og:url = absolute apex URL. The 404 page gets only noindex: it is served under any
  * unknown URL, so a canonical or og:url would point to the wrong place.
  */
 export function headFor(id: PageId): string {
@@ -58,8 +58,13 @@ export function headFor(id: PageId): string {
     meta('property', 'og:image:alt', site.ogImageAlt),
     meta('name', 'twitter:card', 'summary_large_image'),
   ];
-  if (id === 'home') tags.push(`<script type="application/ld+json">${jsonLd(homeGraph())}</script>`, movedScript());
-  if (id === 'fragen') tags.push(`<script type="application/ld+json">${jsonLd(faqGraph())}</script>`);
+  if (id === 'home') {
+    tags.push(
+      `<script type="application/ld+json">${jsonLd(homeGraph())}</script>`,
+      `<script type="application/ld+json">${jsonLd(faqGraph())}</script>`,
+      movedScript(),
+    );
+  }
   if (page.kind === 'info' && page.scrollFx) tags.push(SCROLL_FX_SCRIPT);
   return tags.join('\n  ');
 }
@@ -136,17 +141,17 @@ function homeGraph() {
   };
 }
 
-/** FAQPage of /fragen/, from faq.items (the questions shown on that page), part of the landing page's WebSite. */
+/** FAQPage for the FAQ section of the landing page (#fragen, since 2026-11-25), from faq.items (the questions shown
+    there, HomeFaq). */
 function faqGraph() {
-  const url = absoluteUrl(pageMeta('fragen').path);
+  const url = absoluteUrl(pageMeta('home').path);
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     '@id': `${url}#fragen`,
     url,
     inLanguage: site.language,
-    // Minimal WebSite node, so the reference resolves on this page too (the full node is on the landing page)
-    isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}#website`, name: site.name, url: SITE_URL },
+    isPartOf: { '@id': `${SITE_URL}#website` },
     mainEntity: faq.items.map((item) => ({
       '@type': 'Question',
       name: item.q,
