@@ -23,7 +23,7 @@ html:has(.lg-header) { scroll-padding-top: 1.5rem; }
 .lg-header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
 .lg-actions { display: flex; align-items: center; gap: .5rem; }
 .lg-brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: var(--radius-sm); }
-.lg-brand img { width: 132px; height: auto; }
+.lg-brand img { width: 148px; height: auto; }
 
 .lg-nav ul { display: flex; gap: .25rem; }
 .lg-nav a {

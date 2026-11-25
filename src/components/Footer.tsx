@@ -1,5 +1,5 @@
-import { contact, footer } from '../content';
-import { siteHref } from '../lib/links';
+import { contact, footer, newTabHint } from '../content';
+import { NEW_TAB, siteHref } from '../lib/links';
 import wordmark from '../assets/wordmark-light.svg';
 import '../styles/sections/footer.css';
 
@@ -51,7 +51,7 @@ export function Footer({ onLanding = true, current }: FooterProps) {
                   {CONTACT_EMAIL && (
                     <li><a className="ft-link ft-mail" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
                   )}
-                  {contact.linkedin && <li><a className="ft-link" href={contact.linkedin}>LinkedIn</a></li>}
+                  {contact.linkedin && <li><a className="ft-link" href={contact.linkedin} {...NEW_TAB}>LinkedIn<span className="visually-hidden">{newTabHint}</span></a></li>}
                   {CONTACT_TOWN && <li className="ft-text">{CONTACT_TOWN}</li>}
                 </ul>
               </div>
@@ -59,17 +59,10 @@ export function Footer({ onLanding = true, current }: FooterProps) {
           </nav>
         </div>
 
-        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={104} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
+        <img className="ft-wordmark" src={wordmark} alt="Sponsuno" width={612} height={78} loading="lazy" decoding="async" data-reveal="" data-scroll="zoom-in" />
 
         <div className="ft-bottom">
           <p>{footer.copyright}</p>
-          {/* The audience photos are on the landing page only, so only its footer names them */}
-          {onLanding && (
-            <p>
-              {footer.photoNote.before}
-              <a href={siteHref(footer.photoNote.href, onLanding)}>{footer.photoNote.link}</a>
-            </p>
-          )}
         </div>
       </div>
     </footer>

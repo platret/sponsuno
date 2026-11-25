@@ -2,19 +2,18 @@
 // formal "Sie", nothing presented as decided or working that the team has not decided or built).
 
 import { pageMeta } from './pages';
-import photoAlex from './assets/photos/team-alex-platret.jpg';
-import photoAurel from './assets/photos/team-aurel-eugster.jpg';
-import photoMaurice from './assets/photos/team-maurice-straessle.jpg';
 
 // Main navigation: one list for the landing page header (Header, MobileMenu) and the static pages (PageHeader).
-// '#ablauf' is the landing page section (siteHref() in lib/links.ts: a plain anchor on the landing page, /#ablauf on the
-// other pages); the rest are page paths relative to the site root. The current page is marked by navCurrent().
+// Since 2026-11-25 (owner: "just the main page for now") only landing page sections, in page order: siteHref() in
+// lib/links.ts keeps them plain anchors on the landing page and makes them /#… on the legal and notice pages.
 export const nav: FooterLink[] = [
   { href: '#ablauf', label: 'So funktioniert es' },
-  { href: pageMeta('kosten').path, label: 'Kosten' },
-  { href: pageMeta('fragen').path, label: 'Fragen' },
-  { href: pageMeta('ueber-uns').path, label: 'Über uns' },
+  { href: '#team', label: 'Über uns' },
+  { href: '#fragen', label: 'Fragen' },
 ];
+
+/** Screen-reader note after a link that opens in a new tab (lib/links.ts → NEW_TAB) */
+export const newTabHint = ' (öffnet in neuem Tab)';
 
 export const cta = {
   waitlist: 'Auf die Warteliste',
@@ -66,49 +65,50 @@ export const match = {
 };
 
 export const proof = {
+  // D1 redesign: one large statement under the hero (the handbook's own sentence, page 01, with culture named, copy
+  // rule 7); the accent is one word in Bernstein dunkel.
+  statementStart: 'Sponsuno verbindet Vereine aus Sport und Kultur, Sportlerinnen und Sportler mit Firmen, die zu ihnen ',
+  statementAccent: 'passen',
+  statementEnd: ': nach Region, Budget, Branche und Art der Unterstützung.',
   items: [
     'Für Sport und Kultur in der Deutschschweiz',
     'Entstanden aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer',
     'Kein Abo, keine Grundgebühr',
   ],
-  disciplinesLabel: 'Zum Beispiel für',
-  disciplines: ['Mountainbike', 'Unihockey', 'Musikgesellschaft', 'Beachvolleyball', 'Theaterverein', 'Triathlon', 'Chor', 'Turnverein'],
 };
 
-// Audience section under the proof line. The photos are stock photos (Symbolbilder, see photoCredits): the people
-// shown have nothing to do with Sponsuno. They illustrate the target groups only (no names, never shown as users);
-// the note saying so sits in the landing page footer (footer.photoNote) and in the Impressum.
-export type AudienceImage = 'athlete' | 'sportverein' | 'kulturverein' | 'firma';
-
+// «Für wen» (Audience.tsx, redrawn 2026-11-25: drawings instead of stock photos, Mobbin references Mural and Maze):
+// four cards, each with a drawing (audienceArt.tsx), the group, one sentence and a link that preselects the waitlist
+// role. Culture clubs keep their own card (copy rule 7).
 export const audience = {
   title: 'Für wen Sponsuno gemacht ist',
   intro: 'Für alle, die in ihrer Region Sponsoren finden oder selbst sponsern möchten, im Sport wie in der Kultur.',
   items: [
     {
-      image: 'athlete',
+      role: 'athlete' as Role,
       label: 'Sportlerinnen und Sportler',
       text: 'Sie trainieren neben Ausbildung oder Beruf und suchen Unterstützung für Material, Startgelder oder Reisen.',
-      alt: 'Eine Person läuft auf einem schmalen Bergweg durch grüne Hänge mit blühenden Alpenrosen.',
+      cta: 'Als Sportlerin oder Sportler eintragen',
     },
     {
-      image: 'sportverein',
+      role: 'sportverein' as Role,
       label: 'Sportvereine',
       text: 'Ehrenamtliche Vorstände, die Partner für Trikots, Trainingslager oder Turniere suchen.',
-      alt: 'Ein Ruderboot mit drei Personen von oben auf einem Fluss in der Abendsonne.',
+      cta: 'Als Sportverein eintragen',
     },
     {
-      image: 'kulturverein',
+      role: 'kulturverein' as Role,
       label: 'Kulturvereine',
       text: 'Musikgesellschaften, Chöre und Theatervereine, die Instrumente, Kostüme oder Aufführungen finanzieren müssen.',
-      alt: 'Musikanten in Tracht und Filzhut spielen Posaune, vorne ein Notenhalter.',
+      cta: 'Als Kulturverein eintragen',
     },
     {
-      image: 'firma',
+      role: 'sponsor' as Role,
       label: 'Firmen aus der Region',
       text: 'Gewerbe und KMU, die sich vor Ort engagieren möchten: mit Geld, Material oder Dienstleistungen.',
-      alt: 'Zwei Handwerker in Arbeitsschürzen besprechen sich an der Werkbank einer Schreinerei.',
+      cta: 'Als Firma eintragen',
     },
-  ] satisfies { image: AudienceImage; label: string; text: string; alt: string }[],
+  ],
 };
 
 export const problem = {
@@ -209,6 +209,19 @@ export const story = {
   // Short score on the pair cards and the hero window rows; the match card uses match.result.
   // A 3 marks the last criterion (Budget) as partly matching, as in the demo.
   scoreShort: (n: number) => `${n} von 4`,
+};
+
+// «Mit Sponsuno» (Features.tsx): three cards on Tintenblau, each a small product picture with one of the story steps'
+// texts. Everything in the pictures is a fictional example (match, story.pairs); the section carries one
+// "Beispieldaten" label for all three pictures (copy rule 6).
+export const features = {
+  label: 'Mit Sponsuno',
+  title: 'Vom Profil zum passenden Partner.',
+  intro: 'Beide Seiten zeigen, was sie suchen und was sie bieten. Sponsuno bringt zusammen, was passt.',
+  // Horizontal card row (Features.tsx, 2026-11-25): the three story steps plus story.after, each with an illustration
+  scrollerLabel: 'Schritte mit Sponsuno',
+  prev: 'Vorheriger Schritt',
+  next: 'Nächster Schritt',
 };
 
 export type Track = 'seeker' | 'sponsor';
@@ -351,29 +364,41 @@ export const faq = {
   ] satisfies FaqItem[],
 };
 
-// Founders section (id="team"), on /ueber-uns/. Team decision (2026-11-03): full names allowed here.
-// Nothing else personal (no ages, schools, home addresses, private e-mails, social handles).
-// Without a photo the card shows a monogram. To add a real, consented photo later: put a square JPEG
-// (at least 240 x 240 px, under 40 KB) in src/assets/photos/, import it at the top of this file and set
-// `photo: { src: importedFile, alt: 'Porträt von …' }` on the person.
+// FAQ on the landing page (HomeFaq.tsx, id #fragen): since 2026-11-25 all questions of faq.items (the /fragen/ page is
+// parked), word for word. The cost question stands in for the parked Kosten page.
+export const homeFaq = {
+  title: faq.title,
+  items: faq.items,
+};
+
+// Founders section (id="team"), on /ueber-uns/, and the team row on the landing page (TeamStrip). Team decision
+// (2026-11-03): full names allowed here. Since 2026-11-25 (owner's call) no individual roles: the four are shown as
+// the founding team, in this order. Nothing else personal (no ages, schools, home addresses, private e-mails); the
+// only profile link allowed is each person's own LinkedIn page, added when they send it.
+// Since 2026-11-25 (owner's call) no photos: every card shows the initials. To add a real, consented photo later: put a square JPEG
+// (240 x 240 px, under 40 KB) in src/assets/photos/, add it to PHOTOS in scripts/photos.mjs (sameName) and run
+// `npm run photos` for its AVIF, import both at the top of this file and set `photo` on the person.
 export type TeamMember = {
   name: string;
-  /** Provisional focus in the team */
-  focus: string;
-  photo?: { src: string; alt: string };
+  photo?: { src: string; avif: string; alt: string };
+  /** The person's own LinkedIn profile (https://www.linkedin.com/in/…), only once they sent it */
+  linkedin?: string;
 };
 
 const teamMembers: TeamMember[] = [
-  { name: 'Aurel Eugster', focus: 'Medien und Content', photo: { src: photoAurel, alt: 'Porträt von Aurel Eugster' } },
-  { name: 'Alex Platret', focus: 'Technik', photo: { src: photoAlex, alt: 'Porträt von Alex Platret' } },
-  { name: 'Maurice Strässle', focus: 'Branding, Marketing, Sales und Partnerschaften', photo: { src: photoMaurice, alt: 'Porträt von Maurice Strässle' } },
-  { name: 'Dozie Ilunga', focus: 'Organisation und Prozesse' },
+  { name: 'Aurel Eugster', linkedin: 'https://www.linkedin.com/in/aurel-eugster-004569399/' },
+  { name: 'Alex Platret', linkedin: 'https://www.linkedin.com/in/platret/' },
+  { name: 'Maurice Strässle', linkedin: 'https://www.linkedin.com/in/maurice-str%C3%A4ssle-926a61391/' },
+  { name: 'Dozie Ilunga' },
 ];
 
 export const team = {
   title: 'Wer hinter Sponsuno steht',
-  intro: 'Wir sind ein Team aus vier Personen und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf. Die Aufgaben im Team sind vorläufig verteilt.',
+  intro: 'Wir sind ein Team aus vier Personen und bauen Sponsuno aus Gesprächen mit Sportlerinnen, Sportlern und einem Trainer auf.',
   members: teamMembers,
+  // Landing page row (TeamStrip)
+  stripLabel: 'Gründungsteam',
+  linkedinLabel: (name: string) => `${name} auf LinkedIn${newTabHint}`,
 };
 
 // "Stand des Projekts" block at the end of the team section. Sources and rules: AGENTS.md -> Project status.
@@ -457,17 +482,12 @@ export const footer = {
   sub: 'Sponsoren finden für Sport und Kultur in der Deutschschweiz.',
   columns: [
     {
-      title: 'Plattform',
+      // One column since 2026-11-25 (Plattform had only two links left after Kosten moved out)
+      title: 'Sponsuno',
       links: [
         { href: '#ablauf', label: 'So funktioniert es' },
-        { href: pageMeta('kosten').path, label: 'Kosten' },
-        { href: pageMeta('fragen').path, label: 'Fragen' },
-      ],
-    },
-    {
-      title: 'Mehr',
-      links: [
-        { href: pageMeta('ueber-uns').path, label: 'Über uns' },
+        { href: '#team', label: 'Über uns' },
+        { href: '#fragen', label: 'Fragen' },
         { href: '#warteliste', label: 'Warteliste' },
         { href: '#top', label: 'Nach oben' },
       ],
@@ -484,8 +504,6 @@ export const footer = {
   // mailto link and the town of the postal address. Not shown while both are missing.
   contactTitle: 'Kontakt',
   copyright: '© 2026 Team Sponsuno',
-  // Landing page only (the audience photos): the stock photos are named as such once, outside the content flow.
-  photoNote: { before: 'Fotos: Symbolbilder, ', link: 'Bildnachweise', href: 'impressum/#urheberrecht' },
 };
 
 export const stickyCta = {
@@ -574,48 +592,9 @@ export type PhotoCredit = {
 };
 
 /** Every third-party photo on the site, in page order. Listed in the Impressum. Originals stay outside the repo. */
-export const photoCredits: PhotoCredit[] = [
-  {
-    subject: 'Mountainbikerin in der Beispielkarte (Startseite), Symbolbild',
-    photographer: 'Corneliu Stefan Esanu',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/woman-riding-on-a-mountain-bike-23410483/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Traillauf auf einem Bergweg, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'Alin Serban',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/trail-runner-in-green-mountain-landscape-30932860/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Ruderteam auf dem Fluss, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'Adrian Jozefowicz',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/three-people-on-brown-canoe-sailing-on-calm-water-1046231/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Blasmusik in Tracht, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'Bastian Riccardi',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/traditional-bavarian-musicians-playing-trombones-34013753/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-  {
-    subject: 'Schreinerei, Abschnitt «Für wen Sponsuno gemacht ist», Symbolbild',
-    photographer: 'cottonbro studio',
-    source: 'Pexels',
-    sourceUrl: 'https://www.pexels.com/photo/men-looking-at-a-piece-of-wood-7484154/',
-    licence: 'Pexels-Lizenz',
-    licenceUrl: 'https://www.pexels.com/de-de/lizenz/',
-  },
-];
+// Empty since 2026-11-25: «Für wen» uses drawings now, and no published page shows a third-party photo. The stock
+// photos stay in src/assets/photos/ (and their credits in git history) in case they come back.
+export const photoCredits: PhotoCredit[] = [];
 
 /**
  * Contact data: shown on the legal pages (legal.contact) and used by the footer, the waitlist's e-mail route, the FAQ
@@ -650,7 +629,7 @@ export const legal = {
     // persona portrait again: 'Porträt der Mountainbikerin in der Produktvorschau (Profil und Sponsor-Cockpit):
     // KI-generiert, Symbolbild ohne reale Person.' (the block is left out while the list is empty)
     aiImages: [] as string[],
-    fonts: 'Schrift: Schibsted Grotesk, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
+    fonts: 'Schriften: Unbounded und DM Sans, unter der SIL Open Font License 1.1, ausgeliefert von dieser Website.',
   },
 
   impressum: {
@@ -686,7 +665,6 @@ export const legal = {
           // Legally relevant (no misleading claims): the site describes the product before its launch. Keep this
           // section factual even though the rest of the site uses product voice (AGENTS.md, copy rules).
           { type: 'p', text: 'Sponsuno ist noch nicht gestartet. Vermittlung, KI-Sponsoringmanager und Zahlungen sind bis zum Start nicht verfügbar. Angaben zu Funktionen, Kosten und Abläufen geben den aktuellen Planungsstand wieder und können sich ändern.' },
-          { type: 'p', text: 'Die Fotos von Personen auf der Startseite sind Symbolbilder. Die abgebildeten Personen haben keinen Bezug zu Sponsuno.' },
         ],
       },
       {
@@ -1529,11 +1507,10 @@ export const forFirms = {
   },
 };
 
-// One line per page for the link boxes of the 404 page and /warteliste/bestaetigt/ (and the welcome e-mail), taken from
-// the pages' own intros (pricing.intro, the FAQ, team and projectStatus)
-const kostenText = 'Kein Abo, keine Grundgebühr: was feststeht und was wir vor dem Start bekannt geben.';
+// One line per link for the link boxes of the 404 page and /warteliste/bestaetigt/ (and the welcome e-mail): the landing
+// page sections #team and #fragen (the topic pages are parked since 2026-11-25)
 const fragenText = 'Antworten auf häufige Fragen, von der Provision bis zum Start.';
-const ueberUnsText = 'Das Team hinter Sponsuno und der aktuelle Stand des Projekts.';
+const ueberUnsText = 'Die vier Personen hinter Sponsuno.';
 
 // ---------- 404 page (dist/404.html, NoticePage.tsx): served by Cloudflare for every unknown URL ----------
 // Static, noindex, not in the sitemap. Links are page paths relative to the site root, or '#warteliste' (the landing
@@ -1546,9 +1523,8 @@ export const notFound = {
   linksTitle: 'Weiter zu',
   links: [
     { href: '', label: 'Startseite', text: 'Worum es bei Sponsuno geht und wie es funktioniert.' },
-    { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
-    { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
-    { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },
+    { href: '#team', label: 'Über uns', text: ueberUnsText },
+    { href: '#fragen', label: 'Fragen', text: fragenText },
     { href: '#warteliste', label: 'Warteliste', text: 'Sponsuno startet bald. Melden Sie hier Ihr Interesse an.' },
   ] satisfies (FooterLink & { text: string })[],
   /** Only shown while a contact address exists */
@@ -1571,10 +1547,9 @@ export const waitlistConfirmed = {
   intro: 'Sie stehen jetzt auf der Warteliste. Sponsuno startet bald in der Deutschschweiz. Wir schreiben Ihnen zum Start.',
   linksTitle: 'Bis dahin',
   links: [
-    { href: '#ablauf', label: 'So funktioniert es', text: howItWorks.intro },
-    { href: pageMeta('kosten').path, label: 'Kosten', text: kostenText },
-    { href: pageMeta('fragen').path, label: 'Fragen', text: fragenText },
-    { href: pageMeta('ueber-uns').path, label: 'Über uns', text: ueberUnsText },
+    { href: '#ablauf', label: 'So funktioniert es', text: features.intro },
+    { href: '#team', label: 'Über uns', text: ueberUnsText },
+    { href: '#fragen', label: 'Fragen', text: fragenText },
   ] satisfies (FooterLink & { text: string })[],
   /** Only shown while a contact address exists */
   contact: confirmedMail

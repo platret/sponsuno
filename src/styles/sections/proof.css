@@ -1,39 +1,50 @@
-/* Proof line: a quiet kalk band under the hero, left-aligned on the grid. Three proof points, then example
-   disciplines under a label. Static, no motion. Markup is a plain list so it can later become a logo row.
-   Layouts: >=761 three columns, each point under its own hairline, the disciplines in one row beside their label;
-            <=760 a stacked list, each point under a hairline, the disciplines wrapping under their label. */
-
+/* Under the hero (D1 redesign, calmer 2026-11-25): a large statement in DM Sans, then a thin rule with the three proof
+   points in one quiet row. Scroll (html.scroll-fx only): the Hafer sheet widens out of the Tintenblau hero
+   (data-scroll="frame", the wrapper is Tintenblau), and the statement fills in word by word, from 60 % to full ink.
+   60 % keeps Tintenblau on Hafer above 3:1 (large text) at every point; the Bernstein word stays full from the start. */
+.proof-wrap { background: var(--graphit); }
 .proof {
-  padding-block: clamp(2.5rem, 2rem + 1.6vw, 3.5rem);
-  border-bottom: 1px solid var(--line);
+  /* The sheet starts a wide gutter in from both sides and reaches full width as its top nears the header */
+  /* never further in than the text column, so no letter is ever clipped */
+  --scroll-frame-inset: 0 max(var(--gutter) * .75, min(8rem, (100vw - var(--container)) / 2 + var(--gutter) * .75));
+  --scroll-range-end: entry min(100%, 85vh);
+  padding-block: clamp(5.5rem, 4rem + 6vw, 10rem) clamp(4rem, 3rem + 3vw, 6rem);
 }
+/* Custom properties inherit: the children's own scroll windows (the proof items) keep the default */
+.proof > .container { --scroll-range-end: initial; }
 
-.proof-items {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-.proof-items li {
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-  font-size: 1.0625rem; font-weight: 600; line-height: 1.45; color: var(--heading);
+.proof-statement {
+  max-width: 23ch;
+  font: 400 clamp(1.75rem, 1.1rem + 2.6vw, 3.25rem)/1.18 var(--sans);
+  letter-spacing: -0.02em; color: var(--heading);
   text-wrap: pretty;
 }
+.proof-accent { color: var(--accent-text); }
 
-.proof-disciplines {
-  display: flex; align-items: baseline; gap: .5rem 1.5rem;
-  margin-top: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+.proof-items {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
+  margin-top: clamp(4rem, 3rem + 4vw, 7rem); padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
 }
-.proof-label { flex: none; }
-/* Plain words separated by space only: works at every wrap point, no dangling separators */
-.proof-list {
-  display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; min-width: 0;
-  font-size: var(--fs-small); line-height: 1.5; color: var(--text);
-}
-.proof-list li { white-space: nowrap; }
+.proof-items li { font-size: .9375rem; line-height: 1.5; color: var(--text); text-wrap: pretty; max-width: 26ch; }
 
-/* Phones: the points stack, each under its hairline; disciplines wrap under their label */
+@keyframes proof-fill { from { opacity: .6; } to { opacity: 1; } }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-fx .proof-statement { view-timeline: --proof-stmt block; }
+    /* Word n fills between cover 12 % + n·1.1 % and 4 % later: the sentence is complete when its top sits at about
+       a third of the viewport, i.e. in reading position. */
+    .scroll-fx .proof-w:not(.proof-accent) {
+      animation: proof-fill linear both;
+      animation-duration: auto;
+      animation-timeline: --proof-stmt;
+      animation-range: cover calc(12% + var(--w) * 1.1%) cover calc(16% + var(--w) * 1.1%);
+    }
+  }
+}
+
 @media (max-width: 760px) {
-  .proof-items { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .proof-items li { padding-top: .85rem; font-size: 1rem; }
-  .proof-disciplines { flex-direction: column; gap: .5rem; }
+  .proof-items { grid-template-columns: 1fr; gap: .75rem; }
+  .proof-items li { max-width: none; }
 }

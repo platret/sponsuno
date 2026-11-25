@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
-import { legal, photoCredits, type LegalBlock, type LegalPageId } from '../content';
+import { legal, newTabHint, photoCredits, type LegalBlock, type LegalPageId } from '../content';
+import { NEW_TAB } from '../lib/links';
 import { Footer } from './Footer';
 import { PageBand, PageHeader } from './PageHeader';
 import { rich } from './rich';
@@ -98,8 +99,8 @@ function Credits() {
         <ul className="lg-list">
           {photoCredits.map((photo) => (
             <li key={photo.sourceUrl}>
-              {photo.subject}: {c.photoBy} {photo.photographer}, <a href={photo.sourceUrl}>{photo.source}</a>,{' '}
-              {photo.licenceUrl ? <a href={photo.licenceUrl}>{photo.licence}</a> : photo.licence}
+              {photo.subject}: {c.photoBy} {photo.photographer}, <a href={photo.sourceUrl} {...NEW_TAB}>{photo.source}<span className="visually-hidden">{newTabHint}</span></a>,{' '}
+              {photo.licenceUrl ? <a href={photo.licenceUrl} {...NEW_TAB}>{photo.licence}<span className="visually-hidden">{newTabHint}</span></a> : photo.licence}
             </li>
           ))}
         </ul>

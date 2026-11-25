@@ -1,0 +1,75 @@
+/* «Mit Sponsuno» (Features.tsx, fifth form 2026-11-25): Tintenblau. Head with two square arrow buttons on the right,
+   then a horizontally scrolling row of Hafer cards that starts at the container edge and runs out to the right edge of
+   the window (scroll-snap, native scrolling). Each card: a drawing (featuresArt.tsx) on a Hafer-2 field, the number,
+   title and text. Square corners on cards and buttons; the drawings alone use soft rounded shapes (Fruitful). */
+
+.fx-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 2rem; margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem); }
+.fx-head { max-width: 42rem; }
+
+.fx-arrows { display: flex; gap: .5rem; }
+.fx-arrow {
+  display: grid; place-items: center; width: 48px; height: 48px; padding: 0;
+  border: 1px solid rgba(236, 230, 218, .32); background: transparent; color: var(--kalk); cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+}
+.fx-arrow svg { width: 20px; height: 20px; stroke-width: 1.75; }
+.fx-arrow:hover:not(:disabled) { background: var(--kalk); color: var(--graphit); border-color: var(--kalk); }
+.fx-arrow:disabled { opacity: .35; cursor: default; }
+.fx-arrow:focus-visible { outline: 3px solid var(--brass); outline-offset: 2px; }
+
+/* The row: left edge on the container's content edge, right edge at the window edge */
+.fx-row {
+  --fx-edge: max(var(--gutter), (100% - var(--container)) / 2 + var(--gutter));
+  display: grid; grid-auto-flow: column; grid-auto-columns: clamp(17.5rem, 36vw, 27rem); gap: 1rem;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--fx-edge);
+  padding: .5rem var(--fx-edge) 1.5rem;
+  scrollbar-width: none;
+}
+.fx-row::-webkit-scrollbar { display: none; }
+.fx-row:focus-visible { outline: 3px solid var(--brass); outline-offset: -3px; }
+
+.fx-card {
+  scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  padding: 1.25rem 1.25rem 1.75rem;
+  background: var(--kalk); color: var(--graphit);
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s ease;
+}
+@media (hover: hover) {
+  .fx-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -36px rgba(0, 0, 0, .8); }
+}
+.fx-art-box { aspect-ratio: 9 / 5; margin-bottom: 1.5rem; background: var(--kalk-2); }
+.fx-num { display: block; font: 500 .8125rem/1 var(--display); color: var(--accent-text); font-variant-numeric: tabular-nums; margin-bottom: .75rem; }
+.fx .fx-card h3 { color: var(--graphit); margin-bottom: .55rem; }
+.fx .fx-card p { color: var(--ink); font-size: 1rem; line-height: 1.6; }
+
+/* ---------- Drawing system (featuresArt.tsx, audienceArt.tsx): D1 colours only, two line weights ---------- */
+:is(.fx-art, .aud-art) { --a-w1: 2; --a-w2: 3; display: block; width: 100%; height: 100%; overflow: visible; }
+:is(.fx-art, .aud-art) .a-ink { fill: var(--graphit); }
+:is(.fx-art, .aud-art) .a-ink2 { fill: var(--graphit-2); }
+:is(.fx-art, .aud-art) .a-amber { fill: var(--brass); }
+:is(.fx-art, .aud-art) .a-amber-soft { fill: #F7BE93; }
+:is(.fx-art, .aud-art) .a-mist { fill: #9FB1C6; }
+:is(.fx-art, .aud-art) .a-light { fill: var(--kalk); }
+:is(.fx-art, .aud-art) .a-line { fill: var(--rule); }
+:is(.fx-art, .aud-art) .a-line-light { fill: var(--kalk); }
+/* weight 1 (2): connectors and structure */
+:is(.fx-art, .aud-art) :is(.a-wire, .a-pitch, .a-staff) { fill: none; stroke-width: var(--a-w1); stroke-linecap: round; stroke-linejoin: round; }
+:is(.fx-art, .aud-art) .a-wire { stroke: var(--graphit); }
+:is(.fx-art, .aud-art) .a-wire-amber { stroke: var(--brass); }
+:is(.fx-art, .aud-art) .a-wire-light { stroke: var(--kalk); }
+.aud-art .a-pitch { stroke: var(--kalk); }
+.aud-art .a-staff { stroke: #F7BE93; }
+/* weight 2 (3): marks */
+:is(.fx-art, .aud-art) :is(.a-mark, .a-stem) { fill: none; stroke-width: var(--a-w2); stroke-linecap: round; stroke-linejoin: round; }
+:is(.fx-art, .aud-art) .a-mark-amber { stroke: var(--brass); }
+:is(.fx-art, .aud-art) .a-mark-light { stroke: var(--kalk); }
+.aud-art .a-stem { stroke: var(--graphit); stroke-linecap: butt; }
+/* free shapes: an 8 wide outline in the fill colour, round joins = the 4 radius */
+.aud-art .a-soft { stroke: var(--graphit); stroke-width: 8; stroke-linejoin: round; }
+
+@media (max-width: 560px) {
+  .fx-arrows { display: none; }
+  .fx-row { grid-auto-columns: 82%; }
+}

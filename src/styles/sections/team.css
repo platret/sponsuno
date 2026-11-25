@@ -37,7 +37,12 @@
 .team-portrait { --scroll-zoom-from: .86; --scroll-zoom-y: 0px; transform-origin: 50% 50%; }
 
 .team-name { margin-top: 2rem; }
-.team-focus { margin-top: .5rem; font-size: var(--fs-small); line-height: 1.55; color: var(--text); max-width: 18rem; }
+.team-link {
+  display: inline-flex; align-items: center; min-height: 44px; margin-top: .25rem;
+  font-size: var(--fs-small); font-weight: 600; color: var(--heading);
+  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px;
+}
+.team-link:hover { color: var(--accent-text); }
 
 /* Quiet stagger for the reveal (only applies while motion is on) */
 .motion .team-member[data-reveal]:nth-child(2) { transition-delay: .06s; }

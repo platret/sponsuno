@@ -22,8 +22,8 @@ export const site = {
   logo: `${SITE_URL}icon-512.png`,
 };
 
-/** home = landing page (hydrated); legal, guide and info = static pages without JavaScript (info: the topic pages
-    reached from the header: Kosten, Fragen, Über uns; guide: the parked Ratgeber pages); notfound = the 404 page (static,
+/** home = landing page (hydrated); legal, guide and info = static pages without JavaScript (info: the topic pages,
+    all parked since 2026-11-25: Kosten, Fragen, Über uns, Für Firmen, KI-Manager; guide: the parked Ratgeber pages); notfound = the 404 page (static,
     noindex, no canonical, no share tags); notice = a short static page outside search (noindex, not in the sitemap, no
     canonical or share tags), today /warteliste/bestaetigt/ */
 export type PageKind = 'home' | 'legal' | 'guide' | 'info' | 'notfound' | 'notice';
@@ -73,30 +73,6 @@ export const pages: PageMeta[] = [
     index: true,
   },
   {
-    id: 'kosten',
-    path: 'kosten/',
-    title: 'Kosten: Provision statt Abo | Sponsuno',
-    description: 'Kein Abo, keine Grundgebühr: Sponsuno arbeitet mit einer Provision, wenn eine Partnerschaft zustande kommt. Die Konditionen folgen vor dem Start.',
-    kind: 'info',
-    index: true,
-  },
-  {
-    id: 'fragen',
-    path: 'fragen/',
-    title: 'Fragen und Antworten zu Sponsuno',
-    description: 'Antworten auf häufige Fragen zu Sponsuno: Provision, interessierte Firmen, Aufwand, Gegenleistungen, für wen Sponsuno ist und wann es losgeht.',
-    kind: 'info',
-    index: true,
-  },
-  {
-    id: 'ueber-uns',
-    path: 'ueber-uns/',
-    title: 'Über uns: das Team hinter Sponsuno',
-    description: 'Das Team hinter Sponsuno: vier Personen, ihre Aufgaben im Team und der aktuelle Stand des Projekts, von den ersten Gesprächen bis zu den nächsten Schritten.',
-    kind: 'info',
-    index: true,
-  },
-  {
     id: 'impressum',
     path: 'impressum/',
     title: 'Impressum – Sponsuno',
@@ -143,6 +119,32 @@ export const pages: PageMeta[] = [
  * footer) and follow AGENTS.md → "Parked (not built)".
  */
 export const parkedPages: PageMeta[] = [
+  // Parked 2026-11-25 (owner: "just the main page for now"): Kosten, Fragen, Über uns. The FAQ and the team are
+  // sections of the landing page (#fragen, #team); public/_redirects sends the old URLs there.
+  {
+    id: 'kosten',
+    path: 'kosten/',
+    title: 'Kosten: Provision statt Abo | Sponsuno',
+    description: 'Kein Abo, keine Grundgebühr: Sponsuno arbeitet mit einer Provision, wenn eine Partnerschaft zustande kommt. Die Konditionen folgen vor dem Start.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'fragen',
+    path: 'fragen/',
+    title: 'Fragen und Antworten zu Sponsuno',
+    description: 'Antworten auf häufige Fragen zu Sponsuno: Provision, interessierte Firmen, Aufwand, Gegenleistungen, für wen Sponsuno ist und wann es losgeht.',
+    kind: 'info',
+    index: true,
+  },
+  {
+    id: 'ueber-uns',
+    path: 'ueber-uns/',
+    title: 'Über uns: das Team hinter Sponsuno',
+    description: 'Das Team hinter Sponsuno: vier Personen, ihre Aufgaben im Team und der aktuelle Stand des Projekts, von den ersten Gesprächen bis zu den nächsten Schritten.',
+    kind: 'info',
+    index: true,
+  },
   {
     id: 'fuer-firmen',
     path: 'fuer-firmen/',

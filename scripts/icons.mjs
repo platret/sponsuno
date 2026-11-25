@@ -18,7 +18,7 @@ const tmp = await mkdtemp(path.join(tmpdir(), 'sponsuno-icons-'));
 
 // Renders the icon at 512 px. full = graphit gradient behind it, so the rounded corners disappear.
 async function render(out, full) {
-  const bg = full ? 'linear-gradient(135deg, #1D2125, #2E343A)' : 'transparent';
+  const bg = full ? '#1A2B40' : 'transparent';
   const html = path.join(tmp, `${full ? 'full' : 'round'}.html`);
   await writeFile(html, `<body style="margin:0;background:${bg}"><img src="${svg}" width="512" height="512" style="display:block">`);
   execFileSync(chrome, ['--headless', '--hide-scrollbars', '--default-background-color=00000000',

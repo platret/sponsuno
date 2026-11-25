@@ -1,33 +1,8 @@
-import { contact, projectStatus, team, type TeamMember } from '../content';
+import { contact, projectStatus, team } from '../content';
+import { Portrait } from './Portrait';
+import { NEW_TAB } from '../lib/links';
 import { rich } from './rich';
 import '../styles/sections/team.css';
-
-/** "Aurel Eugster" -> "AE": first letter of the first and the last name. */
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  const first = parts[0]?.[0] ?? '';
-  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
-  return (first + last).toUpperCase();
-}
-
-/** Real photo when content.ts provides one, otherwise a monogram disc (decorative: the name follows). */
-function Portrait({ member }: { member: TeamMember }) {
-  if (member.photo) {
-    return (
-      <img
-        className="team-portrait team-photo"
-        data-scroll="zoom-in"
-        src={member.photo.src}
-        alt={member.photo.alt}
-        width={120}
-        height={120}
-        loading="lazy"
-        decoding="async"
-      />
-    );
-  }
-  return <span className="team-portrait team-mono" data-scroll="zoom-in" aria-hidden="true">{initials(member.name)}</span>;
-}
 
 /** "Stand des Projekts": the programme with a link, then the steps so far and the planned ones as a short
     vertical sequence, in a graphit card. The state is written out (Erledigt / Geplant); the marker on the line only echoes it. */
@@ -55,7 +30,7 @@ function ProjectStatus() {
 }
 
 /** Kalk section, the body of /ueber-uns/ (its title and intro are the page head band: InfoPage → PageBand; names
-    and "Stand des Projekts" are H2, styled as H3): the four founders with their provisional focus, then the project
+    and "Stand des Projekts" are H2, styled as H3): the four founders (name, and LinkedIn once they sent it), then the project
     status. */
 export function Team() {
   return (
@@ -64,9 +39,11 @@ export function Team() {
         <ul className="team-grid" role="list" data-scroll-stagger="">
           {team.members.map((member) => (
             <li className="team-member" data-reveal="" data-scroll="rise" key={member.name}>
-              <Portrait member={member} />
+              <Portrait member={member} size={120} photoClass="team-portrait team-photo" monoClass="team-portrait team-mono" scroll="zoom-in" />
               <h2 className="pg-h3 team-name">{member.name}</h2>
-              <p className="team-focus">{member.focus}</p>
+              {member.linkedin && (
+                <a className="team-link" href={member.linkedin} {...NEW_TAB} aria-label={team.linkedinLabel(member.name)}>LinkedIn</a>
+              )}
             </li>
           ))}
         </ul>

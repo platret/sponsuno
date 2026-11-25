@@ -24,8 +24,8 @@ html:not(.js) .site-header {
 
 .header-inner { height: var(--header-h); display: flex; align-items: center; gap: 2rem; }
 
-.brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; border-radius: 6px; }
-.brand img { width: 132px; height: auto; }
+.brand { display: flex; align-items: center; min-height: 44px; margin-right: auto; }
+.brand img { width: 148px; height: auto; }
 .brand-on-light { display: none; }
 /* Solid bar on kalk: the graphit wordmark */
 .is-solid .brand-on-dark { display: none; }

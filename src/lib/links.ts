@@ -1,7 +1,6 @@
 // Base-aware links: links between pages are built from import.meta.env.BASE_URL instead of hardcoded paths.
 
 import type { Role } from '../content';
-import { pageMeta } from '../pages';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -19,6 +18,10 @@ export function siteHref(href: string, onLanding: boolean): string {
   return pageHref(href);
 }
 
+/** Props for links that leave the site (owner, 2026-11-25: external links open in a new tab, Sponsuno stays open).
+    Pair them with newTabHint (content.ts) for screen readers. */
+export const NEW_TAB = { target: '_blank', rel: 'noopener noreferrer' } as const;
+
 /** True for links that leave the site. */
 export const isExternal = (href: string): boolean => /^https?:\/\//i.test(href);
 
@@ -35,15 +38,15 @@ export const ROLE_PARAM = 'rolle';
 export const waitlistHref = (role?: Role): string => `${BASE}${role ? `?${ROLE_PARAM}=${role}` : ''}#warteliste`;
 
 /**
- * Sections that moved from the landing page to their own page (November 2026). App.tsx sends an old link such as
- * /#kosten there with location.replace, so shared links keep working. Keys are the old section ids. /#ki-manager is no
+ * Old landing page anchors whose section no longer exists (Kosten moved out in November 2026 and was parked on
+ * 2026-11-25). App.tsx sends an old link such as /#kosten on with location.replace, so shared links keep working. Keys are the old section ids. /#ki-manager is no
  * longer listed: its page is parked (pages.ts → parkedPages), so the old link simply opens the top of the homepage.
  */
 export const MOVED_SECTIONS: Record<string, string> = {
-  kosten: pageMeta('kosten').path,
-  sachleistungen: `${pageMeta('kosten').path}#sachleistungen`,
-  fragen: pageMeta('fragen').path,
-  team: pageMeta('ueber-uns').path,
+  // Since 2026-11-25 the FAQ (#fragen) and the team (#team) are landing page sections again; the old cost anchors go
+  // to the FAQ, which holds the cost question.
+  kosten: '#fragen',
+  sachleistungen: '#fragen',
 };
 
 /** aria-current for a main navigation item (content.ts → nav): 'page' on the page it links to. */

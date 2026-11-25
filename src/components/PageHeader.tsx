@@ -31,7 +31,7 @@ export function PageHeader({ current, role }: PageHeaderProps) {
       <header className="lg-header" id="top">
         <div className="container lg-header-inner">
           <a className="lg-brand" href={pageHref('')} aria-label={legal.homeLabel}>
-            <img src={wordmarkLight} alt="" width={141} height={24} />
+            <img src={wordmarkLight} alt="" width={172} height={22} />
           </a>
           <nav className="lg-nav" aria-label="Hauptnavigation">
             <ul>{links}</ul>

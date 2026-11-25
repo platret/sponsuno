@@ -1,0 +1,30 @@
+/* Landing page team row (TeamStrip.tsx): head with the link on the right, then four square portraits (no radius,
+   brand rule) with the name under each. Since 2026-11-25 no photos: a small Tintenblau square with the initials. */
+.ts-head {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 2rem;
+  margin-bottom: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+}
+.ts-head > div { max-width: 40rem; }
+.ts-more { color: var(--heading); min-height: 44px; }
+
+.ts-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1rem, .5rem + 1.5vw, 2rem); }
+.ts-photo { display: block; width: 100%; max-width: 240px; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--graphit); }
+.ts-mono {
+  display: grid; place-items: center;
+  width: 6.5rem; max-width: none;
+  color: var(--kalk); font: 700 1.5rem/1 var(--display);
+}
+.ts-square-link { display: inline-block; }
+.ts-square-link .ts-mono { transition: background-color .2s ease; }
+.ts-square-link:hover .ts-mono { background: var(--graphit-2); }
+.ts-name { margin-top: 1rem; font-weight: 600; color: var(--heading); }
+.ts-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: var(--fs-small); color: var(--text);
+  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px;
+}
+.ts-link:hover { color: var(--accent-text); }
+
+@media (max-width: 760px) {
+  .ts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2rem; }
+}
