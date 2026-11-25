@@ -1518,15 +1518,19 @@ const ueberUnsText = 'Die vier Personen hinter Sponsuno.';
 const notFoundMail = contact.email;
 
 export const notFound = {
-  title: 'Diese Seite gibt es nicht (mehr)',
-  intro: 'Vielleicht hat sich die Adresse geändert, oder sie enthält einen Tippfehler. Von hier aus geht es weiter:',
-  linksTitle: 'Weiter zu',
+  // Redesigned 2026-11-25 (owner: "cool, funny, clean"): the 0 of «404» is the pitch's centre circle, the ball has
+  // rolled out past the second 4 and the linesman's flag is up. One light joke, then plain help.
+  label: 'Fehler 404',
+  title: 'Abseits.',
+  intro: 'Diese Seite gibt es nicht (mehr). Vielleicht hat sich die Adresse geändert, oder sie enthält einen Tippfehler. Kein Grund für eine rote Karte: Von hier geht es zurück ins Spiel.',
+  home: 'Zurück zum Anstoss',
+  waitlist: 'Auf die Warteliste',
+  linksTitle: 'Oder direkt zu',
   links: [
-    { href: '', label: 'Startseite', text: 'Worum es bei Sponsuno geht und wie es funktioniert.' },
-    { href: '#team', label: 'Über uns', text: ueberUnsText },
-    { href: '#fragen', label: 'Fragen', text: fragenText },
-    { href: '#warteliste', label: 'Warteliste', text: 'Sponsuno startet bald. Melden Sie hier Ihr Interesse an.' },
-  ] satisfies (FooterLink & { text: string })[],
+    { href: '#ablauf', label: 'So funktioniert es' },
+    { href: '#team', label: 'Über uns' },
+    { href: '#fragen', label: 'Fragen' },
+  ] satisfies FooterLink[],
   /** Only shown while a contact address exists */
   contact: notFoundMail
     ? ([

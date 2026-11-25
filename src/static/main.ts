@@ -9,6 +9,7 @@ import '../styles/site.css';
 import '../styles/sections/footer.css';
 import '../styles/sections/legal.css';
 import '../styles/sections/guide.css';
+import '../styles/sections/notfound.css'; // the 404 page (NoticePage → NotFound), about 1 KB gzipped
 
 if (import.meta.env.DEV) {
   const root = document.getElementById('root');
