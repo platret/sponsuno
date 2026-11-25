@@ -1,5 +1,6 @@
 import { contact, projectStatus, team } from '../content';
 import { Portrait } from './Portrait';
+import { NEW_TAB } from '../lib/links';
 import { rich } from './rich';
 import '../styles/sections/team.css';
 
@@ -41,7 +42,7 @@ export function Team() {
               <Portrait member={member} size={120} photoClass="team-portrait team-photo" monoClass="team-portrait team-mono" scroll="zoom-in" />
               <h2 className="pg-h3 team-name">{member.name}</h2>
               {member.linkedin && (
-                <a className="team-link" href={member.linkedin} aria-label={team.linkedinLabel(member.name)}>LinkedIn</a>
+                <a className="team-link" href={member.linkedin} {...NEW_TAB} aria-label={team.linkedinLabel(member.name)}>LinkedIn</a>
               )}
             </li>
           ))}

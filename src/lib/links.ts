@@ -18,6 +18,10 @@ export function siteHref(href: string, onLanding: boolean): string {
   return pageHref(href);
 }
 
+/** Props for links that leave the site (owner, 2026-11-25: external links open in a new tab, Sponsuno stays open).
+    Pair them with newTabHint (content.ts) for screen readers. */
+export const NEW_TAB = { target: '_blank', rel: 'noopener noreferrer' } as const;
+
 /** True for links that leave the site. */
 export const isExternal = (href: string): boolean => /^https?:\/\//i.test(href);
 

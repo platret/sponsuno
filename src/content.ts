@@ -12,6 +12,9 @@ export const nav: FooterLink[] = [
   { href: '#fragen', label: 'Fragen' },
 ];
 
+/** Screen-reader note after a link that opens in a new tab (lib/links.ts → NEW_TAB) */
+export const newTabHint = ' (öffnet in neuem Tab)';
+
 export const cta = {
   waitlist: 'Auf die Warteliste',
   waitlistShort: 'Warteliste',
@@ -230,7 +233,8 @@ export const features = {
   title: 'Vom Profil zum passenden Partner.',
   intro: 'Beide Seiten zeigen, was sie suchen und was sie bieten. Sponsuno bringt zusammen, was passt.',
   caption: 'Beispieldaten',
-  list: { title: 'Passende Partner', tab: 'Vorschläge' },
+  score: '4 von 4 Kriterien passen',
+  seekerName: 'Mountainbikerin',
 };
 
 export type Track = 'seeker' | 'sponsor';
@@ -407,7 +411,7 @@ export const team = {
   members: teamMembers,
   // Landing page row (TeamStrip)
   stripLabel: 'Gründungsteam',
-  linkedinLabel: (name: string) => `${name} auf LinkedIn`,
+  linkedinLabel: (name: string) => `${name} auf LinkedIn${newTabHint}`,
 };
 
 // "Stand des Projekts" block at the end of the team section. Sources and rules: AGENTS.md -> Project status.
