@@ -1,37 +1,19 @@
-import { useRef } from 'react';
-import { AnimatePresence, LazyMotion, MotionConfig, m, type Variants } from 'motion/react';
-import { AnimateIn, CardFrame, MotionKit, STATES, type MotionKitValue } from './featuresCard';
+import type { ReactNode } from 'react';
+import { LazyMotion, MotionConfig, m } from 'motion/react';
+import { ArtKit } from './featuresArt';
 
-/* The animated card of «Mit Sponsuno», loaded by Features.tsx after hydration on desktop only (its own chunk, like
-   the hero field), so Motion (motion.dev) never weighs on the first load or on phones. LazyMotion loads Motion's DOM
-   features on top (lib/motionFeatures.ts). MotionConfig reducedMotion="user" drops movement under reduced motion. */
+/* Motion for the «Mit Sponsuno» illustrations, loaded by Features.tsx after hydration (its own chunk, never in the
+   first JavaScript) and only when the visitor allows motion. It swaps the plain SVG elements of featuresArt.tsx for
+   Motion's `m` elements; LazyMotion loads Motion's DOM features on top (lib/motionFeatures.ts). */
 
 const loadFeatures = () => import('../lib/motionFeatures').then((r) => r.default);
+const KIT = { live: true, svg: m.svg, g: m.g, path: m.path, rect: m.rect, circle: m.circle };
 
-const list: Variants = { show: { transition: { staggerChildren: 0.09, delayChildren: 0.12 } } };
-const row: Variants = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
-};
-const KIT = { div: m.div, span: m.span, list, row } as unknown as MotionKitValue;
-
-export function LiveCard({ step }: { step: number }) {
-  const State = STATES[step];
-  const first = useRef(step);
-  const moved = useRef(false);
-  if (step !== first.current) moved.current = true;
+export function LiveArt({ children }: { children: ReactNode }) {
   return (
     <LazyMotion features={loadFeatures} strict>
       <MotionConfig reducedMotion="user">
-        <MotionKit.Provider value={KIT}>
-          <CardFrame step={step}>
-            <AnimatePresence mode="wait" initial={false}>
-              <m.div key={step} exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}>
-                <AnimateIn.Provider value={moved.current}><State /></AnimateIn.Provider>
-              </m.div>
-            </AnimatePresence>
-          </CardFrame>
-        </MotionKit.Provider>
+        <ArtKit.Provider value={KIT}>{children}</ArtKit.Provider>
       </MotionConfig>
     </LazyMotion>
   );
